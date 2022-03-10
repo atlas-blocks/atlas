@@ -17,7 +17,8 @@
 
 .dndnode {
     align-items: center;
-    border: 1px solid #1a192b;
+    border-width: 1px;
+    border-style: solid;
     border-radius: 2px;
     cursor: grab;
     display: flex;
@@ -27,10 +28,22 @@
     font-size: 15px;
 }
 
-.dndnode.input {
-    border-color: #0041d0;
+.dndnode.default {
+    border-color: #1a192b;
+    color: #1a192b;
 }
 
-.dndnode.output {
+.dndnode.simplify {
+    border-color: green;
+    color: green;
+}
+
+.dndnode.set {
+    border-color: #0041d0;
+    color: #0041d0;
+}
+
+.dndnode.graph {
     border-color: #ff0072;
+    color: #ff0072;
 }

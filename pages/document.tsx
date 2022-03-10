@@ -1,31 +1,44 @@
-import styles from '../styles/DnDFlow.module.css';
-import Navbar from '../components/includes/navbar';
 import React, { useState, useRef } from 'react';
 import ReactFlow, {
 	ReactFlowProvider,
 	addEdge,
 	removeElements,
-	Controls, Edge, Elements, Connection,
+	Controls, Edge, Elements, Connection, MiniMap,
 } from 'react-flow-renderer';
 
-
+import { DefaultBlock, SimplifyBlock } from '../components/blocks/Blocks';
+import { DefaultEdge } from '../components/blocks/Edge';
 import Sidebar from '../components/Sidebar';
 
-import { Connect } from 'react-redux';
+import styles from '../styles/DnDFlow.module.css';
 
 const initialElements: Elements = [
+	{ id: '1', data: { label: 'Node 1' }, position: { x: 300, y: 100 } },
 	{
-		id: '1',
-		type: 'input',
-		data: { label: 'input node' },
+		id: '2',
+		type: 'output',
+		data: { label: 'output node' },
 		position: { x: 250, y: 250 },
 	},
-	{ id: '2', data: { label: 'Node 2' }, position: { x: 100, y: 100 } },
-	{ id: 'e1-2', source: '1', target: '2', animated: true },
+	{
+		id: '3',
+		type: 'defaultBlock',
+		data: { label: 'x + 2' },
+		position: { x: 350, y: 350 },
+	},
+	{ id: 'e1-2', type: 'defaultEdge', source: '1', target: '2', animated: true },
 ];
 
 let id = 0;
 const getId = () => `dndnode_${id++}`;
+
+const nodeTypes = {
+	defaultBlock: DefaultBlock,
+	simplifyBlock: SimplifyBlock,
+};
+const edgeTypes = {
+	defaultEdge: DefaultEdge,
+};
 
 const DnDFlow = () => {
 	const reactFlowWrapper = useRef(null);
@@ -66,17 +79,21 @@ const DnDFlow = () => {
 
 	return (
 		<div className={styles.dndflow}>
+
 			<ReactFlowProvider>
 				<div className={styles['reactflow-wrapper']} ref={reactFlowWrapper}>
 					<ReactFlow
 						id={styles.blocks_canvas}
 						elements={elements}
+						nodeTypes={nodeTypes}
+						edgeTypes={edgeTypes}
 						onConnect={onConnect}
 						onElementsRemove={onElementsRemove}
 						onLoad={onLoad}
 						onDrop={onDrop}
 						onDragOver={onDragOver}
 					>
+						<MiniMap />
 						<Controls />
 					</ReactFlow>
 				</div>

@@ -11,17 +11,20 @@ function Sidebar() {
 	return (
 		<aside id={styles.sidebar}>
 			<h2>Blocks Menu</h2>
-			<div className={`${styles.dndnode} ${styles.input}`} onDragStart={(event) => onDragStart(event, 'input')} draggable>
-				Input Node
+			<div className={`${styles.dndnode} ${styles.default}`} onDragStart={(event) => onDragStart(event, 'defaultBlock')} draggable>
+				Default
 			</div>
-			<div className={`${styles.dndnode}`} onDragStart={(event) => onDragStart(event, 'default')} draggable>
-				Default Node
+			<div className={`${styles.dndnode} ${styles.simplify}`} onDragStart={(event) => onDragStart(event, 'simplifyBlock')} draggable>
+				Simplify
 			</div>
-			<div className={`${styles.dndnode} ${styles.output}`} onDragStart={(event) => onDragStart(event, 'output')} draggable>
-				Output Node
+			<div className={`${styles.dndnode} ${styles.set}`} onDragStart={(event) => onDragStart(event, 'defaultBlock')} draggable>
+				Set
+			</div>
+			<div className={`${styles.dndnode} ${styles.graph}`} onDragStart={(event) => onDragStart(event, 'defaultBlock')} draggable>
+				Graph
 			</div>
 		</aside>
 	);
-};
+}
 
 export default Sidebar;
