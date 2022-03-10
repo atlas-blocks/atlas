@@ -4,7 +4,6 @@
     top: 0;
     left: 0;
 }
-
 #blocks_canvas {
     position: absolute;
     top: 0;
@@ -14,9 +13,6 @@
     z-index: -1;
 }
 
-#blocks_settings {
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 200px;
-}
+
+
+

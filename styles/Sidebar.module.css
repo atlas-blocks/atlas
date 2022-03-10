@@ -1,0 +1,36 @@
+/*===== sidebar ======*/
+
+
+#sidebar {
+    position: absolute;
+    background: #fcfcfcCC;
+    border-right: 1px solid #eee;
+    font-size: 12px;
+    padding: 15px 10px;
+    display: block;
+    max-width: 200px;
+    min-width: 100px;
+    width: 20%;
+    height: 80vh;
+    text-align: center;
+}
+
+.dndnode {
+    align-items: center;
+    border: 1px solid #1a192b;
+    border-radius: 2px;
+    cursor: grab;
+    display: flex;
+    justify-content: center;
+    padding: 10px;
+    margin: 10px 5px;
+    font-size: 15px;
+}
+
+.dndnode.input {
+    border-color: #0041d0;
+}
+
+.dndnode.output {
+    border-color: #ff0072;
+}
