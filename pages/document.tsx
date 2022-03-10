@@ -1,16 +1,18 @@
 import React, { useState, useRef } from 'react';
+import dynamic from 'next/dynamic'
+// @ts-ignore
+const Background = dynamic(import('react-flow-renderer').then(mod => mod.Background), { ssr: false }) // disable ssr
 import ReactFlow, {
-	ReactFlowProvider,
-	addEdge,
-	removeElements,
-	Controls, Edge, Elements, Connection, MiniMap,
+	addEdge, removeElements, Controls, Edge, Elements, Connection, ReactFlowProvider,
+	MiniMap,
 } from 'react-flow-renderer';
 
 import { DefaultBlock, SimplifyBlock } from '../components/blocks/Blocks';
 import { DefaultEdge } from '../components/blocks/Edge';
-import Sidebar from '../components/Sidebar';
+import Sidebar from '../components/document/Sidebar';
 
 import styles from '../styles/DnDFlow.module.css';
+import { NextPage } from 'next';
 
 const initialElements: Elements = [
 	{ id: '1', data: { label: 'Node 1' }, position: { x: 300, y: 100 } },
@@ -40,7 +42,7 @@ const edgeTypes = {
 	defaultEdge: DefaultEdge,
 };
 
-const DnDFlow = () => {
+const DnDFlow: NextPage = () => {
 	const reactFlowWrapper = useRef(null);
 	const [reactFlowInstance, setReactFlowInstance] = useState(null);
 	const [elements, setElements] = useState(initialElements);
@@ -48,8 +50,7 @@ const DnDFlow = () => {
 	const onElementsRemove = (elementsToRemove: Elements) =>
 		setElements((els: Elements) => removeElements(elementsToRemove, els));
 
-	const onLoad = (_reactFlowInstance: React.SetStateAction<any>) =>
-		setReactFlowInstance(_reactFlowInstance);
+	const onLoad = (_reactFlowInstance: React.SetStateAction<any>) => setReactFlowInstance(_reactFlowInstance);
 
 	const onDragOver = (event: React.DragEvent) => {
 		event.preventDefault();
@@ -71,7 +72,7 @@ const DnDFlow = () => {
 			id: getId(),
 			type,
 			position,
-			data: { label: `${type} node` },
+			data: { label: type },
 		};
 
 		setElements((es) => es.concat(newNode));
@@ -95,6 +96,7 @@ const DnDFlow = () => {
 					>
 						<MiniMap />
 						<Controls />
+						<Background />
 					</ReactFlow>
 				</div>
 				<Sidebar />

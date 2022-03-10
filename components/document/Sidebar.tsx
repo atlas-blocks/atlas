@@ -1,6 +1,6 @@
 import React from 'react';
 
-import styles from '../styles/Sidebar.module.css';
+import styles from '../../styles/Sidebar.module.css';
 
 function Sidebar() {
 	const onDragStart = (event: React.DragEvent<HTMLDivElement>, nodeType: string) => {

@@ -1,5 +1,12 @@
 import React from 'react';
-import { ArrowHeadType, getBezierPath, getMarkerEnd } from 'react-flow-renderer';
+import {
+	ArrowHeadType,
+	EdgeSmoothStepProps,
+	getBezierPath,
+	getMarkerEnd,
+	getSmoothStepPath,
+	SmoothStepEdge,
+} from 'react-flow-renderer';
 import { Position } from 'react-flow-renderer/dist/types';
 
 interface DefaultEdgeProps {
@@ -30,7 +37,7 @@ export function DefaultEdge({
 								arrowHeadType = ArrowHeadType.Arrow,
 								markerEndId,
 							}: DefaultEdgeProps) {
-	const edgePath = getBezierPath({ sourceX, sourceY, sourcePosition, targetX, targetY, targetPosition });
+	const edgePath = getSmoothStepPath({ sourceX, sourceY, sourcePosition, targetX, targetY, targetPosition });
 	const markerEnd = getMarkerEnd(arrowHeadType, markerEndId);
 
 	return (
