@@ -3,7 +3,7 @@
 
 #sidebar {
     position: absolute;
-    background: #fcfcfcCC;
+    background: var(--elements-background);
     border-right: 1px solid #eee;
     font-size: 12px;
     padding: 15px 10px;

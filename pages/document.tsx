@@ -1,6 +1,7 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, MutableRefObject } from 'react';
 import dynamic from 'next/dynamic'
 // @ts-ignore
+// without it Next.js don't load background correctly and prints an error in the console.
 const Background = dynamic(import('react-flow-renderer').then(mod => mod.Background), { ssr: false }) // disable ssr
 import ReactFlow, {
 	addEdge, removeElements, Controls, Edge, Elements, Connection, ReactFlowProvider,
@@ -13,23 +14,7 @@ import Sidebar from '../components/document/Sidebar';
 
 import styles from '../styles/DnDFlow.module.css';
 import { NextPage } from 'next';
-
-const initialElements: Elements = [
-	{ id: '1', data: { label: 'Node 1' }, position: { x: 300, y: 100 } },
-	{
-		id: '2',
-		type: 'output',
-		data: { label: 'output node' },
-		position: { x: 250, y: 250 },
-	},
-	{
-		id: '3',
-		type: 'defaultBlock',
-		data: { label: 'x + 2' },
-		position: { x: 350, y: 350 },
-	},
-	{ id: 'e1-2', type: 'defaultEdge', source: '1', target: '2', animated: true },
-];
+import MathInput from '../components/document/MathInput';
 
 let id = 0;
 const getId = () => `dndnode_${id++}`;
@@ -43,6 +28,28 @@ const edgeTypes = {
 };
 
 const DnDFlow: NextPage = () => {
+	const [documentState, setDocumentState] = useState({});
+	const initialElements: Elements = [
+		{
+			id: '1',
+			type: 'defaultBlock',
+			data: { label: '2 + 1 + y', documentState, setDocumentState },
+			position: { x: 300, y: 100 } },
+		{
+			id: '2',
+			type: 'simplifyBlock',
+			data: { label: 'y + 3' },
+			position: { x: 250, y: 250 },
+		},
+		{
+			id: '3',
+			type: 'defaultBlock',
+			data: { label: 'x + 2' },
+			position: { x: 350, y: 350 },
+		},
+		{ id: 'e1-2', type: 'defaultEdge', source: '1', target: '2', animated: true },
+	];
+
 	const reactFlowWrapper = useRef(null);
 	const [reactFlowInstance, setReactFlowInstance] = useState(null);
 	const [elements, setElements] = useState(initialElements);
@@ -100,10 +107,10 @@ const DnDFlow: NextPage = () => {
 					</ReactFlow>
 				</div>
 				<Sidebar />
+				<MathInput />
 			</ReactFlowProvider>
 		</div>
 	);
 };
 
 export default DnDFlow;
-

@@ -1,4 +1,5 @@
 .block {
+    background: var(--elements-background);
     border-width: 1px;
     border-radius: 5px;
     padding: 10px;
