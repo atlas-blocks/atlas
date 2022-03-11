@@ -1,5 +1,5 @@
 {
-	"name": "atlas-next-ts",
+	"name": "atlas-blocks",
 	"version": "0.1.0",
 	"private": true,
 	"scripts": {
@@ -8,7 +8,6 @@
 		"start": "next start -p $PORT",
 		"lint": "next lint"
 	},
-	"cacheDirectories": [".next/cache"],
 	"dependencies": {
 		"next": "12.1.0",
 		"react": "17.0.2",
