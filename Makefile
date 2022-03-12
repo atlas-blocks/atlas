@@ -1,5 +1,15 @@
 .PHONY: *
 
-deploy:
-	cp . /var/www/atlas/html
+
+deploy: clean_aws_prod build_aws_prod start_aws_prod_server
+
+clean_aws_prod:
+	rm -rf /var/www/atlas/html
+	cp -a . /var/www/atlas/html
+build_aws_prod:
+	cd /var/www/atlas/html
+	npm run build
+	npm run start -p 8080
+start_aws_prod_server:
+	npm run start -p 8080
 
