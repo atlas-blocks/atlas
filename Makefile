@@ -1,5 +1,5 @@
-.PHONY *
+.PHONY: *
 
 deploy:
-	cp . /var/www/altlas/html
+	cp . /var/www/atlas/html
 
