@@ -1,15 +1,20 @@
 import React from 'react';
 import { Handle, Position } from 'react-flow-renderer';
 import styles from '../../styles/Block.module.css';
-import globals from '../globals';
+
+export const nodeTypes = {
+	defaultBlock: DefaultBlock,
+	simplifyBlock: SimplifyBlock,
+};
 
 interface DefaultBlockProps {
 	label: string;
+	setCurrentSelectionID: (str: string) => void;
 }
 
 export function DefaultBlock({ data }: { data: DefaultBlockProps }) {
 	return (
-		<div className={`${styles.block} ${styles.default}`} onClick={blockClickHandler}>
+		<div className={`${styles.block} ${styles.default}`}>
 			<Handle
 				type='target'
 				position={Position.Top}
@@ -26,8 +31,9 @@ export function DefaultBlock({ data }: { data: DefaultBlockProps }) {
 
 export function SimplifyBlock({ data }: { data: DefaultBlockProps }) {
 
+
 	return (
-		<div className={`${styles.block} ${styles.simplify}`} onClick={blockClickHandler}>
+		<div className={`${styles.block} ${styles.simplify}`}>
 			<Handle
 				type='target'
 				position={Position.Top}
@@ -42,9 +48,6 @@ export function SimplifyBlock({ data }: { data: DefaultBlockProps }) {
 	);
 }
 
-
-function blockClickHandler(event: React.MouseEvent) {
-}
 
 function openMathInput() {
 }

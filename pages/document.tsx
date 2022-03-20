@@ -1,15 +1,15 @@
-import React, { useState, useRef, MutableRefObject } from 'react';
-import dynamic from 'next/dynamic'
+import React, { useState, useRef, MutableRefObject, useEffect, MouseEvent as ReactMouseEvent } from 'react';
+import dynamic from 'next/dynamic';
 // @ts-ignore
 // without it Next.js don't load background correctly and prints an error in the console.
-const Background = dynamic(import('react-flow-renderer').then(mod => mod.Background), { ssr: false }) // disable ssr
+const Background = dynamic(import('react-flow-renderer').then(mod => mod.Background), { ssr: false }); // disable ssr
 import ReactFlow, {
-	addEdge, removeElements, Controls, Edge, Elements, Connection, ReactFlowProvider,
-	MiniMap,
+	addEdge, removeElements, Controls, Edge, Node, Elements, Connection, ReactFlowProvider,
+	MiniMap, isNode,
 } from 'react-flow-renderer';
 
-import { DefaultBlock, SimplifyBlock } from '../components/blocks/Blocks';
-import { DefaultEdge } from '../components/blocks/Edge';
+import { nodeTypes } from '../components/blocks/Blocks';
+import { edgeTypes } from '../components/blocks/Edge';
 import Sidebar from '../components/document/Sidebar';
 
 import styles from '../styles/DnDFlow.module.css';
@@ -17,38 +17,46 @@ import { NextPage } from 'next';
 import MathInput from '../components/document/MathInput';
 
 let id = 0;
-const getId = () => `dndnode_${id++}`;
+const getId = () => `block_${id++}`;
 
-const nodeTypes = {
-	defaultBlock: DefaultBlock,
-	simplifyBlock: SimplifyBlock,
-};
-const edgeTypes = {
-	defaultEdge: DefaultEdge,
-};
+const initialElements: Elements = [
+	{
+		id: '1',
+		type: 'defaultBlock',
+		data: { label: '2 + 1 + y' },
+		position: { x: 300, y: 100 },
+	},
+	{
+		id: '2',
+		type: 'simplifyBlock',
+		data: { label: 'y + 3' },
+		position: { x: 250, y: 250 },
+	},
+	{
+		id: '3',
+		type: 'defaultBlock',
+		data: { label: 'x + 2' },
+		position: { x: 350, y: 350 },
+	},
+	{ id: 'e1-2', type: 'defaultEdge', source: '1', target: '2', animated: true },
+];
 
 const DnDFlow: NextPage = () => {
-	const [documentState, setDocumentState] = useState({});
-	const initialElements: Elements = [
-		{
-			id: '1',
-			type: 'defaultBlock',
-			data: { label: '2 + 1 + y', documentState, setDocumentState },
-			position: { x: 300, y: 100 } },
-		{
-			id: '2',
-			type: 'simplifyBlock',
-			data: { label: 'y + 3' },
-			position: { x: 250, y: 250 },
-		},
-		{
-			id: '3',
-			type: 'defaultBlock',
-			data: { label: 'x + 2' },
-			position: { x: 350, y: 350 },
-		},
-		{ id: 'e1-2', type: 'defaultEdge', source: '1', target: '2', animated: true },
-	];
+	const [nodeLatex, setNodeLatex] = useState('0');
+	const [currentSelectionID, setCurrentSelectionID] = useState<string | null>(null);
+
+	function handleBlockSelection(event: React.MouseEvent, element: Node | Edge) {
+		setCurrentSelectionID(element.id);
+	}
+
+	function handleBlockDoubleClick(event: ReactMouseEvent, node: Node) {
+		setCurrentSelectionID(node.id);
+		setNodeLatex(node.data.label);
+	}
+
+	function onPaneClick(event: ReactMouseEvent) {
+		setCurrentSelectionID(null);
+	}
 
 	const reactFlowWrapper = useRef(null);
 	const [reactFlowInstance, setReactFlowInstance] = useState(null);
@@ -85,6 +93,22 @@ const DnDFlow: NextPage = () => {
 		setElements((es) => es.concat(newNode));
 	};
 
+	useEffect(() => {
+		setElements((els) =>
+			els.map((el) => {
+				if (el.id === currentSelectionID) {
+					// it's important that you create a new object here
+					// in order to notify react flow about the change
+					el.data = {
+						...el.data,
+						label: nodeLatex,
+					};
+				}
+				return el;
+			}),
+		);
+	}, [nodeLatex, setElements]);
+
 	return (
 		<div className={styles.dndflow}>
 
@@ -97,6 +121,8 @@ const DnDFlow: NextPage = () => {
 						edgeTypes={edgeTypes}
 						onConnect={onConnect}
 						onElementsRemove={onElementsRemove}
+						onElementClick={handleBlockSelection}
+						onNodeDoubleClick={handleBlockDoubleClick}
 						onLoad={onLoad}
 						onDrop={onDrop}
 						onDragOver={onDragOver}
@@ -107,7 +133,7 @@ const DnDFlow: NextPage = () => {
 					</ReactFlow>
 				</div>
 				<Sidebar />
-				<MathInput />
+				<MathInput nodeLatex={nodeLatex} setNodeLatex={setNodeLatex} />
 			</ReactFlowProvider>
 		</div>
 	);

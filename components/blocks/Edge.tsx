@@ -1,13 +1,14 @@
 import React from 'react';
 import {
 	ArrowHeadType,
-	EdgeSmoothStepProps,
-	getBezierPath,
 	getMarkerEnd,
 	getSmoothStepPath,
-	SmoothStepEdge,
 } from 'react-flow-renderer';
 import { Position } from 'react-flow-renderer/dist/types';
+
+export const edgeTypes = {
+	defaultEdge: DefaultEdge,
+};
 
 interface DefaultEdgeProps {
 	id: string;

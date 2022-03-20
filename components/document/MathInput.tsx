@@ -1,20 +1,37 @@
 import React from 'react';
 
 import styles from '../../styles/MathInput.module.css';
-import globals from '../globals';
 
-let currentBlock: Element;
+interface Props {
+	nodeLatex: string;
+	setNodeLatex: React.Dispatch<React.SetStateAction<any>>;
+}
 
-export default function MathInput() {
-	const inputRef = React.useRef(null);
+export default class MathInput extends React.Component<Props> {
+	inputRef: React.RefObject<any>;
 
-	function updateBlock() {
+	constructor(props: Props) {
+		super(props);
+		this.inputRef = React.createRef();
 	}
-	return (
-		<div id={styles.math_input}>
-			<input type={'text'} ref={inputRef} />
-			<button onClick={updateBlock}>ok</button>
-		</div>
-	);
+
+	hideMathInput() {
+
+	}
+
+	updateBlock = () => {
+		this.props.setNodeLatex(this.inputRef.current.value);
+	}
+
+	render() {
+
+
+		return (
+			<div id={styles.math_input}>
+				<input type={'text'} ref={this.inputRef} value={this.props.nodeLatex} onChange={this.updateBlock} />
+				<button onClick={this.updateBlock}>ok</button>
+			</div>
+		);
+	}
 }
 
