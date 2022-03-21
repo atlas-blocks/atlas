@@ -66,7 +66,8 @@ const DnDFlow: NextPage = () => {
 	const mathInputRef = useRef<MathInput>(null);
 	const [reactFlowInstance, setReactFlowInstance] = useState(null);
 	const [elements, setElements] = useState(initialElements);
-	const onConnect = (params: Edge | Connection) => setElements((els: Elements) => addEdge(params, els));
+	const onConnect = (params: Edge | Connection) => setElements((els: Elements) =>
+		addEdge({ ...params, type: 'defaultEdge' }, els));
 	const onElementsRemove = (elementsToRemove: Elements) =>
 		setElements((els: Elements) => removeElements(elementsToRemove, els));
 
@@ -110,7 +111,7 @@ const DnDFlow: NextPage = () => {
 				return el;
 			}),
 		);
-	}, [nodeLatex, setElements]);
+	}, [nodeLatex, currentSelectionID, setElements]);
 
 	return (
 		<div className={styles.dndflow}>
