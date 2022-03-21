@@ -46,7 +46,6 @@ const DnDFlow: NextPage = () => {
 	const [currentSelectionID, setCurrentSelectionID] = useState<string | null>(null);
 
 	function handleBlockSelection(event: React.MouseEvent, element: Node | Edge) {
-		setCurrentSelectionID(element.id);
 	}
 
 	function handleBlockDoubleClick(event: ReactMouseEvent, node: Node) {

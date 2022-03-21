@@ -14,7 +14,7 @@ export default class MathInput extends React.Component<Props, { inputBottom: str
 		super(props);
 		this.inputRef = React.createRef();
 		this.state = {
-			inputBottom: '0',
+			inputBottom: '-200px',
 		};
 	}
 
@@ -29,6 +29,10 @@ export default class MathInput extends React.Component<Props, { inputBottom: str
 	updateBlock = () => {
 		this.props.setNodeLatex(this.inputRef.current.value);
 	};
+	submitInput = () => {
+		this.props.setNodeLatex(this.inputRef.current.value);
+		this.hideMathInput();
+	}
 
 	render() {
 		return (
