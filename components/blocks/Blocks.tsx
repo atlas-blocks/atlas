@@ -30,8 +30,6 @@ export function DefaultBlock({ data }: { data: DefaultBlockProps }) {
 }
 
 export function SimplifyBlock({ data }: { data: DefaultBlockProps }) {
-
-
 	return (
 		<div className={`${styles.block} ${styles.simplify}`}>
 			<Handle
@@ -46,8 +44,4 @@ export function SimplifyBlock({ data }: { data: DefaultBlockProps }) {
 			/>
 		</div>
 	);
-}
-
-
-function openMathInput() {
 }

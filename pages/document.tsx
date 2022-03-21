@@ -52,13 +52,18 @@ const DnDFlow: NextPage = () => {
 	function handleBlockDoubleClick(event: ReactMouseEvent, node: Node) {
 		setCurrentSelectionID(node.id);
 		setNodeLatex(node.data.label);
+		// @ts-ignore
+		mathInputRef.current.showMathInput();
 	}
 
 	function onPaneClick(event: ReactMouseEvent) {
 		setCurrentSelectionID(null);
+		// @ts-ignore
+		mathInputRef.current.hideMathInput();
 	}
 
 	const reactFlowWrapper = useRef(null);
+	const mathInputRef = useRef<MathInput>(null);
 	const [reactFlowInstance, setReactFlowInstance] = useState(null);
 	const [elements, setElements] = useState(initialElements);
 	const onConnect = (params: Edge | Connection) => setElements((els: Elements) => addEdge(params, els));
@@ -74,7 +79,6 @@ const DnDFlow: NextPage = () => {
 
 	const onDrop = (event: React.DragEvent) => {
 		event.preventDefault();
-
 		// @ts-ignore
 		const reactFlowBounds = reactFlowWrapper.current.getBoundingClientRect();
 		const type = event.dataTransfer.getData('application/reactflow');
@@ -89,7 +93,6 @@ const DnDFlow: NextPage = () => {
 			position,
 			data: { label: type },
 		};
-
 		setElements((es) => es.concat(newNode));
 	};
 
@@ -111,7 +114,6 @@ const DnDFlow: NextPage = () => {
 
 	return (
 		<div className={styles.dndflow}>
-
 			<ReactFlowProvider>
 				<div className={styles['reactflow-wrapper']} ref={reactFlowWrapper}>
 					<ReactFlow
@@ -123,6 +125,7 @@ const DnDFlow: NextPage = () => {
 						onElementsRemove={onElementsRemove}
 						onElementClick={handleBlockSelection}
 						onNodeDoubleClick={handleBlockDoubleClick}
+						onPaneClick={onPaneClick}
 						onLoad={onLoad}
 						onDrop={onDrop}
 						onDragOver={onDragOver}
@@ -133,7 +136,7 @@ const DnDFlow: NextPage = () => {
 					</ReactFlow>
 				</div>
 				<Sidebar />
-				<MathInput nodeLatex={nodeLatex} setNodeLatex={setNodeLatex} />
+				<MathInput nodeLatex={nodeLatex} setNodeLatex={setNodeLatex} ref={mathInputRef} />
 			</ReactFlowProvider>
 		</div>
 	);
