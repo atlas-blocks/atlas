@@ -1,4 +1,10 @@
-import React, { useState, useRef, MutableRefObject, useEffect, MouseEvent as ReactMouseEvent } from 'react';
+import React, {
+	useState,
+	useRef,
+	MutableRefObject,
+	useEffect,
+	MouseEvent as ReactMouseEvent,
+} from 'react';
 import Document from '../commons/Document';
 import dynamic from 'next/dynamic';
 
@@ -37,9 +43,21 @@ const getId = () => `block_${id++}`;
 
 const document = new Document('document_name');
 const page = document.getPage(0);
-page.getGraph().addNode(new ExpressionNode('name1', 'description1', '2 + 1 + y', 0));
-page.getGraph().addNode(new ExpressionNode('name2', 'description2', 'x + 2', 0));
-page.getGraph().addNode(new SimplifyNode('name3', new ExpressionNode('name1', 'description1', '2 + 1 + y', 0)));
+page.getGraph().addNode(
+	new ExpressionNode('name1', 'description1', '2 + 1 + y', 0).setPosition({ x: 200, y: 200 }),
+);
+page.getGraph().addNode(
+	new ExpressionNode('name2', 'description2', 'x + 2', 0).setPosition({ x: 200, y: 300 }),
+);
+page.getGraph().addNode(
+	new SimplifyNode(
+		'name3',
+		new ExpressionNode('name1', 'description1', '2 + 1 + y', 0),
+	).setPosition({
+		x: 300,
+		y: 200,
+	}),
+);
 
 const initialElements: Elements = WebInterfaceUtils.toBlocks(page.getGraph());
 
@@ -71,7 +89,8 @@ const DnDFlow: NextPage = () => {
 	const onElementsRemove = (elementsToRemove: Elements) =>
 		setElements((els: Elements) => removeElements(elementsToRemove, els));
 
-	const onLoad = (_reactFlowInstance: React.SetStateAction<any>) => setReactFlowInstance(_reactFlowInstance);
+	const onLoad = (_reactFlowInstance: React.SetStateAction<any>) =>
+		setReactFlowInstance(_reactFlowInstance);
 
 	const onDragOver = (event: React.DragEvent) => {
 		event.preventDefault();

@@ -37,7 +37,12 @@ export default class MathInput extends React.Component<Props, { inputBottom: str
 	render() {
 		return (
 			<div id={styles.math_input} style={{ bottom: this.state.inputBottom }}>
-				<input type={'text'} ref={this.inputRef} value={this.props.nodeLatex} onChange={this.updateBlock} />
+				<input
+					type={'text'}
+					ref={this.inputRef}
+					value={this.props.nodeLatex}
+					onChange={this.updateBlock}
+				/>
 				<button onClick={this.updateBlock}>ok</button>
 			</div>
 		);
