@@ -4,7 +4,7 @@ import GraphNamespace from './namespaces/GraphNamespace';
 import Namespace from './namespaces/Namespace';
 
 class Page {
-	graph: Graph;
+	private graph: Graph;
 	namespace: Namespace;
 	imports: Import[];
 
@@ -12,6 +12,10 @@ class Page {
 		this.graph = new Graph();
 		this.namespace = new GraphNamespace(packageName, this.graph);
 		this.imports = [];
+	}
+
+	public getGraph() {
+		return this.graph;
 	}
 }
 

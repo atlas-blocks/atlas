@@ -1,6 +1,7 @@
 import React, { useState, useRef, MutableRefObject, useEffect, MouseEvent as ReactMouseEvent } from 'react';
 import Document from '../commons/Document';
 import dynamic from 'next/dynamic';
+
 const Background = dynamic(
 	// @ts-ignore
 	// without it Next.js don't load background correctly and prints an error in the console.
@@ -27,35 +28,22 @@ import Sidebar from '../components/document/Sidebar';
 import styles from '../styles/DnDFlow.module.css';
 import { NextPage } from 'next';
 import MathInput from '../components/document/MathInput';
+import ExpressionNode from '../commons/nodes/formulas/ExpressionNode';
+import SimplifyNode from '../commons/nodes/formulas/SimplifyNode';
+import WebInterfaceUtils from '../utils/WebInterfaceUtils';
 
 let id = 0;
 const getId = () => `block_${id++}`;
 
-const initialElements: Elements = [
-	{
-		id: '1',
-		type: 'defaultBlock',
-		data: { label: '2 + 1 + y' },
-		position: { x: 300, y: 100 },
-	},
-	{
-		id: '2',
-		type: 'simplifyBlock',
-		data: { label: 'y + 3' },
-		position: { x: 250, y: 250 },
-	},
-	{
-		id: '3',
-		type: 'defaultBlock',
-		data: { label: 'x + 2' },
-		position: { x: 350, y: 350 },
-	},
-	{ id: 'e1-2', type: 'defaultEdge', source: '1', target: '2', animated: true },
-];
+const document = new Document('document_name');
+const page = document.getPage(0);
+page.getGraph().addNode(new ExpressionNode('name1', 'description1', '2 + 1 + y', 0));
+page.getGraph().addNode(new ExpressionNode('name2', 'description2', 'x + 2', 0));
+page.getGraph().addNode(new SimplifyNode('name3', new ExpressionNode('name1', 'description1', '2 + 1 + y', 0)));
+
+const initialElements: Elements = WebInterfaceUtils.toBlocks(page.getGraph());
 
 const DnDFlow: NextPage = () => {
-	const document = new Document('document_name');
-
 	const [nodeLatex, setNodeLatex] = useState('0');
 	const [currentSelectionID, setCurrentSelectionID] = useState<string | null>(null);
 

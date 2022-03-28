@@ -1,12 +1,40 @@
+type Position = {
+	x: number;
+	y: number;
+};
+
 abstract class Node {
-	readonly id: string;
+	private static cnt = 0;
+	private readonly id: string;
 	private name: string;
 	private description: string;
+	private position: Position;
 
-	protected constructor(id: string, name: string, description: string) {
-		this.id = id;
+	protected constructor(name: string, description: string) {
+		this.id = Node.cnt.toString();
+		++Node.cnt;
 		this.name = name;
 		this.description = description;
+		this.position = { x: 0, y: 0 };
+	}
+
+	public set setPosition(pos: Position) {
+		this.position = pos;
+	}
+
+	public getId() {
+		return this.id;
+	}
+
+	public getName() {
+		return this.name;
+	}
+	public getDescription() {
+		return this.description;
+	}
+
+	public getPosition() {
+		return this.position;
 	}
 }
 

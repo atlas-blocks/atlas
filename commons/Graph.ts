@@ -1,10 +1,18 @@
 import Node from './nodes/Node';
 
 class Graph {
-	nodes: Node[];
+	private nodes: Node[];
 
 	constructor() {
 		this.nodes = [];
+	}
+
+	public getNodes() {
+		return this.nodes;
+	}
+
+	public addNode(node: Node) {
+		this.nodes.push(node);
 	}
 }
 

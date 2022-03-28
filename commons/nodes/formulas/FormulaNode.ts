@@ -1,11 +1,15 @@
 import Node from '../Node';
 
 abstract class FormulaNode extends Node {
-	private content: string;
+	protected content: string;
 
-	protected constructor(id: string, name: string, description: string, content: string) {
-		super(id, name, description);
+	protected constructor(name: string, description: string, content: string) {
+		super(name, description);
 		this.content = content;
+	}
+
+	public toLatex() {
+		return this.content;
 	}
 }
 
