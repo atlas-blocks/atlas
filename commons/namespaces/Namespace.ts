@@ -1,7 +1,9 @@
-import { ConstantNode } from '../nodes/formulas/values/ConstantNode';
+import ConstantNode from '../nodes/formulas/values/ConstantNode';
 
-export interface Namespace {
+interface Namespace {
 	package: string;
 
 	getConstants: () => ConstantNode[];
 }
+
+export default Namespace;

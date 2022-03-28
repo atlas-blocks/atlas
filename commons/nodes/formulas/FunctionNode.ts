@@ -1,3 +1,5 @@
-import { FormulaNode } from './FormulaNode';
+import FormulaNode from './FormulaNode';
 
-export class FunctionNode extends FormulaNode {}
+class FunctionNode extends FormulaNode {}
+
+export default FunctionNode;

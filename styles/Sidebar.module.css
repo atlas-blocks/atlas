@@ -1,49 +1,48 @@
 /*===== sidebar ======*/
 
-
 #sidebar {
-    position: absolute;
-    background: var(--elements-background);
-    border-right: 1px solid #eee;
-    font-size: 12px;
-    padding: 15px 10px;
-    display: block;
-    max-width: 200px;
-    min-width: 100px;
-    width: 20%;
-    height: 80vh;
-    text-align: center;
+	position: absolute;
+	background: var(--elements-background);
+	border-right: 1px solid #eee;
+	font-size: 12px;
+	padding: 15px 10px;
+	display: block;
+	max-width: 200px;
+	min-width: 100px;
+	width: 20%;
+	height: 80vh;
+	text-align: center;
 }
 
 .dndnode {
-    align-items: center;
-    border-width: 1px;
-    border-style: solid;
-    border-radius: 2px;
-    cursor: grab;
-    display: flex;
-    justify-content: center;
-    padding: 10px;
-    margin: 10px 5px;
-    font-size: 15px;
+	align-items: center;
+	border-width: 1px;
+	border-style: solid;
+	border-radius: 2px;
+	cursor: grab;
+	display: flex;
+	justify-content: center;
+	padding: 10px;
+	margin: 10px 5px;
+	font-size: 15px;
 }
 
 .dndnode.default {
-    border-color: #1a192b;
-    color: #1a192b;
+	border-color: #1a192b;
+	color: #1a192b;
 }
 
 .dndnode.simplify {
-    border-color: green;
-    color: green;
+	border-color: green;
+	color: green;
 }
 
 .dndnode.set {
-    border-color: #0041d0;
-    color: #0041d0;
+	border-color: #0041d0;
+	color: #0041d0;
 }
 
 .dndnode.graph {
-    border-color: #ff0072;
-    color: #ff0072;
+	border-color: #ff0072;
+	color: #ff0072;
 }

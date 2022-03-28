@@ -15,16 +15,9 @@ interface DefaultBlockProps {
 export function DefaultBlock({ data }: { data: DefaultBlockProps }) {
 	return (
 		<div className={`${styles.block} ${styles.default}`}>
-			<Handle
-				type='target'
-				position={Position.Top}
-			/>
+			<Handle type="target" position={Position.Top} />
 			<div>{data.label}</div>
-			<Handle
-				type='source'
-				position={Position.Bottom}
-				id='a'
-			/>
+			<Handle type="source" position={Position.Bottom} id="a" />
 		</div>
 	);
 }
@@ -32,16 +25,9 @@ export function DefaultBlock({ data }: { data: DefaultBlockProps }) {
 export function SimplifyBlock({ data }: { data: DefaultBlockProps }) {
 	return (
 		<div className={`${styles.block} ${styles.simplify}`}>
-			<Handle
-				type='target'
-				position={Position.Top}
-			/>
+			<Handle type="target" position={Position.Top} />
 			<div>{data.label}</div>
-			<Handle
-				type='source'
-				position={Position.Bottom}
-				id='a'
-			/>
+			<Handle type="source" position={Position.Bottom} id="a" />
 		</div>
 	);
 }

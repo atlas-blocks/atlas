@@ -1,4 +1,4 @@
-export class Import {
+class Import {
 	user: string;
 	package: string;
 	nodeName: string;
@@ -9,3 +9,5 @@ export class Import {
 		this.nodeName = nodeName;
 	}
 }
+
+export default Import;

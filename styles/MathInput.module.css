@@ -1,16 +1,16 @@
 #math_input {
-    position: absolute;
-    width: 80%;
-    margin-left: 10%;
-    background: var(--elements-background);
-    height: 200px;
-    border: 1px solid #eee;
-    border-top-left-radius: 20px;
-    border-top-right-radius: 20px;
-    text-align: center;
-    transition: 1s;
+	position: absolute;
+	width: 80%;
+	margin-left: 10%;
+	background: var(--elements-background);
+	height: 200px;
+	border: 1px solid #eee;
+	border-top-left-radius: 20px;
+	border-top-right-radius: 20px;
+	text-align: center;
+	transition: 1s;
 }
 
 #math_input input {
-    margin: 20px;
+	margin: 20px;
 }

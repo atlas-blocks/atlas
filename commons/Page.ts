@@ -1,17 +1,18 @@
-import { Graph } from './Graph';
-import { Namespace } from './namespaces/Namespace';
-import { Import } from './namespaces/Import';
+import Graph from './Graph';
+import Import from './namespaces/Import';
+import GraphNamespace from './namespaces/GraphNamespace';
+import Namespace from './namespaces/Namespace';
 
-export class Page {
-
+class Page {
 	graph: Graph;
 	namespace: Namespace;
 	imports: Import[];
 
-
-	constructor(graph: Graph, namespace: Namespace, imports: Import[]) {
-		this.graph = graph;
-		this.namespace = namespace;
-		this.imports = imports;
+	constructor(packageName: string) {
+		this.graph = new Graph();
+		this.namespace = new GraphNamespace(packageName, this.graph);
+		this.imports = [];
 	}
 }
+
+export default Page;

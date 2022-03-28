@@ -32,7 +32,7 @@ export default class MathInput extends React.Component<Props, { inputBottom: str
 	submitInput = () => {
 		this.props.setNodeLatex(this.inputRef.current.value);
 		this.hideMathInput();
-	}
+	};
 
 	render() {
 		return (

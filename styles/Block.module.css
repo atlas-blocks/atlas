@@ -1,16 +1,16 @@
 .block {
-    background: var(--elements-background);
-    border-width: 1px;
-    border-radius: 5px;
-    padding: 10px;
-    border-style: solid;
+	background: var(--elements-background);
+	border-width: 1px;
+	border-radius: 5px;
+	padding: 10px;
+	border-style: solid;
 }
 
 .default {
-    border-color: black;
-    color: black;
+	border-color: black;
+	color: black;
 }
 .simplify {
-    border-color: green;
-    color: green;
+	border-color: green;
+	color: green;
 }

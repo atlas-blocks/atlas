@@ -1,3 +1,1 @@
-export class ServerUtils {
-
-}
+export class ServerUtils {}

@@ -1,6 +1,6 @@
-import { UnitSystem } from './UnitSystem';
+import UnitSystem from './UnitSystem';
 
-export class Unit {
+class Unit {
 	private readonly unitSystem: UnitSystem;
 	private name: string;
 
@@ -9,3 +9,5 @@ export class Unit {
 		this.name = name;
 	}
 }
+
+export default Unit;

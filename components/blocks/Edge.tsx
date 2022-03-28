@@ -1,9 +1,5 @@
 import React from 'react';
-import {
-	ArrowHeadType,
-	getMarkerEnd,
-	getSmoothStepPath,
-} from 'react-flow-renderer';
+import { ArrowHeadType, getMarkerEnd, getSmoothStepPath } from 'react-flow-renderer';
 import { Position } from 'react-flow-renderer/dist/types';
 
 export const edgeTypes = {
@@ -27,25 +23,25 @@ interface DefaultEdgeProps {
 }
 
 export function DefaultEdge({
-								id,
-								sourceX,
-								sourceY,
-								targetX,
-								targetY,
-								sourcePosition,
-								targetPosition,
-								data = {},
-								arrowHeadType = ArrowHeadType.Arrow,
-								markerEndId,
-							}: DefaultEdgeProps) {
+	id,
+	sourceX,
+	sourceY,
+	targetX,
+	targetY,
+	sourcePosition,
+	targetPosition,
+	data = {},
+	arrowHeadType = ArrowHeadType.Arrow,
+	markerEndId,
+}: DefaultEdgeProps) {
 	const edgePath = getSmoothStepPath({ sourceX, sourceY, sourcePosition, targetX, targetY, targetPosition });
 	const markerEnd = getMarkerEnd(arrowHeadType, markerEndId);
 
 	return (
 		<>
-			<path id={id} className='react-flow__edge-path' d={edgePath} markerEnd={markerEnd} />
+			<path id={id} className="react-flow__edge-path" d={edgePath} markerEnd={markerEnd} />
 			<text>
-				<textPath href={`#${id}`} style={{ fontSize: '12px' }} startOffset='50%' textAnchor='middle'>
+				<textPath href={`#${id}`} style={{ fontSize: '12px' }} startOffset="50%" textAnchor="middle">
 					{data.label}
 				</textPath>
 			</text>

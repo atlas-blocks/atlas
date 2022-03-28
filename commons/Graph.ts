@@ -1,8 +1,11 @@
-import { Node } from './nodes/Node';
-export class Graph {
+import Node from './nodes/Node';
+
+class Graph {
 	nodes: Node[];
 
 	constructor() {
 		this.nodes = [];
 	}
 }
+
+export default Graph;

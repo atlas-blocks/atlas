@@ -1,3 +1,5 @@
-import { ValueNode } from './ValueNode';
+import ValueNode from './ValueNode';
 
-export class VariableNode extends ValueNode {}
+class VariableNode extends ValueNode {}
+
+export default ValueNode;

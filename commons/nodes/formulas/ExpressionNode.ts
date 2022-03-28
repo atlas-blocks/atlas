@@ -1,6 +1,6 @@
-import { FormulaNode } from './FormulaNode';
+import FormulaNode from './FormulaNode';
 
-export class ExpressionNode extends FormulaNode {
+class ExpressionNode extends FormulaNode {
 	private precision: number;
 
 	constructor(id: string, name: string, description: string, content: string, precision: number) {
@@ -8,3 +8,5 @@ export class ExpressionNode extends FormulaNode {
 		this.precision = precision;
 	}
 }
+
+export default ExpressionNode;

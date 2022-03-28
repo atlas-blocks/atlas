@@ -1,6 +1,6 @@
-import { Node } from '../Node';
+import Node from '../Node';
 
-export abstract class FormulaNode extends Node {
+abstract class FormulaNode extends Node {
 	private content: string;
 
 	protected constructor(id: string, name: string, description: string, content: string) {
@@ -8,3 +8,5 @@ export abstract class FormulaNode extends Node {
 		this.content = content;
 	}
 }
+
+export default FormulaNode;

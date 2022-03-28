@@ -1,7 +1,7 @@
-import { ExpressionNode } from '../ExpressionNode';
-import { Unit } from '../units/Unit';
+import ExpressionNode from '../ExpressionNode';
+import Unit from '../units/Unit';
 
-export class ValueNode extends ExpressionNode {
+class ValueNode extends ExpressionNode {
 	private value: number;
 	private unit: Unit;
 
@@ -19,3 +19,5 @@ export class ValueNode extends ExpressionNode {
 		this.unit = unit;
 	}
 }
+
+export default ValueNode;

@@ -1,11 +1,23 @@
 import React, { useState, useRef, MutableRefObject, useEffect, MouseEvent as ReactMouseEvent } from 'react';
+import Document from '../commons/Document';
 import dynamic from 'next/dynamic';
-// @ts-ignore
-// without it Next.js don't load background correctly and prints an error in the console.
-const Background = dynamic(import('react-flow-renderer').then(mod => mod.Background), { ssr: false }); // disable ssr
+const Background = dynamic(
+	// @ts-ignore
+	// without it Next.js don't load background correctly and prints an error in the console.
+	import('react-flow-renderer').then((mod) => mod.Background),
+	{ ssr: false },
+); // disable ssr
 import ReactFlow, {
-	addEdge, removeElements, Controls, Edge, Node, Elements, Connection, ReactFlowProvider,
-	MiniMap, isNode,
+	addEdge,
+	removeElements,
+	Controls,
+	Edge,
+	Node,
+	Elements,
+	Connection,
+	ReactFlowProvider,
+	MiniMap,
+	isNode,
 } from 'react-flow-renderer';
 
 import { nodeTypes } from '../components/blocks/Blocks';
@@ -42,11 +54,12 @@ const initialElements: Elements = [
 ];
 
 const DnDFlow: NextPage = () => {
+	const document = new Document('document_name');
+
 	const [nodeLatex, setNodeLatex] = useState('0');
 	const [currentSelectionID, setCurrentSelectionID] = useState<string | null>(null);
 
-	function handleBlockSelection(event: React.MouseEvent, element: Node | Edge) {
-	}
+	function handleBlockSelection(event: React.MouseEvent, element: Node | Edge) {}
 
 	function handleBlockDoubleClick(event: ReactMouseEvent, node: Node) {
 		setCurrentSelectionID(node.id);
@@ -65,8 +78,8 @@ const DnDFlow: NextPage = () => {
 	const mathInputRef = useRef<MathInput>(null);
 	const [reactFlowInstance, setReactFlowInstance] = useState(null);
 	const [elements, setElements] = useState(initialElements);
-	const onConnect = (params: Edge | Connection) => setElements((els: Elements) =>
-		addEdge({ ...params, type: 'defaultEdge' }, els));
+	const onConnect = (params: Edge | Connection) =>
+		setElements((els: Elements) => addEdge({ ...params, type: 'defaultEdge' }, els));
 	const onElementsRemove = (elementsToRemove: Elements) =>
 		setElements((els: Elements) => removeElements(elementsToRemove, els));
 

@@ -1,3 +1,1 @@
-export abstract class WebInterfaceUtils {
-
-}
+export abstract class WebInterfaceUtils {}

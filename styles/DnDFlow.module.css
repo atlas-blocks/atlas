@@ -1,18 +1,14 @@
 #blocks_menu {
-    position: absolute;
-    width: 200px;
-    top: 0;
-    left: 0;
+	position: absolute;
+	width: 200px;
+	top: 0;
+	left: 0;
 }
 #blocks_canvas {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100vh;
-    z-index: -1;
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100vh;
+	z-index: -1;
 }
-
-
-
-

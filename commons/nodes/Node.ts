@@ -1,4 +1,4 @@
-export abstract class Node {
+abstract class Node {
 	readonly id: string;
 	private name: string;
 	private description: string;
@@ -9,3 +9,5 @@ export abstract class Node {
 		this.description = description;
 	}
 }
+
+export default Node;
