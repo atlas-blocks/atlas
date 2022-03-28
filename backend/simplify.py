@@ -7,13 +7,15 @@ def simplify_latex_formula(latex):
     return latex + " simplified"
 
 
+def parse_request_query():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--latex', type=str)
+    return parser.parse_args()
+
+
 def handle_simplify_request():
     try:
-        parser = argparse.ArgumentParser()
-        parser.add_argument('--latex', type=str)
-        args = parser.parse_args()
-
-        in_latex = args.latex
+        in_latex = parse_request_query().latex
         response = {"success": True, "latex": simplify_latex_formula(in_latex)}
 
     except Exception as e:
