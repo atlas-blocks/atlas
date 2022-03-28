@@ -84,16 +84,27 @@ const DnDFlow: NextPage = () => {
 		const reactFlowBounds = reactFlowWrapper.current.getBoundingClientRect();
 		const type = event.dataTransfer.getData('application/reactflow');
 		// @ts-ignore
-		const position = reactFlowInstance.project({
+		const pos = reactFlowInstance.project({
 			x: event.clientX - reactFlowBounds.left,
 			y: event.clientY - reactFlowBounds.top,
 		});
-		const newNode = {
-			id: getId(),
-			type,
-			position,
-			data: { label: type },
-		};
+		let newNode: Node;
+		switch (type) {
+			case ExpressionNode.name:
+				newNode = WebInterfaceUtils.toBlock(
+					new ExpressionNode('my_name', 'my_description', '', 0).setPosition(pos),
+				);
+				break;
+			case SimplifyNode.name:
+				newNode = WebInterfaceUtils.toBlock(
+					new SimplifyNode(
+						'my_name',
+						new ExpressionNode('my_name', 'my_description', '', 0).setPosition(pos),
+					),
+				);
+				break;
+		}
+
 		setElements((es) => es.concat(newNode));
 	};
 

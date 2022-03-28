@@ -18,10 +18,6 @@ abstract class Node {
 		this.position = { x: 0, y: 0 };
 	}
 
-	public set setPosition(pos: Position) {
-		this.position = pos;
-	}
-
 	public getId() {
 		return this.id;
 	}
@@ -35,6 +31,11 @@ abstract class Node {
 
 	public getPosition() {
 		return this.position;
+	}
+
+	public setPosition(pos: Position) {
+		this.position = pos;
+		return this;
 	}
 }
 
