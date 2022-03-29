@@ -6,6 +6,12 @@ type Request = {
 	latex: string;
 };
 
+type ServerResponse = {
+	out: string;
+	error: string;
+	success: string;
+};
+
 type Response = {
 	latex: string;
 };
@@ -20,20 +26,23 @@ async function fetchAsync(url: RequestInfo) {
 }
 
 export default function handler(req: NextApiRequest, res: NextApiResponse<Response>) {
-	const onResolve = (data: {out: string}): void => {
+	const onResolve = (data: ServerResponse): void => {
 		console.log(data);
 		res.status(StatusCodes.OK).json({ ...data, latex: data.out });
 	};
-	const onReject = (data: string) => {
-		console.log(data.toString());
+	const onReject = (data: ServerResponse) => {
+		console.log(data);
 		res.status(StatusCodes.INTERNAL_SERVER_ERROR).end(ReasonPhrases.INTERNAL_SERVER_ERROR);
 	};
 
-	const runPy = new Promise<string>(function(resolve, reject) {
-		return fetchAsync('http://18.219.169.98/cgi-bin/el_simplify.py?in_latex=' + fromBase64(req.query.latex.toString()))
-			.then((data: string) => {
-				console.log(data)
-				resolve(data)
+	const runPy = new Promise<ServerResponse>(function (resolve, reject) {
+		return fetchAsync(
+			'http://18.219.169.98/cgi-bin/el_simplify.py?in_latex=' +
+				fromBase64(req.query.latex.toString()),
+		)
+			.then((data: ServerResponse) => {
+				console.log(data);
+				resolve(data);
 			})
 			.catch((data) => reject(data));
 	});
