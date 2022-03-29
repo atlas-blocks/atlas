@@ -16,10 +16,11 @@ function BlockSettings(props: Props) {
 		const newFormula = page
 			.getGraph()
 			.getNodesByNameAndClassType<FormulaNode>(event.target.value, FormulaNode)[0];
-		if (newFormula === null) return;
 		(props.selectedNode as SimplifyNode).setFormula(newFormula);
-		(props.selectedNode as SimplifyNode).fetchLatexAsync().catch();
-		props.webInterfaceUtils.rerenderNode(props.selectedNode as Node);
+		(props.selectedNode as SimplifyNode)
+			.fetchLatexAsync()
+			.then(() => props.webInterfaceUtils.refreshElements())
+			.catch();
 	};
 	const getSettingsJSX = (node: Node) => {
 		return (
