@@ -1,40 +1,54 @@
 import React, { ChangeEvent } from 'react';
+import Node from '../../commons/nodes/Node';
 
 import styles from '../../styles/MathInput.module.css';
+import FormulaNode from '../../commons/nodes/formulas/FormulaNode';
+import WebInterfaceUtils from '../../utils/WebInterfaceUtils';
 
 type Props = {
-	nodeLatex: string;
-	setNodeLatex: React.Dispatch<React.SetStateAction<any>>;
+	selectedNode: Node | null;
+	webInterfaceUtils: WebInterfaceUtils;
 };
 
-export default class MathInput extends React.Component<Props, { inputBottom: string }> {
+export default class MathInput extends React.Component<
+	Props,
+	{ inputBottom: string; inputValue: string }
+> {
 	constructor(props: Props) {
 		super(props);
 		this.state = {
+			inputValue:
+				this.props.selectedNode instanceof FormulaNode
+					? this.props.selectedNode.toLatex()
+					: '',
 			inputBottom: '-200px',
 		};
 	}
 
-	public hideMathInput() {
-		this.setState({ inputBottom: '-200px' });
-	}
-
-	public showMathInput() {
+	public show(inputValue: string) {
+		this.setState({ inputValue: inputValue });
 		this.setState({ inputBottom: '0px' });
 	}
 
+	public hide() {
+		this.setState({ inputBottom: '-200px' });
+	}
+
 	updateBlock = (event: ChangeEvent<HTMLInputElement>) => {
-		this.props.setNodeLatex(event.target.value);
+		if (this.props.selectedNode instanceof FormulaNode)
+			this.props.selectedNode.setLatex(event.target.value);
+		this.props.webInterfaceUtils.refreshElements();
+		this.setState({ inputValue: event.target.value });
 	};
 
 	submitInput = () => {
-		this.hideMathInput();
+		this.hide();
 	};
 
 	render() {
 		return (
 			<div id={styles.math_input} style={{ bottom: this.state.inputBottom }}>
-				<input type={'text'} value={this.props.nodeLatex} onChange={this.updateBlock} />
+				<input type={'text'} value={this.state.inputValue} onChange={this.updateBlock} />
 				<button onClick={this.submitInput}>OK</button>
 			</div>
 		);

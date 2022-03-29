@@ -12,7 +12,7 @@ abstract class FormulaNode extends Node {
 		return this.content;
 	}
 
-	public updateLatex(latex: string) {
+	public setLatex(latex: string) {
 		this.content = latex;
 	}
 }

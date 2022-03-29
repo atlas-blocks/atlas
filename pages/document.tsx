@@ -54,37 +54,25 @@ page.getGraph().addNode(expressionNode1);
 page.getGraph().addNode(simplifyNode0);
 
 const DnDFlow: NextPage = () => {
-	const [nodeLatex, setNodeLatex] = useState('');
 	const [selectedNode, setSelectedNode] = useState<Node | null>(null);
-	const [haveChanges, setHaveChanges] = useState<boolean>(false);
 	const reactFlowWrapper = useRef(null);
 	const mathInputRef = useRef<MathInput>(null);
 	const [reactFlowInstance, setReactFlowInstance] = useState(null);
 	const initialElements: Elements = WebInterfaceUtils.getElements(page.getGraph());
 	const [elements, setElements] = useState(initialElements);
 
-	const webInterfaceUtils = new WebInterfaceUtils(
-		page.getGraph(),
-		setElements,
-		haveChanges,
-		setHaveChanges,
-	);
+	const webInterfaceUtils = new WebInterfaceUtils(page.getGraph(), setElements, setSelectedNode);
 
 	function handleBlockSelection(event: React.MouseEvent, element: Block | Edge) {}
 
 	function handleBlockDoubleClick(event: ReactMouseEvent, block: Block) {
 		setSelectedNode(block.data.node);
-		if (block.data.node instanceof FormulaNode) {
-			setNodeLatex((block.data.node as FormulaNode).toLatex());
-			// @ts-ignore
-			mathInputRef.current.showMathInput();
-		}
+		if (block.data.node instanceof FormulaNode)
+			(mathInputRef.current as MathInput).show(block.data.node.toLatex());
 	}
 
 	function onPaneClick(event: ReactMouseEvent) {
 		setSelectedNode(null);
-		// @ts-ignore
-		mathInputRef.current.hideMathInput();
 	}
 
 	const onConnect = (params: Edge | Connection) =>
@@ -127,10 +115,12 @@ const DnDFlow: NextPage = () => {
 	};
 
 	useEffect(() => {
-		if (selectedNode === null) return;
-		(selectedNode as FormulaNode).updateLatex(nodeLatex);
 		webInterfaceUtils.refreshElements();
-	}, [nodeLatex, selectedNode, setElements, haveChanges]);
+	}, [selectedNode, setElements]);
+
+	useEffect(() => {
+		if (selectedNode === null) (mathInputRef.current as MathInput).hide();
+	}, [selectedNode]);
 
 	return (
 		<div className={styles.dndflow}>
@@ -156,8 +146,12 @@ const DnDFlow: NextPage = () => {
 					</ReactFlow>
 				</div>
 				<Sidebar />
-				<BlockSettings node={selectedNode} webInterfaceUtils={webInterfaceUtils} />
-				<MathInput nodeLatex={nodeLatex} setNodeLatex={setNodeLatex} ref={mathInputRef} />
+				<BlockSettings selectedNode={selectedNode} webInterfaceUtils={webInterfaceUtils} />
+				<MathInput
+					selectedNode={selectedNode}
+					webInterfaceUtils={webInterfaceUtils}
+					ref={mathInputRef}
+				/>
 			</ReactFlowProvider>
 		</div>
 	);

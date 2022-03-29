@@ -7,19 +7,16 @@ import SimplifyNode from '../commons/nodes/formulas/SimplifyNode';
 class WebInterfaceUtils {
 	graph: Graph;
 	setElements: React.Dispatch<React.SetStateAction<Elements>>;
-	haveChanges: boolean;
-	setHaveChanges: React.Dispatch<React.SetStateAction<boolean>>;
+	setSelectedNode: React.Dispatch<React.SetStateAction<Node | null>>;
 
 	constructor(
 		graph: Graph,
 		setElements: React.Dispatch<React.SetStateAction<Elements>>,
-		havechanges: boolean,
-		setHaveChanges: React.Dispatch<React.SetStateAction<boolean>>,
+		setSelectedNode: React.Dispatch<React.SetStateAction<Node | null>>,
 	) {
 		this.graph = graph;
 		this.setElements = setElements;
-		this.haveChanges = havechanges;
-		this.setHaveChanges = setHaveChanges;
+		this.setSelectedNode = setSelectedNode;
 	}
 
 	public static toBlock(node: Node): Block {
@@ -59,12 +56,10 @@ class WebInterfaceUtils {
 	}
 
 	public refreshElements() {
-		this.setElements(() => WebInterfaceUtils.getElements(this.graph));
+		this.setElements((els) => WebInterfaceUtils.getElements(this.graph));
 	}
 
-	public rerenderElements() {
-		this.setHaveChanges(!this.haveChanges);
-	}
+	public rerenderNode(node: Node) {}
 }
 
 export default WebInterfaceUtils;

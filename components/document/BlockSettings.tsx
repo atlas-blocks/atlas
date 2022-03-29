@@ -7,7 +7,7 @@ import FormulaNode from '../../commons/nodes/formulas/FormulaNode';
 import WebInterfaceUtils from '../../utils/WebInterfaceUtils';
 
 type Props = {
-	node: Node | null;
+	selectedNode: Node | null;
 	webInterfaceUtils: WebInterfaceUtils;
 };
 
@@ -17,8 +17,9 @@ function BlockSettings(props: Props) {
 			.getGraph()
 			.getNodesByNameAndClassType<FormulaNode>(event.target.value, FormulaNode)[0];
 		if (newFormula === null) return;
-		(props.node as SimplifyNode).setFormula(newFormula);
-		(props.node as SimplifyNode).fetchLatexAsync().catch();
+		(props.selectedNode as SimplifyNode).setFormula(newFormula);
+		(props.selectedNode as SimplifyNode).fetchLatexAsync().catch();
+		props.webInterfaceUtils.rerenderNode(props.selectedNode as Node);
 	};
 	const getSettingsJSX = (node: Node) => {
 		return (
@@ -28,7 +29,7 @@ function BlockSettings(props: Props) {
 				<div>description: {node.getDescription()}</div>
 				{node instanceof SimplifyNode && (
 					<div>
-						formula name: {(props.node as SimplifyNode).getFormulaName()}
+						formula name: {(props.selectedNode as SimplifyNode).getFormulaName()}
 						<input onChange={(event) => updateField(event, 'formula')} />
 					</div>
 				)}
@@ -36,9 +37,9 @@ function BlockSettings(props: Props) {
 		);
 	};
 	return (
-		<aside id={styles.settings} style={{ right: props.node === null ? '-300px' : '0' }}>
+		<aside id={styles.settings} style={{ right: props.selectedNode === null ? '-300px' : '0' }}>
 			<h2>Block Settings</h2>
-			{props.node === null ? '' : getSettingsJSX(props.node)}
+			{props.selectedNode === null ? '' : getSettingsJSX(props.selectedNode)}
 		</aside>
 	);
 }
