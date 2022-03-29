@@ -20,4 +20,8 @@ export class ServerUtils {
 	public static async getSimplify(latex: string): Promise<Response> {
 		return fetchAsync('/api/simplify?latex=' + toBase64(latex));
 	}
+
+	public static async getElSimplify(latex: string): Promise<Response> {
+		return fetchAsync('/api/el_simplify?latex=' + toBase64(latex));
+	}
 }

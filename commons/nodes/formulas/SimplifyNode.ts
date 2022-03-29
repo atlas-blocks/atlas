@@ -17,7 +17,7 @@ class SimplifyNode extends FormulaNode {
 
 	public async fetchLatexAsync(callback: () => any) {
 		if (this.formula === undefined) return '\\text{no formula}';
-		return ServerUtils.getSimplify(this.formula.toLatex())
+		return ServerUtils.getElSimplify(this.formula.toLatex())
 			.then((response) => (this.content = response.latex))
 			.then(callback());
 	}
