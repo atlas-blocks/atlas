@@ -4,10 +4,11 @@ import styles from '../../styles/Block.module.css';
 import Node from '../../commons/nodes/Node';
 import ExpressionNode from '../../commons/nodes/formulas/ExpressionNode';
 import SimplifyNode from '../../commons/nodes/formulas/SimplifyNode';
+import NodeTypeNames from '../../commons/nodes/NodeTypeNames';
 
 export const nodeTypes = {
-	ExpressionNode: ExpressionBlock,
-	SimplifyNode: SimplifyBlock,
+	[NodeTypeNames.ExpressionNode]: ExpressionBlock,
+	[NodeTypeNames.SimplifyNode]: SimplifyBlock,
 };
 
 interface DefaultBlockProps {

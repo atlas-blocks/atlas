@@ -35,6 +35,7 @@ import FormulaNode from '../commons/nodes/formulas/FormulaNode';
 
 import { NextPage } from 'next';
 import styles from '../styles/DnDFlow.module.css';
+import NodeTypeNames from '../commons/nodes/NodeTypeNames';
 
 export const document = new Document('document_name');
 export const page = document.getPage(0);
@@ -111,10 +112,10 @@ const DnDFlow: NextPage = () => {
 		});
 		let newNode: Node;
 		switch (type) {
-			case ExpressionNode.name:
+			case NodeTypeNames.ExpressionNode:
 				newNode = ExpressionNode.getNewBlock(pos);
 				break;
-			case SimplifyNode.name:
+			case NodeTypeNames.SimplifyNode:
 				newNode = SimplifyNode.getNewBlock(pos);
 				break;
 			default:

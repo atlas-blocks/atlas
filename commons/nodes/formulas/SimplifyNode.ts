@@ -1,6 +1,7 @@
 import FormulaNode from './FormulaNode';
 import { Position } from '../Node';
 import { ServerUtils } from '../../../utils/ServerUtils';
+import NodeTypeNames from '../NodeTypeNames';
 
 class SimplifyNode extends FormulaNode {
 	formula: FormulaNode | undefined;
@@ -8,6 +9,10 @@ class SimplifyNode extends FormulaNode {
 	constructor(name: string, formula: FormulaNode | undefined) {
 		super(name, '', '');
 		this.formula = formula;
+	}
+
+	public getType() {
+		return NodeTypeNames['SimplifyNode'];
 	}
 
 	public async fetchLatexAsync(callback: () => any) {

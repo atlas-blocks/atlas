@@ -1,3 +1,5 @@
+import NodeTypeNames from './NodeTypeNames';
+
 export type Position = {
 	x: number;
 	y: number;
@@ -16,6 +18,10 @@ abstract class Node {
 		this.name = name != '' ? name : '#' + this.id;
 		this.description = description;
 		this.position = { x: 0, y: 0 };
+	}
+
+	public getType() {
+		return NodeTypeNames['Node'];
 	}
 
 	public getId() {

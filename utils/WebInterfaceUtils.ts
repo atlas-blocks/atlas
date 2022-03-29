@@ -25,7 +25,7 @@ class WebInterfaceUtils {
 	public static toBlock(node: Node): Block {
 		return {
 			id: node.getId(),
-			type: node.constructor.name,
+			type: node.getType(),
 			position: node.getPosition(),
 			data: { node: node },
 		};

@@ -15,7 +15,6 @@ function fromBase64(str: string): string {
 }
 
 export default function handler(req: NextApiRequest, res: NextApiResponse<Response>) {
-	console.log(fromBase64(req.query.latex.toString()));
 	const onResolve = (data: string): void => {
 		console.log(data.toString());
 		res.status(StatusCodes.OK).json(JSON.parse(data.toString()));
