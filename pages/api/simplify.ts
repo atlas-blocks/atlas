@@ -10,9 +10,12 @@ type Response = {
 	latex: string;
 };
 
+function fromBase64(str: string): string {
+	return Buffer.from(str, 'base64').toString('ascii');
+}
 
 export default function handler(req: NextApiRequest, res: NextApiResponse<Response>) {
-	console.log(req)
+	console.log(fromBase64(req.query.latex.toString()));
 	const onResolve = (data: string): void => {
 		console.log(data.toString());
 		res.status(StatusCodes.OK).json(JSON.parse(data.toString()));
@@ -23,7 +26,10 @@ export default function handler(req: NextApiRequest, res: NextApiResponse<Respon
 	};
 
 	const runPy = new Promise<string>(function (resolve, reject) {
-		const childProcess = cp.spawn('python3', ['./backend/simplify.py', '--latex=' + req.query.latex]);
+		const childProcess = cp.spawn('python3', [
+			'./backend/simplify.py',
+			'--latex=' + fromBase64(req.query.latex.toString()),
+		]);
 
 		childProcess.stdout.on('data', (data) => resolve(data));
 		childProcess.stderr.on('data', (data) => reject(data));

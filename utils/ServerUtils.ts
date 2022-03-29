@@ -8,8 +8,16 @@ type Response = {
 	latex: string;
 };
 
+function toBase64(str: string): string {
+	return Buffer.from(str).toString('base64');
+}
+
+function fromBase64(str: string): string {
+	return Buffer.from(str, 'base64').toString('ascii');
+}
+
 export class ServerUtils {
 	public static async getSimplify(latex: string): Promise<Response> {
-		return fetchAsync('/api/simplify');
+		return fetchAsync('/api/simplify?latex=' + toBase64(latex));
 	}
 }
