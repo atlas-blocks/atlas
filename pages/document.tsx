@@ -52,13 +52,21 @@ page.getGraph().addNode(expressionNode0);
 page.getGraph().addNode(expressionNode1);
 page.getGraph().addNode(simplifyNode0);
 
-const initialElements: Elements = WebInterfaceUtils.getBlocks(page.getGraph());
 
 const DnDFlow: NextPage = () => {
 	const [nodeLatex, setNodeLatex] = useState('');
 	const [selectedNode, setSelectedNode] = useState<Node | null>(null);
+	const [haveChanges, setHaveChanges] = useState<boolean>(false);
+	const reactFlowWrapper = useRef(null);
+	const mathInputRef = useRef<MathInput>(null);
+	const [reactFlowInstance, setReactFlowInstance] = useState(null);
+	const initialElements: Elements = WebInterfaceUtils.getBlocks(page.getGraph());
+	const [elements, setElements] = useState(initialElements);
 
-	function handleBlockSelection(event: React.MouseEvent, element: Block | Edge) {}
+	const webInterfaceUtils = new WebInterfaceUtils(page.getGraph(), setElements, haveChanges, setHaveChanges);
+
+	function handleBlockSelection(event: React.MouseEvent, element: Block | Edge) {
+	}
 
 	function handleBlockDoubleClick(event: ReactMouseEvent, block: Block) {
 		setSelectedNode(block.data.node);
@@ -75,10 +83,6 @@ const DnDFlow: NextPage = () => {
 		mathInputRef.current.hideMathInput();
 	}
 
-	const reactFlowWrapper = useRef(null);
-	const mathInputRef = useRef<MathInput>(null);
-	const [reactFlowInstance, setReactFlowInstance] = useState(null);
-	const [elements, setElements] = useState(initialElements);
 	const onConnect = (params: Edge | Connection) =>
 		setElements((els: Elements) => addEdge({ ...params, type: 'defaultEdge' }, els));
 	const onElementsRemove = (elementsToRemove: Elements) =>
@@ -115,14 +119,14 @@ const DnDFlow: NextPage = () => {
 		}
 
 		page.getGraph().addNode(newNode);
-		WebInterfaceUtils.refreshBlocks(page.getGraph(), setElements);
+		webInterfaceUtils.refreshBlocks();
 	};
 
 	useEffect(() => {
 		if (selectedNode === null) return;
 		(selectedNode as FormulaNode).updateLatex(nodeLatex);
-		WebInterfaceUtils.refreshBlocks(page.getGraph(), setElements);
-	}, [nodeLatex, selectedNode, setElements]);
+		webInterfaceUtils.refreshBlocks();
+	}, [nodeLatex, selectedNode, setElements, haveChanges]);
 
 	return (
 		<div className={styles.dndflow}>
@@ -148,7 +152,7 @@ const DnDFlow: NextPage = () => {
 					</ReactFlow>
 				</div>
 				<Sidebar />
-				<BlockSettings node={selectedNode} />
+				<BlockSettings node={selectedNode} webInterfaceUtils={webInterfaceUtils} />
 				<MathInput nodeLatex={nodeLatex} setNodeLatex={setNodeLatex} ref={mathInputRef} />
 			</ReactFlowProvider>
 		</div>

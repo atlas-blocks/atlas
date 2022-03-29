@@ -8,14 +8,20 @@ import WebInterfaceUtils from '../../utils/WebInterfaceUtils';
 
 type Props = {
 	node: Node | null;
+	webInterfaceUtils: WebInterfaceUtils;
 };
 
 function BlockSettings(props: Props) {
 	const updateField = (event: ChangeEvent<HTMLInputElement>, field: string) => {
-		const newFormula = page.getGraph().getNodesByNameAndClassType<FormulaNode>(event.target.value, FormulaNode)[0];
+		const newFormula = page
+			.getGraph()
+			.getNodesByNameAndClassType<FormulaNode>(event.target.value, FormulaNode)[0];
 		if (newFormula === null) return;
 		(props.node as SimplifyNode).setFormula(newFormula);
-		WebInterfaceUtils.fetchNodeLatex(props.node as SimplifyNode)
+		WebInterfaceUtils.fetchNodeLatex(props.node as SimplifyNode, () => {
+			props.webInterfaceUtils.refreshBlocks();
+			props.webInterfaceUtils.rerenderBlocks();
+		});
 	};
 	const getSettingsJSX = (node: Node) => {
 		return (
@@ -26,9 +32,7 @@ function BlockSettings(props: Props) {
 				{node instanceof SimplifyNode && (
 					<div>
 						formula name: {(props.node as SimplifyNode).getFormulaName()}
-						<input
-							onChange={(event) => updateField(event, 'formula')}
-						/>
+						<input onChange={(event) => updateField(event, 'formula')} />
 					</div>
 				)}
 			</div>

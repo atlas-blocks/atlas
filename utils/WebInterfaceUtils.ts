@@ -1,20 +1,27 @@
+import React from 'react';
 import Graph from '../commons/Graph';
 import Node from '../commons/nodes/Node';
-import ReactFlow, {
-	addEdge,
-	removeElements,
-	Controls,
-	Edge,
+import {
 	Node as Block,
 	Elements,
-	Connection,
-	ReactFlowProvider,
-	MiniMap,
-	isNode,
 } from 'react-flow-renderer';
 import SimplifyNode from '../commons/nodes/formulas/SimplifyNode';
 
-abstract class WebInterfaceUtils {
+class WebInterfaceUtils {
+
+	graph: Graph;
+	setBlocks: React.Dispatch<React.SetStateAction<Elements>>;
+	haveChanges: boolean;
+	setHaveChanges: React.Dispatch<React.SetStateAction<boolean>>;
+
+
+	constructor(graph: Graph, setBlocks: React.Dispatch<React.SetStateAction<Elements>>, havechanges: boolean, setHaveChanges: React.Dispatch<React.SetStateAction<boolean>>) {
+		this.graph = graph;
+		this.setBlocks = setBlocks;
+		this.haveChanges = havechanges;
+		this.setHaveChanges = setHaveChanges;
+	}
+
 	public static toBlock(node: Node): Block {
 		return {
 			id: node.getId(),
@@ -32,14 +39,17 @@ abstract class WebInterfaceUtils {
 		return ans;
 	}
 
-	public static refreshBlocks(graph: Graph, setBlocks: React.Dispatch<React.SetStateAction<Elements>>) {
-		setBlocks((els) => WebInterfaceUtils.getBlocks(graph));
+	public refreshBlocks() {
+		this.setBlocks(() => WebInterfaceUtils.getBlocks(this.graph));
 	}
 
-	public static fetchNodeLatex(node: SimplifyNode) {
-		node.fetchLatexAsync(()=>{}).finally();
+	public rerenderBlocks() {
+		this.setHaveChanges(!this.haveChanges);
 	}
 
+	public static fetchNodeLatex(node: SimplifyNode, callback: ()=> any) {
+		return node.fetchLatexAsync(callback).finally();
+	}
 }
 
 export default WebInterfaceUtils;
