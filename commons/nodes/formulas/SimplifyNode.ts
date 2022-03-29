@@ -32,6 +32,10 @@ class SimplifyNode extends FormulaNode {
 	public static getNewBlock(pos: Position) {
 		return new SimplifyNode('', undefined).setPosition(pos);
 	}
+
+	public getOutRefNodes(): FormulaNode[] {
+		return this.formula == undefined ? [] : [this.formula];
+	}
 }
 
 export default SimplifyNode;

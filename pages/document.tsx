@@ -40,18 +40,17 @@ export const document = new Document('document_name');
 export const page = document.getPage(0);
 
 const expressionNode0 = new ExpressionNode('', 'description1', '2 + 1 + y', 0).setPosition({
-	x: 200,
+	x: 400,
 	y: 200,
 });
 const expressionNode1 = new ExpressionNode('', 'description2', 'x + 2', 0).setPosition({
-	x: 200,
-	y: 300,
+	x: 500,
+	y: 500,
 });
-const simplifyNode0 = new SimplifyNode('name3', expressionNode0).setPosition({ x: 400, y: 200 });
+const simplifyNode0 = new SimplifyNode('name3', expressionNode1).setPosition({ x: 400, y: 300 });
 page.getGraph().addNode(expressionNode0);
 page.getGraph().addNode(expressionNode1);
 page.getGraph().addNode(simplifyNode0);
-
 
 const DnDFlow: NextPage = () => {
 	const [nodeLatex, setNodeLatex] = useState('');
@@ -60,13 +59,17 @@ const DnDFlow: NextPage = () => {
 	const reactFlowWrapper = useRef(null);
 	const mathInputRef = useRef<MathInput>(null);
 	const [reactFlowInstance, setReactFlowInstance] = useState(null);
-	const initialElements: Elements = WebInterfaceUtils.getBlocks(page.getGraph());
+	const initialElements: Elements = WebInterfaceUtils.getElements(page.getGraph());
 	const [elements, setElements] = useState(initialElements);
 
-	const webInterfaceUtils = new WebInterfaceUtils(page.getGraph(), setElements, haveChanges, setHaveChanges);
+	const webInterfaceUtils = new WebInterfaceUtils(
+		page.getGraph(),
+		setElements,
+		haveChanges,
+		setHaveChanges,
+	);
 
-	function handleBlockSelection(event: React.MouseEvent, element: Block | Edge) {
-	}
+	function handleBlockSelection(event: React.MouseEvent, element: Block | Edge) {}
 
 	function handleBlockDoubleClick(event: ReactMouseEvent, block: Block) {
 		setSelectedNode(block.data.node);
@@ -119,13 +122,13 @@ const DnDFlow: NextPage = () => {
 		}
 
 		page.getGraph().addNode(newNode);
-		webInterfaceUtils.refreshBlocks();
+		webInterfaceUtils.refreshElements();
 	};
 
 	useEffect(() => {
 		if (selectedNode === null) return;
 		(selectedNode as FormulaNode).updateLatex(nodeLatex);
-		webInterfaceUtils.refreshBlocks();
+		webInterfaceUtils.refreshElements();
 	}, [nodeLatex, selectedNode, setElements, haveChanges]);
 
 	return (

@@ -19,8 +19,8 @@ function BlockSettings(props: Props) {
 		if (newFormula === null) return;
 		(props.node as SimplifyNode).setFormula(newFormula);
 		WebInterfaceUtils.fetchNodeLatex(props.node as SimplifyNode, () => {
-			props.webInterfaceUtils.refreshBlocks();
-			props.webInterfaceUtils.rerenderBlocks();
+			props.webInterfaceUtils.refreshElements();
+			props.webInterfaceUtils.rerenderElements();
 		});
 	};
 	const getSettingsJSX = (node: Node) => {
