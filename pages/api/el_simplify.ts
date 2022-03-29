@@ -1,10 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { ReasonPhrases, StatusCodes, getReasonPhrase, getStatusCode } from 'http-status-codes';
 import * as cp from 'child_process';
-
-type Request = {
-	latex: string;
-};
+import ServerUtils from '../../utils/ServerUtils';
 
 type ServerResponse = {
 	out: string;
@@ -15,15 +12,6 @@ type ServerResponse = {
 type Response = {
 	latex: string;
 };
-
-function fromBase64(str: string): string {
-	return Buffer.from(str, 'base64').toString('ascii');
-}
-
-async function fetchAsync(url: RequestInfo) {
-	let response = await fetch(url);
-	return await response.json();
-}
 
 export default function handler(req: NextApiRequest, res: NextApiResponse<Response>) {
 	const onResolve = (data: ServerResponse): void => {
@@ -36,10 +24,10 @@ export default function handler(req: NextApiRequest, res: NextApiResponse<Respon
 	};
 
 	const runPy = new Promise<ServerResponse>(function (resolve, reject) {
-		return fetchAsync(
-			'http://18.219.169.98/cgi-bin/el_simplify.py?in_latex=' +
-				fromBase64(req.query.latex.toString()),
-		)
+		console.log(req.query.latex);
+		return ServerUtils.get('http://18.219.169.98/cgi-bin/el_simplify.py', {
+			in_latex: req.query.latex.toString(),
+		})
 			.then((data: ServerResponse) => {
 				console.log(data);
 				resolve(data);

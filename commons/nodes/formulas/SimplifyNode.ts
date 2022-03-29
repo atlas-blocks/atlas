@@ -1,6 +1,6 @@
 import FormulaNode from './FormulaNode';
 import { Position } from '../Node';
-import { ServerUtils } from '../../../utils/ServerUtils';
+import ServerUtils from '../../../utils/ServerUtils';
 import NodeTypeNames from '../NodeTypeNames';
 
 class SimplifyNode extends FormulaNode {
@@ -15,11 +15,13 @@ class SimplifyNode extends FormulaNode {
 		return NodeTypeNames['SimplifyNode'];
 	}
 
-	public async fetchLatexAsync(callback: () => any) {
-		if (this.formula === undefined) return '\\text{no formula}';
-		return ServerUtils.getElSimplify(this.formula.toLatex())
-			.then((response) => (this.content = response.latex))
-			.then(callback());
+	public async fetchLatexAsync(): Promise<void> {
+		if (this.formula === undefined) {
+			this.content = '\\text{no formula}';
+			return;
+		}
+		const response = await ServerUtils.getElSimplify(this.formula.toLatex());
+		this.content = response.success ? response.latex : '\\text{error during calculating}';
 	}
 
 	public getFormula() {

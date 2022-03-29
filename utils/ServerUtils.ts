@@ -1,27 +1,31 @@
-async function fetchAsync(url: RequestInfo) {
-	let response = await fetch(url);
-	return await response.json();
-}
-
 type Response = {
 	success: boolean;
 	latex: string;
 };
 
-function toBase64(str: string): string {
-	return Buffer.from(str).toString('base64');
-}
+abstract class ServerUtils {
+	public static async fetchAsync(urlString: string, params: any, settings = {}): Promise<any> {
+		const url = new URL(urlString);
+		Object.keys(params).forEach((key) => url.searchParams.append(key, params[key]));
+		return await (await fetch(url.toString(), settings)).json();
+	}
 
-function fromBase64(str: string): string {
-	return Buffer.from(str, 'base64').toString('ascii');
-}
+	public static async get(url: string, params: Object) {
+		return this.fetchAsync(url, params, { method: 'GET' });
+	}
 
-export class ServerUtils {
+	public static async getRelativeUrl(url: string, params: Object) {
+		const hostHref = window.location.href.replace(window.location.pathname, '');
+		return this.fetchAsync(hostHref + url, params, { method: 'GET' });
+	}
+
 	public static async getSimplify(latex: string): Promise<Response> {
-		return fetchAsync('/api/simplify?latex=' + toBase64(latex));
+		return await this.getRelativeUrl('/api/simplify', { latex: latex });
 	}
 
 	public static async getElSimplify(latex: string): Promise<Response> {
-		return fetchAsync('/api/el_simplify?latex=' + toBase64(latex));
+		return await this.getRelativeUrl('/api/el_simplify', { latex: latex });
 	}
 }
+
+export default ServerUtils;

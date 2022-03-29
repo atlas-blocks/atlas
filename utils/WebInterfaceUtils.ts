@@ -65,10 +65,6 @@ class WebInterfaceUtils {
 	public rerenderElements() {
 		this.setHaveChanges(!this.haveChanges);
 	}
-
-	public static fetchNodeLatex(node: SimplifyNode, callback: () => any) {
-		return node.fetchLatexAsync(callback).finally();
-	}
 }
 
 export default WebInterfaceUtils;

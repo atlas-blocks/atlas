@@ -18,10 +18,7 @@ function BlockSettings(props: Props) {
 			.getNodesByNameAndClassType<FormulaNode>(event.target.value, FormulaNode)[0];
 		if (newFormula === null) return;
 		(props.node as SimplifyNode).setFormula(newFormula);
-		WebInterfaceUtils.fetchNodeLatex(props.node as SimplifyNode, () => {
-			props.webInterfaceUtils.refreshElements();
-			props.webInterfaceUtils.rerenderElements();
-		});
+		(props.node as SimplifyNode).fetchLatexAsync().catch();
 	};
 	const getSettingsJSX = (node: Node) => {
 		return (
