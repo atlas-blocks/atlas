@@ -23,7 +23,7 @@ abstract class WebInterfaceUtils {
 		};
 	}
 
-	public static toBlocks(graph: Graph): Elements {
+	public static getBlocks(graph: Graph): Elements {
 		let ans: Elements = [];
 		for (const node of graph.getNodes()) {
 			ans.push(this.toBlock(node));

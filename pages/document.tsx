@@ -42,6 +42,7 @@ import FormulaNode from '../commons/nodes/formulas/FormulaNode';
 
 import { NextPage } from 'next';
 import styles from '../styles/DnDFlow.module.css';
+import { node } from 'prop-types';
 
 const document = new Document('document_name');
 const page = document.getPage(0);
@@ -58,7 +59,7 @@ page.getGraph().addNode(
 	}),
 );
 
-const initialElements: Elements = WebInterfaceUtils.toBlocks(page.getGraph());
+const initialElements: Elements = WebInterfaceUtils.getBlocks(page.getGraph());
 
 const DnDFlow: NextPage = () => {
 	const [nodeLatex, setNodeLatex] = useState('');
@@ -129,16 +130,10 @@ const DnDFlow: NextPage = () => {
 	};
 
 	useEffect(() => {
-		setElements((els) =>
-			els.map((el) => {
-				if (selectedNode !== null && el.id === selectedNode.getId()) {
-					// it's important that you create a new object here
-					// in order to notify react flow about the change
-					(el.data.node as FormulaNode).updateLatex(nodeLatex);
-				}
-				return el;
-			}),
-		);
+		if (selectedNode === null) return;
+		(selectedNode as FormulaNode).updateLatex(nodeLatex);
+
+		setElements((els) => WebInterfaceUtils.getBlocks(page.getGraph()));
 	}, [nodeLatex, selectedNode, setElements]);
 
 	return (
