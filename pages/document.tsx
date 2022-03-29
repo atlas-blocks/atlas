@@ -36,8 +36,8 @@ import FormulaNode from '../commons/nodes/formulas/FormulaNode';
 import { NextPage } from 'next';
 import styles from '../styles/DnDFlow.module.css';
 
-const document = new Document('document_name');
-const page = document.getPage(0);
+export const document = new Document('document_name');
+export const page = document.getPage(0);
 
 const expressionNode0 = new ExpressionNode('', 'description1', '2 + 1 + y', 0).setPosition({
 	x: 200,
@@ -57,12 +57,6 @@ const initialElements: Elements = WebInterfaceUtils.getBlocks(page.getGraph());
 const DnDFlow: NextPage = () => {
 	const [nodeLatex, setNodeLatex] = useState('');
 	const [selectedNode, setSelectedNode] = useState<Node | null>(null);
-
-	function refreshBlocks() {
-		setElements((els) => WebInterfaceUtils.getBlocks(page.getGraph()));
-	}
-
-	simplifyNode0.fetchLatexAsync(() => {}).catch();
 
 	function handleBlockSelection(event: React.MouseEvent, element: Block | Edge) {}
 
@@ -121,13 +115,13 @@ const DnDFlow: NextPage = () => {
 		}
 
 		page.getGraph().addNode(newNode);
-		refreshBlocks();
+		WebInterfaceUtils.refreshBlocks(page.getGraph(), setElements);
 	};
 
 	useEffect(() => {
 		if (selectedNode === null) return;
 		(selectedNode as FormulaNode).updateLatex(nodeLatex);
-		refreshBlocks();
+		WebInterfaceUtils.refreshBlocks(page.getGraph(), setElements);
 	}, [nodeLatex, selectedNode, setElements]);
 
 	return (

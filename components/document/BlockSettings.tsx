@@ -2,6 +2,9 @@ import React, { ChangeEvent, useState } from 'react';
 import styles from '../../styles/BlockSettings.module.css';
 import Node from '../../commons/nodes/Node';
 import SimplifyNode from '../../commons/nodes/formulas/SimplifyNode';
+import { page } from '../../pages/document';
+import FormulaNode from '../../commons/nodes/formulas/FormulaNode';
+import WebInterfaceUtils from '../../utils/WebInterfaceUtils';
 
 type Props = {
 	node: Node | null;
@@ -9,7 +12,10 @@ type Props = {
 
 function BlockSettings(props: Props) {
 	const updateField = (event: ChangeEvent<HTMLInputElement>, field: string) => {
-		// node. event.target.value
+		const newFormula = page.getGraph().getNodesByNameAndClassType<FormulaNode>(event.target.value, FormulaNode)[0];
+		if (newFormula === null) return;
+		(props.node as SimplifyNode).setFormula(newFormula);
+		WebInterfaceUtils.fetchNodeLatex(props.node as SimplifyNode)
 	};
 	const getSettingsJSX = (node: Node) => {
 		return (
@@ -19,9 +25,8 @@ function BlockSettings(props: Props) {
 				<div>description: {node.getDescription()}</div>
 				{node instanceof SimplifyNode && (
 					<div>
-						formula name:{' '}
+						formula name: {(props.node as SimplifyNode).getFormulaName()}
 						<input
-							value={(node as SimplifyNode).getFormulaName()}
 							onChange={(event) => updateField(event, 'formula')}
 						/>
 					</div>

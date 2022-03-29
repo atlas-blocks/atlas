@@ -12,6 +12,7 @@ import ReactFlow, {
 	MiniMap,
 	isNode,
 } from 'react-flow-renderer';
+import SimplifyNode from '../commons/nodes/formulas/SimplifyNode';
 
 abstract class WebInterfaceUtils {
 	public static toBlock(node: Node): Block {
@@ -30,6 +31,15 @@ abstract class WebInterfaceUtils {
 		}
 		return ans;
 	}
+
+	public static refreshBlocks(graph: Graph, setBlocks: React.Dispatch<React.SetStateAction<Elements>>) {
+		setBlocks((els) => WebInterfaceUtils.getBlocks(graph));
+	}
+
+	public static fetchNodeLatex(node: SimplifyNode) {
+		node.fetchLatexAsync(()=>{}).finally();
+	}
+
 }
 
 export default WebInterfaceUtils;

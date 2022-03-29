@@ -21,6 +21,10 @@ class SimplifyNode extends FormulaNode {
 		return this.formula;
 	}
 
+	public setFormula(newFormula: FormulaNode) {
+		this.formula = newFormula;
+	}
+
 	public getFormulaName(): string {
 		return this.formula === undefined ? '' : this.formula.getName();
 	}
