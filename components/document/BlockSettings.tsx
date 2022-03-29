@@ -7,13 +7,19 @@ type Props = {
 };
 
 function BlockSettings(props: Props) {
-	const [nodeFields, setNodeFields] = useState<string[]>(
-		Object.keys(props.node === null ? {} : props.node),
-	);
-	const openBlock = {};
 	return (
 		<aside id={styles.settings} style={{ right: props.node === null ? '-300px' : '0' }}>
 			<h2>Block Settings</h2>
+			{
+				props.node === null
+					? ''
+					: Object.keys(props.node).map((field) => {
+						return (
+							<div key={field}>
+								{field + ": " + props.node[field]}
+							</div>
+						)})
+			}
 		</aside>
 	);
 }
