@@ -21,7 +21,7 @@ function BlockSettings(props: Props) {
 					<div>
 						formula name:{' '}
 						<input
-							value={(node as SimplifyNode).getFormula().getName()}
+							value={(node as SimplifyNode).getFormulaName()}
 							onChange={(event) => updateField(event, 'formula')}
 						/>
 					</div>

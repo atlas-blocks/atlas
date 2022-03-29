@@ -1,10 +1,4 @@
-import React, {
-	useState,
-	useRef,
-	MutableRefObject,
-	useEffect,
-	MouseEvent as ReactMouseEvent,
-} from 'react';
+import React, { useState, useRef, useEffect, MouseEvent as ReactMouseEvent } from 'react';
 import Document from '../commons/Document';
 import dynamic from 'next/dynamic';
 
@@ -24,7 +18,6 @@ import ReactFlow, {
 	Connection,
 	ReactFlowProvider,
 	MiniMap,
-	isNode,
 } from 'react-flow-renderer';
 
 import { nodeTypes } from '../components/blocks/Blocks';
@@ -42,28 +35,34 @@ import FormulaNode from '../commons/nodes/formulas/FormulaNode';
 
 import { NextPage } from 'next';
 import styles from '../styles/DnDFlow.module.css';
-import { node } from 'prop-types';
 
 const document = new Document('document_name');
 const page = document.getPage(0);
-page.getGraph().addNode(
-	new ExpressionNode('', 'description1', '2 + 1 + y', 0).setPosition({ x: 200, y: 200 }),
-);
-page.getGraph().addNode(
-	new ExpressionNode('', 'description2', 'x + 2', 0).setPosition({ x: 200, y: 300 }),
-);
-page.getGraph().addNode(
-	new SimplifyNode('name3', new ExpressionNode('', 'description1', '2 + 1 + y', 0)).setPosition({
-		x: 400,
-		y: 200,
-	}),
-);
+
+const expressionNode0 = new ExpressionNode('', 'description1', '2 + 1 + y', 0).setPosition({
+	x: 200,
+	y: 200,
+});
+const expressionNode1 = new ExpressionNode('', 'description2', 'x + 2', 0).setPosition({
+	x: 200,
+	y: 300,
+});
+const simplifyNode0 = new SimplifyNode('name3', expressionNode0).setPosition({ x: 400, y: 200 });
+page.getGraph().addNode(expressionNode0);
+page.getGraph().addNode(expressionNode1);
+page.getGraph().addNode(simplifyNode0);
 
 const initialElements: Elements = WebInterfaceUtils.getBlocks(page.getGraph());
 
 const DnDFlow: NextPage = () => {
 	const [nodeLatex, setNodeLatex] = useState('');
 	const [selectedNode, setSelectedNode] = useState<Node | null>(null);
+
+	function refreshBlocks() {
+		setElements((els) => WebInterfaceUtils.getBlocks(page.getGraph()));
+	}
+
+	simplifyNode0.fetchLatexAsync(() => {}).catch();
 
 	function handleBlockSelection(event: React.MouseEvent, element: Block | Edge) {}
 
@@ -109,31 +108,26 @@ const DnDFlow: NextPage = () => {
 			x: event.clientX - reactFlowBounds.left,
 			y: event.clientY - reactFlowBounds.top,
 		});
-		let newNode: Block;
+		let newNode: Node;
 		switch (type) {
 			case ExpressionNode.name:
-				newNode = WebInterfaceUtils.toBlock(
-					new ExpressionNode('', 'my_description', '', 0).setPosition(pos),
-				);
+				newNode = ExpressionNode.getNewBlock(pos);
 				break;
 			case SimplifyNode.name:
-				newNode = WebInterfaceUtils.toBlock(
-					new SimplifyNode(
-						'',
-						new ExpressionNode('', 'my_description', '', 0).setPosition(pos),
-					),
-				);
+				newNode = SimplifyNode.getNewBlock(pos);
 				break;
+			default:
+				throw new Error();
 		}
 
-		setElements((es) => es.concat(newNode));
+		page.getGraph().addNode(newNode);
+		refreshBlocks();
 	};
 
 	useEffect(() => {
 		if (selectedNode === null) return;
 		(selectedNode as FormulaNode).updateLatex(nodeLatex);
-
-		setElements((els) => WebInterfaceUtils.getBlocks(page.getGraph()));
+		refreshBlocks();
 	}, [nodeLatex, selectedNode, setElements]);
 
 	return (

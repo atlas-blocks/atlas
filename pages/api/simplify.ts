@@ -10,14 +10,9 @@ type Response = {
 	latex: string;
 };
 
-let runPy = new Promise<string>(function (resolve, reject) {
-	const childProcess = cp.spawn('python3', ['./backend/simplify.py', '--latex=x^3']);
-
-	childProcess.stdout.on('data', (data) => resolve(data));
-	childProcess.stderr.on('data', (data) => reject(data));
-});
 
 export default function handler(req: NextApiRequest, res: NextApiResponse<Response>) {
+	console.log(req)
 	const onResolve = (data: string): void => {
 		console.log(data.toString());
 		res.status(StatusCodes.OK).json(JSON.parse(data.toString()));
@@ -26,6 +21,13 @@ export default function handler(req: NextApiRequest, res: NextApiResponse<Respon
 		console.log(data.toString());
 		res.status(StatusCodes.INTERNAL_SERVER_ERROR).end(ReasonPhrases.INTERNAL_SERVER_ERROR);
 	};
+
+	const runPy = new Promise<string>(function (resolve, reject) {
+		const childProcess = cp.spawn('python3', ['./backend/simplify.py', '--latex=' + req.query.latex]);
+
+		childProcess.stdout.on('data', (data) => resolve(data));
+		childProcess.stderr.on('data', (data) => reject(data));
+	});
 
 	return runPy.then(onResolve, onReject);
 }

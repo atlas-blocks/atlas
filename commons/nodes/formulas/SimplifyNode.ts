@@ -1,19 +1,32 @@
 import FormulaNode from './FormulaNode';
+import { Position } from '../Node';
+import { ServerUtils } from '../../../utils/ServerUtils';
 
 class SimplifyNode extends FormulaNode {
-	formula: FormulaNode;
+	formula: FormulaNode | undefined;
 
-	constructor(name: string, formula: FormulaNode) {
+	constructor(name: string, formula: FormulaNode | undefined) {
 		super(name, '', '');
 		this.formula = formula;
 	}
 
-	public toLatex(): string {
-		return 'bahaha';
+	public async fetchLatexAsync(callback: () => any) {
+		if (this.formula === undefined) return '\\text{no formula}';
+		return ServerUtils.getSimplify(this.formula.toLatex())
+			.then((response) => (this.content = response.latex))
+			.then(callback());
 	}
 
 	public getFormula() {
 		return this.formula;
+	}
+
+	public getFormulaName(): string {
+		return this.formula === undefined ? '' : this.formula.getName();
+	}
+
+	public static getNewBlock(pos: Position) {
+		return new SimplifyNode('', undefined).setPosition(pos);
 	}
 }
 
