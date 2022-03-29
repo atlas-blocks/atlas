@@ -13,3 +13,7 @@
 	text-align: center;
 	transition: 1s;
 }
+
+#settings_container {
+	text-align: left;
+}

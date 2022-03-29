@@ -11,6 +11,10 @@ class SimplifyNode extends FormulaNode {
 	public toLatex(): string {
 		return 'bahaha';
 	}
+
+	public getFormula() {
+		return this.formula;
+	}
 }
 
 export default SimplifyNode;
