@@ -9,7 +9,7 @@ class SimplifyNode extends FormulaNode {
 	}
 
 	public toLatex(): string {
-		return 'simplify';
+		return 'bahaha';
 	}
 }
 

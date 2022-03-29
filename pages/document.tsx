@@ -19,7 +19,7 @@ import ReactFlow, {
 	removeElements,
 	Controls,
 	Edge,
-	Node,
+	Node as Block,
 	Elements,
 	Connection,
 	ReactFlowProvider,
@@ -29,33 +29,31 @@ import ReactFlow, {
 
 import { nodeTypes } from '../components/blocks/Blocks';
 import { edgeTypes } from '../components/blocks/Edge';
-import Sidebar from '../components/document/Sidebar';
 
-import styles from '../styles/DnDFlow.module.css';
-import { NextPage } from 'next';
+import Sidebar from '../components/document/Sidebar';
+import BlockSettings from '../components/document/BlockSettings';
 import MathInput from '../components/document/MathInput';
+
+import Node from '../commons/nodes/Node';
 import ExpressionNode from '../commons/nodes/formulas/ExpressionNode';
 import SimplifyNode from '../commons/nodes/formulas/SimplifyNode';
 import WebInterfaceUtils from '../utils/WebInterfaceUtils';
 import FormulaNode from '../commons/nodes/formulas/FormulaNode';
 
-let id = 0;
-const getId = () => `block_${id++}`;
+import { NextPage } from 'next';
+import styles from '../styles/DnDFlow.module.css';
 
 const document = new Document('document_name');
 const page = document.getPage(0);
 page.getGraph().addNode(
-	new ExpressionNode('name1', 'description1', '2 + 1 + y', 0).setPosition({ x: 200, y: 200 }),
+	new ExpressionNode('', 'description1', '2 + 1 + y', 0).setPosition({ x: 200, y: 200 }),
 );
 page.getGraph().addNode(
-	new ExpressionNode('name2', 'description2', 'x + 2', 0).setPosition({ x: 200, y: 300 }),
+	new ExpressionNode('', 'description2', 'x + 2', 0).setPosition({ x: 200, y: 300 }),
 );
 page.getGraph().addNode(
-	new SimplifyNode(
-		'name3',
-		new ExpressionNode('name1', 'description1', '2 + 1 + y', 0),
-	).setPosition({
-		x: 300,
+	new SimplifyNode('name3', new ExpressionNode('', 'description1', '2 + 1 + y', 0)).setPosition({
+		x: 400,
 		y: 200,
 	}),
 );
@@ -64,19 +62,21 @@ const initialElements: Elements = WebInterfaceUtils.toBlocks(page.getGraph());
 
 const DnDFlow: NextPage = () => {
 	const [nodeLatex, setNodeLatex] = useState('');
-	const [currentSelectionID, setCurrentSelectionID] = useState<string | null>(null);
+	const [selectedNode, setSelectedNode] = useState<Node | null>(null);
 
-	function handleBlockSelection(event: React.MouseEvent, element: Node | Edge) {}
+	function handleBlockSelection(event: React.MouseEvent, element: Block | Edge) {}
 
-	function handleBlockDoubleClick(event: ReactMouseEvent, node: Node) {
-		setCurrentSelectionID(node.id);
-		setNodeLatex(node.data.label);
-		// @ts-ignore
-		mathInputRef.current.showMathInput();
+	function handleBlockDoubleClick(event: ReactMouseEvent, block: Block) {
+		setSelectedNode(block.data.node);
+		if (block.data.node instanceof FormulaNode) {
+			setNodeLatex((block.data.node as FormulaNode).toLatex());
+			// @ts-ignore
+			mathInputRef.current.showMathInput();
+		}
 	}
 
 	function onPaneClick(event: ReactMouseEvent) {
-		setCurrentSelectionID(null);
+		setSelectedNode(null);
 		// @ts-ignore
 		mathInputRef.current.hideMathInput();
 	}
@@ -108,18 +108,18 @@ const DnDFlow: NextPage = () => {
 			x: event.clientX - reactFlowBounds.left,
 			y: event.clientY - reactFlowBounds.top,
 		});
-		let newNode: Node;
+		let newNode: Block;
 		switch (type) {
 			case ExpressionNode.name:
 				newNode = WebInterfaceUtils.toBlock(
-					new ExpressionNode('my_name', 'my_description', '', 0).setPosition(pos),
+					new ExpressionNode('', 'my_description', '', 0).setPosition(pos),
 				);
 				break;
 			case SimplifyNode.name:
 				newNode = WebInterfaceUtils.toBlock(
 					new SimplifyNode(
-						'my_name',
-						new ExpressionNode('my_name', 'my_description', '', 0).setPosition(pos),
+						'',
+						new ExpressionNode('', 'my_description', '', 0).setPosition(pos),
 					),
 				);
 				break;
@@ -131,7 +131,7 @@ const DnDFlow: NextPage = () => {
 	useEffect(() => {
 		setElements((els) =>
 			els.map((el) => {
-				if (el.id === currentSelectionID) {
+				if (selectedNode !== null && el.id === selectedNode.getId()) {
 					// it's important that you create a new object here
 					// in order to notify react flow about the change
 					(el.data.node as FormulaNode).updateLatex(nodeLatex);
@@ -139,7 +139,7 @@ const DnDFlow: NextPage = () => {
 				return el;
 			}),
 		);
-	}, [nodeLatex, currentSelectionID, setElements]);
+	}, [nodeLatex, selectedNode, setElements]);
 
 	return (
 		<div className={styles.dndflow}>
@@ -165,6 +165,7 @@ const DnDFlow: NextPage = () => {
 					</ReactFlow>
 				</div>
 				<Sidebar />
+				<BlockSettings node={selectedNode} />
 				<MathInput nodeLatex={nodeLatex} setNodeLatex={setNodeLatex} ref={mathInputRef} />
 			</ReactFlowProvider>
 		</div>

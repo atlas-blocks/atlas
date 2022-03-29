@@ -13,7 +13,7 @@ abstract class Node {
 	protected constructor(name: string, description: string) {
 		this.id = Node.cnt.toString();
 		++Node.cnt;
-		this.name = name;
+		this.name = name != '' ? name : '#' + this.id;
 		this.description = description;
 		this.position = { x: 0, y: 0 };
 	}
@@ -25,6 +25,7 @@ abstract class Node {
 	public getName() {
 		return this.name;
 	}
+
 	public getDescription() {
 		return this.description;
 	}

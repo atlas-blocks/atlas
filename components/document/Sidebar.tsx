@@ -18,14 +18,14 @@ function Sidebar() {
 				onDragStart={(event) => onDragStart(event, ExpressionNode.name)}
 				draggable
 			>
-				Default
+				{ExpressionNode.name}
 			</div>
 			<div
 				className={`${styles.dndnode} ${styles.simplify}`}
 				onDragStart={(event) => onDragStart(event, SimplifyNode.name)}
 				draggable
 			>
-				Simplify
+				{SimplifyNode.name}
 			</div>
 			<div
 				className={`${styles.dndnode} ${styles.set}`}

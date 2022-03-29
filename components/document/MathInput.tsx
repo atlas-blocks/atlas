@@ -2,10 +2,10 @@ import React from 'react';
 
 import styles from '../../styles/MathInput.module.css';
 
-interface Props {
+type Props = {
 	nodeLatex: string;
 	setNodeLatex: React.Dispatch<React.SetStateAction<any>>;
-}
+};
 
 export default class MathInput extends React.Component<Props, { inputBottom: string }> {
 	inputRef: React.RefObject<any>;
@@ -29,8 +29,8 @@ export default class MathInput extends React.Component<Props, { inputBottom: str
 	updateBlock = () => {
 		this.props.setNodeLatex(this.inputRef.current.value);
 	};
+
 	submitInput = () => {
-		this.props.setNodeLatex(this.inputRef.current.value);
 		this.hideMathInput();
 	};
 
@@ -43,7 +43,7 @@ export default class MathInput extends React.Component<Props, { inputBottom: str
 					value={this.props.nodeLatex}
 					onChange={this.updateBlock}
 				/>
-				<button onClick={this.updateBlock}>OK</button>
+				<button onClick={this.submitInput}>OK</button>
 			</div>
 		);
 	}
