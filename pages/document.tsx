@@ -37,6 +37,7 @@ import MathInput from '../components/document/MathInput';
 import ExpressionNode from '../commons/nodes/formulas/ExpressionNode';
 import SimplifyNode from '../commons/nodes/formulas/SimplifyNode';
 import WebInterfaceUtils from '../utils/WebInterfaceUtils';
+import FormulaNode from '../commons/nodes/formulas/FormulaNode';
 
 let id = 0;
 const getId = () => `block_${id++}`;
@@ -62,7 +63,7 @@ page.getGraph().addNode(
 const initialElements: Elements = WebInterfaceUtils.toBlocks(page.getGraph());
 
 const DnDFlow: NextPage = () => {
-	const [nodeLatex, setNodeLatex] = useState('0');
+	const [nodeLatex, setNodeLatex] = useState('');
 	const [currentSelectionID, setCurrentSelectionID] = useState<string | null>(null);
 
 	function handleBlockSelection(event: React.MouseEvent, element: Node | Edge) {}
@@ -133,10 +134,7 @@ const DnDFlow: NextPage = () => {
 				if (el.id === currentSelectionID) {
 					// it's important that you create a new object here
 					// in order to notify react flow about the change
-					el.data = {
-						...el.data,
-						label: nodeLatex,
-					};
+					(el.data.node as FormulaNode).updateLatex(nodeLatex);
 				}
 				return el;
 			}),

@@ -43,7 +43,7 @@ export default class MathInput extends React.Component<Props, { inputBottom: str
 					value={this.props.nodeLatex}
 					onChange={this.updateBlock}
 				/>
-				<button onClick={this.updateBlock}>ok</button>
+				<button onClick={this.updateBlock}>OK</button>
 			</div>
 		);
 	}
