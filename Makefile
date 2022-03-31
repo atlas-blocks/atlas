@@ -11,5 +11,5 @@ build_aws_prod:
 	npm run build
 start_aws_prod_server:
 	cd /var/www/atlas/html
-	npm run start -p 8080
+	npm run start -p 8080 &
 
