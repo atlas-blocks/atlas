@@ -1,4 +1,5 @@
 import Node from '../Node';
+import { ArrayStack } from '../../../utils/data_sturctures/Stack';
 
 abstract class FormulaNode extends Node {
 	protected content: string;
@@ -14,6 +15,10 @@ abstract class FormulaNode extends Node {
 
 	public setLatex(latex: string) {
 		this.content = latex;
+	}
+
+	public getContent(): String {
+		return this.content;
 	}
 }
 

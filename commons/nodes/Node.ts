@@ -1,4 +1,3 @@
-import NodeTypeNames from './NodeTypeNames';
 import Import from '../namespaces/Import';
 
 export type Position = {

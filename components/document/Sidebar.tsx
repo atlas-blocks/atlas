@@ -26,7 +26,7 @@ function Sidebar() {
 				onDragStart={(event) => onDragStart(event, ExpressionNode.getImport().toString())}
 				draggable
 			>
-				{SimplifyNode}
+				SimplifyNode
 			</div>
 		</aside>
 	);
