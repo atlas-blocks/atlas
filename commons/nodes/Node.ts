@@ -48,6 +48,10 @@ abstract class Node {
 		this.position = pos;
 		return this;
 	}
+
+	public getUsersNodes(): Node[] {
+		return [];
+	}
 }
 
 export default Node;

@@ -1,7 +1,6 @@
 import React, { ChangeEvent, useState } from 'react';
 import styles from '../../styles/BlockSettings.module.css';
 import Node from '../../commons/nodes/Node';
-import SimplifyNode from '../../commons/nodes/formulas/SimplifyNode';
 import { page } from '../../pages/document';
 import FormulaNode from '../../commons/nodes/formulas/FormulaNode';
 import WebInterfaceUtils from '../../utils/WebInterfaceUtils';
@@ -16,11 +15,11 @@ function BlockSettings(props: Props) {
 		const newFormula = page
 			.getGraph()
 			.getNodesByNameAndClassType<FormulaNode>(event.target.value, FormulaNode)[0];
-		(props.selectedNode as SimplifyNode).setFormula(newFormula);
-		(props.selectedNode as SimplifyNode)
-			.fetchLatexAsync()
-			.then(() => props.webInterfaceUtils.refreshElements())
-			.catch();
+		// (props.selectedNode as SimplifyNode).setFormula(newFormula);
+		// (props.selectedNode as SimplifyNode)
+		// 	.fetchLatexAsync()
+		// 	.then(() => props.webInterfaceUtils.refreshElements())
+		// 	.catch();
 	};
 	const getSettingsJSX = (node: Node) => {
 		return (
@@ -28,12 +27,12 @@ function BlockSettings(props: Props) {
 				<div>id: {node.getId()}</div>
 				<div>name: {node.getName()}</div>
 				<div>description: {node.getDescription()}</div>
-				{node instanceof SimplifyNode && (
-					<div>
-						formula name: {(props.selectedNode as SimplifyNode).getFormulaName()}
-						<input onChange={(event) => updateField(event, 'formula')} />
-					</div>
-				)}
+				{/*{node instanceof SimplifyNode && (*/}
+				{/*	<div>*/}
+				{/*		formula name: {(props.selectedNode as SimplifyNode).getFormulaName()}*/}
+				{/*		<input onChange={(event) => updateField(event, 'formula')} />*/}
+				{/*	</div>*/}
+				{/*)}*/}
 			</div>
 		);
 	};

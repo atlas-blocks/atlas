@@ -3,18 +3,21 @@ import { Handle, Position } from 'react-flow-renderer';
 import styles from '../../styles/Block.module.css';
 import Node from '../../commons/nodes/Node';
 import ExpressionNode from '../../commons/nodes/formulas/ExpressionNode';
-import SimplifyNode from '../../commons/nodes/formulas/SimplifyNode';
-import NodeTypeNames from '../../commons/nodes/NodeTypeNames';
+import FunctionNode from '../../commons/nodes/formulas/functions/FunctionNode';
+import FormulaNode from '../../commons/nodes/formulas/FormulaNode';
+import JavaScriptFunctionNode from '../../commons/nodes/formulas/functions/JavaScriptFunctionNode';
 
 export const nodeTypes = {
 	[ExpressionNode.getImport().toString()]: ExpressionBlock,
+	[FormulaNode.getImport().toString()]: FunctionBlock,
+	[JavaScriptFunctionNode.getImport().toString()]: FunctionBlock,
 };
 
 interface DefaultBlockProps {
 	node: Node;
 }
 
-export function FormulaBlockWrapper(content: JSX.Element) {
+export function FormulaBlockWrapper(content: JSX.Element, node: Node) {
 	return (
 		<div className={`${styles.block} ${styles.default}`}>
 			<Handle type="target" position={Position.Left} />
@@ -25,5 +28,23 @@ export function FormulaBlockWrapper(content: JSX.Element) {
 }
 
 export function ExpressionBlock({ data }: { data: { node: ExpressionNode } }) {
-	return FormulaBlockWrapper(<div>{data.node.toLatex()}</div>);
+	return FormulaBlockWrapper(
+		<div>
+			<div>name: {data.node.getName()}</div>
+			<div>{data.node.toLatex()}</div>
+			<div>result: {data.node.getResult()}</div>
+		</div>,
+		data.node,
+	);
+}
+export function FunctionBlock({ data }: { data: { node: FunctionNode } }) {
+	return FormulaBlockWrapper(
+		<div>
+			<div>
+				name: {data.node.getName()}(
+				{data.node.getArgs().map((arg) => arg.name + ': ' + arg.type)})
+			</div>
+		</div>,
+		data.node,
+	);
 }

@@ -21,6 +21,10 @@ class ExpressionNode extends FormulaNode {
 	public static getNewBlock(pos: Position) {
 		return new ExpressionNode('', '', 0).setPosition(pos);
 	}
+
+	public evaluate() {
+		this.setResult('result');
+	}
 }
 
 export default ExpressionNode;

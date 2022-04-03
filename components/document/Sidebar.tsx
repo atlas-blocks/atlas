@@ -2,8 +2,6 @@ import React from 'react';
 
 import styles from '../../styles/Sidebar.module.css';
 import ExpressionNode from '../../commons/nodes/formulas/ExpressionNode';
-import SimplifyNode from '../../commons/nodes/formulas/SimplifyNode';
-import NodeTypeNames from '../../commons/nodes/NodeTypeNames';
 
 function Sidebar() {
 	const onDragStart = (event: React.DragEvent<HTMLDivElement>, nodeType: string) => {

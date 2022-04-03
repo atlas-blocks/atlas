@@ -29,13 +29,14 @@ import MathInput from '../components/document/MathInput';
 
 import Node from '../commons/nodes/Node';
 import ExpressionNode from '../commons/nodes/formulas/ExpressionNode';
-import SimplifyNode from '../commons/nodes/formulas/SimplifyNode';
 import WebInterfaceUtils from '../utils/WebInterfaceUtils';
 import FormulaNode from '../commons/nodes/formulas/FormulaNode';
 
 import { NextPage } from 'next';
 import styles from '../styles/DnDFlow.module.css';
 import NodeTypeNames from '../commons/nodes/NodeTypeNames';
+import { FunctionArgument } from '../commons/nodes/formulas/functions/FunctionNode';
+import JavaScriptFunctionNode from '../commons/nodes/formulas/functions/JavaScriptFunctionNode';
 
 export const document = new Document('document_name');
 export const page = document.getPage(0);
@@ -43,9 +44,18 @@ export const page = document.getPage(0);
 const expressionNode0 = new ExpressionNode('', '2 + 1 + y', 0).setPosition({ x: 400, y: 200 });
 const expressionNode1 = new ExpressionNode('', 'x + 2', 0).setPosition({ x: 500, y: 500 });
 const simplifyNode0 = new ExpressionNode('', 'simplify(b0)', 0).setPosition({ x: 400, y: 300 });
+const simplifyJSFunctionNode = new JavaScriptFunctionNode(
+	'simplify',
+	(args: string[]) => {
+		return 'simplify';
+	},
+	[{ name: 'formulaContent', type: 'String' }],
+).setPosition({ x: 400, y: 400 });
+
 page.getGraph().addNode(expressionNode0);
 page.getGraph().addNode(expressionNode1);
 page.getGraph().addNode(simplifyNode0);
+page.getGraph().addNode(simplifyJSFunctionNode);
 
 const DnDFlow: NextPage = () => {
 	const [selectedNode, setSelectedNode] = useState<Node | null>(null);
@@ -96,9 +106,6 @@ const DnDFlow: NextPage = () => {
 		switch (type) {
 			case NodeTypeNames.ExpressionNode:
 				newNode = ExpressionNode.getNewBlock(pos);
-				break;
-			case NodeTypeNames.SimplifyNode:
-				newNode = SimplifyNode.getNewBlock(pos);
 				break;
 			default:
 				throw new Error();
