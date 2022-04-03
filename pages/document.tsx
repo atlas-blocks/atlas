@@ -48,7 +48,7 @@ const expressionNode1 = new ExpressionNode('', 'description2', 'x + 2', 0).setPo
 	x: 500,
 	y: 500,
 });
-const simplifyNode0 = new SimplifyNode('name3', expressionNode1).setPosition({ x: 400, y: 300 });
+const simplifyNode0 = new SimplifyNode('', expressionNode1).setPosition({ x: 400, y: 300 });
 page.getGraph().addNode(expressionNode0);
 page.getGraph().addNode(expressionNode1);
 page.getGraph().addNode(simplifyNode0);

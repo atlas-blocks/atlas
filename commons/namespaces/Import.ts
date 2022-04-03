@@ -1,12 +1,24 @@
 class Import {
-	user: string;
-	package: string;
-	nodeName: string;
+	private readonly user: string;
+	private readonly package: string;
+	private readonly nodeName: string;
 
 	constructor(user: string, packageName: string, nodeName: string) {
 		this.user = user;
 		this.package = packageName;
 		this.nodeName = nodeName;
+	}
+
+	public getUser(): string {
+		return this.user;
+	}
+
+	public getPackage(): string {
+		return this.package;
+	}
+
+	public getNodeName(): string {
+		return this.nodeName;
 	}
 }
 

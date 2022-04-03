@@ -3,8 +3,8 @@ import Node from '../Node';
 abstract class FormulaNode extends Node {
 	protected content: string;
 
-	protected constructor(name: string, description: string, content: string) {
-		super(name, description);
+	protected constructor(name: string, content: string) {
+		super(name);
 		this.content = content;
 	}
 

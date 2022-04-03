@@ -1,4 +1,5 @@
 import NodeTypeNames from './NodeTypeNames';
+import Import from '../namespaces/Import';
 
 export type Position = {
 	x: number;
@@ -12,16 +13,20 @@ abstract class Node {
 	private description: string;
 	private position: Position;
 
-	protected constructor(name: string, description: string) {
+	protected constructor(name: string) {
 		this.id = Node.cnt.toString();
 		++Node.cnt;
-		this.name = name != '' ? name : '#' + this.id;
-		this.description = description;
+		this.name = name != '' ? name : 'b' + this.id;
+		this.description = '';
 		this.position = { x: 0, y: 0 };
 	}
 
 	public getType() {
-		return NodeTypeNames['Node'];
+		return this.getImport().getNodeName();
+	}
+
+	public getImport() {
+		return new Import('system', '', 'Node');
 	}
 
 	public getId() {

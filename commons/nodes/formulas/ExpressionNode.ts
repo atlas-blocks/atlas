@@ -1,17 +1,21 @@
 import FormulaNode from './FormulaNode';
 import { Position } from '../Node';
-import NodeTypeNames from '../NodeTypeNames';
+import Import from '../../namespaces/Import';
 
 class ExpressionNode extends FormulaNode {
 	private precision: number;
 
 	constructor(name: string, description: string, content: string, precision: number) {
-		super(name, description, content);
+		super(name, content);
 		this.precision = precision;
 	}
 
-	public getType() {
-		return NodeTypeNames['ExpressionNode'];
+	public getType(): string {
+		return this.getImport().getNodeName();
+	}
+
+	public getImport(): Import {
+		return new Import('system', 'formulas', 'ExpressionNode');
 	}
 
 	public static getNewBlock(pos: Position) {

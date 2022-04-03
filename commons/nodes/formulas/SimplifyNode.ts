@@ -7,7 +7,7 @@ class SimplifyNode extends FormulaNode {
 	formula: FormulaNode | undefined;
 
 	constructor(name: string, formula: FormulaNode | undefined) {
-		super(name, '', '');
+		super(name, '');
 		this.formula = formula;
 	}
 
