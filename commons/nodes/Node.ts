@@ -1,4 +1,5 @@
 import Import from '../namespaces/Import';
+import Graph from '../Graph';
 
 export type Position = {
 	x: number;
@@ -49,7 +50,7 @@ abstract class Node {
 		return this;
 	}
 
-	public getUsersNodes(): Node[] {
+	public getUsersNodes(graph: Graph): Node[] {
 		return [];
 	}
 }

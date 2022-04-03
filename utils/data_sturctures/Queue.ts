@@ -2,6 +2,7 @@ export interface Queue<T> {
 	enqueue(item: T): void;
 	dequeue(): T | undefined;
 	size(): number;
+	toArray(): T[];
 }
 
 export class ArrayQueue<T> implements Queue<T> {
@@ -27,5 +28,13 @@ export class ArrayQueue<T> implements Queue<T> {
 
 	size(): number {
 		return this.storage.length;
+	}
+
+	public toArray(): T[] {
+		return this.storage.slice();
+	}
+
+	toString() {
+		return this.storage.toString();
 	}
 }

@@ -1,6 +1,8 @@
 import FormulaNode from './FormulaNode';
-import { Position } from '../Node';
+import Node, { Position } from '../Node';
 import Import from '../../namespaces/Import';
+import FormulaUtils from '../../../utils/algorithms/FormulaUtils';
+import Graph from '../../Graph';
 
 class ExpressionNode extends FormulaNode {
 	private precision: number;
@@ -8,7 +10,6 @@ class ExpressionNode extends FormulaNode {
 	constructor(name: string, content: string, precision: number) {
 		super(name, content);
 		this.precision = precision;
-		this.evaluate();
 	}
 
 	public getImport(): Import {
@@ -23,8 +24,23 @@ class ExpressionNode extends FormulaNode {
 		return new ExpressionNode('', '', 0).setPosition(pos);
 	}
 
-	public evaluate() {
-		this.setResult('result');
+	public async evaluate(graph: Graph): Promise<string> {
+		const rpn = FormulaUtils.getReversePolishNotation(this, graph);
+		const result = await FormulaUtils.evaluateReversePolishNotation(rpn, graph);
+		this.setResult(result);
+		return result;
+	}
+
+	public getUsersNodes(graph: Graph): Node[] {
+		const rpn = FormulaUtils.getReversePolishNotation(this, graph).toArray();
+		const userNodes: Node[] = [];
+		for (const token of rpn) {
+			const node = graph.getNodeByNameOrNull(token);
+			if (node instanceof Node) {
+				userNodes.push(node);
+			}
+		}
+		return userNodes;
 	}
 }
 

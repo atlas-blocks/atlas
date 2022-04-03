@@ -41,9 +41,9 @@ import JavaScriptFunctionNode from '../commons/nodes/formulas/functions/JavaScri
 export const document = new Document('document_name');
 export const page = document.getPage(0);
 
-const expressionNode0 = new ExpressionNode('', '2 + 1 + y', 0).setPosition({ x: 400, y: 200 });
-const expressionNode1 = new ExpressionNode('', 'x + 2', 0).setPosition({ x: 500, y: 500 });
-const simplifyNode0 = new ExpressionNode('', 'simplify(b0)', 0).setPosition({ x: 400, y: 300 });
+const variableY = new ExpressionNode('y', '5', 0).setPosition({ x: 100, y: 100 });
+const expressionNode0 = new ExpressionNode('b1', '2 + 1 + y', 0).setPosition({ x: 300, y: 100 });
+const simplifyNode0 = new ExpressionNode('', 'simplify ( b1 )', 0).setPosition({ x: 600, y: 200 });
 const simplifyJSFunctionNode = new JavaScriptFunctionNode(
 	'simplify',
 	(args: string[]) => {
@@ -51,12 +51,19 @@ const simplifyJSFunctionNode = new JavaScriptFunctionNode(
 	},
 	[{ name: 'formulaContent', type: 'String' }],
 	'string',
-).setPosition({ x: 400, y: 400 });
+).setPosition({ x: 100, y: 200 });
+const variableX = new ExpressionNode('x', '15', 0).setPosition({ x: 300, y: 600 });
+const expressionNode1 = new ExpressionNode('', 'x + 2', 0).setPosition({ x: 500, y: 600 });
 
+page.getGraph().addNode(variableX);
+page.getGraph().addNode(variableY);
 page.getGraph().addNode(expressionNode0);
 page.getGraph().addNode(expressionNode1);
 page.getGraph().addNode(simplifyNode0);
 page.getGraph().addNode(simplifyJSFunctionNode);
+
+expressionNode0.evaluate(page.getGraph());
+simplifyNode0.evaluate(page.getGraph());
 
 const DnDFlow: NextPage = () => {
 	const [selectedNode, setSelectedNode] = useState<Node | null>(null);

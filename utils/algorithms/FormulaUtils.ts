@@ -20,9 +20,9 @@ export default class FormulaUtils {
 
 		for (const token of tokens) {
 			const node = graph.getNodeByNameOrNull(token);
-			if (isNaN(Number(token))) {
+			if (!isNaN(Number(token))) {
 				outputQueue.enqueue(token);
-			} else if (node !== null && node instanceof ExpressionNode) {
+			} else if (node instanceof ExpressionNode) {
 				outputQueue.enqueue(token);
 			} else if (node instanceof FunctionNode) {
 				operationStack.push(token);
@@ -38,11 +38,42 @@ export default class FormulaUtils {
 					outputQueue.enqueue(operationStack.pop());
 				}
 				operationStack.pop();
+			} else {
+				console.assert(false, 'cant recognise token: ' + token);
 			}
 		}
 		while (!operationStack.isEmpty()) {
 			outputQueue.enqueue(operationStack.pop());
 		}
 		return outputQueue;
+	}
+
+	public static async evaluateReversePolishNotation(
+		rpn: Queue<string>,
+		graph: Graph,
+	): Promise<string> {
+		const operations = ['+', '-', '/', '*'];
+
+		const argumentsStack = new ArrayStack<string>();
+		for (const token of rpn.toArray()) {
+			const node = graph.getNodeByNameOrNull(token);
+			if (!isNaN(Number(token))) {
+				argumentsStack.push(token);
+			} else if (node instanceof ExpressionNode) {
+				const subResult = await node.evaluate(graph);
+				argumentsStack.push(subResult);
+			} else if (node instanceof FunctionNode) {
+				const args: string[] = [];
+				for (let i = 0; i < node.getArgs().length; ++i) args.push(argumentsStack.pop());
+				const subResult = await node.call(args);
+				argumentsStack.push(subResult);
+			} else if (operations.includes(token)) {
+				argumentsStack.push(eval(argumentsStack.pop() + token + argumentsStack.pop()));
+			} else {
+				console.assert(false, 'cant recognise token: ' + token);
+			}
+		}
+		console.assert(argumentsStack.size() === 1, 'there should be only one result left');
+		return argumentsStack.pop();
 	}
 }

@@ -23,6 +23,10 @@ class FunctionNode extends FormulaNode {
 	public getImport(): Import {
 		return new Import('system', 'formulas/functions', 'FunctionNode');
 	}
+	async call(args: string[]): Promise<string> {
+		this.setResult('function result');
+		return 'function result';
+	}
 }
 
 export default FunctionNode;
