@@ -49,12 +49,27 @@ const simplifyNode0 = new ExpressionNode('', 'simplify ( "b1" )', 0).setPosition
 const simplifyJSFunctionNode = new JavaScriptFunctionNode(
 	'simplify',
 	async (args: string[]) => {
-		const response = await ServerUtils.getElSimplify(args[0].substring(1, args[0].length - 1));
+		const response = await ServerUtils.getElSimplify(args[0].slice(1, -1));
 		return response.success ? response.latex : '\\text{error during calculating}';
 	},
 	[{ name: 'formulaContent', type: 'String' }],
 	'string',
 ).setPosition({ x: 100, y: 200 });
+
+const fetchJSFunctionNode = new JavaScriptFunctionNode(
+	'fetch',
+	async (args: string[]) => {
+		const url = args[0];
+		const request = JSON.parse(args[1]);
+		return await ServerUtils.post(url, request, request);
+	},
+	[
+		{ name: 'url', type: 'String' },
+		{ name: 'request', type: 'String' },
+	],
+	'string',
+).setPosition({ x: 100, y: 300 });
+
 const variableX = new ExpressionNode('x', '15', 0).setPosition({ x: 300, y: 600 });
 const expressionNode1 = new ExpressionNode('', 'x + 2', 0).setPosition({ x: 500, y: 600 });
 
@@ -64,6 +79,7 @@ page.getGraph().addNode(expressionNode0);
 page.getGraph().addNode(expressionNode1);
 page.getGraph().addNode(simplifyNode0);
 page.getGraph().addNode(simplifyJSFunctionNode);
+page.getGraph().addNode(fetchJSFunctionNode);
 
 expressionNode0.evaluate(page.getGraph());
 simplifyNode0.evaluate(page.getGraph());

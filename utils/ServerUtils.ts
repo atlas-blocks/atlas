@@ -14,6 +14,10 @@ abstract class ServerUtils {
 		return this.fetchAsync(url, params, { method: 'GET' });
 	}
 
+	public static async post(url: string, params: Object, body: Object) {
+		return this.fetchAsync(url, params, { method: 'POST', body: body });
+	}
+
 	public static async getRelativeUrl(url: string, params: Object) {
 		const hostHref = window.location.href.replace(window.location.pathname, '');
 		return this.fetchAsync(hostHref + url, params, { method: 'GET' });

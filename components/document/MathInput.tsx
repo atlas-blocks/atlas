@@ -12,8 +12,11 @@ type Props = {
 type States = { inputBottom: string; inputValue: string };
 
 export default class MathInput extends React.Component<Props, States> {
+	private elementHeight: string;
+
 	constructor(props: Props) {
 		super(props);
+		this.elementHeight = '100px';
 		this.state = {
 			inputValue:
 				this.props.selectedNode instanceof FormulaNode
@@ -29,7 +32,7 @@ export default class MathInput extends React.Component<Props, States> {
 	}
 
 	public hide() {
-		this.setState({ inputBottom: '-200px' });
+		this.setState({ inputBottom: '-' + this.elementHeight });
 	}
 
 	updateBlock = (event: ChangeEvent<HTMLInputElement>) => {
@@ -45,7 +48,10 @@ export default class MathInput extends React.Component<Props, States> {
 
 	render() {
 		return (
-			<div id={styles.math_input} style={{ bottom: this.state.inputBottom }}>
+			<div
+				id={styles.math_input}
+				style={{ bottom: this.state.inputBottom, height: this.elementHeight }}
+			>
 				<input type={'text'} value={this.state.inputValue} onChange={this.updateBlock} />
 				<button onClick={this.submitInput}>OK</button>
 			</div>

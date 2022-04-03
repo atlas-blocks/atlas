@@ -43,7 +43,11 @@ export function FunctionBlock({ data }: { data: { node: FunctionNode } }) {
 		<div>
 			<div>
 				name: {data.node.getName()}(
-				{data.node.getArgs().map((arg) => arg.name + ': ' + arg.type)})
+				{data.node
+					.getArgs()
+					.map((arg) => arg.name + ': ' + arg.type)
+					.join(', ')}
+				)
 			</div>
 		</div>,
 		data.node,
