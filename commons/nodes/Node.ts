@@ -50,8 +50,16 @@ abstract class Node {
 		return this;
 	}
 
-	public getUsersNodes(graph: Graph): Node[] {
+	public getProviderNodes(graph: Graph): Node[] {
 		return [];
+	}
+
+	public getUserNodes(graph: Graph): Node[] {
+		const userNodes: Node[] = [];
+		for (const node of graph.getNodes()) {
+			if (node.getProviderNodes(graph).includes(this)) userNodes.push(node);
+		}
+		return userNodes;
 	}
 }
 

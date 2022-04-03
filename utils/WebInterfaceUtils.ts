@@ -42,7 +42,7 @@ class WebInterfaceUtils {
 	public static getEdges(graph: Graph): Elements {
 		let ans: Elements = [];
 		for (const node of graph.getNodes()) {
-			for (const user of node.getUsersNodes(graph)) {
+			for (const user of node.getProviderNodes(graph)) {
 				ans.push({
 					id: 'edge' + node.getId() + user.getId(),
 					source: user.getId(),

@@ -31,16 +31,18 @@ class ExpressionNode extends FormulaNode {
 		return result;
 	}
 
-	public getUsersNodes(graph: Graph): Node[] {
+	public getProviderNodes(graph: Graph): Node[] {
 		const rpn = FormulaUtils.getReversePolishNotation(this, graph).toArray();
-		const userNodes: Node[] = [];
+		const providerNodes: Node[] = [];
 		for (const token of rpn) {
 			const node = graph.getNodeByNameOrNull(token);
-			if (node instanceof Node) {
-				userNodes.push(node);
-			}
+			if (node instanceof Node) providerNodes.push(node);
 		}
-		return userNodes;
+		return providerNodes;
+	}
+
+	public setContent(content: string) {
+		this.content = content;
 	}
 }
 
