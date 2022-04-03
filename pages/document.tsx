@@ -35,7 +35,7 @@ import FormulaNode from '../commons/nodes/formulas/FormulaNode';
 import { NextPage } from 'next';
 import styles from '../styles/DnDFlow.module.css';
 import NodeTypeNames from '../commons/nodes/NodeTypeNames';
-import { FunctionArgument } from '../commons/nodes/formulas/functions/FunctionNode';
+import { FunctionArgument } from '../commons/nodes/formulas/FunctionNode';
 import JavaScriptFunctionNode from '../commons/nodes/formulas/functions/JavaScriptFunctionNode';
 
 export const document = new Document('document_name');
@@ -47,9 +47,10 @@ const simplifyNode0 = new ExpressionNode('', 'simplify(b0)', 0).setPosition({ x:
 const simplifyJSFunctionNode = new JavaScriptFunctionNode(
 	'simplify',
 	(args: string[]) => {
-		return 'simplify';
+		return new Promise<string>((resolve, reject) => resolve('simplify'));
 	},
 	[{ name: 'formulaContent', type: 'String' }],
+	'string',
 ).setPosition({ x: 400, y: 400 });
 
 page.getGraph().addNode(expressionNode0);

@@ -1,5 +1,5 @@
-import FormulaNode from '../FormulaNode';
-import Import from '../../../namespaces/Import';
+import FormulaNode from './FormulaNode';
+import Import from '../../namespaces/Import';
 
 export type FunctionArgument = {
 	name: string;
@@ -8,18 +8,16 @@ export type FunctionArgument = {
 
 class FunctionNode extends FormulaNode {
 	private readonly args: FunctionArgument[];
+	private readonly returnType: string;
 
-	constructor(name: string, content: string, args: FunctionArgument[]) {
+	constructor(name: string, content: string, args: FunctionArgument[], returnType: string) {
 		super(name, content);
 		this.args = args;
+		this.returnType = returnType;
 	}
 
 	public getArgs() {
 		return this.args;
-	}
-
-	evaluate() {
-		this.setResult('result');
 	}
 
 	public getImport(): Import {

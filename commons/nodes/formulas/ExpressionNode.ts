@@ -8,6 +8,7 @@ class ExpressionNode extends FormulaNode {
 	constructor(name: string, content: string, precision: number) {
 		super(name, content);
 		this.precision = precision;
+		this.evaluate();
 	}
 
 	public getImport(): Import {

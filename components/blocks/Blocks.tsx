@@ -3,7 +3,7 @@ import { Handle, Position } from 'react-flow-renderer';
 import styles from '../../styles/Block.module.css';
 import Node from '../../commons/nodes/Node';
 import ExpressionNode from '../../commons/nodes/formulas/ExpressionNode';
-import FunctionNode from '../../commons/nodes/formulas/functions/FunctionNode';
+import FunctionNode from '../../commons/nodes/formulas/FunctionNode';
 import FormulaNode from '../../commons/nodes/formulas/FormulaNode';
 import JavaScriptFunctionNode from '../../commons/nodes/formulas/functions/JavaScriptFunctionNode';
 
@@ -37,6 +37,7 @@ export function ExpressionBlock({ data }: { data: { node: ExpressionNode } }) {
 		data.node,
 	);
 }
+
 export function FunctionBlock({ data }: { data: { node: FunctionNode } }) {
 	return FormulaBlockWrapper(
 		<div>

@@ -1,17 +1,24 @@
-import FunctionNode, { FunctionArgument } from './FunctionNode';
+import FunctionNode, { FunctionArgument } from '../FunctionNode';
 import Import from '../../../namespaces/Import';
 
 class JavaScriptFunctionNode extends FunctionNode {
-	private readonly func: (args: string[]) => string;
+	private readonly func: (args: string[]) => Promise<string>;
 
-	constructor(name: string, func: (args: string[]) => string, args: FunctionArgument[]) {
-		super(name, '', args);
+	constructor(
+		name: string,
+		func: (args: string[]) => Promise<string>,
+		args: FunctionArgument[],
+		returnType: string,
+	) {
+		super(name, '', args, returnType);
 		this.func = func;
 	}
 
-	call(args: string[]) {
+	async call(args: string[]): Promise<string> {
 		console.assert(args.length === this.getArgs().length);
-		this.setResult(this.func(args));
+		const result = await this.func(args);
+		this.setResult(result);
+		return result;
 	}
 
 	public getImport(): Import {
