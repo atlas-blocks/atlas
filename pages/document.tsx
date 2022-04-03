@@ -23,7 +23,7 @@ import ReactFlow, {
 import { nodeTypes } from '../components/blocks/Blocks';
 import { edgeTypes } from '../components/blocks/Edge';
 
-import Sidebar from '../components/document/Sidebar';
+import BlockMenu from '../components/document/BlockMenu';
 import BlockSettings from '../components/document/BlockSettings';
 import MathInput from '../components/document/MathInput';
 
@@ -150,7 +150,7 @@ const DnDFlow: NextPage = () => {
 						<Background />
 					</ReactFlow>
 				</div>
-				<Sidebar setDruggedNode={setDruggedNode} />
+				<BlockMenu selectedNode={selectedNode} setDruggedNode={setDruggedNode} />
 				<BlockSettings selectedNode={selectedNode} webInterfaceUtils={webInterfaceUtils} />
 				<MathInput
 					selectedNode={selectedNode}

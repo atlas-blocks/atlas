@@ -2,16 +2,18 @@
 
 #sidebar {
 	position: absolute;
+	right: 0;
 	background: var(--elements-background);
-	border-right: 1px solid #eee;
+	border-left: 1px solid #eee;
 	font-size: 12px;
 	padding: 15px 10px;
 	display: block;
-	max-width: 200px;
+	max-width: 300px;
 	min-width: 100px;
 	width: 20%;
 	height: 80vh;
 	text-align: center;
+	transition: 1s;
 }
 
 .dndnode {
