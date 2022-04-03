@@ -16,31 +16,17 @@ function Sidebar() {
 			<h2>Blocks Menu</h2>
 			<div
 				className={`${styles.dndnode} ${styles.default}`}
-				onDragStart={(event) => onDragStart(event, NodeTypeNames.ExpressionNode)}
+				onDragStart={(event) => onDragStart(event, ExpressionNode.getImport().toString())}
 				draggable
 			>
-				{NodeTypeNames.ExpressionNode}
+				{ExpressionNode.getImport().getNodeName()}
 			</div>
 			<div
 				className={`${styles.dndnode} ${styles.simplify}`}
-				onDragStart={(event) => onDragStart(event, NodeTypeNames.SimplifyNode)}
+				onDragStart={(event) => onDragStart(event, ExpressionNode.getImport().toString())}
 				draggable
 			>
-				{NodeTypeNames.SimplifyNode}
-			</div>
-			<div
-				className={`${styles.dndnode} ${styles.set}`}
-				onDragStart={(event) => onDragStart(event, NodeTypeNames.ExpressionNode)}
-				draggable
-			>
-				Set
-			</div>
-			<div
-				className={`${styles.dndnode} ${styles.graph}`}
-				onDragStart={(event) => onDragStart(event, NodeTypeNames.ExpressionNode)}
-				draggable
-			>
-				Graph
+				{SimplifyNode}
 			</div>
 		</aside>
 	);

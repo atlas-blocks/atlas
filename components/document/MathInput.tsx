@@ -9,11 +9,9 @@ type Props = {
 	selectedNode: Node | null;
 	webInterfaceUtils: WebInterfaceUtils;
 };
+type States = { inputBottom: string; inputValue: string };
 
-export default class MathInput extends React.Component<
-	Props,
-	{ inputBottom: string; inputValue: string }
-> {
+export default class MathInput extends React.Component<Props, States> {
 	constructor(props: Props) {
 		super(props);
 		this.state = {

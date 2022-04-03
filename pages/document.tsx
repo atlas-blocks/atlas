@@ -40,15 +40,9 @@ import NodeTypeNames from '../commons/nodes/NodeTypeNames';
 export const document = new Document('document_name');
 export const page = document.getPage(0);
 
-const expressionNode0 = new ExpressionNode('', 'description1', '2 + 1 + y', 0).setPosition({
-	x: 400,
-	y: 200,
-});
-const expressionNode1 = new ExpressionNode('', 'description2', 'x + 2', 0).setPosition({
-	x: 500,
-	y: 500,
-});
-const simplifyNode0 = new SimplifyNode('', expressionNode1).setPosition({ x: 400, y: 300 });
+const expressionNode0 = new ExpressionNode('', '2 + 1 + y', 0).setPosition({ x: 400, y: 200 });
+const expressionNode1 = new ExpressionNode('', 'x + 2', 0).setPosition({ x: 500, y: 500 });
+const simplifyNode0 = new ExpressionNode('', 'simplify(b0)', 0).setPosition({ x: 400, y: 300 });
 page.getGraph().addNode(expressionNode0);
 page.getGraph().addNode(expressionNode1);
 page.getGraph().addNode(simplifyNode0);

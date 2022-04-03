@@ -5,21 +5,21 @@ import Import from '../../namespaces/Import';
 class ExpressionNode extends FormulaNode {
 	private precision: number;
 
-	constructor(name: string, description: string, content: string, precision: number) {
+	constructor(name: string, content: string, precision: number) {
 		super(name, content);
 		this.precision = precision;
 	}
 
-	public getType(): string {
-		return this.getImport().getNodeName();
+	public getImport(): Import {
+		return ExpressionNode.getImport();
 	}
 
-	public getImport(): Import {
+	public static getImport(): Import {
 		return new Import('system', 'formulas', 'ExpressionNode');
 	}
 
 	public static getNewBlock(pos: Position) {
-		return new ExpressionNode('', 'some description', '', 0).setPosition(pos);
+		return new ExpressionNode('', '', 0).setPosition(pos);
 	}
 }
 

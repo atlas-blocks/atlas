@@ -7,8 +7,7 @@ import SimplifyNode from '../../commons/nodes/formulas/SimplifyNode';
 import NodeTypeNames from '../../commons/nodes/NodeTypeNames';
 
 export const nodeTypes = {
-	[NodeTypeNames.ExpressionNode]: ExpressionBlock,
-	[NodeTypeNames.SimplifyNode]: SimplifyBlock,
+	[ExpressionNode.getImport().toString()]: ExpressionBlock,
 };
 
 interface DefaultBlockProps {
@@ -18,23 +17,13 @@ interface DefaultBlockProps {
 export function FormulaBlockWrapper(content: JSX.Element) {
 	return (
 		<div className={`${styles.block} ${styles.default}`}>
-			<Handle type="target" position={Position.Top} />
+			<Handle type="target" position={Position.Left} />
 			{content}
-			<Handle type="source" position={Position.Bottom} id="a" />
+			<Handle type="source" position={Position.Right} id="a" />
 		</div>
 	);
 }
 
 export function ExpressionBlock({ data }: { data: { node: ExpressionNode } }) {
 	return FormulaBlockWrapper(<div>{data.node.toLatex()}</div>);
-}
-
-export function SimplifyBlock({ data }: { data: { node: SimplifyNode } }) {
-	return (
-		<div className={`${styles.block} ${styles.simplify}`}>
-			<Handle type="target" position={Position.Top} />
-			<div>{data.node.toLatex()}</div>
-			<Handle type="source" position={Position.Bottom} id="a" />
-		</div>
-	);
 }

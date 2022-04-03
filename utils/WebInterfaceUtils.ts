@@ -22,7 +22,7 @@ class WebInterfaceUtils {
 	public static toBlock(node: Node): Block {
 		return {
 			id: node.getId(),
-			type: node.getType(),
+			type: node.getImport().toString(),
 			position: node.getPosition(),
 			data: { node: node },
 		};
@@ -58,8 +58,6 @@ class WebInterfaceUtils {
 	public refreshElements() {
 		this.setElements((els) => WebInterfaceUtils.getElements(this.graph));
 	}
-
-	public rerenderNode(node: Node) {}
 }
 
 export default WebInterfaceUtils;

@@ -21,11 +21,11 @@ abstract class Node {
 		this.position = { x: 0, y: 0 };
 	}
 
-	public getType() {
-		return this.getImport().getNodeName();
+	public getImport() {
+		return Node.getImport();
 	}
 
-	public getImport() {
+	public static getImport() {
 		return new Import('system', '', 'Node');
 	}
 

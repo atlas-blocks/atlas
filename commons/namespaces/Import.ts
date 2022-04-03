@@ -20,6 +20,10 @@ class Import {
 	public getNodeName(): string {
 		return this.nodeName;
 	}
+
+	public toString(): string {
+		return this.user + '/' + this.package + '/' + this.nodeName;
+	}
 }
 
 export default Import;
