@@ -34,9 +34,8 @@ import FormulaNode from '../commons/nodes/formulas/FormulaNode';
 
 import { NextPage } from 'next';
 import styles from '../styles/DnDFlow.module.css';
-import NodeTypeNames from '../commons/nodes/NodeTypeNames';
-import { FunctionArgument } from '../commons/nodes/formulas/FunctionNode';
 import JavaScriptFunctionNode from '../commons/nodes/formulas/functions/JavaScriptFunctionNode';
+import ServerUtils from '../utils/ServerUtils';
 
 export const document = new Document('document_name');
 export const page = document.getPage(0);
@@ -49,8 +48,9 @@ const simplifyNode0 = new ExpressionNode('', 'simplify ( "b1" )', 0).setPosition
 });
 const simplifyJSFunctionNode = new JavaScriptFunctionNode(
 	'simplify',
-	(args: string[]) => {
-		return new Promise<string>((resolve, reject) => resolve('simplify'));
+	async (args: string[]) => {
+		const response = await ServerUtils.getElSimplify(args[0].substring(1, args[0].length - 1));
+		return response.success ? response.latex : '\\text{error during calculating}';
 	},
 	[{ name: 'formulaContent', type: 'String' }],
 	'string',

@@ -32,7 +32,7 @@ class ExpressionNode extends FormulaNode {
 	}
 
 	public getProviderNodes(graph: Graph): Node[] {
-		const rpn = FormulaUtils.getReversePolishNotation(this, graph).toArray();
+		const rpn = FormulaUtils.splitIntoTokens(this.getContent());
 		const providerNodes: Node[] = [];
 		for (const token of rpn) {
 			const node = graph.getNodeByNameOrNull(token);
