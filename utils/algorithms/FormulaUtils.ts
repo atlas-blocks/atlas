@@ -26,6 +26,7 @@ export default class FormulaUtils {
 				outputQueue.enqueue(token);
 			} else if (node instanceof FunctionNode) {
 				operationStack.push(token);
+			} else if (token === ',') {
 			} else if (operationsL1.includes(token) || operationsL2.includes(token)) {
 				while (!operationStack.isEmpty() && operationsL2.includes(operationStack.peek())) {
 					outputQueue.enqueue(operationStack.pop());
@@ -60,28 +61,30 @@ export default class FormulaUtils {
 	): Promise<string> {
 		const operations = ['+', '-', '/', '*'];
 
-		const argumentsStack = new ArrayStack<string>();
+		const argumentsQueue = new ArrayQueue<string>();
 		for (const token of rpn.toArray()) {
 			const node = graph.getNodeByNameOrNull(token);
 			if (!isNaN(Number(token))) {
-				argumentsStack.push(token);
+				argumentsQueue.enqueue(token);
 			} else if (node instanceof ExpressionNode) {
 				const subResult = await node.evaluate(graph);
-				argumentsStack.push(subResult);
+				argumentsQueue.enqueue(subResult);
 			} else if (node instanceof FunctionNode) {
 				const args: string[] = [];
-				for (let i = 0; i < node.getArgs().length; ++i) args.push(argumentsStack.pop());
+				for (let i = 0; i < node.getArgs().length; ++i) args.push(argumentsQueue.dequeue());
 				const subResult = await node.call(args);
-				argumentsStack.push(subResult);
+				argumentsQueue.enqueue(subResult);
 			} else if (operations.includes(token)) {
-				argumentsStack.push(eval(argumentsStack.pop() + token + argumentsStack.pop()));
+				argumentsQueue.enqueue(
+					eval(argumentsQueue.dequeue() + token + argumentsQueue.dequeue()),
+				);
 			} else if (token.startsWith('"') && token.endsWith('"')) {
-				argumentsStack.push(token);
+				argumentsQueue.enqueue(token.slice(1, -1));
 			} else {
 				console.assert(false, 'cant recognise token: ' + token);
 			}
 		}
-		console.assert(argumentsStack.size() === 1, 'there should be only one result left');
-		return argumentsStack.pop();
+		console.assert(argumentsQueue.size() === 1, 'there should be only one result left');
+		return argumentsQueue.dequeue();
 	}
 }

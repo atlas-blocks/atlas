@@ -49,19 +49,20 @@ const simplifyNode0 = new ExpressionNode('', 'simplify ( "b1" )', 0).setPosition
 const simplifyJSFunctionNode = new JavaScriptFunctionNode(
 	'simplify',
 	async (args: string[]) => {
-		const response = await ServerUtils.getElSimplify(args[0].slice(1, -1));
+		const response = await ServerUtils.getElSimplify(args[0]);
 		return response.success ? response.latex : '\\text{error during calculating}';
 	},
 	[{ name: 'formulaContent', type: 'String' }],
 	'string',
-).setPosition({ x: 100, y: 200 });
+).setPosition({ x: 100, y: 250 });
 
 const fetchJSFunctionNode = new JavaScriptFunctionNode(
 	'fetch',
 	async (args: string[]) => {
 		const url = args[0];
+		console.log(args[0]);
 		const request = JSON.parse(args[1]);
-		return await ServerUtils.post(url, request, request);
+		return JSON.stringify(await ServerUtils.post(url, request, request));
 	},
 	[
 		{ name: 'url', type: 'String' },
@@ -69,6 +70,11 @@ const fetchJSFunctionNode = new JavaScriptFunctionNode(
 	],
 	'string',
 ).setPosition({ x: 100, y: 300 });
+const customFetchNode0 = new ExpressionNode(
+	'',
+	'fetch ( "http://localhost:3000/api/el_simplify" , "{"latex":"1-1"}" )',
+	0,
+).setPosition({ x: 300, y: 400 });
 
 const variableX = new ExpressionNode('x', '15', 0).setPosition({ x: 300, y: 600 });
 const expressionNode1 = new ExpressionNode('', 'x + 2', 0).setPosition({ x: 500, y: 600 });
@@ -80,9 +86,11 @@ page.getGraph().addNode(expressionNode1);
 page.getGraph().addNode(simplifyNode0);
 page.getGraph().addNode(simplifyJSFunctionNode);
 page.getGraph().addNode(fetchJSFunctionNode);
+page.getGraph().addNode(customFetchNode0);
 
 expressionNode0.evaluate(page.getGraph());
 simplifyNode0.evaluate(page.getGraph());
+customFetchNode0.evaluate(page.getGraph());
 
 const DnDFlow: NextPage = () => {
 	const [selectedNode, setSelectedNode] = useState<Node | null>(null);
