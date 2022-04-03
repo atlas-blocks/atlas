@@ -14,7 +14,7 @@ export default class FormulaUtils {
 	public static getReversePolishNotation(formulaNode: FormulaNode, graph: Graph): Queue<string> {
 		const outputQueue = new ArrayQueue<string>();
 		const operationStack = new ArrayStack<string>();
-		const tokens: string[] = formulaNode.getContent().split(' ');
+		const tokens: string[] = this.splitIntoTokens(formulaNode.getContent());
 		const operationsL1 = ['+', '-'];
 		const operationsL2 = ['/', '*'];
 
@@ -38,6 +38,8 @@ export default class FormulaUtils {
 					outputQueue.enqueue(operationStack.pop());
 				}
 				operationStack.pop();
+			} else if (token.startsWith('"') && token.endsWith('"')) {
+				outputQueue.enqueue(token);
 			} else {
 				console.assert(false, 'cant recognise token: ' + token);
 			}
@@ -46,6 +48,10 @@ export default class FormulaUtils {
 			outputQueue.enqueue(operationStack.pop());
 		}
 		return outputQueue;
+	}
+
+	public static splitIntoTokens(content: string): string[] {
+		return content.split(' ');
 	}
 
 	public static async evaluateReversePolishNotation(
@@ -69,6 +75,8 @@ export default class FormulaUtils {
 				argumentsStack.push(subResult);
 			} else if (operations.includes(token)) {
 				argumentsStack.push(eval(argumentsStack.pop() + token + argumentsStack.pop()));
+			} else if (token.startsWith('"') && token.endsWith('"')) {
+				argumentsStack.push(token);
 			} else {
 				console.assert(false, 'cant recognise token: ' + token);
 			}

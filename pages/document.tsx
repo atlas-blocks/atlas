@@ -43,7 +43,10 @@ export const page = document.getPage(0);
 
 const variableY = new ExpressionNode('y', '5', 0).setPosition({ x: 100, y: 100 });
 const expressionNode0 = new ExpressionNode('b1', '2 + 1 + y', 0).setPosition({ x: 300, y: 100 });
-const simplifyNode0 = new ExpressionNode('', 'simplify ( b1 )', 0).setPosition({ x: 600, y: 200 });
+const simplifyNode0 = new ExpressionNode('', 'simplify ( "b1" )', 0).setPosition({
+	x: 600,
+	y: 200,
+});
 const simplifyJSFunctionNode = new JavaScriptFunctionNode(
 	'simplify',
 	(args: string[]) => {
@@ -67,6 +70,7 @@ simplifyNode0.evaluate(page.getGraph());
 
 const DnDFlow: NextPage = () => {
 	const [selectedNode, setSelectedNode] = useState<Node | null>(null);
+	const [druggedNode, setDruggedNode] = useState<Node | null>(null);
 	const reactFlowWrapper = useRef(null);
 	const mathInputRef = useRef<MathInput>(null);
 	const [reactFlowInstance, setReactFlowInstance] = useState(null);
@@ -104,22 +108,14 @@ const DnDFlow: NextPage = () => {
 		event.preventDefault();
 		// @ts-ignore
 		const reactFlowBounds = reactFlowWrapper.current.getBoundingClientRect();
-		const type = event.dataTransfer.getData('application/reactflow');
 		// @ts-ignore
 		const pos = reactFlowInstance.project({
 			x: event.clientX - reactFlowBounds.left,
 			y: event.clientY - reactFlowBounds.top,
 		});
-		let newNode: Node;
-		switch (type) {
-			case NodeTypeNames.ExpressionNode:
-				newNode = ExpressionNode.getNewBlock(pos);
-				break;
-			default:
-				throw new Error();
-		}
 
-		page.getGraph().addNode(newNode);
+		console.assert(druggedNode !== null, 'drugged node should not be assigned before dragging');
+		if (druggedNode !== null) page.getGraph().addNode(druggedNode.setPosition(pos));
 		webInterfaceUtils.refreshElements();
 	};
 
@@ -154,7 +150,7 @@ const DnDFlow: NextPage = () => {
 						<Background />
 					</ReactFlow>
 				</div>
-				<Sidebar />
+				<Sidebar setDruggedNode={setDruggedNode} />
 				<BlockSettings selectedNode={selectedNode} webInterfaceUtils={webInterfaceUtils} />
 				<MathInput
 					selectedNode={selectedNode}
