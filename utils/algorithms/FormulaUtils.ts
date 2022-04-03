@@ -2,7 +2,7 @@ import Graph from '../../commons/Graph';
 import { ArrayQueue, Queue } from '../data_sturctures/Queue';
 import { ArrayStack } from '../data_sturctures/Stack';
 import ExpressionNode from '../../commons/nodes/formulas/ExpressionNode';
-import FunctionNode from '../../commons/nodes/formulas/FunctionNode';
+import FunctionNode from '../../commons/nodes/formulas/functions/FunctionNode';
 import FormulaNode from '../../commons/nodes/formulas/FormulaNode';
 
 export default class FormulaUtils {

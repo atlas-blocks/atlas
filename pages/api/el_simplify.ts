@@ -28,7 +28,6 @@ export default function handler(req: NextApiRequest, res: NextApiResponse<Respon
 			in_latex: req.query.latex.toString(),
 		})
 			.then((data: ServerResponse) => {
-				console.log(data);
 				resolve(data);
 			})
 			.catch((data) => reject(data));

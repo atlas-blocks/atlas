@@ -1,4 +1,4 @@
-import FunctionNode, { FunctionArgument } from '../FunctionNode';
+import FunctionNode, { FunctionArgument } from './FunctionNode';
 import Import from '../../../namespaces/Import';
 
 class JavaScriptFunctionNode extends FunctionNode {

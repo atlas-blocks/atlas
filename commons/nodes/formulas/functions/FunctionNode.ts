@@ -1,5 +1,5 @@
-import FormulaNode from './FormulaNode';
-import Import from '../../namespaces/Import';
+import FormulaNode from '../FormulaNode';
+import Import from '../../../namespaces/Import';
 
 export type FunctionArgument = {
 	name: string;
