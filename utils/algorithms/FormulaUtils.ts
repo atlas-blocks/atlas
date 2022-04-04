@@ -33,7 +33,6 @@ export default class FormulaUtils {
 				outputQueue.enqueue(token);
 			} else if (node instanceof FunctionNode) {
 				operationStack.push(token);
-			} else if (token === ',') {
 			} else if (operationsL1.includes(token) || operationsL2.includes(token)) {
 				while (!operationStack.isEmpty() && operationsL2.includes(operationStack.peek())) {
 					outputQueue.enqueue(operationStack.pop());
@@ -46,6 +45,12 @@ export default class FormulaUtils {
 					outputQueue.enqueue(operationStack.pop());
 				}
 				operationStack.pop();
+				if (
+					!operationStack.isEmpty() &&
+					graph.getNodeByNameOrNull(operationStack.peek()) instanceof FunctionNode
+				) {
+					outputQueue.enqueue(operationStack.pop());
+				}
 			} else {
 				outputQueue.enqueue(token);
 			}
@@ -167,7 +172,7 @@ export default class FormulaUtils {
 				const args: string[] = [];
 				if (token === this.TypesFunctions.map.name) {
 					while (
-						argumentsStack.size() !== 0 &&
+						!argumentsStack.isEmpty() &&
 						argumentsStack.peek().startsWith(this.TypesFunctions.map.keyPrefix)
 					) {
 						const key = argumentsStack
@@ -180,7 +185,7 @@ export default class FormulaUtils {
 				} else {
 					for (let i = 0; i < node.getArgs().length; ++i) args.push(argumentsStack.pop());
 				}
-				argumentsStack.push(await node.call(args));
+				argumentsStack.push(await node.call(args.reverse()));
 			} else if (operations.includes(token)) {
 				const arg2 = argumentsStack.pop();
 				const arg1 = argumentsStack.pop();

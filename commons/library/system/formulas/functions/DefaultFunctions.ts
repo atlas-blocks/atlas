@@ -43,6 +43,14 @@ export default new CustomNamespace('', [
 		'String',
 	),
 	new JavaScriptFunctionNode(
+		'str',
+		async (args: string[]) => {
+			return '"' + args[0] + '"';
+		},
+		[{ name: 'value', type: 'Any' }],
+		'String',
+	),
+	new JavaScriptFunctionNode(
 		'getMapField',
 		async (args: string[]) => {
 			const map = JSON.parse(args[0]);

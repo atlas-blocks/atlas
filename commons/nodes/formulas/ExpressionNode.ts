@@ -33,6 +33,7 @@ class ExpressionNode extends FormulaNode {
 			result = await FormulaUtils.evaluateReversePolishNotation(rpn, graph);
 		} catch (e) {
 			if (e instanceof Error) {
+				console.trace();
 				ErrorUtils.showAlert(
 					'Error while evaluating expression: ' +
 						this.getName() +

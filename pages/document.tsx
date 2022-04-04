@@ -47,17 +47,17 @@ const simplifyNode0 = new ExpressionNode('', 'simplify("1 + 1")', 0).setPosition
 });
 const customFetchNode0 = new ExpressionNode(
 	'fetch1',
-	'fetch("/api/el_simplify", {"latex":"1+y+y-1"})',
+	'fetch("/api/el_simplify", {"latex":str(y + 5 - 6)})',
 	0,
 ).setPosition({ x: 10, y: 300 });
 
 const mapFieldGettingNode = new ExpressionNode('getMapField1', 'fetch1["out"]', 0).setPosition({
-	x: 400,
-	y: 400,
+	x: 470,
+	y: 300,
 });
 const simplifyNode1 = new ExpressionNode('', 'simplify(getMapField1)', 0).setPosition({
-	x: 650,
-	y: 400,
+	x: 700,
+	y: 300,
 });
 
 const customFetchNode2 = new ExpressionNode(
@@ -75,10 +75,12 @@ page.getGraph().addNode(customFetchNode2);
 page.getGraph().addNode(mapFieldGettingNode);
 page.getGraph().addNode(simplifyNode1);
 
-customFetchNode0.updateResult(page.getGraph());
-variableY.updateResult(page.getGraph());
-simplifyNode0.updateResult(page.getGraph());
-customFetchNode2.updateResult(page.getGraph());
+(async () => {
+	await variableY.updateResult(page.getGraph());
+	await customFetchNode0.updateResult(page.getGraph());
+	await simplifyNode0.updateResult(page.getGraph());
+	await customFetchNode2.updateResult(page.getGraph());
+})();
 
 const DnDFlow: NextPage = () => {
 	const [selectedNode, setSelectedNode] = useState<Node | null>(null);
