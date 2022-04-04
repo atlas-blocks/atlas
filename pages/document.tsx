@@ -59,8 +59,7 @@ const simplifyJSFunctionNode = new JavaScriptFunctionNode(
 const fetchJSFunctionNode = new JavaScriptFunctionNode(
 	'fetch',
 	async (args: string[]) => {
-		const url = args[0];
-		console.log(args[0]);
+		const url = JSON.parse(args[0]);
 		const request = JSON.parse(args[1]);
 		return JSON.stringify(await ServerUtils.post(url, request, request));
 	},
@@ -71,22 +70,38 @@ const fetchJSFunctionNode = new JavaScriptFunctionNode(
 	'string',
 ).setPosition({ x: 100, y: 300 });
 const customFetchNode0 = new ExpressionNode(
-	'',
-	'fetch ( "http://localhost:3000/api/el_simplify" , "{"latex":"1+y+y-1"}" )',
+	'fetch1',
+	'fetch ( "http://localhost:3000/api/el_simplify" , {"latex":"1+y+y-1"} )',
 	0,
 ).setPosition({ x: 300, y: 400 });
 
-const variableX = new ExpressionNode('x', '15', 0).setPosition({ x: 300, y: 600 });
-const expressionNode1 = new ExpressionNode('', 'x + 2', 0).setPosition({ x: 500, y: 600 });
+const getFunctionNode = new JavaScriptFunctionNode(
+	'getMapField',
+	async (args: string[]) => {
+		const map = JSON.parse(args[0]);
+		const field = JSON.parse(args[1]);
+		return JSON.stringify(map[field]);
+	},
+	[
+		{ name: 'map', type: 'String' },
+		{ name: 'field', type: 'String' },
+	],
+	'string',
+).setPosition({ x: 100, y: 500 });
 
-page.getGraph().addNode(variableX);
+const mapFieldGettingNode = new ExpressionNode('getMapField1', 'fetch1["out"]', 0).setPosition({
+	x: 400,
+	y: 550,
+});
+
 page.getGraph().addNode(variableY);
 page.getGraph().addNode(expressionNode0);
-page.getGraph().addNode(expressionNode1);
 page.getGraph().addNode(simplifyNode0);
 page.getGraph().addNode(simplifyJSFunctionNode);
 page.getGraph().addNode(fetchJSFunctionNode);
 page.getGraph().addNode(customFetchNode0);
+page.getGraph().addNode(getFunctionNode);
+page.getGraph().addNode(mapFieldGettingNode);
 
 expressionNode0.evaluate(page.getGraph());
 simplifyNode0.evaluate(page.getGraph());

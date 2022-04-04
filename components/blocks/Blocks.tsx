@@ -31,7 +31,7 @@ export function ExpressionBlock({ data }: { data: { node: ExpressionNode } }) {
 	return FormulaBlockWrapper(
 		<div>
 			<div>name: {data.node.getName()}</div>
-			<div>{data.node.getContent()}</div>
+			<div>content: {data.node.getContent()}</div>
 			<div>result: {data.node.getResult()}</div>
 		</div>,
 		data.node,
