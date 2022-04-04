@@ -1,6 +1,4 @@
 import Node from '../Node';
-import Graph from '../../Graph';
-import FormulaUtils from '../../../utils/algorithms/FormulaUtils';
 
 abstract class FormulaNode extends Node {
 	protected content: string;

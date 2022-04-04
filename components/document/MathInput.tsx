@@ -13,7 +13,7 @@ type Props = {
 type States = { inputBottom: string; inputValue: string };
 
 export default class MathInput extends React.Component<Props, States> {
-	private elementHeight: string;
+	private readonly elementHeight: string;
 
 	constructor(props: Props) {
 		super(props);

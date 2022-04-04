@@ -1,8 +1,8 @@
 import Page from './Page';
 
 export class Document {
-	private package: string;
-	private pages: Page[];
+	private readonly package: string;
+	private readonly pages: Page[];
 
 	constructor(name: string) {
 		this.package = '/system/' + name;

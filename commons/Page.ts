@@ -4,9 +4,9 @@ import GraphNamespace from './namespaces/GraphNamespace';
 import Namespace from './namespaces/Namespace';
 
 class Page {
-	private graph: Graph;
-	namespace: Namespace;
-	imports: Import[];
+	private readonly graph: Graph;
+	private readonly namespace: Namespace;
+	private readonly imports: Import[];
 
 	constructor(packageName: string) {
 		this.graph = new Graph();

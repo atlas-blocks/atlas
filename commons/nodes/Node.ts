@@ -9,8 +9,8 @@ export type Position = {
 abstract class Node {
 	private static cnt = 0;
 	private readonly id: string;
-	private name: string;
-	private description: string;
+	private readonly name: string;
+	private readonly description: string;
 	private position: Position;
 	private visible: boolean;
 

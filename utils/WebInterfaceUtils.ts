@@ -1,7 +1,7 @@
 import React from 'react';
 import Graph from '../commons/Graph';
 import Node from '../commons/nodes/Node';
-import { Node as Block, Edge as BlockEdge, Elements } from 'react-flow-renderer';
+import { Node as Block, Elements } from 'react-flow-renderer';
 import ExpressionNode from '../commons/nodes/formulas/ExpressionNode';
 
 class WebInterfaceUtils {

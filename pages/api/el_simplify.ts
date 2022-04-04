@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { ReasonPhrases, StatusCodes, getReasonPhrase, getStatusCode } from 'http-status-codes';
+import { ReasonPhrases, StatusCodes } from 'http-status-codes';
 import ServerUtils from '../../utils/ServerUtils';
 
 type ServerResponse = {
