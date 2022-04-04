@@ -12,14 +12,6 @@ abstract class FormulaNode extends Node {
 		this.result = '';
 	}
 
-	public toLatex() {
-		return this.content;
-	}
-
-	public setLatex(latex: string) {
-		this.content = latex;
-	}
-
 	public getContent(): string {
 		return this.content;
 	}

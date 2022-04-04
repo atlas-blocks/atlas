@@ -41,8 +41,16 @@ class ExpressionNode extends FormulaNode {
 		return providerNodes;
 	}
 
-	public setContent(content: string) {
+	public async updateContent(content: string, graph: Graph) {
 		this.content = content;
+		await this.updateResult(graph);
+	}
+
+	public async updateResult(graph: Graph) {
+		this.setResult(await this.evaluate(graph));
+		for (const node of this.getUserNodes(graph)) {
+			if (node instanceof ExpressionNode) await node.updateResult(graph);
+		}
 	}
 }
 

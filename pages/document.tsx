@@ -72,7 +72,7 @@ const fetchJSFunctionNode = new JavaScriptFunctionNode(
 ).setPosition({ x: 100, y: 300 });
 const customFetchNode0 = new ExpressionNode(
 	'',
-	'fetch ( "http://localhost:3000/api/el_simplify" , "{"latex":"1-1"}" )',
+	'fetch ( "http://localhost:3000/api/el_simplify" , "{"latex":"1+y+y-1"}" )',
 	0,
 ).setPosition({ x: 300, y: 400 });
 
@@ -108,7 +108,7 @@ const DnDFlow: NextPage = () => {
 	function handleBlockDoubleClick(event: ReactMouseEvent, block: Block) {
 		setSelectedNode(block.data.node);
 		if (block.data.node instanceof FormulaNode)
-			(mathInputRef.current as MathInput).show(block.data.node.toLatex());
+			(mathInputRef.current as MathInput).show(block.data.node.getContent());
 	}
 
 	function onPaneClick(event: ReactMouseEvent) {

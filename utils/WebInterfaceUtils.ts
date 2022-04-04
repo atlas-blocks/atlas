@@ -2,6 +2,7 @@ import React from 'react';
 import Graph from '../commons/Graph';
 import Node from '../commons/nodes/Node';
 import { Node as Block, Edge as BlockEdge, Elements } from 'react-flow-renderer';
+import ExpressionNode from '../commons/nodes/formulas/ExpressionNode';
 
 class WebInterfaceUtils {
 	graph: Graph;
@@ -55,6 +56,11 @@ class WebInterfaceUtils {
 
 	public refreshElements() {
 		this.setElements((els) => WebInterfaceUtils.getElements(this.graph));
+	}
+
+	public async updateExpressionContent(node: ExpressionNode, content: string) {
+		await node.updateContent(content, this.graph);
+		this.refreshElements();
 	}
 }
 

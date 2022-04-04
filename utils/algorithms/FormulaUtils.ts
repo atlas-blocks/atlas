@@ -67,13 +67,11 @@ export default class FormulaUtils {
 			if (!isNaN(Number(token))) {
 				argumentsQueue.enqueue(token);
 			} else if (node instanceof ExpressionNode) {
-				const subResult = await node.evaluate(graph);
-				argumentsQueue.enqueue(subResult);
+				argumentsQueue.enqueue(node.getResult());
 			} else if (node instanceof FunctionNode) {
 				const args: string[] = [];
 				for (let i = 0; i < node.getArgs().length; ++i) args.push(argumentsQueue.dequeue());
-				const subResult = await node.call(args);
-				argumentsQueue.enqueue(subResult);
+				argumentsQueue.enqueue(await node.call(args));
 			} else if (operations.includes(token)) {
 				argumentsQueue.enqueue(
 					eval(argumentsQueue.dequeue() + token + argumentsQueue.dequeue()),

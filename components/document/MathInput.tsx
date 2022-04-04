@@ -4,6 +4,7 @@ import Node from '../../commons/nodes/Node';
 import styles from '../../styles/MathInput.module.css';
 import FormulaNode from '../../commons/nodes/formulas/FormulaNode';
 import WebInterfaceUtils from '../../utils/WebInterfaceUtils';
+import ExpressionNode from '../../commons/nodes/formulas/ExpressionNode';
 
 type Props = {
 	selectedNode: Node | null;
@@ -20,7 +21,7 @@ export default class MathInput extends React.Component<Props, States> {
 		this.state = {
 			inputValue:
 				this.props.selectedNode instanceof FormulaNode
-					? this.props.selectedNode.toLatex()
+					? this.props.selectedNode.getContent()
 					: '',
 			inputBottom: '-200px',
 		};
@@ -36,13 +37,15 @@ export default class MathInput extends React.Component<Props, States> {
 	}
 
 	updateBlock = (event: ChangeEvent<HTMLInputElement>) => {
-		if (this.props.selectedNode instanceof FormulaNode)
-			this.props.selectedNode.setLatex(event.target.value);
-		this.props.webInterfaceUtils.refreshElements();
 		this.setState({ inputValue: event.target.value });
 	};
 
-	submitInput = () => {
+	submitInput = async () => {
+		if (this.props.selectedNode instanceof ExpressionNode)
+			await this.props.webInterfaceUtils.updateExpressionContent(
+				this.props.selectedNode,
+				this.state.inputValue,
+			);
 		this.hide();
 	};
 
