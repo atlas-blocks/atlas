@@ -38,9 +38,10 @@
 	color: #1a192b;
 }
 
-.dndnode.simplify {
-	border-color: green;
-	color: green;
+.dndnode.function {
+	border-color: #0041d0;
+	justify-content: left;
+	color: #0041d0;
 }
 
 .dndnode.set {

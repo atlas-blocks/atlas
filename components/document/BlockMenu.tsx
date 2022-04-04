@@ -34,10 +34,10 @@ function BlockMenu({ selectedNode, setDruggedNode, webInterfaceUtils }: Props) {
 			</div>
 
 			<h3>functions</h3>
-			<div
-				className={`${styles.dndnode} ${styles.simplify}`}
+			<div style={{textAlign:'left'}}
+				className={`${styles.dndnode} ${styles.function}`}
 				onDragStart={(event) =>
-					onDragStart(event, new ExpressionNode('', 'simplify ( "1+1" ) ', 0))
+					onDragStart(event, new ExpressionNode('', 'simplify("1 + 1")', 0))
 				}
 				draggable
 			>
@@ -45,8 +45,19 @@ function BlockMenu({ selectedNode, setDruggedNode, webInterfaceUtils }: Props) {
 					{webInterfaceUtils.getFunctionSignature('simplify', true)}
 				</div>
 			</div>
+			<div style={{textAlign:'left'}}
+				className={`${styles.dndnode} ${styles.function}`}
+				onDragStart={(event) =>
+					onDragStart(event, new ExpressionNode('', 'str(1 + 1")', 0))
+				}
+				draggable
+			>
+				<div className={styles.display_linebreak}>
+					{webInterfaceUtils.getFunctionSignature('str', true)}
+				</div>
+			</div>
 			<div
-				className={`${styles.dndnode} ${styles.simplify}`}
+				className={`${styles.dndnode} ${styles.function}`}
 				onDragStart={(event) =>
 					onDragStart(
 						event,

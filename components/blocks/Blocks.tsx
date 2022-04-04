@@ -30,9 +30,9 @@ export function FormulaBlockWrapper(content: JSX.Element, node: Node) {
 export function ExpressionBlock({ data }: { data: { node: ExpressionNode } }) {
 	return FormulaBlockWrapper(
 		<div>
-			<div>name: {data.node.getName()}</div>
-			<div>content: {data.node.getContent()}</div>
-			<div>result: {data.node.getResult()}</div>
+			<div><span className={styles.attribute_name}>name:</span> {data.node.getName()}</div>
+			<div><span className={styles.attribute_name}>content:</span> {data.node.getContent()}</div>
+			<div><span className={styles.attribute_name}>result:</span> {data.node.getResult()}</div>
 		</div>,
 		data.node,
 	);
