@@ -52,6 +52,7 @@ class WebInterfaceUtils {
 					id: 'edge' + node.getId() + provider.getId(),
 					source: provider.getId(),
 					target: node.getId(),
+					type: 'DefaultEdge',
 				});
 			}
 		}

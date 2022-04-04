@@ -16,7 +16,7 @@ function BlockMenu({ selectedNode, setDruggedNode, webInterfaceUtils }: Props) {
 		setDruggedNode(node);
 		event.dataTransfer.effectAllowed = 'move';
 	};
-	const elementWidth = '300px';
+	const elementWidth = '250px';
 
 	return (
 		<aside
