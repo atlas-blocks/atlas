@@ -34,8 +34,7 @@ import FormulaNode from '../commons/nodes/formulas/FormulaNode';
 
 import { NextPage } from 'next';
 import styles from '../styles/DnDFlow.module.css';
-import JavaScriptFunctionNode from '../commons/nodes/formulas/functions/JavaScriptFunctionNode';
-import ServerUtils from '../utils/ServerUtils';
+import DefaultFunctions from '../commons/library/system/formulas/functions/DefaultFunctions';
 
 export const document = new Document('document_name');
 export const page = document.getPage(0);
@@ -46,61 +45,22 @@ const simplifyNode0 = new ExpressionNode('', 'simplify ( "b1" )', 0).setPosition
 	x: 600,
 	y: 200,
 });
-const simplifyJSFunctionNode = new JavaScriptFunctionNode(
-	'simplify',
-	async (args: string[]) => {
-		const response = await ServerUtils.getElSimplify(args[0]);
-		return response.success ? response.latex : '\\text{error during calculating}';
-	},
-	[{ name: 'formulaContent', type: 'String' }],
-	'string',
-).setPosition({ x: 100, y: 250 });
-
-const fetchJSFunctionNode = new JavaScriptFunctionNode(
-	'fetch',
-	async (args: string[]) => {
-		const url = JSON.parse(args[0]);
-		const request = JSON.parse(args[1]);
-		return JSON.stringify(await ServerUtils.post(url, request, request));
-	},
-	[
-		{ name: 'url', type: 'String' },
-		{ name: 'request', type: 'String' },
-	],
-	'string',
-).setPosition({ x: 100, y: 300 });
 const customFetchNode0 = new ExpressionNode(
 	'fetch1',
-	'fetch ( "http://localhost:3000/api/el_simplify" , {"latex":"1+y+y-1"} )',
+	'fetch("http://localhost:3000/api/el_simplify", {"latex":"1+y+y-1"})',
 	0,
-).setPosition({ x: 300, y: 400 });
-
-const getFunctionNode = new JavaScriptFunctionNode(
-	'getMapField',
-	async (args: string[]) => {
-		const map = JSON.parse(args[0]);
-		const field = JSON.parse(args[1]);
-		return JSON.stringify(map[field]);
-	},
-	[
-		{ name: 'map', type: 'String' },
-		{ name: 'field', type: 'String' },
-	],
-	'string',
-).setPosition({ x: 100, y: 500 });
+).setPosition({ x: 100, y: 400 });
 
 const mapFieldGettingNode = new ExpressionNode('getMapField1', 'fetch1["out"]', 0).setPosition({
 	x: 400,
 	y: 550,
 });
 
+page.getGraph().addNodes(DefaultFunctions.getAllNodes());
 page.getGraph().addNode(variableY);
 page.getGraph().addNode(expressionNode0);
 page.getGraph().addNode(simplifyNode0);
-page.getGraph().addNode(simplifyJSFunctionNode);
-page.getGraph().addNode(fetchJSFunctionNode);
 page.getGraph().addNode(customFetchNode0);
-page.getGraph().addNode(getFunctionNode);
 page.getGraph().addNode(mapFieldGettingNode);
 
 expressionNode0.evaluate(page.getGraph());

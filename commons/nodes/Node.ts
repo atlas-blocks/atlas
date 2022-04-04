@@ -12,12 +12,14 @@ abstract class Node {
 	private name: string;
 	private description: string;
 	private position: Position;
+	private visible: boolean;
 
 	protected constructor(name: string) {
 		this.id = Node.cnt.toString();
 		++Node.cnt;
 		this.name = name != '' ? name : 'b' + this.id;
 		this.description = '';
+		this.visible = false;
 		this.position = { x: 0, y: 0 };
 	}
 
@@ -46,7 +48,16 @@ abstract class Node {
 	}
 
 	public setPosition(pos: Position) {
+		this.visible = true;
 		this.position = pos;
+		return this;
+	}
+	public isVisible() {
+		return this.visible;
+	}
+
+	public setVisible(visibility: boolean) {
+		this.visible = visibility;
 		return this;
 	}
 

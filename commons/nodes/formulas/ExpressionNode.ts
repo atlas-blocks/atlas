@@ -47,9 +47,8 @@ class ExpressionNode extends FormulaNode {
 	}
 
 	public getProviderNodes(graph: Graph): Node[] {
-		const rpn = FormulaUtils.splitIntoTokens(this.getContent());
 		const providerNodes: Node[] = [];
-		for (const token of rpn) {
+		for (const token of FormulaUtils.splitIntoTokens(this.getContent())) {
 			const node = graph.getNodeByNameOrNull(token);
 			if (node instanceof Node) providerNodes.push(node);
 		}

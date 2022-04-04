@@ -1,5 +1,10 @@
+import Node from '../nodes/Node';
+
 interface Namespace {
-	package: string;
+	getPackage(): string;
+
+	getNodeByNameOrNull(name: string): Node | null;
+	getAllNodes(): Node[];
 }
 
 export default Namespace;

@@ -25,6 +25,7 @@ class WebInterfaceUtils {
 			type: node.getImport().toString(),
 			position: node.getPosition(),
 			data: { node: node },
+			isHidden: !node.isVisible(),
 		};
 	}
 
@@ -43,10 +44,12 @@ class WebInterfaceUtils {
 	public static getEdges(graph: Graph): Elements {
 		let ans: Elements = [];
 		for (const node of graph.getNodes()) {
-			for (const user of node.getProviderNodes(graph)) {
+			if (!node.isVisible()) continue;
+			for (const provider of node.getProviderNodes(graph)) {
+				if (!provider.isVisible()) continue;
 				ans.push({
-					id: 'edge' + node.getId() + user.getId(),
-					source: user.getId(),
+					id: 'edge' + node.getId() + provider.getId(),
+					source: provider.getId(),
 					target: node.getId(),
 				});
 			}

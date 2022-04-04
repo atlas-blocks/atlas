@@ -1,9 +1,4 @@
 import Node from './nodes/Node';
-import FormulaNode from './nodes/formulas/FormulaNode';
-import { ArrayStack } from '../utils/data_sturctures/Stack';
-import { ArrayQueue, Queue } from '../utils/data_sturctures/Queue';
-import ExpressionNode from './nodes/formulas/ExpressionNode';
-import FunctionNode from './nodes/formulas/functions/FunctionNode';
 
 class Graph {
 	private readonly nodes: Node[];
@@ -18,6 +13,10 @@ class Graph {
 
 	public addNode(node: Node) {
 		this.nodes.push(node);
+	}
+
+	public addNodes(nodes: Node[]) {
+		for (const node of nodes) this.addNode(node);
 	}
 
 	public getNodeByIdOrNull(id: string): Node | null {

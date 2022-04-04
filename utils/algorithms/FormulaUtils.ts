@@ -40,10 +40,8 @@ export default class FormulaUtils {
 					outputQueue.enqueue(operationStack.pop());
 				}
 				operationStack.pop();
-			} else if (token.startsWith('"') && token.endsWith('"')) {
-				outputQueue.enqueue(token);
 			} else {
-				throw new InvalidTokenError('cant recognise token: ' + token);
+				outputQueue.enqueue(token);
 			}
 		}
 		while (!operationStack.isEmpty()) {
@@ -57,6 +55,7 @@ export default class FormulaUtils {
 		const ans: string[] = [];
 		let curr = '';
 		for (let i = 0; i < content.length; ) {
+			curr = '';
 			if (this.isLetter(content[i])) {
 				for (
 					;
@@ -97,15 +96,16 @@ export default class FormulaUtils {
 				curr += content[i];
 				++i;
 			} else if (operations.includes(content[i])) {
-				curr = content[i];
+				curr += content[i];
+				++i;
+			} else if (content[i] === '(' || content[i] === ')') {
+				curr += content[i];
 				++i;
 			} else {
 				++i;
 			}
 			if (curr !== '') ans.push(curr);
-			curr = '';
 		}
-		console.log(content, ans);
 		return ans;
 	}
 
@@ -138,10 +138,8 @@ export default class FormulaUtils {
 				argumentsQueue.enqueue(
 					eval(argumentsQueue.dequeue() + token + argumentsQueue.dequeue()),
 				);
-			} else if (token.startsWith('"') && token.endsWith('"')) {
-				argumentsQueue.enqueue(token);
 			} else {
-				throw new InvalidTokenError('cant recognise token: ' + token);
+				argumentsQueue.enqueue(token);
 			}
 		}
 		console.assert(argumentsQueue.size() === 1, 'there should be only one result left');
