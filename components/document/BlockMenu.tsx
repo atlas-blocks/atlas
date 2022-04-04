@@ -1,23 +1,30 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Node from '../../commons/nodes/Node';
 
 import styles from '../../styles/BlockMenu.module.css';
 import ExpressionNode from '../../commons/nodes/formulas/ExpressionNode';
+import WebInterfaceUtils from '../../utils/WebInterfaceUtils';
 
 type Props = {
 	selectedNode: Node | null;
 	setDruggedNode: React.Dispatch<React.SetStateAction<Node | null>>;
+	webInterfaceUtils: WebInterfaceUtils;
 };
 
-function BlockMenu({ selectedNode, setDruggedNode }: Props) {
+function BlockMenu({ selectedNode, setDruggedNode, webInterfaceUtils }: Props) {
 	const onDragStart = (event: React.DragEvent<HTMLDivElement>, node: Node) => {
 		setDruggedNode(node);
 		event.dataTransfer.effectAllowed = 'move';
 	};
+	const elementWidth = '300px';
 
 	return (
-		<aside id={styles.sidebar} style={{ right: selectedNode !== null ? '-300px' : '0' }}>
+		<aside
+			id={styles.block_menu}
+			style={{ right: selectedNode !== null ? '-' + elementWidth : '0', width: elementWidth }}
+		>
 			<h2>Blocks Menu</h2>
+			<h3>blocks</h3>
 			<div
 				className={`${styles.dndnode} ${styles.default}`}
 				onDragStart={(event) => onDragStart(event, new ExpressionNode('', '', 0))}
@@ -25,6 +32,8 @@ function BlockMenu({ selectedNode, setDruggedNode }: Props) {
 			>
 				{ExpressionNode.getImport().getNodeName()}
 			</div>
+
+			<h3>functions</h3>
 			<div
 				className={`${styles.dndnode} ${styles.simplify}`}
 				onDragStart={(event) =>
@@ -32,7 +41,27 @@ function BlockMenu({ selectedNode, setDruggedNode }: Props) {
 				}
 				draggable
 			>
-				SimplifyNode
+				<div className={styles.display_linebreak}>
+					{webInterfaceUtils.getFunctionSignature('simplify', true)}
+				</div>
+			</div>
+			<div
+				className={`${styles.dndnode} ${styles.simplify}`}
+				onDragStart={(event) =>
+					onDragStart(
+						event,
+						new ExpressionNode(
+							'',
+							'fetch("http://localhost:3000/api/el_simplify", {"latex":"1+1"})',
+							0,
+						),
+					)
+				}
+				draggable
+			>
+				<div className={styles.display_linebreak}>
+					{webInterfaceUtils.getFunctionSignature('fetch', true)}
+				</div>
 			</div>
 		</aside>
 	);

@@ -14,7 +14,7 @@ export default new CustomNamespace('', [
 			{ name: 'url', type: 'String' },
 			{ name: 'request', type: 'String' },
 		],
-		'string',
+		'String',
 	),
 	new JavaScriptFunctionNode(
 		'simplify',
@@ -23,7 +23,7 @@ export default new CustomNamespace('', [
 			return response.success ? response.latex : '\\text{error during calculating}';
 		},
 		[{ name: 'formulaContent', type: 'String' }],
-		'string',
+		'String',
 	),
 	new JavaScriptFunctionNode(
 		'getMapField',
@@ -36,6 +36,6 @@ export default new CustomNamespace('', [
 			{ name: 'map', type: 'String' },
 			{ name: 'field', type: 'String' },
 		],
-		'string',
+		'String',
 	),
 ]);

@@ -149,7 +149,11 @@ const DnDFlow: NextPage = () => {
 						<Background />
 					</ReactFlow>
 				</div>
-				<BlockMenu selectedNode={selectedNode} setDruggedNode={setDruggedNode} />
+				<BlockMenu
+					webInterfaceUtils={webInterfaceUtils}
+					selectedNode={selectedNode}
+					setDruggedNode={setDruggedNode}
+				/>
 				<BlockSettings selectedNode={selectedNode} webInterfaceUtils={webInterfaceUtils} />
 				<MathInput
 					selectedNode={selectedNode}

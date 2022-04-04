@@ -3,6 +3,7 @@ import Graph from '../commons/Graph';
 import Node from '../commons/nodes/Node';
 import { Node as Block, Elements } from 'react-flow-renderer';
 import ExpressionNode from '../commons/nodes/formulas/ExpressionNode';
+import FunctionNode from '../commons/nodes/formulas/functions/FunctionNode';
 
 class WebInterfaceUtils {
 	graph: Graph;
@@ -64,6 +65,23 @@ class WebInterfaceUtils {
 	public async updateExpressionContent(node: ExpressionNode, content: string) {
 		await node.updateContent(content, this.graph);
 		this.refreshElements();
+	}
+
+	public getFunctionSignature(name: string, multiline = false): string {
+		const func = this.graph.getNodeByNameOrNull(name);
+		if (!(func instanceof FunctionNode)) return '';
+		return (
+			func.getName() +
+			'(' +
+			(multiline ? '\n    ' : '') +
+			func
+				.getArgs()
+				.map((arg) => arg.name + ': ' + arg.type)
+				.join(',' + (multiline ? '\n    ' : ' ')) +
+			(multiline ? '\n' : '') +
+			'): ' +
+			func.getReturnType()
+		);
 	}
 }
 

@@ -20,6 +20,10 @@ class FunctionNode extends FormulaNode {
 		return this.args;
 	}
 
+	public getReturnType() {
+		return this.returnType;
+	}
+
 	public getImport(): Import {
 		return new Import('system', 'formulas/functions', 'FunctionNode');
 	}

@@ -1,6 +1,6 @@
 /*===== sidebar ======*/
 
-#sidebar {
+#block_menu {
 	position: absolute;
 	right: 0;
 	background: var(--elements-background);
@@ -10,10 +10,14 @@
 	display: block;
 	max-width: 300px;
 	min-width: 100px;
-	width: 20%;
 	height: 80vh;
 	text-align: center;
 	transition: 1s;
+}
+
+.display_linebreak {
+	white-space: pre;
+	text-align: left;
 }
 
 .dndnode {
