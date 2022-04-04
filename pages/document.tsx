@@ -41,26 +41,30 @@ export const page = document.getPage(0);
 
 const variableY = new ExpressionNode('y', '5', 0).setPosition({ x: 100, y: 100 });
 const expressionNode0 = new ExpressionNode('b1', '2 + 1 + y', 0).setPosition({ x: 300, y: 100 });
-const simplifyNode0 = new ExpressionNode('', 'simplify ( "b1" )', 0).setPosition({
+const simplifyNode0 = new ExpressionNode('', 'simplify("1 + 1")', 0).setPosition({
 	x: 600,
-	y: 200,
+	y: 100,
 });
 const customFetchNode0 = new ExpressionNode(
 	'fetch1',
-	'fetch("http://localhost:3000/api/el_simplify", {"latex":"1+y+y-1"})',
+	'fetch("/api/el_simplify", {"latex":"1+y+y-1"})',
 	0,
-).setPosition({ x: 100, y: 400 });
+).setPosition({ x: 10, y: 300 });
+
+const mapFieldGettingNode = new ExpressionNode('getMapField1', 'fetch1["out"]', 0).setPosition({
+	x: 400,
+	y: 400,
+});
+const simplifyNode1 = new ExpressionNode('', 'simplify(getMapField1)', 0).setPosition({
+	x: 650,
+	y: 400,
+});
 
 const customFetchNode2 = new ExpressionNode(
 	'fetch2',
 	'fetch("http://18.219.169.98/cgi-bin/el_simplify.py", {"in_latex":"x+2"})',
 	0,
-).setPosition({ x: 100, y: 400 });
-
-const mapFieldGettingNode = new ExpressionNode('getMapField1', 'fetch1["out"]', 0).setPosition({
-	x: 400,
-	y: 550,
-});
+).setPosition({ x: 10, y: 500 });
 
 page.getGraph().addNodes(DefaultFunctions.getAllNodes());
 page.getGraph().addNode(variableY);
@@ -69,11 +73,12 @@ page.getGraph().addNode(simplifyNode0);
 page.getGraph().addNode(customFetchNode0);
 page.getGraph().addNode(customFetchNode2);
 page.getGraph().addNode(mapFieldGettingNode);
+page.getGraph().addNode(simplifyNode1);
 
-expressionNode0.evaluate(page.getGraph());
-simplifyNode0.evaluate(page.getGraph());
-customFetchNode0.evaluate(page.getGraph());
-customFetchNode2.evaluate(page.getGraph());
+customFetchNode0.updateResult(page.getGraph());
+variableY.updateResult(page.getGraph());
+simplifyNode0.updateResult(page.getGraph());
+customFetchNode2.updateResult(page.getGraph());
 
 const DnDFlow: NextPage = () => {
 	const [selectedNode, setSelectedNode] = useState<Node | null>(null);

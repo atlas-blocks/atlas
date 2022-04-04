@@ -8,17 +8,7 @@ export default new CustomNamespace('', [
 		async (args: string[]) => {
 			const url = JSON.parse(args[0]);
 			const request = JSON.parse(args[1]);
-			const proxyRequest = {
-				url: url,
-				request: args[1],
-			};
-			return JSON.stringify(
-				await ServerUtils.post(
-					'http://localhost:3000/api/fetch',
-					proxyRequest,
-					proxyRequest,
-				),
-			);
+			return JSON.stringify(await ServerUtils.getFetch(url, request));
 		},
 		[
 			{ name: 'url', type: 'String' },
