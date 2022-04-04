@@ -51,6 +51,12 @@ const customFetchNode0 = new ExpressionNode(
 	0,
 ).setPosition({ x: 100, y: 400 });
 
+const customFetchNode2 = new ExpressionNode(
+	'fetch2',
+	'fetch("http://18.219.169.98/cgi-bin/el_simplify.py", {"in_latex":"x+2"})',
+	0,
+).setPosition({ x: 100, y: 400 });
+
 const mapFieldGettingNode = new ExpressionNode('getMapField1', 'fetch1["out"]', 0).setPosition({
 	x: 400,
 	y: 550,
@@ -61,11 +67,13 @@ page.getGraph().addNode(variableY);
 page.getGraph().addNode(expressionNode0);
 page.getGraph().addNode(simplifyNode0);
 page.getGraph().addNode(customFetchNode0);
+page.getGraph().addNode(customFetchNode2);
 page.getGraph().addNode(mapFieldGettingNode);
 
 expressionNode0.evaluate(page.getGraph());
 simplifyNode0.evaluate(page.getGraph());
 customFetchNode0.evaluate(page.getGraph());
+customFetchNode2.evaluate(page.getGraph());
 
 const DnDFlow: NextPage = () => {
 	const [selectedNode, setSelectedNode] = useState<Node | null>(null);
