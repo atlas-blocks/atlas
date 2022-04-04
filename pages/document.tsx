@@ -65,6 +65,11 @@ const customFetchNode2 = new ExpressionNode(
 	'fetch("http://18.219.169.98/cgi-bin/el_simplify.py", {"in_latex":"x+2"})',
 	0,
 ).setPosition({ x: 10, y: 500 });
+const fetchNode3 = new ExpressionNode(
+	'fetch3',
+	'fetch("http://18.219.169.98/cgi-bin/el_simplify.py", {"in_latex":fetch2["out"]})',
+	0,
+).setPosition({ x: 300, y: 600 });
 
 page.getGraph().addNodes(DefaultFunctions.getAllNodes());
 page.getGraph().addNode(variableY);
@@ -74,6 +79,7 @@ page.getGraph().addNode(customFetchNode0);
 page.getGraph().addNode(customFetchNode2);
 page.getGraph().addNode(mapFieldGettingNode);
 page.getGraph().addNode(simplifyNode1);
+page.getGraph().addNode(fetchNode3);
 
 (async () => {
 	await variableY.updateResult(page.getGraph());
