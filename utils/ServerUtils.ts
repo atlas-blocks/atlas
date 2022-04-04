@@ -39,7 +39,7 @@ abstract class ServerUtils {
 
 	public static async getFetch(url: string, data: object): Promise<any> {
 		if (url != this.toAbsoluteUrl(url))
-			return await ServerUtils.getFetch(ServerUtils.toAbsoluteUrl(url), data);
+			return await ServerUtils.get(ServerUtils.toAbsoluteUrl(url), data);
 		return await ServerUtils.get(ServerUtils.toAbsoluteUrl('/api/fetch'), {
 			url: url,
 			request: JSON.stringify(data),

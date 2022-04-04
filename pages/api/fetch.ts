@@ -13,10 +13,8 @@ export default function handler(req: NextApiRequest, res: NextApiResponse<Respon
 	};
 
 	const runPy = new Promise<any>(function (resolve, reject) {
-		console.log(req.query.url.toString());
 		const url = req.query.url.toString();
 		const request = JSON.parse(req.query.request.toString());
-		console.log('request: ', JSON.stringify(request));
 		return ServerUtils.get(url, request)
 			.then((data: any) => {
 				resolve(data);
