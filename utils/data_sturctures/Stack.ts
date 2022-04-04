@@ -36,4 +36,12 @@ export class ArrayStack<T> implements Stack<T> {
 	isEmpty(): boolean {
 		return this.size() === 0;
 	}
+
+	public toArray(): T[] {
+		return this.storage.slice();
+	}
+
+	toString() {
+		return this.storage.toString();
+	}
 }

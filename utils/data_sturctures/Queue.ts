@@ -23,7 +23,8 @@ export class ArrayQueue<T> implements Queue<T> {
 	}
 
 	peek(): T {
-		return this.storage[this.size() - 1];
+		if (this.size() === 0) throw new Error();
+		return this.storage[0];
 	}
 
 	size(): number {
