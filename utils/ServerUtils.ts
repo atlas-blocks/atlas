@@ -19,7 +19,9 @@ abstract class ServerUtils {
 	}
 
 	public static async getRelativeUrl(url: string, params: Object) {
-		const hostHref = window.location.href.replace(window.location.pathname, '');
+		let hostHref = '';
+		if (typeof window !== 'undefined')
+			hostHref = window.location.href.replace(window.location.pathname, '');
 		return this.fetchAsync(hostHref + url, params, { method: 'GET' });
 	}
 

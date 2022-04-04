@@ -4,6 +4,7 @@ import { ArrayStack } from '../data_sturctures/Stack';
 import ExpressionNode from '../../commons/nodes/formulas/ExpressionNode';
 import FunctionNode from '../../commons/nodes/formulas/functions/FunctionNode';
 import FormulaNode from '../../commons/nodes/formulas/FormulaNode';
+import InvalidTokenError from '../errors/InvalidTokenError';
 
 export default class FormulaUtils {
 	/**
@@ -42,7 +43,7 @@ export default class FormulaUtils {
 			} else if (token.startsWith('"') && token.endsWith('"')) {
 				outputQueue.enqueue(token);
 			} else {
-				console.assert(false, 'cant recognise token: ' + token);
+				throw new InvalidTokenError('cant recognise token: ' + token);
 			}
 		}
 		while (!operationStack.isEmpty()) {
@@ -79,7 +80,7 @@ export default class FormulaUtils {
 			} else if (token.startsWith('"') && token.endsWith('"')) {
 				argumentsQueue.enqueue(token.slice(1, -1));
 			} else {
-				console.assert(false, 'cant recognise token: ' + token);
+				throw new InvalidTokenError('cant recognise token: ' + token);
 			}
 		}
 		console.assert(argumentsQueue.size() === 1, 'there should be only one result left');

@@ -3,6 +3,8 @@ import Node, { Position } from '../Node';
 import Import from '../../namespaces/Import';
 import FormulaUtils from '../../../utils/algorithms/FormulaUtils';
 import Graph from '../../Graph';
+import InvalidTokenError from '../../../utils/errors/InvalidTokenError';
+import ErrorUtils from '../../../utils/errors/ErrorUtils';
 
 class ExpressionNode extends FormulaNode {
 	private precision: number;
@@ -25,8 +27,21 @@ class ExpressionNode extends FormulaNode {
 	}
 
 	public async evaluate(graph: Graph): Promise<string> {
-		const rpn = FormulaUtils.getReversePolishNotation(this, graph);
-		const result = await FormulaUtils.evaluateReversePolishNotation(rpn, graph);
+		let result = '?';
+		try {
+			const rpn = FormulaUtils.getReversePolishNotation(this, graph);
+			result = await FormulaUtils.evaluateReversePolishNotation(rpn, graph);
+		} catch (e) {
+			if (e instanceof Error) {
+				ErrorUtils.showAlert(
+					'Error while evaluating expression: ' +
+						this.getName() +
+						'\n' +
+						'Message: ' +
+						e.message,
+				);
+			}
+		}
 		this.setResult(result);
 		return result;
 	}

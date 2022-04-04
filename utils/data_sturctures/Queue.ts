@@ -18,7 +18,7 @@ export class ArrayQueue<T> implements Queue<T> {
 	}
 	dequeue(): T {
 		const removed = this.storage.shift();
-		if (removed === undefined) throw new Error();
+		if (removed === undefined) throw new Error("Queue is empty, you can't dequeue");
 		return removed;
 	}
 
