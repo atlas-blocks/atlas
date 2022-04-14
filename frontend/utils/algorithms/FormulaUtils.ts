@@ -15,6 +15,9 @@ export default class FormulaUtils {
 
 	/**
 	 * Implements shunting-yard-algorithm
+	 * https://en.wikipedia.org/wiki/Shunting-yard_algorithm
+	 * https://brilliant.org/wiki/shunting-yard-algorithm/
+	 *
 	 * @param formulaNode
 	 * @param graph
 	 */
