@@ -1,7 +1,7 @@
 .PHONY: *
 
 dev:
-	python3 atlas/app.py
+	python3 wsgi.py
 
 reqs:
 	pip3 freeze > requirements.txt
