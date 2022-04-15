@@ -2,7 +2,7 @@
 
 import os
 
-from utils import make_dir, INSTANCE_FOLDER_PATH
+from atlas.utils import make_dir, INSTANCE_FOLDER_PATH
 
 class BaseConfig(object):
 

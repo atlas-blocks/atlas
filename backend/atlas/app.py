@@ -1,7 +1,7 @@
 from flask import Flask, render_template, url_for, request, redirect, jsonify
 
-from config import DefaultConfig
-from utils import INSTANCE_FOLDER_PATH
+from atlas.config import DefaultConfig
+from atlas.utils import INSTANCE_FOLDER_PATH
 
 
 def create_app(config=None, app_name=None):
@@ -18,7 +18,7 @@ def create_app(config=None, app_name=None):
 def configure_blueprints(app):
     """Configure blueprints in views."""
 
-    from api import views
+    from atlas.api import views
 
     for bp in [views.api]:
         app.register_blueprint(bp)
@@ -29,7 +29,3 @@ app = create_app(app_name="atlas-backend")
 @app.route('/api/update', methods=['POST', 'GET'])
 def updateGraph():
     return jsonify({'hello!': "world"})
-
-
-if __name__ == "__main__":
-    app.run(debug=True)
