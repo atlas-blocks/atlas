@@ -1,4 +1,4 @@
 .PHONY: *
 
 dev:
-	python3 app.py
+	python3 atlas/app.py
