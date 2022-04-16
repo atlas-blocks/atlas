@@ -48,11 +48,14 @@ function dictionary(node::AbstractNode)
 end
 
 function json(graph::AbstractGraph)::AbstractString
+    nodes = Vector{JSON3.Object}()
     for node in graph.nodes
-
+        push!(nodes, JSON3.read(json(node)))
     end
-    # println(JS)
-    return "graph json"
+
+    edges = Vector{JSON3.Object}()
+
+    return JSON3.write(Dict("nodes" => nodes, "edges" => edges))
 end
 
 StructTypes.StructType(::Type{Node}) = StructTypes.Struct()
