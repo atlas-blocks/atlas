@@ -5,6 +5,7 @@ import StructTypes
 abstract type AbstractNode end
 mutable struct Node <: AbstractNode
     name::String
+    package::String
     position::Tuple{Int32,Int32}
     visibility::Bool
 end
@@ -30,7 +31,7 @@ struct Graph <: AbstractGraph
 end
 
 function json(node::AbstractNode)::AbstractString
-    return JSON3.write(dictionary(node))
+    return JSON3.write(push!(dictionary(node), "type" => typeof(node)))
 end
 
 function dictionary(node::AbstractNode)
