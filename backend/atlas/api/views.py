@@ -6,6 +6,9 @@ api_wrap = Api(api)
 
 class Graph(Resource):
     def get(self):
-        return jsonify({'hello!': "world"})
+        print(request.args)
+        graph = request.args["graph"]
+        updated_node_id = request.args["updated_node_id"]
+        return jsonify({'graph': graph, 'updated_node_id': updated_node_id})
 
 api_wrap.add_resource(Graph, '/graph')
