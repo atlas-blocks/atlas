@@ -79,6 +79,8 @@ end
 
 StructTypes.StructType(::Type{Node}) = StructTypes.Struct()
 
-#  updateGraph(graph::String, )
+function updateGraph(graph_json_string::AbstractString)::AbstractString
+    return graph_json_string
+end
 
 end
