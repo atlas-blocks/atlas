@@ -58,6 +58,25 @@ function json(graph::AbstractGraph)::AbstractString
     return JSON3.write(Dict("nodes" => nodes, "edges" => edges))
 end
 
+function node(json_string::AbstractString)::AbstractNode
+    json_dict = JSON3.read(json_string)
+    node = JSON3.read(json_string, Node)
+    if json_dict["type"] == string(Node)
+        return node
+    elseif json_dict["type"] == string(ExpressionNode)
+        return ExpressionNode(node, json_dict["content"], json_dict["result"])
+    end
+end
+
+function graph(json_string::AbstractString)::AbstractGraph
+    nodes_json_arr = JSON3.read(json_string)["nodes"]
+    nodes = Vector{AbstractNode}()
+    for node_json in nodes_json_arr
+        push!(nodes, node(JSON3.write(node_json)))
+    end
+    return Graph(nodes)
+end
+
 StructTypes.StructType(::Type{Node}) = StructTypes.Struct()
 
 #  updateGraph(graph::String, )
