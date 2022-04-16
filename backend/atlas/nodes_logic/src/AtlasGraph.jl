@@ -1,29 +1,27 @@
 module AtlasGraph
+import JSON3
+import StructTypes
 
 abstract type AbstractNode end
 mutable struct Node <: AbstractNode
-    id::UInt32
     name::String
-    description::String
-    position::Tuple{Int32, Int32}
+    position::Tuple{Int32,Int32}
     visibility::Bool
 end
 
 abstract type AbstractFormulaNode <: AbstractNode end
-mutable struct FormulaNode <: AbstractFormulaNode
-    node::Node
-    content::String
-end
 
 abstract type AbstractExpressionNode <: AbstractFormulaNode end
 mutable struct ExpressionNode <: AbstractExpressionNode
-    node::FormulaNode
+    node::Node
+    content::String
     result::Any
 end
 
 abstract type AbstractFunctionNode <: AbstractFormulaNode end
 mutable struct FunctionNode <: AbstractFunctionNode
-    node::FormulaNode
+    node::Node
+    content::String
 end
 
 abstract type AbstractGraph end
@@ -31,15 +29,24 @@ struct Graph <: AbstractGraph
     nodes::Vector{AbstractNode}
 end
 
-import JSON3
-import StructTypes
-
-
-function toJSON(node::AbstractNode)::AbstractString
-    return "node json"
+function json(node::AbstractNode)::AbstractString
+    return JSON3.write(dictionary(node))
 end
 
-function toJSON(graph::AbstractGraph)::AbstractString 
+function dictionary(node::AbstractNode)
+    dic = Dict{AbstractString,Any}()
+    for field in propertynames(node)
+        value = getproperty(node, field)
+        if (typeof(value) <: AbstractNode)
+            merge!(dic, dictionary(value))
+        else
+            push!(dic, string(field) => value)
+        end
+    end
+    return dic
+end
+
+function json(graph::AbstractGraph)::AbstractString
     for node in graph.nodes
 
     end

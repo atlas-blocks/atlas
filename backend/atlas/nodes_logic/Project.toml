@@ -5,5 +5,6 @@ version = "0.1.0"
 
 [deps]
 JSON3 = "0f8b85d8-7281-11e9-16c2-39a750bddbf1"
+JuliaFormatter = "98e50ef6-434e-11e9-1051-2b60c6c9e899"
 StructTypes = "856f2bd8-1eba-4b0a-8007-ebc267875bd4"
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
