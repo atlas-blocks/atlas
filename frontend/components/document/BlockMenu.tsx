@@ -1,18 +1,18 @@
 import React, { useState } from 'react';
-import Node from '../../commons/nodes/Node';
+import { AtlasNode } from '../../utils/AtlasGraph';
 
 import styles from '../../styles/BlockMenu.module.css';
-import ExpressionNode from '../../commons/nodes/formulas/ExpressionNode';
+import { ExpressionNode } from '../../utils/AtlasGraph';
 import WebInterfaceUtils from '../../utils/WebInterfaceUtils';
 
 type Props = {
-	selectedNode: Node | null;
-	setDruggedNode: React.Dispatch<React.SetStateAction<Node | null>>;
+	selectedNode: AtlasNode | null;
+	setDruggedNode: React.Dispatch<React.SetStateAction<AtlasNode | null>>;
 	webInterfaceUtils: WebInterfaceUtils;
 };
 
 function BlockMenu({ selectedNode, setDruggedNode, webInterfaceUtils }: Props) {
-	const onDragStart = (event: React.DragEvent<HTMLDivElement>, node: Node) => {
+	const onDragStart = (event: React.DragEvent<HTMLDivElement>, node: AtlasNode) => {
 		setDruggedNode(node);
 		event.dataTransfer.effectAllowed = 'move';
 	};
@@ -27,13 +27,22 @@ function BlockMenu({ selectedNode, setDruggedNode, webInterfaceUtils }: Props) {
 			<h3>blocks</h3>
 			<div
 				className={`${styles.dndnode} ${styles.default}`}
-				onDragStart={(event) => onDragStart(event, new ExpressionNode('', '', 0))}
+				onDragStart={(event) =>
+					onDragStart(
+						event,
+						new ExpressionNode(
+							new AtlasNode(ExpressionNode.structType, 'name1', 'pkg', [0, 0], true),
+							'2 + 3',
+							'5',
+						),
+					)
+				}
 				draggable
 			>
-				{ExpressionNode.getImport().getNodeName()}
+				{ExpressionNode.structType}
 			</div>
 
-			<h3>functions</h3>
+			{/* <h3>functions</h3>
 			<div
 				style={{ textAlign: 'left' }}
 				className={`${styles.dndnode} ${styles.function}`}
@@ -75,7 +84,7 @@ function BlockMenu({ selectedNode, setDruggedNode, webInterfaceUtils }: Props) {
 				<div className={styles.display_linebreak}>
 					{webInterfaceUtils.getFunctionSignature('fetch', true)}
 				</div>
-			</div>
+			</div> */}
 		</aside>
 	);
 }

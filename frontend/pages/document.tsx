@@ -27,8 +27,7 @@ import BlockMenu from '../components/document/BlockMenu';
 import BlockSettings from '../components/document/BlockSettings';
 import MathInput from '../components/document/MathInput';
 
-import Node from '../commons/nodes/Node';
-import ExpressionNode from '../commons/nodes/formulas/ExpressionNode';
+import AtlasGraph, { AtlasNode } from '../utils/AtlasGraph';
 import WebInterfaceUtils from '../utils/WebInterfaceUtils';
 import FormulaNode from '../commons/nodes/formulas/FormulaNode';
 
@@ -36,68 +35,23 @@ import { NextPage } from 'next';
 import styles from '../styles/DnDFlow.module.css';
 import DefaultFunctions from '../commons/library/system/formulas/functions/DefaultFunctions';
 
-export const document = new Document('document_name');
-export const page = document.getPage(0);
+const node1 = JSON.parse(
+	'{"name":"name","visibility":true,"package":"pkg","content":"1 + 2","position":[300,100],"type":"AtlasGraph.ExpressionNode"}',
+) as AtlasNode;
 
-const variableY = new ExpressionNode('y', '5', 0).setPosition({ x: 100, y: 100 });
-const expressionNode0 = new ExpressionNode('b1', '2 + 1 + y', 0).setPosition({ x: 300, y: 100 });
-const simplifyNode0 = new ExpressionNode('', 'simplify("1 + 1")', 0).setPosition({
-	x: 600,
-	y: 100,
-});
-const customFetchNode0 = new ExpressionNode(
-	'fetch1',
-	'fetch("/api/el_simplify", {"latex":str(y + 5 - 6)})',
-	0,
-).setPosition({ x: 10, y: 300 });
-
-const mapFieldGettingNode = new ExpressionNode('getMapField1', 'fetch1["out"]', 0).setPosition({
-	x: 470,
-	y: 300,
-});
-const simplifyNode1 = new ExpressionNode('', 'simplify(getMapField1)', 0).setPosition({
-	x: 700,
-	y: 300,
-});
-
-const customFetchNode2 = new ExpressionNode(
-	'fetch2',
-	'fetch("http://18.219.169.98/cgi-bin/el_simplify.py", {"in_latex":"x+2"})',
-	0,
-).setPosition({ x: 10, y: 500 });
-const fetchNode3 = new ExpressionNode(
-	'fetch3',
-	'fetch("http://18.219.169.98/cgi-bin/el_simplify.py", {"in_latex":fetch2["out"]})',
-	0,
-).setPosition({ x: 300, y: 600 });
-
-page.getGraph().addNodes(DefaultFunctions.getAllNodes());
-page.getGraph().addNode(variableY);
-page.getGraph().addNode(expressionNode0);
-page.getGraph().addNode(simplifyNode0);
-page.getGraph().addNode(customFetchNode0);
-page.getGraph().addNode(customFetchNode2);
-page.getGraph().addNode(mapFieldGettingNode);
-page.getGraph().addNode(simplifyNode1);
-page.getGraph().addNode(fetchNode3);
-
-(async () => {
-	await variableY.updateResult(page.getGraph());
-	await customFetchNode0.updateResult(page.getGraph());
-	await simplifyNode0.updateResult(page.getGraph());
-	await customFetchNode2.updateResult(page.getGraph());
-})();
+export const atlasGraph = new AtlasGraph();
+atlasGraph.nodes.push(node1);
 
 const DnDFlow: NextPage = () => {
-	const [selectedNode, setSelectedNode] = useState<Node | null>(null);
-	const [druggedNode, setDruggedNode] = useState<Node | null>(null);
+	const [selectedNode, setSelectedNode] = useState<AtlasNode | null>(null);
+	const [druggedNode, setDruggedNode] = useState<AtlasNode | null>(null);
 	const reactFlowWrapper = useRef(null);
 	const mathInputRef = useRef<MathInput>(null);
 	const [reactFlowInstance, setReactFlowInstance] = useState(null);
-	const initialElements: Elements = WebInterfaceUtils.getElements(page.getGraph());
+	const initialElements: Elements = WebInterfaceUtils.getElements(atlasGraph);
 	const [elements, setElements] = useState(initialElements);
 
-	const webInterfaceUtils = new WebInterfaceUtils(page.getGraph(), setElements, setSelectedNode);
+	const webInterfaceUtils = new WebInterfaceUtils(atlasGraph, setElements, setSelectedNode);
 
 	function handleBlockSelection(event: React.MouseEvent, element: Block | Edge) {}
 
@@ -135,7 +89,7 @@ const DnDFlow: NextPage = () => {
 		});
 
 		console.assert(druggedNode !== null, 'drugged node should not be assigned before dragging');
-		if (druggedNode !== null) page.getGraph().addNode(druggedNode.setPosition(pos));
+		if (druggedNode !== null) atlasGraph.nodes.push(druggedNode.setPosition(pos.x, pos.y));
 		webInterfaceUtils.refreshElements();
 	};
 

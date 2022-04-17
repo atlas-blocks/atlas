@@ -1,32 +1,29 @@
 import React, { ChangeEvent, useState } from 'react';
 import styles from '../../styles/BlockSettings.module.css';
-import Node from '../../commons/nodes/Node';
-import { page } from '../../pages/document';
+import { AtlasNode } from '../../utils/AtlasGraph';
+import { atlasGraph } from '../../pages/document';
 import FormulaNode from '../../commons/nodes/formulas/FormulaNode';
 import WebInterfaceUtils from '../../utils/WebInterfaceUtils';
 
 type Props = {
-	selectedNode: Node | null;
+	selectedNode: AtlasNode | null;
 	webInterfaceUtils: WebInterfaceUtils;
 };
 
 function BlockSettings(props: Props) {
 	const updateField = (event: ChangeEvent<HTMLInputElement>, field: string) => {
-		const newFormula = page
-			.getGraph()
-			.getNodesByNameAndClassType<FormulaNode>(event.target.value, FormulaNode)[0];
+		// const newFormula = atlasGraph
+		// 	.getNodesByNameAndClassType<FormulaNode>(event.target.value, FormulaNode)[0];
 		// (props.selectedNode as SimplifyNode).setFormula(newFormula);
 		// (props.selectedNode as SimplifyNode)
 		// 	.fetchLatexAsync()
 		// 	.then(() => props.webInterfaceUtils.refreshElements())
 		// 	.catch();
 	};
-	const getSettingsJSX = (node: Node) => {
+	const getSettingsJSX = (node: AtlasNode) => {
 		return (
 			<div id={styles.settings_container}>
-				<div>id: {node.getId()}</div>
-				<div>name: {node.getName()}</div>
-				<div>description: {node.getDescription()}</div>
+				<div>name: {node.name}</div>
 				{/*{node instanceof SimplifyNode && (*/}
 				{/*	<div>*/}
 				{/*		formula name: {(props.selectedNode as SimplifyNode).getFormulaName()}*/}

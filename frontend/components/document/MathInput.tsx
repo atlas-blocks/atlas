@@ -1,13 +1,11 @@
 import React, { ChangeEvent } from 'react';
-import Node from '../../commons/nodes/Node';
 
 import styles from '../../styles/MathInput.module.css';
-import FormulaNode from '../../commons/nodes/formulas/FormulaNode';
 import WebInterfaceUtils from '../../utils/WebInterfaceUtils';
-import ExpressionNode from '../../commons/nodes/formulas/ExpressionNode';
+import { AtlasNode, ExpressionNode } from '../../utils/AtlasGraph';
 
 type Props = {
-	selectedNode: Node | null;
+	selectedNode: AtlasNode | null;
 	webInterfaceUtils: WebInterfaceUtils;
 };
 type States = { inputBottom: string; inputValue: string };
@@ -20,8 +18,8 @@ export default class MathInput extends React.Component<Props, States> {
 		this.elementHeight = '100px';
 		this.state = {
 			inputValue:
-				this.props.selectedNode instanceof FormulaNode
-					? this.props.selectedNode.getContent()
+				this.props.selectedNode instanceof ExpressionNode
+					? this.props.selectedNode.content
 					: '',
 			inputBottom: '-200px',
 		};
