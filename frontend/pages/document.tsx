@@ -27,17 +27,14 @@ import BlockMenu from '../components/document/BlockMenu';
 import BlockSettings from '../components/document/BlockSettings';
 import MathInput from '../components/document/MathInput';
 
-import AtlasGraph, { AtlasNode } from '../utils/AtlasGraph';
+import AtlasGraph, { AtlasNode, ExpressionNode} from '../utils/AtlasGraph';
 import WebInterfaceUtils from '../utils/WebInterfaceUtils';
-import FormulaNode from '../commons/nodes/formulas/FormulaNode';
 
 import { NextPage } from 'next';
 import styles from '../styles/DnDFlow.module.css';
 import DefaultFunctions from '../commons/library/system/formulas/functions/DefaultFunctions';
 
-const node1 = JSON.parse(
-	'{"name":"name","visibility":true,"package":"pkg","content":"1 + 2","position":[300,100],"type":"AtlasGraph.ExpressionNode"}',
-) as AtlasNode;
+const node1 = new ExpressionNode(new AtlasNode("AtlasGraph.ExpressionNode", "name", "pkg", [300, 100], true), "1 + 2", "3");
 
 export const atlasGraph = new AtlasGraph();
 atlasGraph.nodes.push(node1);
@@ -57,8 +54,9 @@ const DnDFlow: NextPage = () => {
 
 	function handleBlockDoubleClick(event: ReactMouseEvent, block: Block) {
 		setSelectedNode(block.data.node);
-		if (block.data.node instanceof FormulaNode)
-			(mathInputRef.current as MathInput).show(block.data.node.getContent());
+		if (block.data.node instanceof ExpressionNode) {
+			(mathInputRef.current as MathInput).show(block.data.node.content);
+		}
 	}
 
 	function onPaneClick(event: ReactMouseEvent) {
@@ -89,7 +87,8 @@ const DnDFlow: NextPage = () => {
 		});
 
 		console.assert(druggedNode !== null, 'drugged node should not be assigned before dragging');
-		if (druggedNode !== null) atlasGraph.nodes.push(druggedNode.setPosition(pos.x, pos.y).setDefaultName());
+		if (druggedNode !== null)
+			atlasGraph.nodes.push(druggedNode.setPosition(pos.x, pos.y).setDefaultName());
 		webInterfaceUtils.refreshElements();
 	};
 

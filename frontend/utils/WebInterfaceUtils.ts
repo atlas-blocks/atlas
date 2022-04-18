@@ -1,6 +1,7 @@
 import React from 'react';
 import { Node as Block, Elements } from 'react-flow-renderer';
 import AtlasGraph, { AtlasNode } from '../utils/AtlasGraph';
+import ServerUtils from './ServerUtils';
 
 export default class WebInterfaceUtils {
 	graph: AtlasGraph;
@@ -56,16 +57,12 @@ export default class WebInterfaceUtils {
 		return ans;
 	}
 
-	public updateGraph() {
-		
-	}
-
 	public refreshElements() {
 		this.setElements((els) => WebInterfaceUtils.getElements(this.graph));
 	}
 
-	public async updateExpressionContent(node: AtlasNode, content: string) {
-		// await node.updateContent(content, this.graph);
+	public async updateGraph() {
+		await ServerUtils.updateGraph(this.graph);
 		this.refreshElements();
 	}
 

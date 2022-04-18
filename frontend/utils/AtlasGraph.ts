@@ -1,15 +1,19 @@
 export default class AtlasGraph {
-
 	public readonly nodes: AtlasNode[];
+	public readonly edges: AtlasEdge[];
 
 	constructor() {
 		this.nodes = [];
+		this.edges = [];
 	}
-    static nameCnt = 0;
+	private static nameCnt = 0;
+	static getDefaultName() {
+		return 'b' + this.nameCnt++;
+	}
 }
-
+export class AtlasEdge {
+}
 export class AtlasNode {
-
 	static structType = 'AtlasGraph.Node';
 	public type: string;
 	public name: string;
@@ -30,15 +34,18 @@ export class AtlasNode {
 		this.position = position;
 		this.visibility = visibility;
 	}
+	public static constructorEmpty() {
+		return new AtlasNode('', '', '', [0, 0], false);
+	}
 
 	setPosition(x: number, y: number): AtlasNode {
 		this.position = [x, y];
 		return this;
 	}
-    setDefaultName() {
-        this.name = 'b' + AtlasGraph.nameCnt++;
-        return this;
-    }
+	setDefaultName() {
+		this.name = AtlasGraph.getDefaultName();
+		return this;
+	}
 }
 
 export class ExpressionNode extends AtlasNode {
@@ -52,8 +59,7 @@ export class ExpressionNode extends AtlasNode {
 		this.result = result;
 	}
 
-	setPosition(x: number, y: number): AtlasNode {
-		this.position = [x, y];
-		return this;
+	public static constructorEmpty() {
+		return new ExpressionNode(AtlasNode.constructorEmpty(), '', '');
 	}
 }

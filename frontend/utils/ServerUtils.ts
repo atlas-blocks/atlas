@@ -1,3 +1,6 @@
+import ErrorUtils from './errors/ErrorUtils';
+import AtlasGraph, { AtlasNode, ExpressionNode} from './AtlasGraph';
+
 type Response = {
 	success: boolean;
 	latex: string;
@@ -15,7 +18,7 @@ abstract class ServerUtils {
 	}
 
 	public static async post(url: string, params: Object, body: Object) {
-		return this.fetchAsync(url, params, { method: 'POST', body: body });
+		return this.fetchAsync(url, params, { method: 'POST', headers: {"Content-Type": "application/json"}, body: JSON.stringify(body)});
 	}
 
 	public static getHostHref(): string {
@@ -44,6 +47,33 @@ abstract class ServerUtils {
 			url: url,
 			request: JSON.stringify(data),
 		});
+	}
+
+	public static async updateGraph(graph: AtlasGraph) {
+		const graphJsonStr: string = JSON.stringify({"nodes": graph.nodes, "edges": graph.edges});
+		const responseJson = await this.post(this.getHostHref() + '/api/graph', {}, { graph: graph })
+		if (!responseJson.success) {
+			ErrorUtils.showAlert("error while updating graph: " + responseJson.message);
+			return;
+		}
+		const updatedGraph = responseJson.graph;
+		updatedGraph.nodes = ServerUtils.extractNodes(updatedGraph.nodes)
+		Object.assign(graph, updatedGraph);
+	}
+
+	public static extractNodes(nodes: {type: string}[]): AtlasNode[] {
+		const updatedNodes: AtlasNode[] = []
+		for (const node of nodes) {
+			if (node.type === ExpressionNode.structType) {
+				updatedNodes.push(Object.assign(ExpressionNode.constructorEmpty(), node));
+			} else if (node.type === AtlasNode.structType) {
+				updatedNodes.push(Object.assign(AtlasNode.constructorEmpty(), node));
+			} else {
+				throw new Error("no such node type: " + node.type);
+			}
+		}
+		return updatedNodes;
+
 	}
 }
 

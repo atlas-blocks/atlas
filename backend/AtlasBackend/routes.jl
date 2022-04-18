@@ -6,7 +6,12 @@ route("/") do
     html("hello worldd")
 end
 
-route("/graph") do
-    graph = getpayload(:graph, JSON3.write(Dict("nodes" => [1], "edges" => [])))
-    json(JSON3.read(AtlasGraph.updateGraph(graph)))
+route("/graph", method = Router.POST) do
+    println("server < client: " * string(Requests.jsonpayload()))
+
+    if (Requests.jsonpayload() === nothing)
+        return json(Dict("success" => false, "message" => "error during parsing json: \n" * Requests.rawpayload() ))
+    end
+
+    json(Dict("success" => true, "graph" => AtlasGraph.updateGraph(Requests.jsonpayload()["graph"])))
 end

@@ -39,11 +39,10 @@ export default class MathInput extends React.Component<Props, States> {
 	};
 
 	submitInput = async () => {
-		if (this.props.selectedNode instanceof ExpressionNode)
-			await this.props.webInterfaceUtils.updateExpressionContent(
-				this.props.selectedNode,
-				this.state.inputValue,
-			);
+		if (this.props.selectedNode instanceof ExpressionNode) {
+			this.props.selectedNode.content = this.state.inputValue; 
+			await this.props.webInterfaceUtils.updateGraph();
+		}
 		this.hide();
 	};
 
