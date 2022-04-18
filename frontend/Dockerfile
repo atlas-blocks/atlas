@@ -1,4 +1,4 @@
-FROM node:17.1.0-alpine3.12 AS development
+FROM node:17.1.0-alpine3.12 AS dev
 WORKDIR /app
 ENV HOST=0.0.0.0
 ENV PORT=3000
@@ -19,7 +19,7 @@ COPY --from=dependencies /app/node_modules ./node_modules
 COPY . .
 RUN yarn build
 
-FROM node:17.1.0-alpine3.12 AS production
+FROM node:17.1.0-alpine3.12 AS prod
 WORKDIR /app
 ENV HOST=0.0.0.0
 ENV PORT=3000

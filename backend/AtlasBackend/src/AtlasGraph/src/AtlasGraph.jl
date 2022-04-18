@@ -80,7 +80,7 @@ end
 StructTypes.StructType(::Type{Node}) = StructTypes.Struct()
 
 function updateGraph(graph_json_string::AbstractString)::AbstractString
-    return graph_json_string
+    return JSON3.write(graph_json_string)
 end
 
 end

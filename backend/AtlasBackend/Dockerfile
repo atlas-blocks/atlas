@@ -1,5 +1,5 @@
 # pull latest julia image
-FROM --platform=linux/amd64 julia:latest
+FROM --platform=linux/amd64 julia:latest as base
 
 # create dedicated user
 RUN useradd --create-home --shell /bin/bash genie
@@ -28,7 +28,6 @@ EXPOSE 80
 
 # set up app environment
 ENV JULIA_DEPOT_PATH "/home/genie/.julia"
-ENV GENIE_ENV "dev"
 ENV HOST "0.0.0.0"
 ENV PORT "8000"
 ENV WSPORT "8000"
@@ -36,6 +35,12 @@ ENV EARLYBIND "true"
 
 # run app
 CMD ["bin/server"]
+
+FROM base as dev
+ENV GENIE_ENV "dev"
+
+FROM base as prod
+ENV GENIE_ENV "prod"
 
 # or maybe include a Julia file
 # CMD julia -e 'using Pkg; Pkg.activate("."); include("IrisClustering.jl"); '

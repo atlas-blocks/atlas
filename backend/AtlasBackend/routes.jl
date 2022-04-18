@@ -6,7 +6,7 @@ route("/") do
     html("hello worldd")
 end
 
-route("/api/graph") do
-    graph = getpayload(:graph, JSON3.write(Dict("nodes" => [], "edges" => [])))
+route("/graph") do
+    graph = getpayload(:graph, JSON3.write(Dict("nodes" => [1], "edges" => [])))
     json(JSON3.read(AtlasGraph.updateGraph(graph)))
 end
