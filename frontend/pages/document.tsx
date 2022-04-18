@@ -89,7 +89,7 @@ const DnDFlow: NextPage = () => {
 		});
 
 		console.assert(druggedNode !== null, 'drugged node should not be assigned before dragging');
-		if (druggedNode !== null) atlasGraph.nodes.push(druggedNode.setPosition(pos.x, pos.y));
+		if (druggedNode !== null) atlasGraph.nodes.push(druggedNode.setPosition(pos.x, pos.y).setDefaultName());
 		webInterfaceUtils.refreshElements();
 	};
 

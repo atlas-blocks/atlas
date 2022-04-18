@@ -56,6 +56,10 @@ export default class WebInterfaceUtils {
 		return ans;
 	}
 
+	public updateGraph() {
+		
+	}
+
 	public refreshElements() {
 		this.setElements((els) => WebInterfaceUtils.getElements(this.graph));
 	}

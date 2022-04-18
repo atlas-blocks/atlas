@@ -1,12 +1,15 @@
 export default class AtlasGraph {
+
 	public readonly nodes: AtlasNode[];
 
 	constructor() {
 		this.nodes = [];
 	}
+    static nameCnt = 0;
 }
 
 export class AtlasNode {
+
 	static structType = 'AtlasGraph.Node';
 	public type: string;
 	public name: string;
@@ -32,6 +35,10 @@ export class AtlasNode {
 		this.position = [x, y];
 		return this;
 	}
+    setDefaultName() {
+        this.name = 'b' + AtlasGraph.nameCnt++;
+        return this;
+    }
 }
 
 export class ExpressionNode extends AtlasNode {
