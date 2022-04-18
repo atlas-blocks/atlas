@@ -11,8 +11,7 @@ export default class AtlasGraph {
 		return 'b' + this.nameCnt++;
 	}
 }
-export class AtlasEdge {
-}
+export class AtlasEdge {}
 export class AtlasNode {
 	static structType = 'AtlasGraph.Node';
 	public type: string;

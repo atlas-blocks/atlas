@@ -27,14 +27,18 @@ import BlockMenu from '../components/document/BlockMenu';
 import BlockSettings from '../components/document/BlockSettings';
 import MathInput from '../components/document/MathInput';
 
-import AtlasGraph, { AtlasNode, ExpressionNode} from '../utils/AtlasGraph';
+import AtlasGraph, { AtlasNode, ExpressionNode } from '../utils/AtlasGraph';
 import WebInterfaceUtils from '../utils/WebInterfaceUtils';
 
 import { NextPage } from 'next';
 import styles from '../styles/DnDFlow.module.css';
 import DefaultFunctions from '../commons/library/system/formulas/functions/DefaultFunctions';
 
-const node1 = new ExpressionNode(new AtlasNode("AtlasGraph.ExpressionNode", "name", "pkg", [300, 100], true), "1 + 2", "3");
+const node1 = new ExpressionNode(
+	new AtlasNode('AtlasGraph.ExpressionNode', 'name', 'pkg', [300, 100], true),
+	'1 + 2',
+	'3',
+);
 
 export const atlasGraph = new AtlasGraph();
 atlasGraph.nodes.push(node1);
