@@ -1,4 +1,6 @@
 module AtlasGraph
+export AbstractGraph
+
 import JSON3
 import StructTypes
 
@@ -23,6 +25,9 @@ abstract type AbstractFunctionNode <: AbstractFormulaNode end
 mutable struct FunctionNode <: AbstractFunctionNode
     node::Node
     content::String
+
+    priority::Int8
+    leftright_order::Bool
 end
 
 abstract type AbstractGraph end
@@ -82,5 +87,8 @@ StructTypes.StructType(::Type{Node}) = StructTypes.Struct()
 function updateGraph(graph_json_string::JSON3.Object)::JSON3.Object
     return graph_json_string
 end
+
+
+include("./utils/algorithms/FormulaUtils.jl")
 
 end

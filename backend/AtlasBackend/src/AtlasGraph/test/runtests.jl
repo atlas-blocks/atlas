@@ -71,3 +71,6 @@ end
         check
     )
 end
+
+
+include("./utils/algorithms/FormulaUtilsTest.jl")
