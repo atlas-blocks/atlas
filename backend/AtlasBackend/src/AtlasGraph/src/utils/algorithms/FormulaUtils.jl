@@ -5,7 +5,8 @@ function get_rpn(
     content::AbstractString,
     graph::AtlasGraph.AbstractGraph,
 )::AbstractQueue{AbstractString}
-    output_queue = Queue{AbstractString}()
+    output_queue = Queue{Any}()
+    operation_stack = Stack{FunctionNode}()
     tokens = get_tockens(content)
     if (tokens === nothing)
         return nothing
