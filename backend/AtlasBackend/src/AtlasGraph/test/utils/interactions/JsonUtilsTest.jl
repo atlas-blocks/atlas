@@ -34,19 +34,25 @@ end
     )
 
 
-    @test (node = Node("name", "pkg", (5, -7), true);
-    JsonUtils.node(JsonUtils.json(node)) ≂ node)
-    @test (node = ExpressionNode(Node("name", "pkg", (5, -7), true), "1 + 2", "3");
-    JsonUtils.node(JsonUtils.json(node)) ≂ node)
-    @test (node1 = Node("name1", "pkg", (5, -7), true);
-    node2 = ExpressionNode(Node("name2", "pkg", (5, -7), true), "1 + 2", "3");
-    graph = Graph([node1, node2]);
-    actual = JsonUtils.graph(JsonUtils.json(graph));
-    check = (length(graph.nodes) == length(actual.nodes));
-    for i in eachindex(graph.nodes)
-        if (!(graph.nodes[i] ≂ actual.nodes[i]))
-            check = false
-        end
-    end;
-    check)
+    @test (#
+        node = Node("name", "pkg", (5, -7), true);
+        JsonUtils.node(JsonUtils.json(node)) ≂ node
+    )
+    @test (# 
+        node = ExpressionNode(Node("name", "pkg", (5, -7), true), "1 + 2", "3");
+        JsonUtils.node(JsonUtils.json(node)) ≂ node
+    )
+    @test (#
+        node1 = Node("name1", "pkg", (5, -7), true);
+        node2 = ExpressionNode(Node("name2", "pkg", (5, -7), true), "1 + 2", "3");
+        graph = Graph([node1, node2]);
+        actual = JsonUtils.graph(JsonUtils.json(graph));
+        check = (length(graph.nodes) == length(actual.nodes));
+        for i in eachindex(graph.nodes)
+            if (!(graph.nodes[i] ≂ actual.nodes[i]))
+                check = false
+            end
+        end;
+        check
+    )
 end
