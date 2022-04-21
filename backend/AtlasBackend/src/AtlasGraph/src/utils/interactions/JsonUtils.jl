@@ -50,7 +50,7 @@ function node(json_dict::JSON3.Object)::AbstractNode
 end
 
 function graph(json_dict::JSON3.Object)::AbstractGraph
-    nodes_json_arr = JSON3.read(json_dict)["nodes"]
+    nodes_json_arr = json_dict["nodes"]
     nodes = Vector{AbstractNode}()
     for node_json in nodes_json_arr
         push!(nodes, node(node_json))

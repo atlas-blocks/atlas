@@ -1,5 +1,6 @@
 using AtlasGraph, AtlasGraph.JsonUtils
 using Test
+using JSON3
 
 "Lenient comparison operator for `struct`, both mutable and immutable (type with \\eqsim)."
 @generated function ≂(x, y)
@@ -14,14 +15,14 @@ end
     @test (
         node = Node("name", "pkg", (5, -7), true);
         node_json = """{"name":"name","visibility":true,"package":"pkg","position":[5,-7],"type":"Node"}""";
-        JsonUtils.json(node) == node_json
+        JsonUtils.json(node) == JSON3.read(node_json)
     )
     @test (
         node = ExpressionNode(Node("name", "pkg", (5, -7), true), "1 + 2", "3");
         node_json =
             """{"name":"name","visibility":true,"content":"1 + 2","package":"pkg",""" *
             """"position":[5,-7],"type":"ExpressionNode","result":"3"}""";
-        JsonUtils.json(node) == node_json
+        JsonUtils.json(node) == JSON3.read(node_json)
     )
     @test (
         node1 = Node("name1", "pkg", (5, -7), true);
@@ -30,7 +31,7 @@ end
         graph_json =
             """{"nodes":[{"name":"name1","visibility":true,"package":"pkg","position":[5,-7],"type":"Node"},""" *
             """{"name":"name2","visibility":true,"content":"1 + 2","package":"pkg","position":[5,-7],"type":"ExpressionNode","result":"3"}],"edges":[]}""";
-        JsonUtils.json(graph) == graph_json
+        JsonUtils.json(graph) == JSON3.read(graph_json)
     )
 
 

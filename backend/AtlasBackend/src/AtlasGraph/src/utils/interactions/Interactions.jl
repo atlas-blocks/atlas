@@ -1,6 +1,7 @@
 module Interactions
 using ..AtlasGraph
-using .JsonUtils
+using ..AtlasGraph: JsonUtils
+using JSON3
 
 
 function updateGraph(graph_json::JSON3.Object)::JSON3.Object

@@ -1,6 +1,7 @@
 module FormulaUtils
 using ..AtlasGraph
-using .Functions
+using ..AtlasGraph: Functions
+using DataStructures
 
 struct Keyword
     name::String
@@ -9,8 +10,8 @@ end
 function getrpn(
     content::AbstractString,
     graph::AbstractGraph,
-)::AbstractQueue{Union{Real,AbstractString,Symbol,Keyword,AbstractExpressionNode}}
-    output_queue = Queue()
+)::Queue{Union{Real,AbstractString,Symbol,Keyword,AbstractExpressionNode}}
+    output_queue = Queue{Any}()
     operation_stack = Stack{Symbol}()
     tokens = get_tockens(content)
     if (tokens === nothing)
@@ -137,8 +138,8 @@ function extract_node_name(str::AbstractString)::AbstractString
 end
 
 
-function evaluaterpn(rpn::AbstractQueue, graph::AbstractGraph)
-    arguments = Stack()
+function evaluaterpn(rpn::Queue, graph::AbstractGraph)
+    arguments = Stack{Any}()
     while isempty(rpn)
         next = dequeue!(rpn)
         if isa(next, Real) || isa(next, AbstractString)
