@@ -3,6 +3,8 @@ using Test
 
 @testset "FormulaUtils" begin
 
+    @testset "rpn" begin end
+
     @testset "matching" begin
         @test (  # usual case
             FormulaUtils.match_prefix_int("123abba").match == "123"

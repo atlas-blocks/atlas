@@ -1,6 +1,5 @@
 module Interactions
-using ..AtlasGraph
-using ..AtlasGraph: JsonUtils
+using ..AtlasGraph, ..JsonUtils
 using JSON3
 
 

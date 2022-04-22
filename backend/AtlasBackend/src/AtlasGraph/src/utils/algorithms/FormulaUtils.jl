@@ -1,6 +1,5 @@
 module FormulaUtils
-using ..AtlasGraph
-using ..AtlasGraph: Functions
+using ..AtlasGraph, ..Functions
 using DataStructures
 
 struct Keyword
