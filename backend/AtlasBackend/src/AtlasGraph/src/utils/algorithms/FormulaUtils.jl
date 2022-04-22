@@ -32,7 +32,7 @@ function getrpn(content::AbstractString, graph::AbstractGraph)::Result{Queue{Any
                    isdefined(Functions.Math, token)
                 push!(operation_stack, token)
             else
-                return ParsingException("Variable " * string(token) * "not defined.")
+                return ParsingException("Variable " * string(token) * " not defined.")
             end
         elseif isa(token, Real) || isa(token, AbstractString)
             enqueue!(output_queue, token)

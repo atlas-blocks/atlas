@@ -1,5 +1,5 @@
-using Genie.Router, AtlasGraph, JSON3
-using Genie.Renderer, Genie.Renderer.Html, Genie.Renderer.Json, Genie.Requests
+using Genie.Router, AtlasGraph.Interactions.Endpoints, JSON3
+using Genie.Renderer.Json, Genie.Requests, ResultTypes
 
 route("/") do
     serve_static_file("welcome.html")
@@ -13,5 +13,10 @@ route("/graph", method = Router.POST) do
         return json(Dict("success" => false, "message" => "error during parsing json: \n" * Requests.rawpayload() ))
     end
 
-    json(Dict("success" => true, "graph" => AtlasGraph.updateGraph(Requests.jsonpayload()["graph"])))
+    @show typeof(Requests.jsonpayload())
+    result = Endpoints.updategraph(Requests.jsonpayload()["graph"])
+    if ResultTypes.iserror(result)
+        return json(Dict("success" => false, "message" => string(unwrap_error(result))))
+    end
+    json(Dict("success" => true, "graph" => unwrap(result)))
 end

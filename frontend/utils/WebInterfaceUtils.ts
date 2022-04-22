@@ -20,7 +20,7 @@ export default class WebInterfaceUtils {
 
 	public static toBlock(node: AtlasNode): Block {
 		return {
-			id: node.type + '/' + node.name,
+			id: node.getId(),
 			type: node.type,
 			position: { x: node.position[0], y: node.position[1] },
 			data: { node: node },

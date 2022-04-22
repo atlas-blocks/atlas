@@ -45,6 +45,9 @@ export class AtlasNode {
 		this.name = AtlasGraph.getDefaultName();
 		return this;
 	}
+	getId() {
+		return this.package + '/' + this.name;
+	}
 }
 
 export class ExpressionNode extends AtlasNode {

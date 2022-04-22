@@ -39,7 +39,7 @@ function node(json_dict::JSON3.Object)::AbstractNode
     node = Node(
         json_dict["name"],
         json_dict["package"],
-        (json_dict["position"][1], json_dict["position"][2]),
+        (convert(Int32, json_dict["position"][1]), convert(Int32, json_dict["position"][2])),
         json_dict["visibility"],
     )
     if json_dict["type"] == string(Node)

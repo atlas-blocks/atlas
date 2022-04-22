@@ -36,8 +36,8 @@ import DefaultFunctions from '../commons/library/system/formulas/functions/Defau
 
 const node1 = new ExpressionNode(
 	new AtlasNode('AtlasGraph.ExpressionNode', 'name', 'pkg', [300, 100], true),
-	'1 + 2',
-	'3',
+	'__$sin$__(5)',
+	'-0.9589',
 );
 
 export const atlasGraph = new AtlasGraph();
