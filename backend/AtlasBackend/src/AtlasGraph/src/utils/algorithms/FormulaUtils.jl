@@ -1,7 +1,7 @@
 module FormulaUtils
 using ..AtlasGraph, ..Functions
 using DataStructures, ResultTypes
-export getrpn, evaluaterpn, gettokens, topological_order, getproviders
+export getrpn, evalcontent, gettokens, topological_order, getproviders
 
 struct Keyword
     name::String
@@ -145,17 +145,22 @@ function extract_node_name(str::AbstractString)::AbstractString
     return replace(str, r"((__\$)|(\$__))" => "")
 end
 
+function evalcontent(content::AbstractString, graph::AbstractGraph)::Result{Any,Exception}
+    rpn = getrpn(content, graph)
+    if (ResultTypes.iserror(rpn))
+        return unwrap_error(rpn)
+    end
+    rpn = unwrap(rpn)
 
-function evaluaterpn(rpn::Queue{Any}, graph::AbstractGraph)::Result{Any,Exception}
     if (isempty(rpn))
         return nothing
     end
 
     arguments = Stack{Any}()
-    while isempty(rpn)
+    while !isempty(rpn)
         next = dequeue!(rpn)
         if isa(next, Real) || isa(next, AbstractString)
-            push!(arguments, f)
+            push!(arguments, next)
         elseif isa(next, Keyword)
             push!(arguments, next)
         elseif isa(next, AbstractExpressionNode)
@@ -164,25 +169,25 @@ function evaluaterpn(rpn::Queue{Any}, graph::AbstractGraph)::Result{Any,Exceptio
             end
             push!(arguments, next.result)
         elseif isa(next, Symbol)
-            if isempty(rpn) || first(rpn) != Keyword(")")
-                return EvaluatingException("No opening bracket after function call")
+            if isempty(arguments) || first(arguments) != Keyword(")")
+                return EvaluatingException("No cloasing bracket after function call")
             end
-            dequeue!(rpn)
+            pop!(arguments)
             current_arguments = []
-            while !isempty(rpn) && !first(rpn) != Keyword("(")
-                push!(current_arguments, dequeue!(rpn))
+            while !isempty(arguments) && first(arguments) != Keyword("(")
+                push!(current_arguments, pop!(arguments))
             end
-            if isempty(rpn) || first(rpn) != Keyword("(")
+            if isempty(arguments) || first(arguments) != Keyword("(")
                 return EvaluatingException("Brackets number not matching.")
             end
-            dequeue!(rpn)
+            pop!(arguments)
             reverse!(current_arguments)
             arguments_types = map(arg -> typeof(arg), current_arguments)
             if !isdefined(Functions.Math, next)
                 return EvaluatingException("No functions with the name: " * string(next))
             end
             func = getproperty(Functions.Math, next)
-            possible_methods = methods(func, arguments_types, Functions.Math)
+            possible_methods = methods(func, arguments_types)
             if length(possible_methods) == 0
                 return EvaluatingException(
                     "No functions matches for this call: " *

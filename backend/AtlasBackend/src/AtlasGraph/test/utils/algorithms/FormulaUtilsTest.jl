@@ -7,8 +7,15 @@ function genenode(name::AbstractString)::Node
     return Node(name, "pkg", (0, 0), false)
 end
 
+function genexpression(
+    name::AbstractString,
+    content::AbstractString,
+    result::Any,
+)::ExpressionNode
+    return ExpressionNode(genenode(name), content, result)
+end
 function genexpression(name::AbstractString, content::AbstractString)::ExpressionNode
-    return ExpressionNode(genenode(name), content, Nothing)
+    return genexpression(name, content, nothing)
 end
 
 function vec(queue)
@@ -23,7 +30,7 @@ end
 
     @testset "rpn" begin
         @testset "getrpn" begin
-            graph = Graph([genexpression("ex1", "0"), genexpression("ex2", "0")])
+            graph = Graph([genexpression("ex1", "5", 5), genexpression("ex2", "0")])
 
             @test vec(unwrap(getrpn("1", graph))) == [1]
             @test vec(unwrap(getrpn("\"str\"", graph))) == ["str"]
@@ -32,6 +39,23 @@ end
                   [fu.Keyword("("), fu.Keyword(")"), :sin]
             @test vec(unwrap(getrpn("__\$sin\$__(__\$ex1\$__, \"ex2\")", graph))) ==
                   [fu.Keyword("("), graph.nodes[1], "ex2", fu.Keyword(")"), :sin]
+        end
+        @testset "evalcontent" begin
+            graph = Graph([
+                genexpression("ex1", "5", 5),
+                genexpression("ex2", "\"str\"", "str"),
+                genexpression("ex3", ""),
+            ])
+
+            @test unwrap(evalcontent("1", graph)) == 1
+            @test unwrap(evalcontent("\"str\"", graph)) == "str"
+            @test unwrap(evalcontent("__\$ex1\$__", graph)) == 5
+            @test unwrap(evalcontent("__\$sin\$__(__\$ex1\$__)", graph)) == sin(5)
+            @test unwrap(evalcontent("__\$+\$__(__\$ex1\$__, 2.4)", graph)) == 7.4
+            @test unwrap(evalcontent("__\$*\$__(\"concat\", __\$ex2\$__)", graph)) ==
+                  "concatstr"
+            @test unwrap(evalcontent("__\$*\$__(\"concat\", __\$ex3\$__)", graph)) ===
+                  nothing
         end
 
         @testset "gettokens" begin
