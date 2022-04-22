@@ -24,6 +24,15 @@ mutable struct ExpressionNode <: AbstractExpressionNode
     result::Any
 end
 
+function Base.getproperty(obj::ExpressionNode, sym::Symbol)
+    if sym === :name
+        return obj.node.name
+    else
+        return getfield(obj, sym)
+    end
+end
+
+
 abstract type AbstractFunctionNode <: AbstractFormulaNode end
 mutable struct FunctionNode <: AbstractFunctionNode
     node::Node
@@ -39,7 +48,7 @@ struct Graph <: AbstractGraph
 end
 
 function getnodes(graph::AbstractGraph, name::AbstractString)::Vector{AbstractNode}
-    return flter(node -> node.name == name, graph.nodes)
+    return filter(node -> node.name == name, graph.nodes)
 end
 
 function getnodes(graph::AbstractGraph, type::DataType)::Vector{AbstractNode}
@@ -51,11 +60,11 @@ function getnodes(
     name::AbstractString,
     type::DataType,
 )::Vector{AbstractNode}
-    return getnodes(node -> isa(node, type), get_nodes_by_name(graph, name))
+    return filter(node -> isa(node, type), getnodes(graph, name))
 end
 
 function isexpression(graph::AbstractGraph, name::AbstractString)
-    return getnodes(graph, name, ExpressionNode) > 0
+    return length(getnodes(graph, name, ExpressionNode)) > 0
 end
 
 function getexpression(graph::AbstractGraph, name::AbstractString)
@@ -63,8 +72,7 @@ function getexpression(graph::AbstractGraph, name::AbstractString)
 end
 
 function isfunction(graph::AbstractGraph, name::AbstractString)
-    nodes = filter(node -> isa(node, AbstractFunctionNode), get_nodes_by_name(graph, name))
-    return getnodes(graph, nodes) > 0
+    return length(getnodes(graph, name, AbstractFunctionNode)) > 0
 end
 
 StructTypes.StructType(::Type{Node}) = StructTypes.Struct()

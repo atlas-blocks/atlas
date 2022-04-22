@@ -1,21 +1,27 @@
 module FormulaUtils
 using ..AtlasGraph, ..Functions
-using DataStructures
+using DataStructures, ResultTypes
+export getrpn, evaluaterpn, gettokens, topological_order, getproviders
 
 struct Keyword
     name::String
 end
 
-function getrpn(
-    content::AbstractString,
-    graph::AbstractGraph,
-)::Queue{Union{Real,AbstractString,Symbol,Keyword,AbstractExpressionNode}}
+struct ParsingException <: Exception
+    message::String
+end
+struct EvaluatingException <: Exception
+    message::String
+end
+
+function getrpn(content::AbstractString, graph::AbstractGraph)::Result{Queue{Any},Exception}
     output_queue = Queue{Any}()
-    operation_stack = Stack{Symbol}()
-    tokens = get_tockens(content)
-    if (tokens === nothing)
-        return nothing
+    operation_stack = Stack{Union{Symbol,Keyword}}()
+    tokens = gettokens(content)
+    if (ResultTypes.iserror(tokens))
+        return unwrap_error(tokens)
     end
+    tokens = unwrap(tokens)
 
     for i = 1:length(tokens)
         token = tokens[i]
@@ -23,10 +29,10 @@ function getrpn(
             if AtlasGraph.isexpression(graph, string(token))
                 enqueue!(output_queue, AtlasGraph.getexpression(graph, string(token)))
             elseif AtlasGraph.isfunction(graph, string(token)) ||
-                   isdefined(Functios.Math, token)
+                   isdefined(Functions.Math, token)
                 push!(operation_stack, token)
             else
-                return nothing
+                return ParsingException("Variable " * string(token) * "not defined.")
             end
         elseif isa(token, Real) || isa(token, AbstractString)
             enqueue!(output_queue, token)
@@ -34,19 +40,19 @@ function getrpn(
             enqueue!(output_queue, token)
             push!(operation_stack, token)
         elseif token == Keyword(")")
-            enqueue!(output_queue, Keyword(token))
+            enqueue!(output_queue, token)
             while !isempty(operation_stack) && first(operation_stack) != Keyword("(")
                 enqueue!(output_queue, pop!(operation_stack))
             end
-            if isempty(operation_stack) || first(s) != Keyword("(")
-                return nothing
+            if isempty(operation_stack) || first(operation_stack) != Keyword("(")
+                return ParsingException("Amount of open and closing bracket not matching.")
             end
-            enqueue!(output_queue, pop!(operation_stack))
-            if !isempty(operation_stack)
+            pop!(operation_stack)
+            if !isempty(operation_stack) && isa(first(operation_stack), Symbol)
                 enqueue!(output_queue, pop!(operation_stack))
             end
         else
-            return nothing
+            throw(ParsingException("Unexpected token while parsing: " * string(token)))
         end
     end
 
@@ -57,51 +63,54 @@ function getrpn(
     return output_queue
 end
 
-function gettockens(
-    content::AbstractString,
-)::Vector{Union{Real,AbstractString,Symbol,Keyword}}
-    ans = Vector{Union{Real,AbstractString,Symbol,Keyword}}()
+function gettokens(content::AbstractString)::Result{Vector{Any},Exception}
+    ans = Vector{Any}()
 
     i = 1
     while i <= length(content)
         substr = content[i:end]
-        tocken_str = ""
-        tocken_val = ""
+        token_str = ""
+        token_val = ""
         if match_prefix_node(substr) !== nothing
-            tocken_str = match_prefix_node(substr).match
-            tocken_val = Symbol(extract_node_name(tocken_str))
+            token_str = match_prefix_node(substr).match
+            token_val = Symbol(extract_node_name(token_str))
         elseif match_prefix_float(substr) !== nothing
-            tocken_str = match_prefix_float(substr).match
-            tocken_val = parse(Float64, tocken_str)
+            token_str = match_prefix_float(substr).match
+            token_val = parse(Float64, token_str)
         elseif match_prefix_int(substr) !== nothing
-            tocken_str = match_prefix_int(substr).match
-            tocken_val = parse(Int64, tocken_str)
+            token_str = match_prefix_int(substr).match
+            token_val = parse(Int64, token_str)
         elseif match_prefix_string(substr) !== nothing
-            tocken_str = match_prefix_string(substr).match
-            tocken_val = tocken_str[1:end-1]
+            token_str = match_prefix_string(substr).match
+            token_val = token_str[2:end-1]
         elseif substr[1] == '(' || substr[1] == ')'
-            tocken_str = substr[1:1]
-            tocken_val = Keyword(tocken_str)
+            token_str = substr[1:1]
+            token_val = Keyword(token_str)
         elseif substr[1] == ',' || substr[1] == ' '
             i += 1
             continue
         else
-            return nothing
+            return ParsingException(
+                "Invalid syntax starting at position: " *
+                string(i) *
+                "\n substring: " *
+                substr,
+            )
         end
 
-        push!(ans, tocken_val)
-        i += length(tocken_str)
+        push!(ans, token_val)
+        i += length(token_str)
     end
 
     return ans
 end
 
 function getproviders(content::AbstractString, graph::AbstractGraph)::Vector{AbstractString}
-    tockens = gettockens(content)
-    filter!(token -> isa(token, Symbol), tockens)
+    tokens = gettokens(content)
+    filter!(token -> isa(token, Symbol), tokens)
 
     ans = Vector{AbstractString}()
-    for tocken in tockens
+    for token in tokens
         if AtlasGraph.isexpression(graph, string(token))
             push!(ans, string(token))
         end
@@ -128,7 +137,7 @@ function match_prefix_string(str::AbstractString)::Union{RegexMatch,Nothing}
 end
 
 function match_prefix_node(str::AbstractString)::Union{RegexMatch,Nothing}
-    return match(r"^__\$.*\$__", str)
+    return match(r"^__\$[^(\$__)]*\$__", str)
 end
 
 function extract_node_name(str::AbstractString)::AbstractString
@@ -137,7 +146,11 @@ function extract_node_name(str::AbstractString)::AbstractString
 end
 
 
-function evaluaterpn(rpn::Queue, graph::AbstractGraph)
+function evaluaterpn(rpn::Queue{Any}, graph::AbstractGraph)::Result{Any,Exception}
+    if (isempty(rpn))
+        return nothing
+    end
+
     arguments = Stack{Any}()
     while isempty(rpn)
         next = dequeue!(rpn)
@@ -152,7 +165,7 @@ function evaluaterpn(rpn::Queue, graph::AbstractGraph)
             push!(arguments, next.result)
         elseif isa(next, Symbol)
             if isempty(rpn) || first(rpn) != Keyword(")")
-                return nothing
+                return EvaluatingException("No opening bracket after function call")
             end
             dequeue!(rpn)
             current_arguments = []
@@ -160,26 +173,32 @@ function evaluaterpn(rpn::Queue, graph::AbstractGraph)
                 push!(current_arguments, dequeue!(rpn))
             end
             if isempty(rpn) || first(rpn) != Keyword("(")
-                return nothing
+                return EvaluatingException("Brackets number not matching.")
             end
             dequeue!(rpn)
             reverse!(current_arguments)
             arguments_types = map(arg -> typeof(arg), current_arguments)
-            if !isdefined(Functions.Math, arguments_types)
-                return nothing
+            if !isdefined(Functions.Math, next)
+                return EvaluatingException("No functions with the name: " * string(next))
             end
             func = getproperty(Functions.Math, next)
             possible_methods = methods(func, arguments_types, Functions.Math)
             if length(possible_methods) == 0
-                return nothing
+                return EvaluatingException(
+                    "No functions matches for this call: " *
+                    string(next) *
+                    "(" *
+                    string(arguments_types) *
+                    ")",
+                )
             end
             push!(arguments, func(current_arguments...))
         else
-            return nothing
+            return EvaluatingException("Unexpected token: " + string(next))
         end
     end
     if (length(arguments) !== 1)
-        return nothing
+        return EvaluatingException("Invalid syntax, there should be one final result.")
     end
     return pop!(arguments)
 end
