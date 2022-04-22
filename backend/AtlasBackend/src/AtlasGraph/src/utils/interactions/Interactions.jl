@@ -4,14 +4,15 @@ using ..AtlasGraph, ..JsonUtils
 
 module Endpoints
 using ..AtlasGraph
+import ..JsonUtils as ju
 using JSON3, ResultTypes
 
 function updategraph(graph_json::JSON3.Object)::Result{JSON3.Object,Exception}
-    result = AtlasGraph.updategraph!(JsonUtils.graph(graph_json))
+    result = AtlasGraph.updategraph!(ju.graph(graph_json))
     if ResultTypes.iserror(result)
         return unwrap_error(result)
     end
-    return JsonUtils.json()
+    return ju.json(unwrap(result))
 end
 
 end
