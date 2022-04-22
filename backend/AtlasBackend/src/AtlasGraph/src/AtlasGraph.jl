@@ -4,8 +4,7 @@ export AbstractNode, Node
 export AbstractFunctionNode, FunctionNode
 export AbstractExpressionNode, ExpressionNode
 
-import JSON3
-import StructTypes
+using JSON3, StructTypes, ResultTypes
 
 abstract type AbstractNode end
 mutable struct Node <: AbstractNode
@@ -47,46 +46,56 @@ struct Graph <: AbstractGraph
     nodes::Vector{AbstractNode}
 end
 
-function getnodes(graph::AbstractGraph, name::AbstractString)::Vector{AbstractNode}
-    return filter(node -> node.name == name, graph.nodes)
+function filternodes(
+    nodes::Vector{AbstractNode},
+    name::AbstractString,
+)::Vector{AbstractNode}
+    return filter(node -> node.name == name, nodes)
 end
 
-function getnodes(graph::AbstractGraph, type::DataType)::Vector{AbstractNode}
-    return filter(node -> isa(node, type), graph.nodes)
+function filternodes(nodes::Vector{AbstractNode}, type::DataType)::Vector{AbstractNode}
+    return filter(node -> isa(node, type), nodes)
 end
 
-function getnodes(
-    graph::AbstractGraph,
+function filternodes(
+    nodes::Vector{AbstractNode},
     name::AbstractString,
     type::DataType,
 )::Vector{AbstractNode}
-    return filter(node -> isa(node, type), getnodes(graph, name))
+    return filternodes(filternodes(nodes, name), type)
 end
 
 function isexpression(graph::AbstractGraph, name::AbstractString)
-    return length(getnodes(graph, name, ExpressionNode)) > 0
+    return length(filternodes(graph.nodes, name, ExpressionNode)) > 0
 end
 
 function getexpression(graph::AbstractGraph, name::AbstractString)
-    return getnodes(graph, name, ExpressionNode)[1]
+    return filternodes(graph.nodes, name, ExpressionNode)[1]
 end
 
 function isfunction(graph::AbstractGraph, name::AbstractString)
-    return length(getnodes(graph, name, AbstractFunctionNode)) > 0
+    return length(filternodes(graph.nodes, name, AbstractFunctionNode)) > 0
 end
 
 StructTypes.StructType(::Type{Node}) = StructTypes.Struct()
 
-function updateGraph!(graph::AbstractGraph)::AbstractGraph
-    ordered_nodes = FormulaUtils.topological_order(graph)
+function updategraph!(graph::AbstractGraph)::Result{AbstractGraph,Exception}
+    expressions = filternodes(graph.nodes, AbstractExpressionNode)
+    ordered_nodes = FormulaUtils.topological_order(
+        convert(Vector{AbstractExpressionNode}, expressions),
+        graph,
+    )
 
     for node in ordered_nodes
-        node.result = FormulaUtils.evaluaterpn(node, graph)
+        result = FormulaUtils.evalcontent(node.content, graph)
+        if ResultTypes.iserror(result)
+            return unwrap_error(result)
+        end
+        node.result = unwrap(result)
     end
 
     return graph
 end
-
 
 
 include("./Types.jl")

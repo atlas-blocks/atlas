@@ -1,50 +1,28 @@
 using AtlasGraph, AtlasGraph.FormulaUtils
 using Test
+import .TestUtils as tu
 import AtlasGraph.FormulaUtils as fu
 using DataStructures, ResultTypes
 
-function genenode(name::AbstractString)::Node
-    return Node(name, "pkg", (0, 0), false)
-end
-
-function genexpression(
-    name::AbstractString,
-    content::AbstractString,
-    result::Any,
-)::ExpressionNode
-    return ExpressionNode(genenode(name), content, result)
-end
-function genexpression(name::AbstractString, content::AbstractString)::ExpressionNode
-    return genexpression(name, content, nothing)
-end
-
-function vec(queue)
-    v = Vector{Any}()
-    while !isempty(queue)
-        push!(v, dequeue!(queue))
-    end
-    return v
-end
 
 @testset "FormulaUtils" begin
-
     @testset "rpn" begin
         @testset "getrpn" begin
-            graph = Graph([genexpression("ex1", "5", 5), genexpression("ex2", "0")])
+            graph = Graph([tu.genexpression("ex1", "5", 5), tu.genexpression("ex2", "0")])
 
-            @test vec(unwrap(getrpn("1", graph))) == [1]
-            @test vec(unwrap(getrpn("\"str\"", graph))) == ["str"]
-            @test vec(unwrap(getrpn("1.24", graph))) == [1.24]
-            @test vec(unwrap(getrpn("__\$sin\$__()", graph))) ==
+            @test tu.vec(unwrap(getrpn("1", graph))) == [1]
+            @test tu.vec(unwrap(getrpn("\"str\"", graph))) == ["str"]
+            @test tu.vec(unwrap(getrpn("1.24", graph))) == [1.24]
+            @test tu.vec(unwrap(getrpn("__\$sin\$__()", graph))) ==
                   [fu.Keyword("("), fu.Keyword(")"), :sin]
-            @test vec(unwrap(getrpn("__\$sin\$__(__\$ex1\$__, \"ex2\")", graph))) ==
+            @test tu.vec(unwrap(getrpn("__\$sin\$__(__\$ex1\$__, \"ex2\")", graph))) ==
                   [fu.Keyword("("), graph.nodes[1], "ex2", fu.Keyword(")"), :sin]
         end
         @testset "evalcontent" begin
             graph = Graph([
-                genexpression("ex1", "5", 5),
-                genexpression("ex2", "\"str\"", "str"),
-                genexpression("ex3", ""),
+                tu.genexpression("ex1", "5", 5),
+                tu.genexpression("ex2", "\"str\"", "str"),
+                tu.genexpression("ex3", ""),
             ])
 
             @test unwrap(evalcontent("1", graph)) == 1

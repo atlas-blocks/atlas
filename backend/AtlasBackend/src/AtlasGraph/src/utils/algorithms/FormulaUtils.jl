@@ -118,10 +118,11 @@ function getproviders(content::AbstractString, graph::AbstractGraph)::Vector{Abs
     return ans
 end
 
-function topological_order(graph::AbstractString)::Vector{AbstractNode}
-    expressions = AtlasGraph.expressions(graph, ExpressionNode)
-
-    return expressions
+function topological_order(
+    nodes::Vector{AbstractExpressionNode},
+    graph::AbstractGraph,
+)::Vector{AbstractExpressionNode}
+    return nodes
 end
 
 function match_prefix_int(str::AbstractString)::Union{RegexMatch,Nothing}
