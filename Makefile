@@ -8,6 +8,9 @@ prod:
 	docker-compose -f docker-compose.yml -f docker-compose.prod.yml build
 	docker-compose -f docker-compose.yml -f docker-compose.prod.yml up
 
+kill:
+	docker kill reverse_proxy julia-backend frontend
+
 frontend: 
 	cd frontend; \
 	ls; \
