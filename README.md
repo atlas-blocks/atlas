@@ -1,5 +1,18 @@
 # Atlas
 
+## Table of Content
+1. [About The Project](#about-the-project)
+   - [About Us](#about-us)
+   - [The Problems Atlas Solves](#the-problems-atlas-solves)
+   - [The Target Audience](#the-target-audience)
+   - [Project Structure](#project-structure)
+1. [Installing](#installing)
+1. [Running](#running)
+   - [Development](#development)
+   - [Production](#production)
+1. [Testing](#testing)
+   - [Backend](#backend)
+
 ## About The Project
 
 ### About Us
@@ -35,7 +48,7 @@ We are doing an interface where you can create complex formulas and models using
 ```zsh
 $ git clone git@github.com:atlas-blocks/atlas.git
 ```
-Also, you'll need to install Docker.
+Also, you'll need to install `Docker`.
 - Windows, macOS: [Docker Desctop](https://www.docker.com/products/docker-desktop/)
 - Linux: you should know [what to do :)](https://docs.docker.com/engine/install/ubuntu/)
 
