@@ -17,4 +17,13 @@ function pow(base::Float64, exp::Float64)
     return base^exp
 end
 
+
+function ifthenelse(cond::Bool, then_result::Any, else_result::Any)
+    if (cond)
+        return then_result;
+    else
+        return else_result;
+    end
+end
+
 end

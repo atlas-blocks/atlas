@@ -32,16 +32,23 @@ import WebInterfaceUtils from '../utils/WebInterfaceUtils';
 
 import { NextPage } from 'next';
 import styles from '../styles/DnDFlow.module.css';
-import DefaultFunctions from '../commons/library/system/formulas/functions/DefaultFunctions';
 
 const node1 = new ExpressionNode(
-	new AtlasNode('AtlasGraph.ExpressionNode', 'name', 'pkg', [300, 100], true),
+	new AtlasNode('AtlasGraph.ExpressionNode', 'ex1', 'pkg', [300, 100], true),
 	'__$sin$__(5)',
 	'-0.9589',
 );
 
+const node2 = new ExpressionNode(
+	new AtlasNode('AtlasGraph.ExpressionNode', 'ex2', 'pkg', [200, 200], true),
+	'__$ifthenelse$__(__$==$__(2, 3), __$asin$__(__$ex1$__), __$*$__(__$ex1$__, 2))',
+	'-1.9178',
+);
+
+
 export const atlasGraph = new AtlasGraph();
 atlasGraph.nodes.push(node1);
+atlasGraph.nodes.push(node2);
 
 const DnDFlow: NextPage = () => {
 	const [selectedNode, setSelectedNode] = useState<AtlasNode | null>(null);
