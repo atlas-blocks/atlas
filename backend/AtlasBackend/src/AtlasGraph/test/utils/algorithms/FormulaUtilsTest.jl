@@ -13,9 +13,9 @@ using DataStructures, ResultTypes
             @test tu.vec(unwrap(getrpn("1", graph))) == [1]
             @test tu.vec(unwrap(getrpn("\"str\"", graph))) == ["str"]
             @test tu.vec(unwrap(getrpn("1.24", graph))) == [1.24]
-            @test tu.vec(unwrap(getrpn("__\$sin\$__()", graph))) ==
+            @test tu.vec(unwrap(getrpn("sin()", graph))) ==
                   [fu.Keyword("("), fu.Keyword(")"), :sin]
-            @test tu.vec(unwrap(getrpn("__\$sin\$__(__\$ex1\$__, \"ex2\")", graph))) ==
+            @test tu.vec(unwrap(getrpn("sin(ex1, \"ex2\")", graph))) ==
                   [fu.Keyword("("), graph.nodes[1], "ex2", fu.Keyword(")"), :sin]
         end
         @testset "evalcontent" begin
@@ -27,31 +27,28 @@ using DataStructures, ResultTypes
 
             @test unwrap(evalcontent("1", graph)) == 1
             @test unwrap(evalcontent("\"str\"", graph)) == "str"
-            @test unwrap(evalcontent("__\$ex1\$__", graph)) == 5
-            @test unwrap(evalcontent("__\$sin\$__(__\$ex1\$__)", graph)) == sin(5)
-            @test unwrap(evalcontent("__\$+\$__(__\$ex1\$__, 2.4)", graph)) == 7.4
-            @test unwrap(evalcontent("__\$*\$__(\"concat\", __\$ex2\$__)", graph)) ==
-                  "concatstr"
-            @test unwrap(evalcontent("__\$*\$__(\"concat\", __\$ex3\$__)", graph)) ===
-                  nothing
+            @test unwrap(evalcontent("ex1", graph)) == 5
+            @test unwrap(evalcontent("sin(ex1)", graph)) == sin(5)
+            @test unwrap(evalcontent("+(ex1, 2.4)", graph)) == 7.4
+            @test unwrap(evalcontent("*(\"concat\", ex2)", graph)) == "concatstr"
+            @test unwrap(evalcontent("*(\"concat\", ex3)", graph)) === nothing
+            @test unwrap(evalcontent("nothing", graph)) === nothing
         end
 
         @testset "gettokens" begin
-            @test unwrap(gettokens("__\$foo\$__")) == [:foo]
+            @test unwrap(gettokens("foo")) == [:foo]
             @test unwrap(gettokens("\"\"")) == [""]
             @test unwrap(gettokens("\"aba\"")) == ["aba"]
             @test unwrap(gettokens("\"ab\\\"a\"")) == ["ab\\\"a"]
             @test unwrap(gettokens("1")) == [1]
             @test unwrap(gettokens("194")) == [194]
             @test unwrap(gettokens("194.43")) == [194.43]
-            @test unwrap(gettokens("__\$foo\$__()")) ==
-                  [:foo, fu.Keyword("("), fu.Keyword(")")]
-            @test unwrap(gettokens("__\$foo\$__(__\$a\$__, __\$b\$__)")) ==
+            @test unwrap(gettokens("foo()")) == [:foo, fu.Keyword("("), fu.Keyword(")")]
+            @test unwrap(gettokens("foo(a, b)")) ==
                   [:foo, fu.Keyword("("), :a, :b, fu.Keyword(")")]
-            @test unwrap(gettokens("__\$foo\$__(__\$a\$__, \"abba\")")) ==
+            @test unwrap(gettokens("foo(a, \"abba\")")) ==
                   [:foo, fu.Keyword("("), :a, "abba", fu.Keyword(")")]
-            @test unwrap(gettokens("__\$foo\$__(__\$a\$__, __\$bar\$__(5, __\$b\$__))")) ==
-                  [
+            @test unwrap(gettokens("foo(a, bar(5, b))")) == [
                 :foo,
                 fu.Keyword("("),
                 :a,
@@ -111,8 +108,10 @@ using DataStructures, ResultTypes
             fu.match_prefix_string("abba\"") === nothing
         )
 
-        @test fu.match_prefix_node("__\$foo\$__").match == "__\$foo\$__"
-        @test fu.match_prefix_node("__\$foo\$__(__\$a\$__, __\$b\$__)").match ==
-              "__\$foo\$__"
+        @test fu.match_prefix_symbol("foo").match == "foo"
+        @test fu.match_prefix_symbol("fo_o34").match == "fo_o34"
+        @test fu.match_prefix_symbol("1foo") === nothing
+        @test fu.match_prefix_operator("+ asdhf").match == "+"
+        @test fu.match_prefix_operator("<=").match == "<="
     end
 end

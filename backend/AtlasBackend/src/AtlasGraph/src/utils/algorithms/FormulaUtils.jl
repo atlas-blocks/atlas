@@ -28,6 +28,10 @@ function getrpn(content::AbstractString, graph::AbstractGraph)::Result{Queue{Any
         if isa(token, Symbol)
             if AtlasGraph.isexpression(graph, string(token))
                 enqueue!(output_queue, AtlasGraph.getexpression(graph, string(token)))
+            elseif isdefined(Functions.Math, token) &&
+                   (i < length(tokens) && tokens[i+1] != Keyword("(")) ||
+                   i == length(tokens)
+                enqueue!(output_queue, getproperty(Functions.Math, token))
             elseif AtlasGraph.isfunction(graph, string(token)) ||
                    isdefined(Functions.Math, token)
                 push!(operation_stack, token)
@@ -71,9 +75,12 @@ function gettokens(content::AbstractString)::Result{Vector{Any},Exception}
         substr = content[i:end]
         token_str = ""
         token_val = ""
-        if match_prefix_node(substr) !== nothing
-            token_str = match_prefix_node(substr).match
-            token_val = Symbol(extract_node_name(token_str))
+        if match_prefix_symbol(substr) !== nothing
+            token_str = match_prefix_symbol(substr).match
+            token_val = Symbol(token_str)
+        elseif match_prefix_operator(substr) !== nothing
+            token_str = match_prefix_operator(substr).match
+            token_val = Symbol(token_str)
         elseif match_prefix_float(substr) !== nothing
             token_str = match_prefix_float(substr).match
             token_val = parse(Float64, token_str)
@@ -141,6 +148,14 @@ function match_prefix_node(str::AbstractString)::Union{RegexMatch,Nothing}
     return match(r"^__\$[^(\$__)]*\$__", str)
 end
 
+function match_prefix_symbol(str::AbstractString)::Union{RegexMatch,Nothing}
+    return match(r"^(_|[a-zA-Z])\w*", str)
+end
+
+function match_prefix_operator(str::AbstractString)::Union{RegexMatch,Nothing}
+    return match(r"^(\+|\-|\*|\^|<=|<|>=|>|==|=|!=)", str)
+end
+
 function extract_node_name(str::AbstractString)::AbstractString
     @assert match_prefix_node(str) !== nothing
     return replace(str, r"((__\$)|(\$__))" => "")
@@ -164,6 +179,8 @@ function evalcontent(content::AbstractString, graph::AbstractGraph)::Result{Any,
             push!(arguments, next)
         elseif isa(next, Keyword)
             push!(arguments, next)
+        elseif next === nothing
+            return nothing
         elseif isa(next, AbstractExpressionNode)
             if next.result === nothing
                 return nothing
@@ -207,6 +224,10 @@ function evalcontent(content::AbstractString, graph::AbstractGraph)::Result{Any,
         return EvaluatingException("Invalid syntax, there should be one final result.")
     end
     return pop!(arguments)
+end
+
+function evalcontent(content::AbstractString)::Result{Any,Exception}
+    return evalcontent(content::AbstractString, Graph([]))
 end
 
 end

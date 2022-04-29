@@ -1,6 +1,6 @@
 module JsonUtils
-using ..AtlasGraph
-using JSON3
+using ..AtlasGraph, ..FormulaUtils
+using JSON3, ResultTypes
 using ..Types
 
 function jsonwriteread(x)
@@ -54,7 +54,7 @@ function node(json_dict::JSON3.Object)::AbstractNode
         return ExpressionNode(
             node,
             json_dict["content"],
-            Types.getvalue(json_dict["result"]),
+            unwrap(FormulaUtils.evalcontent(json_dict["result"])),
         )
     end
 end

@@ -9,32 +9,17 @@ using JSON3
 # Float === Float64
 # Map   === Dict
 
-function getvalue(elem_dict::JSON3.Object)
-    string_type = elem_dict["type"]
-    content = elem_dict["content"]
-    type = Any
 
-    if string_type == string(Nothing)
-        return nothing
-    elseif string_type == string(Bool)
-        type = Bool
-    elseif string_type == string(Float64)
-        type = Float64
-    elseif string_type == string(Int64)
-        type = Int64
-    elseif string_type == string(String)
-        type = String
-    elseif string_type == string(Dict)
-        type = Dict
-    elseif string_type == string(Array)
-        type = Array
-    end
-
-    return convert(type, content)
+function getjson(elem::Union{Int64,Float64,Bool,AbstractString})::AbstractString
+    return JSON3.write(elem)
 end
 
-function getjson(elem::Any)::JSON3.Object
-    return JSON3.read(JSON3.write(Dict(:type => string(typeof(elem)), :content => elem)))
+function getjson(elem::Array)::AbstractString
+    return JSON3.write(elem)
+end
+
+function getjson(elem::Nothing)::AbstractString
+    return "nothing"
 end
 
 end
