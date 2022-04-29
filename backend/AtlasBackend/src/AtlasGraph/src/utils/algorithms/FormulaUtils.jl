@@ -78,15 +78,15 @@ function gettokens(content::AbstractString)::Result{Vector{Any},Exception}
         if match_prefix_symbol(substr) !== nothing
             token_str = match_prefix_symbol(substr).match
             token_val = Symbol(token_str)
-        elseif match_prefix_operator(substr) !== nothing
-            token_str = match_prefix_operator(substr).match
-            token_val = Symbol(token_str)
         elseif match_prefix_float(substr) !== nothing
             token_str = match_prefix_float(substr).match
             token_val = parse(Float64, token_str)
         elseif match_prefix_int(substr) !== nothing
             token_str = match_prefix_int(substr).match
             token_val = parse(Int64, token_str)
+        elseif match_prefix_operator(substr) !== nothing
+            token_str = match_prefix_operator(substr).match
+            token_val = Symbol(token_str)
         elseif match_prefix_string(substr) !== nothing
             token_str = match_prefix_string(substr).match
             token_val = token_str[2:end-1]
