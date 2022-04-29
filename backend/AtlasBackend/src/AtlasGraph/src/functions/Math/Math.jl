@@ -20,9 +20,9 @@ end
 
 function ifthenelse(cond::Bool, then_result::Any, else_result::Any)
     if (cond)
-        return then_result;
+        return then_result
     else
-        return else_result;
+        return else_result
     end
 end
 

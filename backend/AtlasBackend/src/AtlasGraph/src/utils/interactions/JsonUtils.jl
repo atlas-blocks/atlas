@@ -1,6 +1,7 @@
 module JsonUtils
 using ..AtlasGraph
 using JSON3
+using ..Types
 
 function jsonwriteread(x)
     return JSON3.read(JSON3.write(x))
@@ -12,6 +13,8 @@ function dictionary(node::AbstractNode)::Dict{AbstractString,Any}
         value = getproperty(node, field)
         if (typeof(value) <: AbstractNode)
             merge!(dic, dictionary(value))
+        elseif field == :result
+            push!(dic, string(field) => Types.getjson(value))
         else
             push!(dic, string(field) => value)
         end
@@ -39,13 +42,20 @@ function node(json_dict::JSON3.Object)::AbstractNode
     node = Node(
         json_dict["name"],
         json_dict["package"],
-        (convert(Int32, json_dict["position"][1]), convert(Int32, json_dict["position"][2])),
+        (
+            convert(Int32, json_dict["position"][1]),
+            convert(Int32, json_dict["position"][2]),
+        ),
         json_dict["visibility"],
     )
     if json_dict["type"] == string(Node)
         return node
     elseif json_dict["type"] == string(ExpressionNode)
-        return ExpressionNode(node, json_dict["content"], json_dict["result"])
+        return ExpressionNode(
+            node,
+            json_dict["content"],
+            Types.getvalue(json_dict["result"]),
+        )
     end
 end
 

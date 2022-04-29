@@ -11,5 +11,6 @@ import .TestUtils as tu
         tu.genexpression("ex2", "\"str\"", "str"),
         tu.genexpression("ex3", ""),
     ])
-    @test unwrap(ep.updategraph(ju.json(graph))) == ju.json(unwrap(AtlasGraph.updategraph!(graph)))
+    @test unwrap(ep.updategraph(ju.json(graph))) ==
+          ju.json(unwrap(AtlasGraph.updategraph!(graph)))
 end

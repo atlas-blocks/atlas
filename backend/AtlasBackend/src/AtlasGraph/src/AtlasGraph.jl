@@ -98,8 +98,8 @@ function updategraph!(graph::AbstractGraph)::Result{AbstractGraph,Exception}
 end
 
 
-include("./Types.jl")
 include("./functions/Functions.jl")
+include("./utils/interactions/Types.jl")
 include("./utils/interactions/JsonUtils.jl")
 include("./utils/interactions/Interactions.jl")
 include("./utils/algorithms/FormulaUtils.jl")
