@@ -55,6 +55,8 @@ function getrpn(content::AbstractString, graph::AbstractGraph)::Result{Queue{Any
             if !isempty(operation_stack) && isa(first(operation_stack), Symbol)
                 enqueue!(output_queue, pop!(operation_stack))
             end
+        elseif token == Keyword("[") || token == Keyword("]")
+            enqueue!(output_queue, token)
         else
             throw(ParsingException("Unexpected token while parsing: " * string(token)))
         end
@@ -90,7 +92,7 @@ function gettokens(content::AbstractString)::Result{Vector{Any},Exception}
         elseif match_prefix_string(substr) !== nothing
             token_str = match_prefix_string(substr).match
             token_val = token_str[2:end-1]
-        elseif substr[1] == '(' || substr[1] == ')'
+        elseif substr[1] == '(' || substr[1] == ')' || substr[1] == '[' || substr[1] == ']'
             token_str = substr[1:1]
             token_val = Keyword(token_str)
         elseif substr[1] == ',' || substr[1] == ' '
