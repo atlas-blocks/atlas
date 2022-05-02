@@ -1,24 +1,51 @@
 module Tokens
+import ..AtlasParser: ParsingException
 using ResultTypes
-export Token, TokenType
+export Token, TokenType, gettokens
+
+@enum TokenType begin
+    VALUE
+    NAME
+    BIN_OPERATOR
+
+    # punctuation and grouping
+    LEFT_PAREN  # "("
+    RIGHT_PAREN  # ")"
+    LEFT_BRACKET  # "["
+    RIGHT_BRACKET  # "]"
+    LEFT_BRACE  # "{"
+    RIGHT_BRACE  # "}"
+    COMMA
+end
+
+keyword_type = Dict{String,TokenType}(
+    "(" => LEFT_PAREN,
+    ")" => RIGHT_PAREN,
+    "[" => LEFT_BRACKET,
+    "]" => RIGHT_BRACKET,
+    "{" => LEFT_BRACE,
+    "}" => RIGHT_BRACE,
+    "," => COMMA,
+)
+
 
 mutable struct Lexer
     text::String
-    index::Int64 = 1
+    index::Int64
 
     Lexer(text::String) = new(text, 1)
 end
 
-struct Token where {T}
+struct Token{T}
     type::TokenType
     content::T
 end
 
-isempty(lexer::Lexer) = lexer.index >= length(lexer.text)
+isempty(lexer::Lexer) = lexer.index > length(lexer.text)
 nextchar(lexer::Lexer) = lexer.text[lexer.index]
 
 function next(lexer::Lexer)::Result{Union{Nothing,Token},Exception}
-    while (isempty(lexer) && nextchar(lexer) == ' ')
+    while (!isempty(lexer) && nextchar(lexer) == ' ')
         lexer.index += 1
     end
 
@@ -31,7 +58,7 @@ function next(lexer::Lexer)::Result{Union{Nothing,Token},Exception}
     token_val = ""
     token_type = nothing
     if match_name(substr) !== nothing
-        token_str = match_prefix_symbol(substr).match
+        token_str = match_name(substr).match
         if token_str == "nothing"
             token_val = nothing
             token_type = VALUE
@@ -40,25 +67,25 @@ function next(lexer::Lexer)::Result{Union{Nothing,Token},Exception}
             token_type = NAME
         end
     elseif match_operator(substr) !== nothing
-        token_str = match_prefix_operator(substr).match
+        token_str = match_operator(substr).match
         token_val = Symbol(token_str)
         token_type = NAME
     elseif match_float(substr) !== nothing
-        token_str = match_prefix_float(substr).match
+        token_str = match_float(substr).match
         token_val = parse(Float64, token_str)
         token_type = VALUE
     elseif match_int(substr) !== nothing
-        token_str = match_prefix_int(substr).match
+        token_str = match_int(substr).match
         token_val = parse(Int64, token_str)
         token_type = VALUE
     elseif match_string(substr) !== nothing
-        token_str = match_prefix_string(substr).match
-        token_val = token_str[2:end-1]
+        token_str = match_string(substr).match
+        token_val = string(token_str[2:end-1])
         token_type = VALUE
     elseif match_keywords(substr) !== nothing
         token_str = match_keywords(substr).match
-        token_val = Keyword(token_str)
-        token_type = keyword_type(token_str)
+        token_val = ""
+        token_type = keyword_type[token_str]
     else
         return ParsingException(
             "Invalid syntax starting at position: " *
@@ -79,7 +106,7 @@ function gettokens(text::String)::Result{Vector{Token},Exception}
     while !isempty(lexer)
         next_result = next(lexer)
 
-        if ResultTypes.iserror()
+        if ResultTypes.iserror(next_result)
             return unwrap_error(next_result)
         end
 
@@ -119,33 +146,6 @@ end
 function match_operator(str::AbstractString)::Union{RegexMatch,Nothing}
     return match(r"^(\+|\-|\*|\^|<=|<|>=|>|==|=|!=)", str)
 end
-
-
-
-@enum TokenType begin
-    VALUE
-    NAME
-    BIN_OPERATOR
-
-    # punctuation and grouping
-    LEFT_PAREN  # "("
-    RIGHT_PAREN  # ")"
-    LEFT_BRACKET  # "["
-    RIGHT_BRACKET  # "]"
-    LEFT_BRACE  # "{"
-    RIGHT_BRACE  # "}"
-    COMMA
-end
-
-keyword_type = Dict{String,TokenType}(
-    "(" => LEFT_PAREN,
-    ")" => RIGHT_PAREN,
-    "[" => LEFT_BRACKET,
-    "]" => RIGHT_BRACKET,
-    "{" => LEFT_BRACE,
-    "}" => RIGHT_BRACE,
-    "," => COMMA,
-)
 
 
 end

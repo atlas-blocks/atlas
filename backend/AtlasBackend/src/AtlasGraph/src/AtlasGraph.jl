@@ -100,6 +100,7 @@ end
 
 include("./functions/Functions.jl")
 include("./utils/algorithms/FormulaUtils.jl")
+include("./utils/parser/AtlasParser.jl")
 include("./utils/interactions/Types.jl")
 include("./utils/interactions/JsonUtils.jl")
 include("./utils/interactions/Interactions.jl")

@@ -1,19 +1,27 @@
 module TokenParser
 using ..Tokens, ..Expressions
+using ResultTypes
+export Parser, parse_expression
 
-include("./Parselets.jl")
 
 mutable struct Parser
-    tokens::Vector{Any}
+    tokens::Vector{Token}
     index::Int64
-    Parser(tokens::Vector{Any}) = new(tokens, 1)
+    Parser(tokens::Vector{Token}) = new(tokens, 1)
+end
+
+function hasnext(parser::Parser, shift::Int64)::Bool
+    return parser.index + shift <= length(parser.tokens)
 end
 
 function hasnext(parser::Parser)::Bool
-    return parser.index < length(parser.tokens)
+    return hasnext(parser, 0)
 end
 
 function peek(parser::Parser, shift::Int64)::Any
+    # if !hasnext(parser, shift)
+    #     return nothing
+    # end
     return parser.tokens[parser.index+shift]
 end
 
@@ -49,19 +57,19 @@ function getprecedence(token::Token)
 end
 
 function parse_expression(parser::Parser, precedence::Int64)::Result{AbstractExpr,Exception}
-    token::Token = consume(parser)
+    token = consume(parser)
 
     if !haskey(prefix_parselets, token.type)
         return ParsingException("Couldn't parse " * token.content * ".")
     end
-    left::AbstractExpr = prefix_parselets(token.type)(parser, token)
+    left::AbstractExpr = prefix_parselets[token.type](parser, token)
 
-    while precedence < getprecedence(peek(parser))
+    while hasnext(parser) && precedence < getprecedence(peek(parser))
         token = consume(parser)
         if (is_infix_operator(token))
             token = Token(Tokens.BIN_OPERATOR, token.content)
         end
-        left = infix_parselets(token.type)(parser, left, token)
+        left = infix_parselets[token.type](parser, left, token)
     end
 
     return left
@@ -70,5 +78,9 @@ end
 function parse_expression(parser::Parser)::Result{AbstractExpr,Exception}
     return parse_expression(parser, 0)
 end
+
+
+include("./parselets/Parselets.jl")
+
 
 end

@@ -1,11 +1,11 @@
 include("./Precendance.jl")
 
 function name_parselet(parser::Parser, token::Token{Symbol})::NameExpr
-    return NameExpr(token)
+    return NameExpr(token.content)
 end
 
-function value_parselet(parser::Parser, token::Token{Any})::ValueExpr
-    return ValueExpr(token)
+function value_parselet(parser::Parser, token::Token)::ValueExpr
+    return ValueExpr(token.content)
 end
 
 function group_parselet(parser::Parser, token::Token)::AbstractExpr
