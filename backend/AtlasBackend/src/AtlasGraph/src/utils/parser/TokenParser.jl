@@ -38,7 +38,7 @@ function consume(parser::Parser, expected::TokenType)::Token
     parser.index += 1
     token = peek(parser, -1)
     @assert token.type == expected
-    return next
+    return token
 end
 
 function match(parser::Parser, expected::TokenType)::Bool
@@ -46,14 +46,14 @@ function match(parser::Parser, expected::TokenType)::Bool
 end
 
 function is_infix_operator(token::Token)
-    return haskey(infix_precendance, token)
+    return haskey(infix_precedence, token)
 end
 
 function getprecedence(token::Token)
     if !is_infix_operator(token)
         return 0
     end
-    return infix_precedence[token]
+    return infix_precedence[token].precedence
 end
 
 function parse_expression(parser::Parser, precedence::Int64)::Result{AbstractExpr,Exception}
@@ -62,14 +62,23 @@ function parse_expression(parser::Parser, precedence::Int64)::Result{AbstractExp
     if !haskey(prefix_parselets, token.type)
         return ParsingException("Couldn't parse " * token.content * ".")
     end
-    left::AbstractExpr = prefix_parselets[token.type](parser, token)
+    left = prefix_parselets[token.type](parser, token)
+    if ResultTypes.iserror(left)
+        return unwrap_error(left)
+    end
+    left = unwrap(left)
 
     while hasnext(parser) && precedence < getprecedence(peek(parser))
         token = consume(parser)
-        if (is_infix_operator(token))
-            token = Token(Tokens.BIN_OPERATOR, token.content)
+        type = token.type
+        if (token.content in bin_operator_symbols)
+            type = Tokens.BIN_OPERATOR
         end
-        left = infix_parselets[token.type](parser, left, token)
+        left = infix_parselets[type](parser, left, token)
+        if ResultTypes.iserror(left)
+            return unwrap_error(left)
+        end
+        left = unwrap(left)
     end
 
     return left

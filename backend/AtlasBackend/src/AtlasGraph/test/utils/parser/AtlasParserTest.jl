@@ -40,6 +40,12 @@ import .TestUtils as tu
             Token(Tokens.NAME, :bar),
             Token(Tokens.RIGHT_PAREN, ""),
         ]
+        @test unwrap(Tokens.gettokens("sind(30)")) == [
+            Token(Tokens.NAME, :sind),
+            Token(Tokens.LEFT_PAREN, ""),
+            Token(Tokens.VALUE, 30),
+            Token(Tokens.RIGHT_PAREN, ""),
+        ]
         @test unwrap(Tokens.gettokens("foo(bar, 42)")) == [
             Token(Tokens.NAME, :foo),
             Token(Tokens.LEFT_PAREN, ""),
@@ -50,7 +56,20 @@ import .TestUtils as tu
         ]
     end
 
+    @testset "Precendence" begin
+        @test TokenParser.is_infix_operator(Token(Tokens.NAME, :+))
+    end
+
     @testset "evaluate" begin
         @test unwrap(evaluate_content("42", empty_graph)) == 42
+        @test unwrap(evaluate_content("42.02", empty_graph)) == 42.02
+        @test unwrap(evaluate_content("\"foo\"", empty_graph)) == "foo"
+        @test unwrap(evaluate_content("(42)", empty_graph)) == 42
+        @test unwrap(evaluate_content("4 + 2", empty_graph)) == 6
+        @test unwrap(evaluate_content("4 + 2 + 3", empty_graph)) == 9
+        @test unwrap(evaluate_content("4 + (2 + 3)", empty_graph)) == 9
+        @test unwrap(evaluate_content("8 / 4 / 2", empty_graph)) == 1
+        @test unwrap(evaluate_content("2 ^ 3 ^ 2", empty_graph)) == 2^3^2
+        @test unwrap(evaluate_content("sind(30)", empty_graph)) == sind(30)
     end
 end

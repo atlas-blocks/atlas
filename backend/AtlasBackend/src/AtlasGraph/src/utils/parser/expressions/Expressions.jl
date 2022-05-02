@@ -35,10 +35,23 @@ end
 
 function evaluate(expr::CallExpr, graph::AbstractGraph)::Result{Any,Exception}
     args = map(arg -> evaluate(arg, graph), expr.args)
+    for arg in args
+        if ResultTypes.iserror(arg)
+            return unwrap_error(arg)
+        end
+    end
+    args = map(arg -> unwrap(arg), args)
+
     arg_types = map(arg -> typeof(arg), args)
+
     func = evaluate(expr.func, graph)
+    if ResultTypes.iserror(func)
+        return unwrap_error(func)
+    end
+    func = unwrap(func)
+
     if typeof(func) == Symbol
-        if !isdefined(Functions.Math, token)
+        if !isdefined(Functions.Math, func)
             return EvaluatingException("No functions with the name: " * string(next))
         end
         func = getproperty(Functions.Math, func)
@@ -56,7 +69,7 @@ function evaluate(expr::CallExpr, graph::AbstractGraph)::Result{Any,Exception}
             ")",
         )
     end
-    return func(current_arguments...)
+    return func(args...)
 end
 
 

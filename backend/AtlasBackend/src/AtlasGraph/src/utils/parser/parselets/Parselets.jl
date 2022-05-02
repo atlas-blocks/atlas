@@ -1,22 +1,28 @@
-include("./Precendance.jl")
+include("./Precedence.jl")
 
-function name_parselet(parser::Parser, token::Token{Symbol})::NameExpr
+function name_parselet(parser::Parser, token::Token{Symbol})::Result{NameExpr,Exception}
     return NameExpr(token.content)
 end
 
-function value_parselet(parser::Parser, token::Token)::ValueExpr
+function value_parselet(parser::Parser, token::Token)::Result{ValueExpr,Exception}
     return ValueExpr(token.content)
 end
 
-function group_parselet(parser::Parser, token::Token)::AbstractExpr
+function group_parselet(parser::Parser, token::Token)::Result{AbstractExpr,Exception}
     expr = parse_expression(parser)
+    if ResultTypes.iserror(expr)
+        return expr
+    end
     consume(parser, Tokens.RIGHT_PAREN)
     return expr
 end
 
-function prefix_operator_parselet(parser::Parser, token::Token)::CallExpr
-    right = parse_expression(parser, infix_precendance[token].precedence)
-    return CallExpr(NameExpr(token.content), [right])
+function prefix_operator_parselet(parser::Parser, token::Token)::Result{CallExpr,Exception}
+    right = parse_expression(parser, infix_precedence[token].precedence)
+    if ResultTypes.iserror(right)
+        return right
+    end
+    return CallExpr(NameExpr(token.content), [unwrap(right)])
 end
 
 prefix_parselets = Dict{TokenType,Function}(
@@ -26,13 +32,21 @@ prefix_parselets = Dict{TokenType,Function}(
 )
 
 
-function call_parselet(parser::Parser, left::AbstractExpr, token::Token)::CallExpr
+function call_parselet(
+    parser::Parser,
+    left::AbstractExpr,
+    token::Token,
+)::Result{CallExpr,Exception}
     args = Vector{AbstractExpr}()
 
     if !match(parser, Tokens.RIGHT_PAREN)
-        push!(args, parse_expression(parser))
-        while match(parser, Tokens.COMMA)
-            push!(args, parse_expression(parser))
+        while true
+            expr = parse_expression(parser)
+            if ResultTypes.iserror(expr)
+                return expr
+            end
+            push!(args, unwrap(expr))
+            match(parser, Tokens.COMMA) || break
         end
     end
     consume(parser, Tokens.RIGHT_PAREN)
@@ -40,10 +54,17 @@ function call_parselet(parser::Parser, left::AbstractExpr, token::Token)::CallEx
     return CallExpr(left, args)
 end
 
-function bin_operator_parselet(parser::Parser, left::AbstractExpr, token::Token)::CallExpr
-    info = infix_precendance[token]
-    right::AbstractExpr =
-        parse_expression(parser, info.precendance - (info.left_associative ? 0 : 1))
+function bin_operator_parselet(
+    parser::Parser,
+    left::AbstractExpr,
+    token::Token,
+)::Result{CallExpr,Exception}
+    info = infix_precedence[token]
+    right = parse_expression(parser, info.precedence - (info.left_associative ? 0 : 1))
+    if ResultTypes.iserror(right)
+        return unwrap_error(right)
+    end
+    right = unwrap(right)
     return CallExpr(NameExpr(token.content), [left, right])
 end
 
