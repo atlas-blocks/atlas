@@ -1,5 +1,6 @@
 module TokenParser
 using ..Tokens, ..Expressions
+import ..AtlasParser: ParsingException
 using ResultTypes
 export Parser, parse_expression
 
@@ -60,7 +61,7 @@ function parse_expression(parser::Parser, precedence::Int64)::Result{AbstractExp
     token = consume(parser)
 
     if !haskey(prefix_parselets, token.type)
-        return ParsingException("Couldn't parse " * token.content * ".")
+        return ParsingException("Couldn't parse \"$(string(token.content))\".")
     end
     left = prefix_parselets[token.type](parser, token)
     if ResultTypes.iserror(left)

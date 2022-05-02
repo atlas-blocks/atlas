@@ -17,6 +17,25 @@ function group_parselet(parser::Parser, token::Token)::Result{AbstractExpr,Excep
     return expr
 end
 
+function array_parselet(parser::Parser, token::Token)::Result{AbstractExpr,Exception}
+    elems = Vector{AbstractExpr}()
+
+    if !match(parser, Tokens.RIGHT_BRACKET)
+        while true
+            expr = parse_expression(parser)
+            if ResultTypes.iserror(expr)
+                return expr
+            end
+            push!(elems, unwrap(expr))
+            match(parser, Tokens.COMMA) || break
+            consume(parser, Tokens.COMMA)
+        end
+    end
+    consume(parser, Tokens.RIGHT_BRACKET)
+
+    return VectorExpr(elems)
+end
+
 function prefix_operator_parselet(parser::Parser, token::Token)::Result{CallExpr,Exception}
     right = parse_expression(parser, infix_precedence[token].precedence)
     if ResultTypes.iserror(right)
@@ -29,6 +48,7 @@ prefix_parselets = Dict{TokenType,Function}(
     Tokens.NAME => name_parselet,
     Tokens.VALUE => value_parselet,
     Tokens.LEFT_PAREN => group_parselet,
+    Tokens.LEFT_BRACKET => array_parselet,
 )
 
 
@@ -47,6 +67,7 @@ function call_parselet(
             end
             push!(args, unwrap(expr))
             match(parser, Tokens.COMMA) || break
+            consume(parser, Tokens.COMMA)
         end
     end
     consume(parser, Tokens.RIGHT_PAREN)

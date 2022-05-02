@@ -71,5 +71,8 @@ import .TestUtils as tu
         @test unwrap(evaluate_content("8 / 4 / 2", empty_graph)) == 1
         @test unwrap(evaluate_content("2 ^ 3 ^ 2", empty_graph)) == 2^3^2
         @test unwrap(evaluate_content("sind(30)", empty_graph)) == sind(30)
+        @test unwrap(evaluate_content("[]", empty_graph)) == []
+        @test unwrap(evaluate_content("[1]", empty_graph)) == [1]
+        @test unwrap(evaluate_content("[1, \"foo\"]", empty_graph)) == [1, "foo"]
     end
 end

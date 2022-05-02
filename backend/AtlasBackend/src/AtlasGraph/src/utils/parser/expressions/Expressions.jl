@@ -1,7 +1,7 @@
 module Expressions
 using ..AtlasGraph, ..Functions
 using ResultTypes
-export AbstractExpr, ValueExpr, NameExpr, CallExpr, evaluate
+export AbstractExpr, ValueExpr, VectorExpr, NameExpr, CallExpr, evaluate
 
 
 abstract type AbstractExpr end
@@ -28,19 +28,29 @@ function evaluate(expr::NameExpr, graph::AbstractGraph)::Result{Symbol,Exception
 end
 
 
+struct VectorExpr <: AbstractExpr
+    elems::Vector{AbstractExpr}
+end
+
+function evaluate(expr::VectorExpr, graph::AbstractGraph)::Result{Vector,Exception}
+    elems = evaluate_vector(expr.elems, graph)
+    if ResultTypes.iserror(elems)
+        return unwrap_error(elems)
+    end
+    return unwrap(elems)
+end
+
 struct CallExpr <: AbstractExpr
     func::AbstractExpr
     args::Vector{AbstractExpr}
 end
 
 function evaluate(expr::CallExpr, graph::AbstractGraph)::Result{Any,Exception}
-    args = map(arg -> evaluate(arg, graph), expr.args)
-    for arg in args
-        if ResultTypes.iserror(arg)
-            return unwrap_error(arg)
-        end
+    args = evaluate_vector(expr.args, graph)
+    if ResultTypes.iserror(args)
+        return unwrap_error(args)
     end
-    args = map(arg -> unwrap(arg), args)
+    args = unwrap(args)
 
     arg_types = map(arg -> typeof(arg), args)
 
@@ -62,15 +72,24 @@ function evaluate(expr::CallExpr, graph::AbstractGraph)::Result{Any,Exception}
     possible_methods = methods(func, arg_types)
     if length(possible_methods) == 0
         return EvaluatingException(
-            "No functions matches for this call: " *
-            string(next) *
-            "(" *
-            string(arguments_types) *
-            ")",
+            "No functions matches this call: $(string(next))($( string(arguments_types)))",
         )
     end
     return func(args...)
 end
 
+
+function evaluate_vector(
+    elems::Vector{AbstractExpr},
+    graph::AbstractGraph,
+)::Result{Vector,Exception}
+    elems = map(elem -> evaluate(elem, graph), elems)
+    for elem in elems
+        if ResultTypes.iserror(elem)
+            return unwrap_error(elem)
+        end
+    end
+    return map(elem -> unwrap(elem), elems)
+end
 
 end
