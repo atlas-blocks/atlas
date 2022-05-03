@@ -19,7 +19,11 @@ function getjson(elem::Array)::AbstractString
 end
 
 function getjson(elem::Nothing)::AbstractString
-    return "nothing"
+    return string(elem)
+end
+
+function getjson(elem::UnitRange)::AbstractString
+    return getjson(elem.start) * ":" * getjson(elem.stop)
 end
 
 end

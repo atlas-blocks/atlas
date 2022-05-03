@@ -119,7 +119,6 @@ function getindex_parselet(
     if ResultTypes.iserror(expr)
         return unwrap_error(expr)
     end
-    @show left
 
     return CallExpr(NameExpr(:getindex), [left, unwrap(expr)])
 end

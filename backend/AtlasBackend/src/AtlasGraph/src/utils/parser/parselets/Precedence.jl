@@ -1,5 +1,6 @@
 @enum Precendence begin
-    SUM = 1
+    UNIT_RANGE = 1
+    SUM
     PRODUCT
     EXPONENT
     PREFIX
@@ -14,7 +15,7 @@ struct InfixTokenInfo
         new(Int32(prec), left_associative)
 end
 
-bin_operator_symbols = Set{Symbol}([:+, :-, :*, :/, :^])
+bin_operator_symbols = Set{Symbol}([:+, :-, :*, :/, :^, :(:)])
 
 infix_precedence = Dict{Token,InfixTokenInfo}(
     Token(Tokens.NAME, :+) => InfixTokenInfo(SUM, true),
@@ -22,6 +23,7 @@ infix_precedence = Dict{Token,InfixTokenInfo}(
     Token(Tokens.NAME, :*) => InfixTokenInfo(PRODUCT, true),
     Token(Tokens.NAME, :/) => InfixTokenInfo(PRODUCT, true),
     Token(Tokens.NAME, :^) => InfixTokenInfo(EXPONENT, false),
+    Token(Tokens.NAME, :(:)) => InfixTokenInfo(UNIT_RANGE, true),
     Token(Tokens.LEFT_PAREN, "") => InfixTokenInfo(CALL, true),
     Token(Tokens.LEFT_BRACKET, "") => InfixTokenInfo(CALL, true),
 )

@@ -140,7 +140,7 @@ function match_name(str::AbstractString)::Union{RegexMatch,Nothing}
 end
 
 function match_operator(str::AbstractString)::Union{RegexMatch,Nothing}
-    return match(r"^(\+|\-|\*|\/|\^|<=|<|>=|>|==|=|!=)", str)
+    return match(r"^(\+|\-|\*|\/|\^|\:|<=|<|>=|>|==|=|!=)", str)
 end
 
 
