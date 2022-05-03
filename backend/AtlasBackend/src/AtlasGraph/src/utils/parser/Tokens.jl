@@ -135,10 +135,6 @@ function match_string(str::AbstractString)::Union{RegexMatch,Nothing}
     return match(r"^\"([^\"\\]*(\\\\\")*(\\\\\\\\)*)*\"", str)
 end
 
-function match_node(str::AbstractString)::Union{RegexMatch,Nothing}
-    return match(r"^__\$[^(\$__)]*\$__", str)
-end
-
 function match_name(str::AbstractString)::Union{RegexMatch,Nothing}
     return match(r"^(_|[a-zA-Z])\w*", str)
 end

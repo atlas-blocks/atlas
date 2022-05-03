@@ -7,13 +7,13 @@ import .TestUtils as tu
 
 @testset "AtlasParser" begin
     empty_graph = Graph([])
-    middle_graph_no_results = Graph([
+    graph_no_results = Graph([
         tu.genexpression("ex1", "5"),
         tu.genexpression("ex2", "\"str\"", "st"),
         tu.genexpression("ex3", ""),
         tu.genexpression("ex4", "sin(ex1)"),
     ])
-    middle_graph_with_results = Graph([
+    graph_with_results = Graph([
         tu.genexpression("ex1", "5", 5),
         tu.genexpression("ex2", "\"str\"", "str"),
         tu.genexpression("ex3", ""),
@@ -23,6 +23,7 @@ import .TestUtils as tu
     @testset "Tokens" begin
         @test unwrap(Tokens.gettokens("42")) == [Token(Tokens.VALUE, Int64(42))]
         @test unwrap(Tokens.gettokens("42.02")) == [Token(Tokens.VALUE, Float64(42.02))]
+        @test unwrap(Tokens.gettokens("\"\"")) == [Token(Tokens.VALUE, "")]
         @test unwrap(Tokens.gettokens("\"42\"")) == [Token(Tokens.VALUE, "42")]
         @test unwrap(Tokens.gettokens("nothing")) == [Token(Tokens.VALUE, nothing)]
         @test unwrap(Tokens.gettokens("foo")) == [Token(Tokens.NAME, :foo)]
@@ -40,18 +41,23 @@ import .TestUtils as tu
             Token(Tokens.NAME, :bar),
             Token(Tokens.RIGHT_PAREN, ""),
         ]
-        @test unwrap(Tokens.gettokens("sind(30)")) == [
-            Token(Tokens.NAME, :sind),
-            Token(Tokens.LEFT_PAREN, ""),
-            Token(Tokens.VALUE, 30),
-            Token(Tokens.RIGHT_PAREN, ""),
-        ]
         @test unwrap(Tokens.gettokens("foo(bar, 42)")) == [
             Token(Tokens.NAME, :foo),
             Token(Tokens.LEFT_PAREN, ""),
             Token(Tokens.NAME, :bar),
             Token(Tokens.COMMA, ""),
             Token(Tokens.VALUE, 42),
+            Token(Tokens.RIGHT_PAREN, ""),
+        ]
+        @test unwrap(Tokens.gettokens("foo(bar, foobar(42))")) == [
+            Token(Tokens.NAME, :foo),
+            Token(Tokens.LEFT_PAREN, ""),
+            Token(Tokens.NAME, :bar),
+            Token(Tokens.COMMA, ""),
+            Token(Tokens.NAME, :foobar),
+            Token(Tokens.LEFT_PAREN, ""),
+            Token(Tokens.VALUE, 42),
+            Token(Tokens.RIGHT_PAREN, ""),
             Token(Tokens.RIGHT_PAREN, ""),
         ]
     end
@@ -71,6 +77,8 @@ import .TestUtils as tu
         @test unwrap(evaluate_content("8 / 4 / 2", empty_graph)) == 1
         @test unwrap(evaluate_content("2 ^ 3 ^ 2", empty_graph)) == 2^3^2
         @test unwrap(evaluate_content("sind(30)", empty_graph)) == sind(30)
+        @test unwrap(evaluate_content("sind(30)", empty_graph)) == sind(30)
+        @test unwrap(evaluate_content("4.2 + ex1", graph_with_results)) == 9.2
 
         @testset "Vectors" begin
             @test unwrap(evaluate_content("[]", empty_graph)) == []
@@ -78,5 +86,31 @@ import .TestUtils as tu
             @test unwrap(evaluate_content("[1, \"foo\"]", empty_graph)) == [1, "foo"]
             @test unwrap(evaluate_content("[1, \"foo\"][2]", empty_graph)) == "foo"
         end
+    end
+
+    @testset "matching" begin
+        @test Tokens.match_int("123abba").match == "123"
+        @test Tokens.match_int("123").match == "123"
+        @test Tokens.match_int("123.45").match == "123"
+        @test Tokens.match_int("sd123.45") === nothing
+
+        @test Tokens.match_float("123.34abba").match == "123.34"
+        @test Tokens.match_float("123.abba") === nothing
+        @test Tokens.match_float("123abba") === nothing
+        @test Tokens.match_float("123.43").match == "123.43"
+        @test Tokens.match_float("sd123.45") === nothing
+
+        @test Tokens.match_string("\"ak\\\"shd\"f\"").match == "\"ak\\\"shd\""
+        @test Tokens.match_string("\"abba\"").match == "\"abba\""
+        @test Tokens.match_string("\"\"").match == "\"\""
+        @test Tokens.match_string("\"abba") === nothing
+        @test Tokens.match_string("abba\"") === nothing
+
+
+        @test Tokens.match_name("foo").match == "foo"
+        @test Tokens.match_name("fo_o34").match == "fo_o34"
+        @test Tokens.match_name("1foo") === nothing
+        @test Tokens.match_operator("+ asdhf").match == "+"
+        @test Tokens.match_operator("<=").match == "<="
     end
 end

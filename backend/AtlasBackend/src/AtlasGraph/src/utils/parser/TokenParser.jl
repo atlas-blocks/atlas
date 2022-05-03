@@ -30,12 +30,18 @@ function peek(parser::Parser)::Any
     return peek(parser, 0)
 end
 
-function consume(parser::Parser)::Any
+function consume(parser::Parser)::Result{Token,Exception}
+    if !hasnext(parser)
+        return ParsingException("Expected token, but found nothing.")
+    end
     parser.index += 1
     return peek(parser, -1)
 end
 
 function consume(parser::Parser, expected::TokenType)::Result{Token,Exception}
+    if !hasnext(parser)
+        return ParsingException("Expected token, but found nothing.")
+    end
     parser.index += 1
     token = peek(parser, -1)
     if (token.type != expected)
@@ -62,7 +68,10 @@ function getprecedence(token::Token)
 end
 
 function parse_expression(parser::Parser, precedence::Int64)::Result{AbstractExpr,Exception}
-    token = consume(parser)
+    if !hasnext(parser)
+        return ValueExpr(nothing)
+    end
+    token::Token = unwrap(consume(parser))
 
     if !haskey(prefix_parselets, token.type)
         return ParsingException("Couldn't parse \"$(string(token.content))\".")
@@ -74,7 +83,7 @@ function parse_expression(parser::Parser, precedence::Int64)::Result{AbstractExp
     left = unwrap(left)
 
     while hasnext(parser) && precedence < getprecedence(peek(parser))
-        token = consume(parser)
+        token = unwrap(consume(parser))
         type = token.type
         if (token.content in bin_operator_symbols)
             type = Tokens.BIN_OPERATOR

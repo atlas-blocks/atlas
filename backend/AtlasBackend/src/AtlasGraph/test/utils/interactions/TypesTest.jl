@@ -7,5 +7,5 @@ using JSON3, ResultTypes
 
 @testset "Types" begin
     @test Types.getjson(convert(Int64, 5)) == "5"
-    @test unwrap(fu.evalcontent(Types.getjson(convert(Int64, 5)))) == 5
+    @test unwrap(evaluate_content(Types.getjson(convert(Int64, 5)))) == 5
 end

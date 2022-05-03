@@ -19,10 +19,9 @@ struct NameExpr <: AbstractExpr
     name::Symbol
 end
 
-function evaluate(expr::NameExpr, graph::AbstractGraph)::Result{Symbol,Exception}
-    name = string(expr.name)
-    if AtlasGraph.isexpression(graph, name)
-        return AtlasGraph.getexpression(graph, name).result
+function evaluate(expr::NameExpr, graph::AbstractGraph)::Result{Any,Exception}
+    if AtlasGraph.isexpression(graph, string(expr.name))
+        return AtlasGraph.getexpression(graph, string(expr.name)).result
     end
     return expr.name
 end

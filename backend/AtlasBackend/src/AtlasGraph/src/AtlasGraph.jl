@@ -87,7 +87,7 @@ function updategraph!(graph::AbstractGraph)::Result{AbstractGraph,Exception}
     )
 
     for node in ordered_nodes
-        result = FormulaUtils.evalcontent(node.content, graph)
+        result = AtlasParser.evaluate_content(node.content, graph)
         if ResultTypes.iserror(result)
             return unwrap_error(result)
         end

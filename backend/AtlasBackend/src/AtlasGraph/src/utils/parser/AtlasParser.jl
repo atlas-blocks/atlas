@@ -37,4 +37,8 @@ function evaluate_content(content::String, graph::AbstractGraph)::Result{Any,Exc
     return evaluate(expr, graph)
 end
 
+function evaluate_content(content::String)::Result{Any,Exception}
+    return evaluate_content(content, Graph([]))
+end
+
 end
