@@ -1,21 +1,11 @@
 import React from 'react';
 import { Handle, Position } from 'react-flow-renderer';
 import styles from '../../styles/Block.module.css';
-import Node from '../../commons/nodes/Node';
 import { AtlasNode, ExpressionNode } from '../../utils/AtlasGraph';
-import FunctionNode from '../../commons/nodes/formulas/functions/FunctionNode';
-import FormulaNode from '../../commons/nodes/formulas/FormulaNode';
-import JavaScriptFunctionNode from '../../commons/nodes/formulas/functions/JavaScriptFunctionNode';
 
 export const nodeTypes = {
 	[ExpressionNode.structType]: ExpressionBlock,
-	[FormulaNode.getImport().toString()]: FunctionBlock,
-	[JavaScriptFunctionNode.getImport().toString()]: FunctionBlock,
 };
-
-interface DefaultBlockProps {
-	node: Node;
-}
 
 export function FormulaBlockWrapper(content: JSX.Element) {
 	return (
@@ -44,17 +34,17 @@ export function ExpressionBlock({ data }: { data: { node: ExpressionNode } }) {
 	);
 }
 
-export function FunctionBlock({ data }: { data: { node: FunctionNode } }) {
-	return FormulaBlockWrapper(
-		<div>
-			<div>
-				name: {data.node.getName()}(
-				{data.node
-					.getArgs()
-					.map((arg) => arg.name + ': ' + arg.type)
-					.join(', ')}
-				)
-			</div>
-		</div>,
-	);
-}
+// export function FunctionBlock({ data }: { data: { node: FunctionNode } }) {
+// 	return FormulaBlockWrapper(
+// 		<div>
+// 			<div>
+// 				name: {data.node.getName()}(
+// 				{data.node
+// 					.getArgs()
+// 					.map((arg) => arg.name + ': ' + arg.type)
+// 					.join(', ')}
+// 				)
+// 			</div>
+// 		</div>,
+// 	);
+// }

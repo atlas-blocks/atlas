@@ -1,8 +1,6 @@
 import React, { ChangeEvent, useState } from 'react';
 import styles from '../../styles/BlockSettings.module.css';
 import { AtlasNode } from '../../utils/AtlasGraph';
-import { atlasGraph } from '../../pages/document';
-import FormulaNode from '../../commons/nodes/formulas/FormulaNode';
 import WebInterfaceUtils from '../../utils/WebInterfaceUtils';
 
 type Props = {

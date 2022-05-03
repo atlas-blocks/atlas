@@ -1,5 +1,4 @@
 import React, { useState, useRef, useEffect, MouseEvent as ReactMouseEvent } from 'react';
-import Document from '../commons/Document';
 import dynamic from 'next/dynamic';
 
 const Background = dynamic(
