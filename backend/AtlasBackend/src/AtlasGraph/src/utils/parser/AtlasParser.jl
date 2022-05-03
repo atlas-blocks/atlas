@@ -30,7 +30,9 @@ function evaluate_content(content::String, graph::AbstractGraph)::Result{Any,Exc
         return unwrap_error(expr)
     end
     if TokenParser.hasnext(parser)
-        return EvaluatingException("There is more then one expressions.")
+        return EvaluatingException(
+            "There is more then one expression. The tail: $(parser.tokens[parser.index:end])",
+        )
     end
     expr = unwrap(expr)
 

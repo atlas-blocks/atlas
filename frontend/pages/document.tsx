@@ -41,7 +41,7 @@ const node1 = new ExpressionNode(
 
 const node2 = new ExpressionNode(
 	new AtlasNode('AtlasGraph.ExpressionNode', 'ex2', 'pkg', [200, 200], true),
-	'ifthenelse(==(2, 3), asin(ex1), *(ex1, 2))',
+	'ifthenelse(2 == 3, asin(ex1), ex1 * 2)',
 	'-1.9178',
 );
 

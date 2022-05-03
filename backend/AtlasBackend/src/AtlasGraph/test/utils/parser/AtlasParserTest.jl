@@ -62,10 +62,6 @@ import .TestUtils as tu
         ]
     end
 
-    @testset "Precendence" begin
-        @test TokenParser.is_infix_operator(Token(Tokens.NAME, :+))
-    end
-
     @testset "evaluate" begin
         @test unwrap(evaluate_content("42", empty_graph)) == 42
         @test unwrap(evaluate_content("42.02", empty_graph)) == 42.02
@@ -79,6 +75,13 @@ import .TestUtils as tu
         @test unwrap(evaluate_content("sind(30)", empty_graph)) == sind(30)
         @test unwrap(evaluate_content("sind(30)", empty_graph)) == sind(30)
         @test unwrap(evaluate_content("4.2 + ex1", graph_with_results)) == 9.2
+        @test unwrap(evaluate_content("ifthenelse(2 == 3, 2, ex1)", graph_with_results)) ==
+              5
+        @test unwrap(evaluate_content("ifthenelse(3 == 3, 2, ex1)", graph_with_results)) ==
+              2
+        @test unwrap(
+            evaluate_content("ifthenelse(2 == 3, sin(ex1), 2 * ex1)", graph_with_results),
+        ) == 10
 
         @testset "Vectors" begin
             @test unwrap(evaluate_content("[]", empty_graph)) == []

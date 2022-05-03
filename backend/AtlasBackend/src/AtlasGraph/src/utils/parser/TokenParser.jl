@@ -56,39 +56,39 @@ function match(parser::Parser, expected::TokenType)::Bool
     return peek(parser, 0).type == expected
 end
 
-function is_infix_operator(token::Token)
+function isinfix(token::Token)
     return haskey(infix_precedence, token)
 end
 
-function getprecedence(token::Token)
-    if !is_infix_operator(token)
+function getinfixprecedence(token::Token)
+    if !isinfix(token)
         return 0
     end
     return infix_precedence[token].precedence
 end
 
-function parse_expression(parser::Parser, precedence::Int64)::Result{AbstractExpr,Exception}
+function parse_expression(
+    parser::Parser,
+    precedence::Union{Int32,Int64},
+)::Result{AbstractExpr,Exception}
     if !hasnext(parser)
         return ValueExpr(nothing)
     end
     token::Token = unwrap(consume(parser))
 
-    if !haskey(prefix_parselets, token.type)
+
+    if !haskey(prefix_parselets, updateprefixtype(token).type)
         return ParsingException("Couldn't parse \"$(string(token.content))\".")
     end
-    left = prefix_parselets[token.type](parser, token)
+    left = prefix_parselets[updateprefixtype(token).type](parser, token)
     if ResultTypes.iserror(left)
         return unwrap_error(left)
     end
     left = unwrap(left)
 
-    while hasnext(parser) && precedence < getprecedence(peek(parser))
+    while hasnext(parser) && precedence < getinfixprecedence(peek(parser))
         token = unwrap(consume(parser))
-        type = token.type
-        if (token.content in bin_operator_symbols)
-            type = Tokens.BIN_OPERATOR
-        end
-        left = infix_parselets[type](parser, left, token)
+        left = infix_parselets[updateinfixtype(token).type](parser, left, token)
         if ResultTypes.iserror(left)
             return unwrap_error(left)
         end
@@ -96,6 +96,20 @@ function parse_expression(parser::Parser, precedence::Int64)::Result{AbstractExp
     end
 
     return left
+end
+
+function updateinfixtype(token::Token)::Token
+    if token.type != Tokens.NAME || !(token.content in Tokens.infix_bin_operators)
+        return token
+    end
+    return Token(Tokens.INFIX_BIN_OPERATOR, token.content)
+end
+
+function updateprefixtype(token::Token)::Token
+    if token.type != Tokens.NAME || !(token.content in Tokens.prefix_unary_operators)
+        return token
+    end
+    return Token(Tokens.PREFIX_UNARY_OPERATOR, token.content)
 end
 
 function parse_expression(parser::Parser)::Result{AbstractExpr,Exception}

@@ -11,4 +11,8 @@ using JSON3, ResultTypes
 
     @test Types.getjson(4:5) == "4:5"
     @test unwrap(evaluate_content(Types.getjson(4:5))) == 4:5
+
+    @test Types.getjson(convert(Int64, -5)) == "-5"
+    @test unwrap(evaluate_content(Types.getjson(convert(Int64, -5)))) == -5
+
 end

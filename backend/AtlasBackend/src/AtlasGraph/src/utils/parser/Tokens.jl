@@ -6,7 +6,8 @@ export Token, TokenType, gettokens
 @enum TokenType begin
     VALUE
     NAME
-    BIN_OPERATOR
+    PREFIX_UNARY_OPERATOR
+    INFIX_BIN_OPERATOR
 
     # punctuation and grouping
     LEFT_PAREN  # "("
@@ -17,6 +18,9 @@ export Token, TokenType, gettokens
     RIGHT_BRACE  # "}"
     COMMA
 end
+
+infix_bin_operators = Set{Symbol}([:+, :-, :*, :/, :^, :(:), :(==), :(<=), :(>=), :(!=)])
+prefix_unary_operators = Set{Symbol}([:+, :-, :!])
 
 keyword_type = Dict{String,TokenType}(
     "(" => LEFT_PAREN,

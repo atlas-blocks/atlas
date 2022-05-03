@@ -67,10 +67,13 @@ function array_parselet(parser::Parser, token::Token)::Result{VectorExpr,Excepti
     return VectorExpr(unwrap(elems))
 end
 
-function prefix_operator_parselet(parser::Parser, token::Token)::Result{CallExpr,Exception}
-    right = parse_expression(parser, infix_precedence[token].precedence)
+function prefix_unary_operator_parselet(
+    parser::Parser,
+    token::Token,
+)::Result{CallExpr,Exception}
+    right = parse_expression(parser, prefix_precedence[token].precedence)
     if ResultTypes.iserror(right)
-        return right
+        return unwrap_error(right)
     end
     return CallExpr(NameExpr(token.content), [unwrap(right)])
 end
@@ -80,6 +83,7 @@ prefix_parselets = Dict{TokenType,Function}(
     Tokens.VALUE => value_parselet,
     Tokens.LEFT_PAREN => group_parselet,
     Tokens.LEFT_BRACKET => array_parselet,
+    Tokens.PREFIX_UNARY_OPERATOR => prefix_unary_operator_parselet,
 )
 
 
@@ -96,7 +100,7 @@ function call_parselet(
     return CallExpr(left, unwrap(args))
 end
 
-function bin_operator_parselet(
+function infix_bin_operator_parselet(
     parser::Parser,
     left::AbstractExpr,
     token::Token,
@@ -126,5 +130,5 @@ end
 infix_parselets = Dict{TokenType,Function}(
     Tokens.LEFT_PAREN => call_parselet,
     Tokens.LEFT_BRACKET => getindex_parselet,
-    Tokens.BIN_OPERATOR => bin_operator_parselet,
+    Tokens.INFIX_BIN_OPERATOR => infix_bin_operator_parselet,
 )
