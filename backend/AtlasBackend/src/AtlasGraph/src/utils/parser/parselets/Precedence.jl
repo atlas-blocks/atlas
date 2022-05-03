@@ -23,4 +23,5 @@ infix_precedence = Dict{Token,InfixTokenInfo}(
     Token(Tokens.NAME, :/) => InfixTokenInfo(PRODUCT, true),
     Token(Tokens.NAME, :^) => InfixTokenInfo(EXPONENT, false),
     Token(Tokens.LEFT_PAREN, "") => InfixTokenInfo(CALL, true),
+    Token(Tokens.LEFT_BRACKET, "") => InfixTokenInfo(CALL, true),
 )

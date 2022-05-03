@@ -29,6 +29,9 @@ function evaluate_content(content::String, graph::AbstractGraph)::Result{Any,Exc
     if ResultTypes.iserror(expr)
         return unwrap_error(expr)
     end
+    if TokenParser.hasnext(parser)
+        return EvaluatingException("There is more then one expressions.")
+    end
     expr = unwrap(expr)
 
     return evaluate(expr, graph)

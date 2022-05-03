@@ -35,10 +35,14 @@ function consume(parser::Parser)::Any
     return peek(parser, -1)
 end
 
-function consume(parser::Parser, expected::TokenType)::Token
+function consume(parser::Parser, expected::TokenType)::Result{Token,Exception}
     parser.index += 1
     token = peek(parser, -1)
-    @assert token.type == expected
+    if (token.type != expected)
+        return ParsingException(
+            "Expected token type: $(expected) but received: $(token.type)",
+        )
+    end
     return token
 end
 
