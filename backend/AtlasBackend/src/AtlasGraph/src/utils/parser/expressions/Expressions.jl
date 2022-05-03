@@ -61,17 +61,17 @@ function evaluate(expr::CallExpr, graph::AbstractGraph)::Result{Any,Exception}
 
     if typeof(func) == Symbol
         if !isdefined(Functions.Math, func)
-            return EvaluatingException("No functions with the name: " * string(next))
+            return EvaluatingException("No functions with the name: " * string(func))
         end
         func = getproperty(Functions.Math, func)
     elseif typeof(func) != Function
-        return EvaluatingException("Unexpected token: " + string(func))
+        return EvaluatingException("Unexpected token: " * string(func))
     end
 
     possible_methods = methods(func, arg_types)
     if length(possible_methods) == 0
         return EvaluatingException(
-            "No functions matches this call: $(string(next))($( string(arguments_types)))",
+            "No functions with this signature: ($( string(arguments_types)))",
         )
     end
     return func(args...)

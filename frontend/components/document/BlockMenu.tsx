@@ -32,7 +32,7 @@ function BlockMenu({ selectedNode, setDruggedNode, webInterfaceUtils }: Props) {
 						event,
 						new ExpressionNode(
 							new AtlasNode(ExpressionNode.structType, 'name1', 'pkg', [0, 0], true),
-							'__$+$__(2, 3)',
+							'2 + 3',
 							'5',
 						),
 					)

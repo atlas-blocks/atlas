@@ -14,8 +14,12 @@ function getjson(elem::Union{Int64,Float64,Bool,AbstractString})::AbstractString
     return JSON3.write(elem)
 end
 
-function getjson(elem::Array)::AbstractString
-    return JSON3.write(elem)
+function getjson(elems::Array)::AbstractString
+    ans = "["
+    for el in elems
+        ans *= getjson(el) * ", "
+    end
+    return ans * "]"
 end
 
 function getjson(elem::Nothing)::AbstractString

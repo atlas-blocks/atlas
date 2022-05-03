@@ -37,4 +37,14 @@ import .TestUtils as tu
         ])
         tu.equals(unwrap(AtlasGraph.updategraph!(graph)), expected)
     end
+    @test begin
+        graph = Graph([
+            tu.genexpression("ex1", "sin(5)", "-0.9589"),
+            tu.genexpression("ex2", "ifthenelse(2 == 3, asin(ex1), ex1 * 2)", "1.9178"),
+            tu.genexpression("ex3", "[-1, -2, -3]", "[-1, -2, -3, ]"),
+            tu.genexpression("ex4", "ex3[1]", "-1"),
+            tu.genexpression("ex5", "ex3[2:3]", "[-2, -3, ]"),
+        ])
+        tu.equals(unwrap(AtlasGraph.updategraph!(graph)), graph)
+    end
 end

@@ -7,18 +7,16 @@ function group_with_commas_helper(
 )::Result{Vector{AbstractExpr},Exception}
     elems = Vector{AbstractExpr}()
 
-    if !match(parser, closing)
-        while true
-            expr = parse_expression(parser)
-            if ResultTypes.iserror(expr)
-                return expr
-            end
-            push!(elems, unwrap(expr))
-            match(parser, Tokens.COMMA) || break
-            res = consume(parser, Tokens.COMMA)
-            if ResultTypes.iserror(res)
-                return unwrap_error(res)
-            end
+    while !match(parser, closing)
+        expr = parse_expression(parser)
+        if ResultTypes.iserror(expr)
+            return unwrap_error(expr)
+        end
+        push!(elems, unwrap(expr))
+        match(parser, Tokens.COMMA) || break
+        res = consume(parser, Tokens.COMMA)
+        if ResultTypes.iserror(res)
+            return unwrap_error(res)
         end
     end
     res = consume(parser, closing)
@@ -103,15 +101,14 @@ end
 function infix_bin_operator_parselet(
     parser::Parser,
     left::AbstractExpr,
-    token::Token,
+    token::Token{Symbol},
 )::Result{CallExpr,Exception}
     info = infix_precedence[token]
     right = parse_expression(parser, info.precedence - (info.left_associative ? 0 : 1))
     if ResultTypes.iserror(right)
         return unwrap_error(right)
     end
-    right = unwrap(right)
-    return CallExpr(NameExpr(token.content), [left, right])
+    return CallExpr(NameExpr(token.content), [left, unwrap(right)])
 end
 
 function getindex_parselet(

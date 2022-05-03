@@ -33,22 +33,31 @@ import WebInterfaceUtils from '../utils/WebInterfaceUtils';
 import { NextPage } from 'next';
 import styles from '../styles/DnDFlow.module.css';
 
-const node1 = new ExpressionNode(
-	new AtlasNode('AtlasGraph.ExpressionNode', 'ex1', 'pkg', [300, 100], true),
-	'sin(5)',
-	'-0.9589',
-);
-
-const node2 = new ExpressionNode(
-	new AtlasNode('AtlasGraph.ExpressionNode', 'ex2', 'pkg', [200, 200], true),
-	'ifthenelse(2 == 3, asin(ex1), ex1 * 2)',
-	'-1.9178',
-);
-
+const exampleNodes = [
+	new ExpressionNode(
+		new AtlasNode('AtlasGraph.ExpressionNode', 'ex1', 'pkg', [300, 100], true),
+		'sin(5)',
+		'-0.9589',
+	),
+	new ExpressionNode(
+		new AtlasNode('AtlasGraph.ExpressionNode', 'ex2', 'pkg', [200, 200], true),
+		'ifthenelse(2 == 3, asin(ex1), ex1 * 2)',
+		'-1.9178',
+	),
+	new ExpressionNode(
+		new AtlasNode('AtlasGraph.ExpressionNode', 'ex3', 'pkg', [100, 300], true),
+		'[-1, -2, -3]',
+		'[-1, -2, -3, ]',
+	),
+	new ExpressionNode(
+		new AtlasNode('AtlasGraph.ExpressionNode', 'ex4', 'pkg', [300, 300], true),
+		'ex3[1]',
+		'-1',
+	),
+];
 
 export const atlasGraph = new AtlasGraph();
-atlasGraph.nodes.push(node1);
-atlasGraph.nodes.push(node2);
+exampleNodes.forEach((node) => atlasGraph.nodes.push(node));
 
 const DnDFlow: NextPage = () => {
 	const [selectedNode, setSelectedNode] = useState<AtlasNode | null>(null);
