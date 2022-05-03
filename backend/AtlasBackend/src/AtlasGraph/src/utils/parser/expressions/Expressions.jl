@@ -71,7 +71,7 @@ function evaluate(expr::CallExpr, graph::AbstractGraph)::Result{Any,Exception}
     possible_methods = methods(func, arg_types)
     if length(possible_methods) == 0
         return EvaluatingException(
-            "No functions with this signature: ($( string(arguments_types)))",
+            "No functions with this signature: ($( string(arg_types)))",
         )
     end
     return func(args...)
