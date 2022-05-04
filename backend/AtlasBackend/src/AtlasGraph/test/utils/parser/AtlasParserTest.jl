@@ -72,16 +72,26 @@ import .TestUtils as tu
         @test unwrap(evaluate_content("4 + (2 + 3)", empty_graph)) == 9
         @test unwrap(evaluate_content("8 / 4 / 2", empty_graph)) == 1
         @test unwrap(evaluate_content("2 ^ 3 ^ 2", empty_graph)) == 2^3^2
-        @test unwrap(evaluate_content("sind(30)", empty_graph)) == sind(30)
-        @test unwrap(evaluate_content("sind(30)", empty_graph)) == sind(30)
-        @test unwrap(evaluate_content("4.2 + ex1", graph_with_results)) == 9.2
-        @test unwrap(evaluate_content("ifthenelse(2 == 3, 2, ex1)", graph_with_results)) ==
-              5
-        @test unwrap(evaluate_content("ifthenelse(3 == 3, 2, ex1)", graph_with_results)) ==
-              2
-        @test unwrap(
-            evaluate_content("ifthenelse(2 == 3, sin(ex1), 2 * ex1)", graph_with_results),
-        ) == 10
+
+        @testset "Calls" begin
+            @test unwrap(evaluate_content("sind(30)", empty_graph)) == sind(30)
+            @test unwrap(evaluate_content("sind(30)", empty_graph)) == sind(30)
+            @test unwrap(evaluate_content("4.2 + ex1", graph_with_results)) == 9.2
+            @test unwrap(
+                evaluate_content("ifthenelse(2 == 3, 2, ex1)", graph_with_results),
+            ) == 5
+            @test unwrap(
+                evaluate_content("ifthenelse(3 == 3, 2, ex1)", graph_with_results),
+            ) == 2
+            @test unwrap(
+                evaluate_content(
+                    "ifthenelse(2 == 3, sin(ex1), 2 * ex1)",
+                    graph_with_results,
+                ),
+            ) == 10
+            @test unwrap(evaluate_content("map(sqrt, [1, 2])", empty_graph)) ==
+                  [sqrt(1), sqrt(2)]
+        end
 
         @testset "Vectors" begin
             @test unwrap(evaluate_content("[]", empty_graph)) == []

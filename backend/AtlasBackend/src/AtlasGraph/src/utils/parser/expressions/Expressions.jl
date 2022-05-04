@@ -1,5 +1,6 @@
 module Expressions
 using ..AtlasGraph, ..Functions
+import ..AtlasParser: EvaluatingException
 using ResultTypes
 export AbstractExpr, ValueExpr, VectorExpr, NameExpr, CallExpr, evaluate
 
@@ -22,6 +23,8 @@ end
 function evaluate(expr::NameExpr, graph::AbstractGraph)::Result{Any,Exception}
     if AtlasGraph.isexpression(graph, string(expr.name))
         return AtlasGraph.getexpression(graph, string(expr.name)).result
+    elseif isdefined(Functions.Math, expr.name)
+        return getproperty(Functions.Math, expr.name)
     end
     return expr.name
 end
@@ -60,11 +63,8 @@ function evaluate(expr::CallExpr, graph::AbstractGraph)::Result{Any,Exception}
     func = unwrap(func)
 
     if typeof(func) == Symbol
-        if !isdefined(Functions.Math, func)
-            return EvaluatingException("No functions with the name: " * string(func))
-        end
-        func = getproperty(Functions.Math, func)
-    elseif typeof(func) != Function
+        return EvaluatingException("No functions with the name: " * string(func))
+    elseif !(typeof(func) <: Function)
         return EvaluatingException("Unexpected token: " * string(func))
     end
 
