@@ -47,4 +47,32 @@ import .TestUtils as tu
         ])
         tu.equals(unwrap(AtlasGraph.updategraph!(graph)), graph)
     end
+
+    @test begin
+        graph = Graph([tu.genexpression("ex1", "5", "5")])
+        AtlasGraph.getedges(graph) == []
+    end
+
+    @test begin
+        graph =
+            Graph([tu.genexpression("ex1", "5", "5"), tu.genexpression("ex2", "ex1", "5")])
+        AtlasGraph.getedges(graph) == [ProviderEdge("ex1", "ex2")]
+    end
+
+    @test begin
+        graph = Graph([
+            tu.genexpression("ex1", "5", "5"),
+            tu.genexpression("ex2", "ex1 ex1", "5"),
+        ])
+        AtlasGraph.getedges(graph) == [ProviderEdge("ex1", "ex2")]
+    end
+    @test begin
+        graph = Graph([
+            tu.genexpression("ex1", "5", "5"),
+            tu.genexpression("ex2", "ex1 ", "5"),
+            tu.genexpression("ex3", "ex1 ex2 5 \"str\"", "5"),
+        ])
+        AtlasGraph.getedges(graph) ==
+        [ProviderEdge("ex1", "ex2"), ProviderEdge("ex1", "ex3"), ProviderEdge("ex2", "ex3")]
+    end
 end

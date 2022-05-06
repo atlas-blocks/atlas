@@ -100,6 +100,7 @@ function isfunction(graph::AbstractGraph, name::AbstractString)
 end
 
 StructTypes.StructType(::Type{Node}) = StructTypes.Struct()
+StructTypes.StructType(::Type{ProviderEdge}) = StructTypes.Struct()
 
 function updategraph!(graph::AbstractGraph)::Result{AbstractGraph,Exception}
     expressions = filternodes(graph.nodes, AbstractExpressionNode)
@@ -126,10 +127,12 @@ function getedges(graph::Graph)::Vector{AbstractEdge}
         node -> (
             node.name,
             map(
-                token -> string(token),
-                filter!(
-                    token -> isa(token, Symbol),
-                    unwrap(AtlasParser.Tokens.gettokens(node.content)),
+                token -> string(token.content),
+                unique(
+                    filter!(
+                        token -> token.type == AtlasParser.Tokens.NAME,
+                        unwrap(AtlasParser.Tokens.gettokens(node.content)),
+                    ),
                 ),
             ),
         ),
@@ -138,7 +141,7 @@ function getedges(graph::Graph)::Vector{AbstractEdge}
     edges = Vector{AbstractEdge}()
     for i = 1:length(rawedges)
         for j = 1:length(rawedges[i][2])
-            push!(edges, ProviderEdge(rawedges[i][1], rawedges[i][2][j]))
+            push!(edges, ProviderEdge(rawedges[i][2][j], rawedges[i][1]))
         end
     end
     return edges
