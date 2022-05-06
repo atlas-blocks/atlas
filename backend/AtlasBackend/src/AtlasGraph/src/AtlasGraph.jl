@@ -1,6 +1,8 @@
 module AtlasGraph
 export AbstractGraph, Graph
+export AbstractEdge, ProviderEdge
 export AbstractNode, Node
+export AbstractTextNode, TextNode
 export AbstractFunctionNode, FunctionNode
 export AbstractExpressionNode, ExpressionNode
 
@@ -12,6 +14,20 @@ mutable struct Node <: AbstractNode
     package::String
     position::Tuple{Int32,Int32}
     visibility::Bool
+end
+
+abstract type AbstractTextNode <: AbstractNode end
+mutable struct TextNode <: AbstractTextNode
+    node::Node
+    content::String
+end
+
+function Base.getproperty(obj::TextNode, sym::Symbol)
+    if sym === :name
+        return obj.node.name
+    else
+        return getfield(obj, sym)
+    end
 end
 
 abstract type AbstractFormulaNode <: AbstractNode end
@@ -39,6 +55,12 @@ mutable struct FunctionNode <: AbstractFunctionNode
 
     priority::Int8
     leftright_order::Bool
+end
+
+abstract type AbstractEdge end
+struct ProviderEdge <: AbstractEdge
+    from::String
+    to::String
 end
 
 abstract type AbstractGraph end
@@ -97,6 +119,30 @@ function updategraph!(graph::AbstractGraph)::Result{AbstractGraph,Exception}
     return graph
 end
 
+function getedges(graph::Graph)::Vector{AbstractEdge}
+    expressions = filternodes(graph.nodes, ExpressionNode)
+
+    rawedges = map(
+        node -> (
+            node.name,
+            map(
+                token -> string(token),
+                filter!(
+                    token -> isa(token, Symbol),
+                    unwrap(AtlasParser.Tokens.gettokens(node.content)),
+                ),
+            ),
+        ),
+        expressions,
+    )
+    edges = Vector{AbstractEdge}()
+    for i = 1:length(rawedges)
+        for j = 1:length(rawedges[i][2])
+            push!(edges, ProviderEdge(rawedges[i][1], rawedges[i][2][j]))
+        end
+    end
+    return edges
+end
 
 include("./functions/Functions.jl")
 include("./utils/algorithms/FormulaUtils.jl")

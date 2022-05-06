@@ -9,7 +9,7 @@ end
 
 function dictionary(node::AbstractNode)::Dict{AbstractString,Any}
     dic = Dict{AbstractString,Any}()
-    for field in propertynames(node)
+    for field in fieldnames(typeof(node))
         value = getproperty(node, field)
         if (typeof(value) <: AbstractNode)
             merge!(dic, dictionary(value))
@@ -27,13 +27,13 @@ function json(node::AbstractNode)::JSON3.Object
     return jsonwriteread(push!(dictionary(node), "type" => typeof(node)))
 end
 
-function json(graph::AbstractGraph)::JSON3.Object
-    nodes = Vector{JSON3.Object}()
-    for node in graph.nodes
-        push!(nodes, json(node))
-    end
+function json(edge::AbstractEdge)::JSON3.Object
+    return jsonwriteread(edge)
+end
 
-    edges = Vector{JSON3.Object}()
+function json(graph::AbstractGraph)::JSON3.Object
+    nodes::Vector{JSON3.Object} = map(node -> json(node), graph.nodes)
+    edges::Vector{JSON3.Object} = map(edge -> json(edge), AtlasGraph.getedges(graph))
 
     return jsonwriteread(Dict("nodes" => nodes, "edges" => edges))
 end
@@ -51,11 +51,12 @@ function node(json_dict::JSON3.Object)::AbstractNode
     if json_dict["type"] == string(Node)
         return node
     elseif json_dict["type"] == string(ExpressionNode)
-        return ExpressionNode(
-            node,
-            json_dict["content"],
-            unwrap(evaluate_content(json_dict["result"])),
-        )
+        content = json_dict["content"]
+        result = unwrap(evaluate_content(json_dict["result"]))
+        return ExpressionNode(node, content, result)
+    elseif json_dict["type"] == string(TextNode)
+        content = json_dict["content"]
+        return TextNode(node, content)
     end
 end
 

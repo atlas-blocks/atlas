@@ -1,4 +1,5 @@
 module Math
+using CSV
 
 struct Operator
     name::Symbol
@@ -24,6 +25,15 @@ function ifthenelse(cond::Bool, then_result::Any, else_result::Any)
     else
         return else_result
     end
+end
+
+function csv2vector(csv_string::AbstractString)::Vector{Vector}
+    ans = Vector{Vector}()
+    csv = CSV.File(IOBuffer(csv_string), header = false)
+    for i = 1:length(csv)
+        push!(ans, collect(csv[i]))
+    end
+    return length(ans) == 0 ? ans : collect(eachrow(reduce(hcat, ans)))
 end
 
 end

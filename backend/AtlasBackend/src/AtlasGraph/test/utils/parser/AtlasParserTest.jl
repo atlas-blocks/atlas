@@ -12,12 +12,14 @@ import .TestUtils as tu
         tu.genexpression("ex2", "\"str\"", "st"),
         tu.genexpression("ex3", ""),
         tu.genexpression("ex4", "sin(ex1)"),
+        tu.gentext("ex5", "1,2,3\n5,6,7"),
     ])
     graph_with_results = Graph([
         tu.genexpression("ex1", "5", 5),
         tu.genexpression("ex2", "\"str\"", "str"),
         tu.genexpression("ex3", ""),
         tu.genexpression("ex4", "sin(ex1)", sin(5)),
+        tu.gentext("ex5", "1,2,3\n5,6,7"),
     ])
 
     @testset "Tokens" begin
@@ -91,6 +93,8 @@ import .TestUtils as tu
             ) == 10
             @test unwrap(evaluate_content("map(sqrt, [1, 2])", empty_graph)) ==
                   [sqrt(1), sqrt(2)]
+            @test unwrap(evaluate_content("csv2vector(ex5)", graph_with_results)) ==
+                  [[1, 5], [2, 6], [3, 7]]
         end
 
         @testset "Vectors" begin

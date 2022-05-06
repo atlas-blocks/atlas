@@ -27,6 +27,10 @@ function genenode(name::AbstractString)::Node
     return Node(name, "pkg", (0, 0), false)
 end
 
+function gentext(name::AbstractString, content::AbstractString)::TextNode
+    return TextNode(genenode(name), content)
+end
+
 function genexpression(
     name::AbstractString,
     content::AbstractString,

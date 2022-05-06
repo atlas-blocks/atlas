@@ -10,6 +10,13 @@ using JSON3
         JsonUtils.json(node) == JSON3.read(node_json)
     end
     @test begin
+        node = TextNode(Node("name", "pkg", (5, -7), true), "foo")
+        node_json =
+            """{"name":"name","visibility":true,"content":"foo","package":"pkg",""" *
+            """"position":[5,-7],"type":"TextNode"}"""
+        JsonUtils.json(node) == JSON3.read(node_json)
+    end
+    @test begin
         node = ExpressionNode(Node("name", "pkg", (5, -7), true), "1 + 2", 3)
         node_json =
             """{"name":"name","visibility":true,"content":"1 + 2","package":"pkg",""" *

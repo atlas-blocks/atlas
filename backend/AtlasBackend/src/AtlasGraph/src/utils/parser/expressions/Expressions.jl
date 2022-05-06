@@ -21,12 +21,16 @@ struct NameExpr <: AbstractExpr
 end
 
 function evaluate(expr::NameExpr, graph::AbstractGraph)::Result{Any,Exception}
-    if AtlasGraph.isexpression(graph, string(expr.name))
-        return AtlasGraph.getexpression(graph, string(expr.name)).result
+    nodes = AtlasGraph.filternodes(graph.nodes, string(expr.name))
+    @assert length(nodes) <= 1
+    if length(nodes) == 1 && typeof(nodes[1]) == ExpressionNode
+        return nodes[1].result
+    elseif length(nodes) == 1 && typeof(nodes[1]) == TextNode
+        return nodes[1].content
     elseif isdefined(Functions.Math, expr.name)
         return getproperty(Functions.Math, expr.name)
     end
-    return expr.name
+    return EvaluatingException("No such name: " * string(func))
 end
 
 
@@ -62,9 +66,7 @@ function evaluate(expr::CallExpr, graph::AbstractGraph)::Result{Any,Exception}
     end
     func = unwrap(func)
 
-    if typeof(func) == Symbol
-        return EvaluatingException("No functions with the name: " * string(func))
-    elseif !(typeof(func) <: Function)
+    if !(typeof(func) <: Function)
         return EvaluatingException("Unexpected token: " * string(func))
     end
 
