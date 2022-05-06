@@ -46,7 +46,7 @@ const exampleNodes = [
 	new ExpressionNode(
 		new AtlasNode('AtlasGraph.ExpressionNode', 'ex3', 'pkg', [100, 300], true),
 		'[-1, -2, -3]',
-		'[-1, -2, -3, ]',
+		'[-1, -2, -3]',
 	),
 	new TextNode(
 		new AtlasNode('AtlasGraph.TextNode', 'ex4', 'pkg', [300, 300], true),
@@ -55,7 +55,7 @@ const exampleNodes = [
 	new ExpressionNode(
 		new AtlasNode('AtlasGraph.ExpressionNode', 'ex5', 'pkg', [500, 300], true),
 		'csv2vector(ex4)',
-		'[[1, 2, 3, ], [4, 5, 6, ], ]',
+		'[[1, 4], [2, 5], [3, 6]]',
 	),
 ];
 

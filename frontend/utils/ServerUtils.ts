@@ -1,5 +1,5 @@
 import ErrorUtils from './errors/ErrorUtils';
-import AtlasGraph, { AtlasNode, ExpressionNode, TextNode} from './AtlasGraph';
+import AtlasGraph, { AtlasEdge, AtlasNode, ExpressionNode, TextNode } from './AtlasGraph';
 
 type Response = {
 	success: boolean;
@@ -66,6 +66,7 @@ abstract class ServerUtils {
 		}
 		const updatedGraph = responseJson.graph;
 		updatedGraph.nodes = ServerUtils.extractNodes(updatedGraph.nodes);
+		updatedGraph.edges = ServerUtils.extractEdges(updatedGraph.edges);
 		Object.assign(graph, updatedGraph);
 	}
 
@@ -83,6 +84,15 @@ abstract class ServerUtils {
 			}
 		}
 		return updatedNodes;
+	}
+	public static extractEdges(edges: []): AtlasEdge[] {
+		const updated: AtlasEdge[] = [];
+
+		for (const edge of edges) {
+			updated.push(Object.assign(AtlasEdge.constructorEmpty(), edge));
+		}
+
+		return updated;
 	}
 }
 

@@ -25,8 +25,7 @@ export function TextBlock({ data }: { data: { node: TextNode } }) {
 				<span className={styles.attribute_name}>name:</span> {data.node.name}
 			</div>
 			<div>
-				<span className={styles.attribute_name}>content:</span>{' '}
-				{data.node.content}
+				<span className={styles.attribute_name}>content:</span> {data.node.content}
 			</div>
 		</div>,
 	);
@@ -39,8 +38,7 @@ export function ExpressionBlock({ data }: { data: { node: ExpressionNode } }) {
 				<span className={styles.attribute_name}>name:</span> {data.node.name}
 			</div>
 			<div>
-				<span className={styles.attribute_name}>content:</span>{' '}
-				{data.node.content}
+				<span className={styles.attribute_name}>content:</span> {data.node.content}
 			</div>
 			<div>
 				<span className={styles.attribute_name}>result:</span> {data.node.result}

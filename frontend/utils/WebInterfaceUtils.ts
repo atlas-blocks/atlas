@@ -42,17 +42,21 @@ export default class WebInterfaceUtils {
 
 	public static getEdges(graph: AtlasGraph): Elements {
 		let ans: Elements = [];
-		for (const node of graph.nodes) {
-			// if (!node.visibility) continue;
-			// for (const provider of node.getProviderNodes(graph)) {
-			// 	if (!provider.isVisible()) continue;
-			// 	ans.push({
-			// 		id: 'edge' + node.getId() + provider.getId(),
-			// 		source: provider.getId(),
-			// 		target: node.getId(),
-			// 		type: 'DefaultEdge',
-			// 	});
-			// }
+
+		for (const edge of graph.edges) {
+			const froms = graph.nodes.filter((node) => node.name === edge.from);
+			const tos = graph.nodes.filter((node) => node.name === edge.to);
+
+			for (const from of froms) {
+				for (const to of tos) {
+					ans.push({
+						id: 'edge' + from.getId() + to.getId(),
+						source: from.getId(),
+						target: to.getId(),
+						type: 'DefaultEdge',
+					});
+				}
+			}
 		}
 		return ans;
 	}

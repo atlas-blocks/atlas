@@ -12,7 +12,19 @@ export default class AtlasGraph {
 	}
 }
 
-export class AtlasEdge {}
+export class AtlasEdge {
+	public to: string;
+	public from: string;
+
+	constructor(to: string, from: string) {
+		this.to = to;
+		this.from = from;
+	}
+	public static constructorEmpty() {
+		return new AtlasEdge('', '');
+	}
+}
+
 export class AtlasNode {
 	static structType = 'AtlasGraph.Node';
 	public type: string;
