@@ -1,0 +1,10 @@
+version: '3.8'
+
+services:
+  frontend:
+    volumes:
+      - ./frontend:/app
+
+  julia-backend:
+    volumes: 
+      - ./backend/AtlasBackend:/home/genie/app

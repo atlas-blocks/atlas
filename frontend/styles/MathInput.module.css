@@ -10,7 +10,7 @@
 	transition: 1s;
 }
 
-#math_input input {
+#math_input textarea {
 	margin: 20px;
 	width: 75%;
 }

@@ -1,59 +1,61 @@
 import React from 'react';
-import Graph from '../commons/Graph';
-import Node from '../commons/nodes/Node';
 import { Node as Block, Elements } from 'react-flow-renderer';
-import ExpressionNode from '../commons/nodes/formulas/ExpressionNode';
-import FunctionNode from '../commons/nodes/formulas/functions/FunctionNode';
+import AtlasGraph, { AtlasNode } from '../utils/AtlasGraph';
+import ServerUtils from './ServerUtils';
 
-class WebInterfaceUtils {
-	graph: Graph;
+export default class WebInterfaceUtils {
+	graph: AtlasGraph;
 	setElements: React.Dispatch<React.SetStateAction<Elements>>;
-	setSelectedNode: React.Dispatch<React.SetStateAction<Node | null>>;
+	setSelectedNode: React.Dispatch<React.SetStateAction<AtlasNode | null>>;
 
 	constructor(
-		graph: Graph,
+		graph: AtlasGraph,
 		setElements: React.Dispatch<React.SetStateAction<Elements>>,
-		setSelectedNode: React.Dispatch<React.SetStateAction<Node | null>>,
+		setSelectedNode: React.Dispatch<React.SetStateAction<AtlasNode | null>>,
 	) {
 		this.graph = graph;
 		this.setElements = setElements;
 		this.setSelectedNode = setSelectedNode;
 	}
 
-	public static toBlock(node: Node): Block {
+	public static toBlock(node: AtlasNode): Block {
 		return {
 			id: node.getId(),
-			type: node.getImport().toString(),
-			position: node.getPosition(),
+			type: node.type,
+			position: { x: node.position[0], y: node.position[1] },
 			data: { node: node },
-			isHidden: !node.isVisible(),
+			isHidden: !node.visibility,
 		};
 	}
 
-	public static getElements(graph: Graph): Elements {
+	public static getElements(graph: AtlasGraph): Elements {
 		return WebInterfaceUtils.getBlocks(graph).concat(WebInterfaceUtils.getEdges(graph));
 	}
 
-	public static getBlocks(graph: Graph): Elements {
+	public static getBlocks(graph: AtlasGraph): Elements {
 		let ans: Elements = [];
-		for (const node of graph.getNodes()) {
+		for (const node of graph.nodes) {
 			ans.push(this.toBlock(node));
 		}
 		return ans;
 	}
 
-	public static getEdges(graph: Graph): Elements {
+	public static getEdges(graph: AtlasGraph): Elements {
 		let ans: Elements = [];
-		for (const node of graph.getNodes()) {
-			if (!node.isVisible()) continue;
-			for (const provider of node.getProviderNodes(graph)) {
-				if (!provider.isVisible()) continue;
-				ans.push({
-					id: 'edge' + node.getId() + provider.getId(),
-					source: provider.getId(),
-					target: node.getId(),
-					type: 'DefaultEdge',
-				});
+
+		for (const edge of graph.edges) {
+			const froms = graph.nodes.filter((node) => node.name === edge.from);
+			const tos = graph.nodes.filter((node) => node.name === edge.to);
+
+			for (const from of froms) {
+				for (const to of tos) {
+					ans.push({
+						id: 'edge' + from.getId() + to.getId(),
+						source: from.getId(),
+						target: to.getId(),
+						type: 'DefaultEdge',
+					});
+				}
 			}
 		}
 		return ans;
@@ -63,27 +65,26 @@ class WebInterfaceUtils {
 		this.setElements((els) => WebInterfaceUtils.getElements(this.graph));
 	}
 
-	public async updateExpressionContent(node: ExpressionNode, content: string) {
-		await node.updateContent(content, this.graph);
+	public async updateGraph() {
+		await ServerUtils.updateGraph(this.graph);
 		this.refreshElements();
 	}
 
 	public getFunctionSignature(name: string, multiline = false): string {
-		const func = this.graph.getNodeByNameOrNull(name);
-		if (!(func instanceof FunctionNode)) return '';
-		return (
-			func.getName() +
-			'(' +
-			(multiline ? '\n    ' : '') +
-			func
-				.getArgs()
-				.map((arg) => arg.name + ': ' + arg.type)
-				.join(',' + (multiline ? '\n    ' : ' ')) +
-			(multiline ? '\n' : '') +
-			'): ' +
-			func.getReturnType()
-		);
+		// const func = this.graph.getNodeByNameOrNull(name);
+		// if (!(func instanceof FunctionNode)) return '';
+		// return (
+		// 	func.getName() +
+		// 	'(' +
+		// 	(multiline ? '\n    ' : '') +
+		// 	func
+		// 		.getArgs()
+		// 		.map((arg) => arg.name + ': ' + arg.type)
+		// 		.join(',' + (multiline ? '\n    ' : ' ')) +
+		// 	(multiline ? '\n' : '') +
+		// 	'): ' +
+		// 	func.getReturnType()
+		// );
+		return 'signature';
 	}
 }
-
-export default WebInterfaceUtils;

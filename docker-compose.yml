@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+
+  # Proxies requests to internal services
+  reverse-proxy:
+    image: nginx:1.17.10
+    container_name: reverse_proxy
+    depends_on:
+        - frontend
+        - julia-backend
+    volumes:
+      - ./reverse_proxy/nginx.conf:/etc/nginx/nginx.conf
+    ports:
+      - 8080:80
+
+  frontend:
+    image: frontend
+    container_name: frontend
+    build:
+      context: ./frontend
+      target: dev
+    depends_on:
+        - julia-backend
+    ports:
+      - 3000:3000
+    restart: on-failure
+
+
+  julia-backend:
+    image: julia-backend
+    container_name: julia-backend
+    build:
+      context: ./backend/AtlasBackend
+      target: dev
+    ports:
+      - 8000:8000
+    restart: on-failure

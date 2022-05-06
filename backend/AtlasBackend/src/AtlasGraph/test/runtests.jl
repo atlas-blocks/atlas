@@ -1,0 +1,8 @@
+include("./TestUtils.jl")
+include("./utils/parser/AtlasParserTest.jl")
+include("./AtlasGraphTest.jl")
+include("./utils/interactions/JsonUtilsTest.jl")
+include("./utils/interactions/TypesTest.jl")
+include("./utils/algorithms/FormulaUtilsTest.jl")
+include("./utils/interactions/EndpointsTest.jl")
+include("./functions/MathTest.jl")

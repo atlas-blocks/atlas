@@ -1,5 +1,4 @@
 import React, { useState, useRef, useEffect, MouseEvent as ReactMouseEvent } from 'react';
-import Document from '../commons/Document';
 import dynamic from 'next/dynamic';
 
 const Background = dynamic(
@@ -27,84 +26,60 @@ import BlockMenu from '../components/document/BlockMenu';
 import BlockSettings from '../components/document/BlockSettings';
 import MathInput from '../components/document/MathInput';
 
-import Node from '../commons/nodes/Node';
-import ExpressionNode from '../commons/nodes/formulas/ExpressionNode';
+import AtlasGraph, { AtlasNode, ExpressionNode, TextNode, ContentNode } from '../utils/AtlasGraph';
 import WebInterfaceUtils from '../utils/WebInterfaceUtils';
-import FormulaNode from '../commons/nodes/formulas/FormulaNode';
 
 import { NextPage } from 'next';
 import styles from '../styles/DnDFlow.module.css';
-import DefaultFunctions from '../commons/library/system/formulas/functions/DefaultFunctions';
 
-export const document = new Document('document_name');
-export const page = document.getPage(0);
+const exampleNodes = [
+	new ExpressionNode(
+		new AtlasNode('AtlasGraph.ExpressionNode', 'ex1', 'pkg', [300, 100], true),
+		'sin(5)',
+		'-0.9589',
+	),
+	new ExpressionNode(
+		new AtlasNode('AtlasGraph.ExpressionNode', 'ex2', 'pkg', [200, 200], true),
+		'ifthenelse(2 == 3, asin(ex1), ex1 * 2)',
+		'-1.9178',
+	),
+	new ExpressionNode(
+		new AtlasNode('AtlasGraph.ExpressionNode', 'ex3', 'pkg', [100, 300], true),
+		'[-1, -2, -3]',
+		'[-1, -2, -3]',
+	),
+	new TextNode(
+		new AtlasNode('AtlasGraph.TextNode', 'ex4', 'pkg', [300, 300], true),
+		'1,2,3\n4,5,6',
+	),
+	new ExpressionNode(
+		new AtlasNode('AtlasGraph.ExpressionNode', 'ex5', 'pkg', [500, 300], true),
+		'csv2vector(ex4)',
+		'[[1, 4], [2, 5], [3, 6]]',
+	),
+];
 
-const variableY = new ExpressionNode('y', '5', 0).setPosition({ x: 100, y: 100 });
-const expressionNode0 = new ExpressionNode('b1', '2 + 1 + y', 0).setPosition({ x: 300, y: 100 });
-const simplifyNode0 = new ExpressionNode('', 'simplify("1 + 1")', 0).setPosition({
-	x: 600,
-	y: 100,
-});
-const customFetchNode0 = new ExpressionNode(
-	'fetch1',
-	'fetch("/api/el_simplify", {"latex":str(y + 5 - 6)})',
-	0,
-).setPosition({ x: 10, y: 300 });
-
-const mapFieldGettingNode = new ExpressionNode('getMapField1', 'fetch1["out"]', 0).setPosition({
-	x: 470,
-	y: 300,
-});
-const simplifyNode1 = new ExpressionNode('', 'simplify(getMapField1)', 0).setPosition({
-	x: 700,
-	y: 300,
-});
-
-const customFetchNode2 = new ExpressionNode(
-	'fetch2',
-	'fetch("http://18.219.169.98/cgi-bin/el_simplify.py", {"in_latex":"x+2"})',
-	0,
-).setPosition({ x: 10, y: 500 });
-const fetchNode3 = new ExpressionNode(
-	'fetch3',
-	'fetch("http://18.219.169.98/cgi-bin/el_simplify.py", {"in_latex":fetch2["out"]})',
-	0,
-).setPosition({ x: 300, y: 600 });
-
-page.getGraph().addNodes(DefaultFunctions.getAllNodes());
-page.getGraph().addNode(variableY);
-page.getGraph().addNode(expressionNode0);
-page.getGraph().addNode(simplifyNode0);
-page.getGraph().addNode(customFetchNode0);
-page.getGraph().addNode(customFetchNode2);
-page.getGraph().addNode(mapFieldGettingNode);
-page.getGraph().addNode(simplifyNode1);
-page.getGraph().addNode(fetchNode3);
-
-(async () => {
-	await variableY.updateResult(page.getGraph());
-	await customFetchNode0.updateResult(page.getGraph());
-	await simplifyNode0.updateResult(page.getGraph());
-	await customFetchNode2.updateResult(page.getGraph());
-})();
+export const atlasGraph = new AtlasGraph();
+exampleNodes.forEach((node) => atlasGraph.nodes.push(node));
 
 const DnDFlow: NextPage = () => {
-	const [selectedNode, setSelectedNode] = useState<Node | null>(null);
-	const [druggedNode, setDruggedNode] = useState<Node | null>(null);
+	const [selectedNode, setSelectedNode] = useState<AtlasNode | null>(null);
+	const [druggedNode, setDruggedNode] = useState<AtlasNode | null>(null);
 	const reactFlowWrapper = useRef(null);
 	const mathInputRef = useRef<MathInput>(null);
 	const [reactFlowInstance, setReactFlowInstance] = useState(null);
-	const initialElements: Elements = WebInterfaceUtils.getElements(page.getGraph());
+	const initialElements: Elements = WebInterfaceUtils.getElements(atlasGraph);
 	const [elements, setElements] = useState(initialElements);
 
-	const webInterfaceUtils = new WebInterfaceUtils(page.getGraph(), setElements, setSelectedNode);
+	const webInterfaceUtils = new WebInterfaceUtils(atlasGraph, setElements, setSelectedNode);
 
 	function handleBlockSelection(event: React.MouseEvent, element: Block | Edge) {}
 
 	function handleBlockDoubleClick(event: ReactMouseEvent, block: Block) {
 		setSelectedNode(block.data.node);
-		if (block.data.node instanceof FormulaNode)
-			(mathInputRef.current as MathInput).show(block.data.node.getContent());
+		if (block.data.node instanceof ContentNode) {
+			(mathInputRef.current as MathInput).show(block.data.node.content);
+		}
 	}
 
 	function onPaneClick(event: ReactMouseEvent) {
@@ -135,7 +110,8 @@ const DnDFlow: NextPage = () => {
 		});
 
 		console.assert(druggedNode !== null, 'drugged node should not be assigned before dragging');
-		if (druggedNode !== null) page.getGraph().addNode(druggedNode.setPosition(pos));
+		if (druggedNode !== null)
+			atlasGraph.nodes.push(druggedNode.setPosition(pos.x, pos.y).setDefaultName());
 		webInterfaceUtils.refreshElements();
 	};
 

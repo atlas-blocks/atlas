@@ -1,6 +1,6 @@
 .block {
 	background: var(--elements-background);
-	border-width: 1px;
+	border-width: 2px;
 	border-radius: 5px;
 	padding: 10px;
 	min-width: 50px;
@@ -9,11 +9,25 @@
 	font-size: 16px;
 }
 
+.expression_block {
+	border-color: grey;
+}
+
+.text_block {
+	border-color: green;
+}
+
 .default {
 	border-color: black;
 	color: black;
 }
+
 .attribute_name {
 	color: green;
 	font-size: 12px;
+}
+
+.display_linebreak {
+	white-space: pre;
+	text-align: left;
 }
