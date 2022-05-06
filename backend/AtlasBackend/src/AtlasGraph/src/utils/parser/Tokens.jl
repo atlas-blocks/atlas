@@ -19,7 +19,8 @@ export Token, TokenType, gettokens
     COMMA
 end
 
-infix_bin_operators = Set{Symbol}([:+, :-, :*, :/, :^, :(:), :(==), :(<=), :(>=), :(!=)])
+infix_bin_operators =
+    Set{Symbol}([:+, :-, :*, :/, :^, :(:), :(==), :(<=), :(<), :(>), :(>=), :(=>), :(!=)])
 prefix_unary_operators = Set{Symbol}([:+, :-, :!])
 
 keyword_type = Dict{String,TokenType}(
@@ -132,6 +133,10 @@ function match_int(str::AbstractString)::Union{RegexMatch,Nothing}
 end
 
 function match_float(str::AbstractString)::Union{RegexMatch,Nothing}
+    expmatch = match(r"^[+-]?[0-9]+(\.[0-9]+)?e[+-]?[0-9]+", str)
+    if (expmatch !== nothing)
+        return expmatch
+    end
     return match(r"^[+-]?[0-9]+\.[0-9]+", str)
 end
 
@@ -144,7 +149,7 @@ function match_name(str::AbstractString)::Union{RegexMatch,Nothing}
 end
 
 function match_operator(str::AbstractString)::Union{RegexMatch,Nothing}
-    return match(r"^(\+|\-|\*|\/|\^|\:|<=|<|>=|>|==|=|!=)", str)
+    return match(r"^(\+|\-|\*|\/|\^|\:|<=|<|>=|>|==|=>|=|!=|<|>)", str)
 end
 
 

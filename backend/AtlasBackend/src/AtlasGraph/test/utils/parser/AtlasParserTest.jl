@@ -25,6 +25,12 @@ import .TestUtils as tu
     @testset "Tokens" begin
         @test unwrap(Tokens.gettokens("42")) == [Token(Tokens.VALUE, Int64(42))]
         @test unwrap(Tokens.gettokens("42.02")) == [Token(Tokens.VALUE, Float64(42.02))]
+        @test unwrap(Tokens.gettokens("42.02e-5")) ==
+              [Token(Tokens.VALUE, Float64(42.02e-5))]
+        @test unwrap(Tokens.gettokens("42.02e+5")) ==
+              [Token(Tokens.VALUE, Float64(42.02e5))]
+        @test unwrap(Tokens.gettokens("42e5")) == [Token(Tokens.VALUE, Float64(42e5))]
+        @test unwrap(Tokens.gettokens("42.02e5")) == [Token(Tokens.VALUE, Float64(42.02e5))]
         @test unwrap(Tokens.gettokens("\"\"")) == [Token(Tokens.VALUE, "")]
         @test unwrap(Tokens.gettokens("\"42\"")) == [Token(Tokens.VALUE, "42")]
         @test unwrap(Tokens.gettokens("nothing")) == [Token(Tokens.VALUE, nothing)]
