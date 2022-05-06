@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { AtlasNode } from '../../utils/AtlasGraph';
+import { AtlasNode, ExpressionNode, TextNode } from '../../utils/AtlasGraph';
 
 import styles from '../../styles/BlockMenu.module.css';
-import { ExpressionNode } from '../../utils/AtlasGraph';
+import blockStyles from '../../styles/Block.module.css';
 import WebInterfaceUtils from '../../utils/WebInterfaceUtils';
 
 type Props = {
@@ -26,7 +26,7 @@ function BlockMenu({ selectedNode, setDruggedNode, webInterfaceUtils }: Props) {
 			<h2>Blocks Menu</h2>
 			<h3>blocks</h3>
 			<div
-				className={`${styles.dndnode} ${styles.default}`}
+				className={`${styles.dndnode} ${blockStyles.expression_block}`}
 				onDragStart={(event) =>
 					onDragStart(
 						event,
@@ -40,6 +40,22 @@ function BlockMenu({ selectedNode, setDruggedNode, webInterfaceUtils }: Props) {
 				draggable
 			>
 				{ExpressionNode.structType}
+			</div>
+
+			<div
+				className={`${styles.dndnode} ${blockStyles.text_block}`}
+				onDragStart={(event) =>
+					onDragStart(
+						event,
+						new TextNode(
+							new AtlasNode(ExpressionNode.structType, 'name1', 'pkg', [0, 0], true),
+							'1, 2, 3',
+						),
+					)
+				}
+				draggable
+			>
+				{TextNode.structType}
 			</div>
 
 			{/* <h3>functions</h3>

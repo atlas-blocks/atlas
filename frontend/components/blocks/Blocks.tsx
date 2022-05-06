@@ -8,9 +8,9 @@ export const nodeTypes = {
 	[TextNode.structType]: TextBlock,
 };
 
-export function FormulaBlockWrapper(content: JSX.Element) {
+export function FormulaBlockWrapper(content: JSX.Element, blockClass: string) {
 	return (
-		<div className={`${styles.block} ${styles.default}`}>
+		<div className={`${styles.block} ${blockClass}`}>
 			<Handle type="target" position={Position.Left} />
 			<Handle type="source" position={Position.Right} id="a" />
 			<div className={styles.display_linebreak}>{content}</div>
@@ -20,14 +20,16 @@ export function FormulaBlockWrapper(content: JSX.Element) {
 
 export function TextBlock({ data }: { data: { node: TextNode } }) {
 	return FormulaBlockWrapper(
-		<div>
+		<div className={`${styles.text_block}`}>
 			<div>
 				<span className={styles.attribute_name}>name:</span> {data.node.name}
 			</div>
 			<div>
-				<span className={styles.attribute_name}>content:</span> {data.node.content}
+				<span className={styles.attribute_name}>content:</span>
+				<br /> {data.node.content}
 			</div>
 		</div>,
+		styles.text_block,
 	);
 }
 
@@ -44,6 +46,7 @@ export function ExpressionBlock({ data }: { data: { node: ExpressionNode } }) {
 				<span className={styles.attribute_name}>result:</span> {data.node.result}
 			</div>
 		</div>,
+		styles.expression_block,
 	);
 }
 
