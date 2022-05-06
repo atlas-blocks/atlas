@@ -2,7 +2,7 @@ import React, { ChangeEvent } from 'react';
 
 import styles from '../../styles/MathInput.module.css';
 import WebInterfaceUtils from '../../utils/WebInterfaceUtils';
-import { AtlasNode, ExpressionNode } from '../../utils/AtlasGraph';
+import { AtlasNode, ContentNode } from '../../utils/AtlasGraph';
 
 type Props = {
 	selectedNode: AtlasNode | null;
@@ -18,7 +18,7 @@ export default class MathInput extends React.Component<Props, States> {
 		this.elementHeight = '100px';
 		this.state = {
 			inputValue:
-				this.props.selectedNode instanceof ExpressionNode
+				this.props.selectedNode instanceof ContentNode
 					? this.props.selectedNode.content
 					: '',
 			inputBottom: '-200px',
@@ -34,12 +34,12 @@ export default class MathInput extends React.Component<Props, States> {
 		this.setState({ inputBottom: '-' + this.elementHeight });
 	}
 
-	updateBlock = (event: ChangeEvent<HTMLInputElement>) => {
+	updateBlock = (event: ChangeEvent<HTMLTextAreaElement>) => {
 		this.setState({ inputValue: event.target.value });
 	};
 
 	submitInput = async () => {
-		if (this.props.selectedNode instanceof ExpressionNode) {
+		if (this.props.selectedNode instanceof ContentNode) {
 			this.props.selectedNode.content = this.state.inputValue;
 			await this.props.webInterfaceUtils.updateGraph();
 		}
@@ -52,7 +52,7 @@ export default class MathInput extends React.Component<Props, States> {
 				id={styles.math_input}
 				style={{ bottom: this.state.inputBottom, height: this.elementHeight }}
 			>
-				<input type={'text'} value={this.state.inputValue} onChange={this.updateBlock} />
+				<textarea value={this.state.inputValue} onChange={this.updateBlock} />
 				<button onClick={this.submitInput}>OK</button>
 			</div>
 		);

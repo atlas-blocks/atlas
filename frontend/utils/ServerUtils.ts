@@ -1,5 +1,5 @@
 import ErrorUtils from './errors/ErrorUtils';
-import AtlasGraph, { AtlasNode, ExpressionNode } from './AtlasGraph';
+import AtlasGraph, { AtlasNode, ExpressionNode, TextNode} from './AtlasGraph';
 
 type Response = {
 	success: boolean;
@@ -74,6 +74,8 @@ abstract class ServerUtils {
 		for (const node of nodes) {
 			if (node.type === ExpressionNode.structType) {
 				updatedNodes.push(Object.assign(ExpressionNode.constructorEmpty(), node));
+			} else if (node.type === TextNode.structType) {
+				updatedNodes.push(Object.assign(TextNode.constructorEmpty(), node));
 			} else if (node.type === AtlasNode.structType) {
 				updatedNodes.push(Object.assign(AtlasNode.constructorEmpty(), node));
 			} else {

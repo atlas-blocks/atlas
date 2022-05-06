@@ -11,6 +11,7 @@ export default class AtlasGraph {
 		return 'b' + this.nameCnt++;
 	}
 }
+
 export class AtlasEdge {}
 export class AtlasNode {
 	static structType = 'AtlasGraph.Node';
@@ -50,14 +51,29 @@ export class AtlasNode {
 	}
 }
 
-export class ExpressionNode extends AtlasNode {
-	static structType = 'AtlasGraph.ExpressionNode';
+export class ContentNode extends AtlasNode {
 	public content: string;
+
+	constructor(node: AtlasNode, content: string) {
+		super(node.type, node.name, node.package, node.position, node.visibility);
+		this.content = content;
+	}
+
+	public static constructorEmpty() {
+		return new TextNode(AtlasNode.constructorEmpty(), '');
+	}
+}
+
+export class TextNode extends ContentNode {
+	static structType = 'AtlasGraph.TextNode';
+}
+
+export class ExpressionNode extends ContentNode {
+	static structType = 'AtlasGraph.ExpressionNode';
 	public result: string;
 
 	constructor(node: AtlasNode, content: string, result: string) {
-		super(node.type, node.name, node.package, node.position, node.visibility);
-		this.content = content;
+		super(node, content);
 		this.result = result;
 	}
 

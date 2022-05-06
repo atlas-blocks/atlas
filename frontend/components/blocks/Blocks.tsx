@@ -1,10 +1,11 @@
 import React from 'react';
 import { Handle, Position } from 'react-flow-renderer';
 import styles from '../../styles/Block.module.css';
-import { AtlasNode, ExpressionNode } from '../../utils/AtlasGraph';
+import { AtlasNode, ExpressionNode, TextNode } from '../../utils/AtlasGraph';
 
 export const nodeTypes = {
 	[ExpressionNode.structType]: ExpressionBlock,
+	[TextNode.structType]: TextBlock,
 };
 
 export function FormulaBlockWrapper(content: JSX.Element) {
@@ -12,8 +13,22 @@ export function FormulaBlockWrapper(content: JSX.Element) {
 		<div className={`${styles.block} ${styles.default}`}>
 			<Handle type="target" position={Position.Left} />
 			<Handle type="source" position={Position.Right} id="a" />
-			{content}
+			<div className={styles.display_linebreak}>{content}</div>
 		</div>
+	);
+}
+
+export function TextBlock({ data }: { data: { node: TextNode } }) {
+	return FormulaBlockWrapper(
+		<div>
+			<div>
+				<span className={styles.attribute_name}>name:</span> {data.node.name}
+			</div>
+			<div>
+				<span className={styles.attribute_name}>content:</span>{' '}
+				{data.node.content}
+			</div>
+		</div>,
 	);
 }
 
@@ -25,7 +40,7 @@ export function ExpressionBlock({ data }: { data: { node: ExpressionNode } }) {
 			</div>
 			<div>
 				<span className={styles.attribute_name}>content:</span>{' '}
-				{data.node.content.replaceAll('__$', '').replaceAll('$__', '')}
+				{data.node.content}
 			</div>
 			<div>
 				<span className={styles.attribute_name}>result:</span> {data.node.result}

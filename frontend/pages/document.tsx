@@ -26,7 +26,7 @@ import BlockMenu from '../components/document/BlockMenu';
 import BlockSettings from '../components/document/BlockSettings';
 import MathInput from '../components/document/MathInput';
 
-import AtlasGraph, { AtlasNode, ExpressionNode } from '../utils/AtlasGraph';
+import AtlasGraph, { AtlasNode, ExpressionNode, TextNode, ContentNode } from '../utils/AtlasGraph';
 import WebInterfaceUtils from '../utils/WebInterfaceUtils';
 
 import { NextPage } from 'next';
@@ -48,10 +48,14 @@ const exampleNodes = [
 		'[-1, -2, -3]',
 		'[-1, -2, -3, ]',
 	),
+	new TextNode(
+		new AtlasNode('AtlasGraph.TextNode', 'ex4', 'pkg', [300, 300], true),
+		'1,2,3\n4,5,6',
+	),
 	new ExpressionNode(
-		new AtlasNode('AtlasGraph.ExpressionNode', 'ex4', 'pkg', [300, 300], true),
-		'ex3[1]',
-		'-1',
+		new AtlasNode('AtlasGraph.ExpressionNode', 'ex5', 'pkg', [500, 300], true),
+		'csv2vector(ex4)',
+		'[[1, 2, 3, ], [4, 5, 6, ], ]',
 	),
 ];
 
@@ -73,7 +77,7 @@ const DnDFlow: NextPage = () => {
 
 	function handleBlockDoubleClick(event: ReactMouseEvent, block: Block) {
 		setSelectedNode(block.data.node);
-		if (block.data.node instanceof ExpressionNode) {
+		if (block.data.node instanceof ContentNode) {
 			(mathInputRef.current as MathInput).show(block.data.node.content);
 		}
 	}

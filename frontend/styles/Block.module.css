@@ -17,3 +17,8 @@
 	color: green;
 	font-size: 12px;
 }
+
+.display_linebreak {
+	white-space: pre;
+	text-align: left;
+}
