@@ -19,8 +19,11 @@ end
 infix_precedence = Dict{Token,InfixTokenInfo}(
     Token(Tokens.NAME, :(==)) => InfixTokenInfo(EQUALITY, true),
     Token(Tokens.NAME, :(<=)) => InfixTokenInfo(EQUALITY, true),
+    Token(Tokens.NAME, :(<)) => InfixTokenInfo(EQUALITY, true),
     Token(Tokens.NAME, :(>=)) => InfixTokenInfo(EQUALITY, true),
+    Token(Tokens.NAME, :(>)) => InfixTokenInfo(EQUALITY, true),
     Token(Tokens.NAME, :(!=)) => InfixTokenInfo(EQUALITY, true),
+    Token(Tokens.NAME, :(=>)) => InfixTokenInfo(EQUALITY, true),
     Token(Tokens.NAME, :+) => InfixTokenInfo(SUM, true),
     Token(Tokens.NAME, :-) => InfixTokenInfo(SUM, true),
     Token(Tokens.NAME, :*) => InfixTokenInfo(PRODUCT, true),

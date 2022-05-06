@@ -66,10 +66,6 @@ function evaluate(expr::CallExpr, graph::AbstractGraph)::Result{Any,Exception}
     end
     func = unwrap(func)
 
-    if !(typeof(func) <: Function)
-        return EvaluatingException("Unexpected token: " * string(func))
-    end
-
     possible_methods = methods(func, arg_types)
     if length(possible_methods) == 0
         return EvaluatingException(
