@@ -4,6 +4,7 @@ services:
   frontend:
     volumes:
       - ./frontend:/app
+      - /app/node_modules
 
   julia-backend:
     volumes: 
