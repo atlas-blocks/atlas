@@ -4,7 +4,12 @@ ENV HOST=0.0.0.0
 ENV PORT=3000
 ENV NODE_ENV=development
 EXPOSE 3000
-CMD [ "yarn", "dev" ]
+# Install the application's dependencies into the node_modules's cache directory.
+COPY package.json ./
+COPY package-lock.json ./
+RUN npm install
+# Run the next server.
+CMD npm run dev
 
 FROM node:17.1.0-alpine3.12 AS dependencies
 ENV NODE_ENV=production
