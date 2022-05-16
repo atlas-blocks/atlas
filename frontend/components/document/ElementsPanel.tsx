@@ -1,9 +1,6 @@
-// import React from "react"
-// import {useNodes} from "react-flow-renderer";
 import styles from "../../styles/main.module.css";
 
 export default function ElementsPanel(props: any) {
-    // const nodes = useNodes()
 
     const showNodes = () => {
 
@@ -12,10 +9,6 @@ export default function ElementsPanel(props: any) {
         return result
         // return props?.nodes.toString() ?? ""
     }
-
-    console.log(props.nodes)
-
-    // console.log(nodes)
 
     return (
         <div className={props.visibleState}>

@@ -30,7 +30,6 @@ import AtlasGraph, { AtlasNode, ExpressionNode, TextNode, ContentNode } from '..
 import WebInterfaceUtils from '../../utils/WebInterfaceUtils';
 
 import { NextPage } from 'next';
-import styles from '../../styles/DnDFlow.module.css';
 import styles2 from "../../styles/main.module.css";
 
 
@@ -102,10 +101,8 @@ const DnDFlow: NextPage = () => {
     }, [selectedNode]);
 
     return (
-        // <div className={styles.dndflow}>
             <ReactFlowProvider>
                 <div className={styles2.flowcanvas} ref={reactFlowWrapper}>
-                {/*<div className={styles['reactflow-wrapper']} ref={reactFlowWrapper}>*/}
                     <ReactFlow
                         // id={styles.blocks_canvas}
                         elements={elements}
@@ -124,14 +121,11 @@ const DnDFlow: NextPage = () => {
                         {/*<Controls />*/}
                         <Background />
                     </ReactFlow>
-                {/*</div>*/}
-                {/*    <div>*/}
                 <BlockMenu
                     webInterfaceUtils={webInterfaceUtils}
                     selectedNode={selectedNode}
                     setDruggedNode={setDruggedNode}
                 />
-                    {/*</div>*/}
                 {/*<BlockSettings selectedNode={selectedNode} webInterfaceUtils={webInterfaceUtils} />*/}
                 <MathInput
                     selectedNode={selectedNode}

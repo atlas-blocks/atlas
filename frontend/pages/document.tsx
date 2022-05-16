@@ -89,14 +89,13 @@ export default function Home() {
 
 
             {/*-----Panels*/}
-            {/*<ElementsPanel visibleState={styles.leftpanel} nodes={nodes}/>*/}
             <ElementsPanel visibleState={styles.leftpanel} />
-            {/*<div className={styles.flowcanvas}>*/}
-        {/*<DnDFlow />*/}
             <DnDFlow />
-            {/*</div>*/}
             <PropsPanel visibleState={propsPanelState} />
             <LibPanel visibleState={libPanelState}/>
+
+            {/*This should stay for further development*/}
+            {/*<ElementsPanel visibleState={styles.leftpanel} nodes={nodes}/>*/}
             {/*<PropsPanel visibleState={propsPanelState} editNode={editNode} updNode={setUpdNode}/>*/}
             {/*<LibPanel visibleState={libPanelState}/>*/}
         </div>

@@ -7,8 +7,6 @@ export default function LibPanel(props: any) {
         event.dataTransfer.effectAllowed = 'move';
     };
 
-    // const clkLog = () => {console.log(ReactFlowInstance)}
-
     return (
         <div className={props.visibleState}>
             <div className={styles.libPanelWrapper}>
