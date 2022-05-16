@@ -1,0 +1,31 @@
+.libPanelWrapper {
+	border: 1px solid #eaeaea;
+	height: fit-content;
+	width: 100%;
+	font-size: 10px;
+	padding-left: 5px;
+}
+
+.libPanelWrapper label {
+	font-size: 15px;
+	margin: 5px;
+	margin-top: 7px;
+}
+
+.elementsContainer {
+	width: 150px;
+	margin: 10px;
+	display: flex;
+	flex-wrap: wrap;
+}
+
+.elementSingle {
+	border: 1px solid #dddddd;
+	height: 50px;
+	width: 33%;
+	background-color: #ececec;
+	font-size: 12px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
