@@ -48,7 +48,7 @@ function BlockMenu({ selectedNode, setDruggedNode, webInterfaceUtils }: Props) {
 					onDragStart(
 						event,
 						new TextNode(
-							new AtlasNode(ExpressionNode.structType, 'name1', 'pkg', [0, 0], true),
+							new AtlasNode(TextNode.structType, 'name1', 'pkg', [0, 0], true),
 							'1, 2, 3',
 						),
 					)

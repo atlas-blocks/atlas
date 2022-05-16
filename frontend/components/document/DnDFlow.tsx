@@ -10,23 +10,20 @@ const Background = dynamic(
 import ReactFlow, {
     addEdge,
     removeElements,
-    Controls,
     Edge,
     Node as Block,
     Elements,
     Connection,
     ReactFlowProvider,
-    MiniMap,
 } from 'react-flow-renderer';
 
 import { nodeTypes } from '../blocks/Blocks';
 import { edgeTypes } from '../blocks/Edge';
 
 import BlockMenu from './BlockMenu';
-import BlockSettings from './BlockSettings';
 import MathInput from './MathInput';
 
-import AtlasGraph, { AtlasNode, ExpressionNode, TextNode, ContentNode } from '../../utils/AtlasGraph';
+import AtlasGraph, { AtlasNode, ContentNode } from '../../utils/AtlasGraph';
 import WebInterfaceUtils from '../../utils/WebInterfaceUtils';
 
 import { NextPage } from 'next';
@@ -86,7 +83,7 @@ const DnDFlow: NextPage = () => {
             y: event.clientY - reactFlowBounds.top,
         });
 
-        console.assert(druggedNode !== null, 'drugged node should not be assigned before dragging');
+        console.assert(druggedNode !== null, 'drugged node should not be assigned before dragging'); 
         if (druggedNode !== null)
             atlasGraph.nodes.push(druggedNode.setPosition(pos.x, pos.y).setDefaultName());
         webInterfaceUtils.refreshElements();
