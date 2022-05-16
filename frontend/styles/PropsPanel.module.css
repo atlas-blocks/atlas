@@ -1,39 +1,39 @@
 .propsPanelWrapper {
-    border: 1px solid #eaeaea;
-    height: 50px;
-    display: flex;
-    color: #30A5BE;
-    flex-wrap: wrap;
-    align-items: flex-start;
+	border: 1px solid #eaeaea;
+	height: 50px;
+	display: flex;
+	color: #30a5be;
+	flex-wrap: wrap;
+	align-items: flex-start;
 }
 
 .propsPanelWrapper label {
-    font-size: 15px;
-    margin: 5px;
-    margin-top: 7px;
+	font-size: 15px;
+	margin: 5px;
+	margin-top: 7px;
 }
 .inpName {
-    border-style: none;
-    border-bottom: 1px solid black;
-    box-sizing: content-box;
-    width: 40%;
-    margin-top: 8px;
-    outline: none;
-    font-size: 15px;
-    line-height: 10px;
+	border-style: none;
+	border-bottom: 1px solid black;
+	box-sizing: content-box;
+	width: 40%;
+	margin-top: 8px;
+	outline: none;
+	font-size: 15px;
+	line-height: 10px;
 }
 
 .inpContent {
-    border-style: none;
-    border-bottom: 1px solid black;
-    box-sizing: content-box;
-    width: 40%;
-    /*margin-top: 8px;*/
-    margin: 5px;
-    outline: none;
-    font-size: 15px;
-    line-height: 10px;
-    /*height: 8px;*/
-    flex: 1;
-    /*flex-grow: 1;*/
+	border-style: none;
+	border-bottom: 1px solid black;
+	box-sizing: content-box;
+	width: 40%;
+	/*margin-top: 8px;*/
+	margin: 5px;
+	outline: none;
+	font-size: 15px;
+	line-height: 10px;
+	/*height: 8px;*/
+	flex: 1;
+	/*flex-grow: 1;*/
 }

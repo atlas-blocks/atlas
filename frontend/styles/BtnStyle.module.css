@@ -1,69 +1,69 @@
 .justBtn {
-    border: 1px solid #eaeaea;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+	border: 1px solid #eaeaea;
+	display: flex;
+	align-items: center;
+	justify-content: center;
 }
 
 .justBtn label {
-    font-size: 15px;
+	font-size: 15px;
 }
 
 .actBtn {
-    border-bottom: 2px solid  #30A5BE;
+	border-bottom: 2px solid #30a5be;
 }
 
 .libBtn {
-    grid-column: 11/12;
-    grid-row: 2;
+	grid-column: 11/12;
+	grid-row: 2;
 }
 
 .assetsBtn {
-    border: 1px solid #eaeaea;
-    grid-column: 12/13;
-    grid-row: 2;
-    text-align: center;
+	border: 1px solid #eaeaea;
+	grid-column: 12/13;
+	grid-row: 2;
+	text-align: center;
 }
 
 .propBtn {
-    /*border: 1px solid #eaeaea;*/
-    grid-column: 11/12;
-    grid-row: 3;
-    /*text-align: center;*/
+	/*border: 1px solid #eaeaea;*/
+	grid-column: 11/12;
+	grid-row: 3;
+	/*text-align: center;*/
 }
 
 .objBtn {
-    /*border: 1px solid #eaeaea;*/
-    grid-column: 12/13;
-    grid-row: 3;
-    /*text-align: center;*/
+	/*border: 1px solid #eaeaea;*/
+	grid-column: 12/13;
+	grid-row: 3;
+	/*text-align: center;*/
 }
 
 .mockupBtn {
-    /*border: 1px solid #eaeaea;*/
-    grid-column: 1/2;
-    grid-row: 2;
-    /*text-align: center;*/
+	/*border: 1px solid #eaeaea;*/
+	grid-column: 1/2;
+	grid-row: 2;
+	/*text-align: center;*/
 }
 
 .envBtn {
-    /*border: 1px solid #eaeaea;*/
-    grid-column: 2/3;
-    grid-row: 2;
-    /*text-align: center;*/
+	/*border: 1px solid #eaeaea;*/
+	grid-column: 2/3;
+	grid-row: 2;
+	/*text-align: center;*/
 }
 
 .elementsBtn {
-    /*border: 1px solid #eaeaea;*/
-    /*border-bottom: 2px solid  #30A5BE;*/
-    grid-column: 1/2;
-    grid-row: 3;
-    /*text-align: center;*/
+	/*border: 1px solid #eaeaea;*/
+	/*border-bottom: 2px solid  #30A5BE;*/
+	grid-column: 1/2;
+	grid-row: 3;
+	/*text-align: center;*/
 }
 
 .layersBtn {
-    /*border: 1px solid #eaeaea;*/
-    grid-column: 2/3;
-    grid-row: 3;
-    /*text-align: center;*/
+	/*border: 1px solid #eaeaea;*/
+	grid-column: 2/3;
+	grid-row: 3;
+	/*text-align: center;*/
 }
