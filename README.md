@@ -86,4 +86,3 @@ julia>]  # just type ], it will switch the context automatically
 (@v1.7) pkg> activate .  # activate current environment
 (AtlasGraph) pkg> test  # it will run all the tests
 ```
-

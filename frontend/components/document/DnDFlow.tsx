@@ -30,7 +30,7 @@ import AtlasGraph, { AtlasNode, ExpressionNode, TextNode, ContentNode } from '..
 import WebInterfaceUtils from '../../utils/WebInterfaceUtils';
 
 import { NextPage } from 'next';
-import styles2 from "../../styles/main.module.css";
+import styles from "../../styles/main.module.css";
 
 
 import {exampleNodes} from "../blocks/ExampleNodes";
@@ -102,7 +102,7 @@ const DnDFlow: NextPage = () => {
 
     return (
             <ReactFlowProvider>
-                <div className={styles2.flowcanvas} ref={reactFlowWrapper}>
+                <div className={styles.flowcanvas} ref={reactFlowWrapper}>
                     <ReactFlow
                         // id={styles.blocks_canvas}
                         elements={elements}
