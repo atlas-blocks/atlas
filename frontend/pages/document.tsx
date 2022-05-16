@@ -1,165 +1,105 @@
-import React, { useState, useRef, useEffect, MouseEvent as ReactMouseEvent } from 'react';
-import dynamic from 'next/dynamic';
+import DnDFlow from "../components/document/DnDFlow";
+import Head from "next/head";
+import styles from "../styles/main.module.css";
+import btnStyles from "../styles/BtnStyle.module.css";
+import ElementsPanel from "../components/document/ElementsPanel";
+import PropsPanel from "../components/document/PropsPanel";
+import LibPanel from "../components/document/LibPanel";
+import {useState} from "react";
+import Image from "next/image";
+import menuImg from "/img/icons/menu.png"
+import questionImg from "/img/icons/question.png"
+import settingsImg from "/img/icons/settings.png"
+import exportImg from "/img/icons/export.png"
+import logoImg from "/img/logo/atlas_long_white_cut.png"
 
-const Background = dynamic(
-	// @ts-ignore
-	// without it Next.js don't load background correctly and prints an error in the console.
-	import('react-flow-renderer').then((mod) => mod.Background),
-	{ ssr: false },
-); // disable ssr
-import ReactFlow, {
-	addEdge,
-	removeElements,
-	Controls,
-	Edge,
-	Node as Block,
-	Elements,
-	Connection,
-	ReactFlowProvider,
-	MiniMap,
-} from 'react-flow-renderer';
 
-import { nodeTypes } from '../components/blocks/Blocks';
-import { edgeTypes } from '../components/blocks/Edge';
 
-import BlockMenu from '../components/document/BlockMenu';
-import BlockSettings from '../components/document/BlockSettings';
-import MathInput from '../components/document/MathInput';
 
-import AtlasGraph, { AtlasNode, ExpressionNode, TextNode, ContentNode } from '../utils/AtlasGraph';
-import WebInterfaceUtils from '../utils/WebInterfaceUtils';
 
-import { NextPage } from 'next';
-import styles from '../styles/DnDFlow.module.css';
+export default function Home() {
 
-const exampleNodes = [
-	new ExpressionNode(
-		new AtlasNode('AtlasGraph.ExpressionNode', 'ex1', 'pkg', [300, 100], true),
-		'sin(5)',
-		'-0.9589',
-	),
-	new ExpressionNode(
-		new AtlasNode('AtlasGraph.ExpressionNode', 'ex2', 'pkg', [200, 200], true),
-		'ifthenelse(2 == 3, asin(ex1), ex1 * 2)',
-		'-1.9178',
-	),
-	new ExpressionNode(
-		new AtlasNode('AtlasGraph.ExpressionNode', 'ex3', 'pkg', [100, 300], true),
-		'[-1, -2, -3]',
-		'[-1, -2, -3]',
-	),
-	new TextNode(
-		new AtlasNode('AtlasGraph.TextNode', 'ex4', 'pkg', [300, 300], true),
-		'1,2,3\n4,5,6',
-	),
-	new ExpressionNode(
-		new AtlasNode('AtlasGraph.ExpressionNode', 'ex5', 'pkg', [500, 300], true),
-		'csv2vector(ex4)',
-		'[[1, 4], [2, 5], [3, 6]]',
-	),
-];
+    const [libBtnState, setLibBtnState] = useState(`${btnStyles.justBtn} ${btnStyles.libBtn} ${btnStyles.actBtn}`)
+    const [propBtnState, setPropBtnState] = useState(`${btnStyles.justBtn} ${btnStyles.propBtn}`)
+    const [propsPanelState, setPropsPanelState] = useState(`${styles.propsPanel} ${styles.panelHidden}`)
+    const [libPanelState, setLibPanelState] = useState(`${styles.libPanel}`)
 
-export const atlasGraph = new AtlasGraph();
-exampleNodes.forEach((node) => atlasGraph.nodes.push(node));
+    const showLibraries = () => {
+        setLibBtnState(`${btnStyles.justBtn} ${btnStyles.libBtn} ${btnStyles.actBtn}`)
+        setPropBtnState(`${btnStyles.justBtn} ${btnStyles.propBtn}`)
+        setPropsPanelState(`${styles.propsPanel} ${styles.panelHidden}`)
+        setLibPanelState(`${styles.libPanel}`)
+    }
+    const showProperties = () => {
+        setPropBtnState(`${btnStyles.justBtn} ${btnStyles.propBtn} ${btnStyles.actBtn}`)
+        setLibBtnState(`${btnStyles.justBtn} ${btnStyles.libBtn}`)
+        setLibPanelState(`${styles.libPanel} ${styles.panelHidden}`)
+        setPropsPanelState(`${styles.propsPanel}`)
+    }
 
-const DnDFlow: NextPage = () => {
-	const [selectedNode, setSelectedNode] = useState<AtlasNode | null>(null);
-	const [druggedNode, setDruggedNode] = useState<AtlasNode | null>(null);
-	const reactFlowWrapper = useRef(null);
-	const mathInputRef = useRef<MathInput>(null);
-	const [reactFlowInstance, setReactFlowInstance] = useState(null);
-	const initialElements: Elements = WebInterfaceUtils.getElements(atlasGraph);
-	const [elements, setElements] = useState(initialElements);
 
-	const webInterfaceUtils = new WebInterfaceUtils(atlasGraph, setElements, setSelectedNode);
 
-	function handleBlockSelection(event: React.MouseEvent, element: Block | Edge) {}
+    return (
+    <>
+        <Head>
+            <title>Atlas Next</title>
+        </Head>
+        <div className={styles.layout}>
 
-	function handleBlockDoubleClick(event: ReactMouseEvent, block: Block) {
-		setSelectedNode(block.data.node);
-		if (block.data.node instanceof ContentNode) {
-			(mathInputRef.current as MathInput).show(block.data.node.content);
-		}
-	}
+            <div className={styles.leftTop}>
+                <Image src={menuImg} width={"20px"} height={"20px"} layout={'intrinsic'} objectFit={'contain'}/>
+                <Image src={logoImg} alt="Atlas Logo" width={"100%"} height={"100%"} layout={"intrinsic"}
+                       objectFit={'contain'}/>
+            </div>
+            <div className={styles.centerTop}>
+                <a>\mockup_name1</a>
+            </div>
+            <div className={styles.rightTop}>
+                <Image src={exportImg} width={"20px"} height={"20px"} layout={'intrinsic'} objectFit={'contain'}/>
+                <Image src={questionImg} width={"10px"} height={"100%"} layout={'intrinsic'} objectFit={'contain'}/>
+                <Image src={settingsImg} width={"20px"} height={"20px"} layout={'intrinsic'} objectFit={'contain'}/>
+            </div>
 
-	function onPaneClick(event: ReactMouseEvent) {
-		setSelectedNode(null);
-	}
+            {/*------- Buttons*/}
+            <div className={libBtnState} onClick={showLibraries}>
+                <label>Libraries</label>
+            </div>
+            <div className={`${btnStyles.justBtn} ${btnStyles.assetsBtn}`}>
+                <label>Assets</label>
+            </div>
+            <div className={propBtnState} onClick={showProperties}>
+                <label>Properties</label>
+            </div>
+            <div className={`${btnStyles.justBtn} ${btnStyles.objBtn}`}>
+                <label>Object</label>
+            </div>
+            <div className={`${btnStyles.justBtn} ${btnStyles.mockupBtn}`}>
+                <label>Mockup</label>
+            </div>
+            <div className={`${btnStyles.justBtn} ${btnStyles.envBtn}`}>
+                <label>Environment</label>
+            </div>
+            <div className={`${btnStyles.justBtn} ${btnStyles.elementsBtn} ${btnStyles.actBtn}`}>
+                <label>Elements</label>
+            </div>
+            <div className={`${btnStyles.justBtn} ${btnStyles.layersBtn}`}>
+                <label>Layers</label>
+            </div>
 
-	const onConnect = (params: Edge | Connection) =>
-		setElements((els: Elements) => addEdge({ ...params, type: 'defaultEdge' }, els));
-	const onElementsRemove = (elementsToRemove: Elements) =>
-		setElements((els: Elements) => removeElements(elementsToRemove, els));
 
-	const onLoad = (_reactFlowInstance: React.SetStateAction<any>) =>
-		setReactFlowInstance(_reactFlowInstance);
 
-	const onDragOver = (event: React.DragEvent) => {
-		event.preventDefault();
-		event.dataTransfer.dropEffect = 'move';
-	};
-
-	const onDrop = (event: React.DragEvent) => {
-		event.preventDefault();
-		// @ts-ignore
-		const reactFlowBounds = reactFlowWrapper.current.getBoundingClientRect();
-		// @ts-ignore
-		const pos = reactFlowInstance.project({
-			x: event.clientX - reactFlowBounds.left,
-			y: event.clientY - reactFlowBounds.top,
-		});
-
-		console.assert(druggedNode !== null, 'drugged node should not be assigned before dragging');
-		if (druggedNode !== null)
-			atlasGraph.nodes.push(druggedNode.setPosition(pos.x, pos.y).setDefaultName());
-		webInterfaceUtils.refreshElements();
-	};
-
-	useEffect(() => {
-		webInterfaceUtils.refreshElements();
-	}, [selectedNode, setElements]);
-
-	useEffect(() => {
-		if (selectedNode === null) (mathInputRef.current as MathInput).hide();
-	}, [selectedNode]);
-
-	return (
-		<div className={styles.dndflow}>
-			<ReactFlowProvider>
-				<div className={styles['reactflow-wrapper']} ref={reactFlowWrapper}>
-					<ReactFlow
-						id={styles.blocks_canvas}
-						elements={elements}
-						nodeTypes={nodeTypes}
-						edgeTypes={edgeTypes}
-						onConnect={onConnect}
-						onElementsRemove={onElementsRemove}
-						onElementClick={handleBlockSelection}
-						onNodeDoubleClick={handleBlockDoubleClick}
-						onPaneClick={onPaneClick}
-						onLoad={onLoad}
-						onDrop={onDrop}
-						onDragOver={onDragOver}
-					>
-						<MiniMap />
-						<Controls />
-						<Background />
-					</ReactFlow>
-				</div>
-				<BlockMenu
-					webInterfaceUtils={webInterfaceUtils}
-					selectedNode={selectedNode}
-					setDruggedNode={setDruggedNode}
-				/>
-				<BlockSettings selectedNode={selectedNode} webInterfaceUtils={webInterfaceUtils} />
-				<MathInput
-					selectedNode={selectedNode}
-					webInterfaceUtils={webInterfaceUtils}
-					ref={mathInputRef}
-				/>
-			</ReactFlowProvider>
-		</div>
-	);
-};
-
-export default DnDFlow;
+            {/*-----Panels*/}
+            {/*<ElementsPanel visibleState={styles.leftpanel} nodes={nodes}/>*/}
+            <ElementsPanel visibleState={styles.leftpanel} />
+            {/*<div className={styles.flowcanvas}>*/}
+        {/*<DnDFlow />*/}
+            <DnDFlow />
+            {/*</div>*/}
+            <PropsPanel visibleState={propsPanelState} />
+            <LibPanel visibleState={libPanelState}/>
+            {/*<PropsPanel visibleState={propsPanelState} editNode={editNode} updNode={setUpdNode}/>*/}
+            {/*<LibPanel visibleState={libPanelState}/>*/}
+        </div>
+    </>
+)
+}

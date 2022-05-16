@@ -66,6 +66,7 @@ export default class WebInterfaceUtils {
 	}
 
 	public async updateGraph() {
+		// console.log(this.graph)
 		await ServerUtils.updateGraph(this.graph);
 		this.refreshElements();
 	}

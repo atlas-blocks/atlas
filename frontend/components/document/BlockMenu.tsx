@@ -21,7 +21,7 @@ function BlockMenu({ selectedNode, setDruggedNode, webInterfaceUtils }: Props) {
 	return (
 		<aside
 			id={styles.block_menu}
-			style={{ right: selectedNode !== null ? '-' + elementWidth : '0', width: elementWidth }}
+			// style={{ right: selectedNode !== null ? '-' + elementWidth : '0', width: elementWidth }}
 		>
 			<h2>Blocks Menu</h2>
 			<h3>blocks</h3>

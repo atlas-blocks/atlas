@@ -8,6 +8,7 @@
 	border-top-right-radius: 20px;
 	text-align: center;
 	transition: 1s;
+	/*z-index: initial;*/
 }
 
 #math_input textarea {
