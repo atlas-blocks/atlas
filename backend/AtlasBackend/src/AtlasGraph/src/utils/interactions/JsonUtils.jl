@@ -43,8 +43,8 @@ function node(json_dict::JSON3.Object)::AbstractNode
         json_dict["name"],
         json_dict["package"],
         (
-            convert(Int32, json_dict["position"][1]),
-            convert(Int32, json_dict["position"][2]),
+            convert(Int32, floor(json_dict["position"][1])),
+            convert(Int32, floor(json_dict["position"][2])),
         ),
         json_dict["visibility"],
     )
