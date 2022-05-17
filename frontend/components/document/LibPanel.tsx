@@ -1,4 +1,5 @@
 import styles from '../../styles/LibPanel.module.css';
+import {useState} from "react";
 
 export default function LibPanel(props: any) {
     const onDragStart = (event: any, nodeType: any) => {
@@ -6,19 +7,27 @@ export default function LibPanel(props: any) {
         event.dataTransfer.effectAllowed = 'move';
     };
 
+    const [libSectionBasic, setLibSectionBasic] = useState({open: true})
+    const [libSectionSymbolic, setLibSectionSymbolic] = useState({open: true})
+    const [libSectionGraphic, setLibSectionGraphic] = useState({open: true})
+    const [libSectionImport, setLibSectionImport] = useState({open: true})
+    const [libSectionPhysical, setLibSectionPhysical] = useState({open: true})
+
+
     return (
         <div className={`${props.visibleState}`}>
-            <div className={styles.libSection}>
-            <div className={styles.libPanelWrapper}>
-                <label> &or; Basic</label>
+            <div className={styles.libSectionLabel} onClick={() => setLibSectionBasic({open: !libSectionBasic.open})}>
+                <label> {'>'} Basic</label>
             </div>
-            <div className={styles.elementsContainer}>
+            <div className={`${styles.elementsContainer}`}
+                 style={libSectionBasic.open ? {maxHeight: "100%"} : {maxHeight: "0px"}}
+            >
                 <div
                     className={styles.elementSingle}
                     onDragStart={(event) => onDragStart(event, 'expressionNode')}
                     draggable
                 >
-                    <label>Expr</label>
+                    <span>Expr</span>
                 </div>
                 <div
                     className={styles.elementSingle}
@@ -35,11 +44,14 @@ export default function LibPanel(props: any) {
                     <span>for</span>
                 </div>
             </div>
+
+            <div className={styles.libSectionLabel}
+                 onClick={() => setLibSectionSymbolic({open: !libSectionSymbolic.open})}>
+                <label> {'>'} Symbolic</label>
             </div>
-            <div className={styles.libPanelWrapper}>
-                <label> &or; Symbolic</label>
-            </div>
-            <div className={styles.elementsContainer}>
+            <div className={styles.elementsContainer}
+                 style={libSectionSymbolic.open ? {maxHeight: "100%"} : {maxHeight: "0px"}}
+            >
                 <div
                     className={styles.elementSingle}
                     onDragStart={(event) => onDragStart(event, 'expressionNode')}
@@ -55,10 +67,35 @@ export default function LibPanel(props: any) {
                     <span>Equal</span>
                 </div>
             </div>
-            <div className={styles.libPanelWrapper}>
-                <label> &or; Import</label>
+
+            <div className={styles.libSectionLabel}
+                 onClick={() => setLibSectionGraphic({open: !libSectionGraphic.open})}>
+                <label> {'>'} Graphics</label>
             </div>
-            <div className={styles.elementsContainer}>
+            <div className={styles.elementsContainer}
+                 style={libSectionGraphic.open ? {maxHeight: "100%"} : {maxHeight: "0px"}}
+            >
+                <div
+                    className={styles.elementSingle}
+                    onDragStart={(event) => onDragStart(event, 'expressionNode')}
+                    draggable
+                >
+                    <span>2D Plot</span>
+                </div>
+                <div
+                    className={styles.elementSingle}
+                    onDragStart={(event) => onDragStart(event, 'expressionNode')}
+                    draggable
+                >
+                    <span>3D Plot</span>
+                </div>
+            </div>
+            <div className={styles.libSectionLabel} onClick={() => setLibSectionImport({open: !libSectionImport.open})}>
+                <label> {'>'} Import</label>
+            </div>
+            <div className={styles.elementsContainer}
+                 style={libSectionImport.open ? {maxHeight: "100%"} : {maxHeight: "0px"}}
+            >
                 <div
                     className={styles.elementSingle}
                     onDragStart={(event) => onDragStart(event, 'expressionNode')}
@@ -81,18 +118,23 @@ export default function LibPanel(props: any) {
                     <span>XML</span>
                 </div>
             </div>
-            <div className={styles.libPanelWrapper}>
-                <label> &or; Physical</label>
+
+            <div className={styles.libSectionLabel}
+                 onClick={() => setLibSectionPhysical({open: !libSectionPhysical.open})}>
+                <label> {'>'} Physical</label>
             </div>
-            <div className={styles.elementsContainer}>
+            <div className={styles.elementsContainer}
+                 style={libSectionPhysical.open ? {maxHeight: "100%"} : {maxHeight: "0px"}}
+            >
                 <div
                     className={styles.elementSingle}
                     onDragStart={(event) => onDragStart(event, 'expressionNode')}
                     draggable
                 >
-                    <label>Custom object</label>
+                    <span>Custom object</span>
                 </div>
             </div>
         </div>
-    );
+    )
+        ;
 }
