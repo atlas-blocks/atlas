@@ -1,4 +1,10 @@
-import React, { useState, useRef, useEffect, MouseEvent as ReactMouseEvent } from 'react';
+import React, {
+	useState,
+	useCallback,
+	useRef,
+	useEffect,
+	MouseEvent as ReactMouseEvent,
+} from 'react';
 import dynamic from 'next/dynamic';
 
 const Background = dynamic(
@@ -8,17 +14,21 @@ const Background = dynamic(
 	{ ssr: false },
 ); // disable ssr
 import ReactFlow, {
-	addEdge,
-	removeElements,
-	Edge,
-	Node as Block,
-	Elements,
+	Controls,
+	addEdge as addUiEdge,
+	applyNodeChanges,
+	applyEdgeChanges,
+	Edge as UIEdge,
+	Node as UINode,
+	useNodesState as useUiNodesState,
+	useEdgesState as useUiEdgesState,
 	Connection,
 	ReactFlowProvider,
+	ReactFlowInstance,
 } from 'react-flow-renderer';
 
-import { nodeTypes } from '../blocks/Blocks';
-import { edgeTypes } from '../blocks/Edge';
+import { uiNodeTypes } from '../blocks/UiNode';
+import { uiEdgeTypes } from '../blocks/UiEdge';
 
 import BlockMenu from './BlockMenu';
 import MathInput from './MathInput';
@@ -35,19 +45,27 @@ export const atlasGraph = new AtlasGraph();
 exampleNodes.forEach((node) => atlasGraph.nodes.push(node));
 
 const DnDFlow: NextPage = () => {
+	const [reactFlowInstance, setReactFlowInstance] = useState<ReactFlowInstance | null>(null);
 	const [selectedNode, setSelectedNode] = useState<AtlasNode | null>(null);
 	const [druggedNode, setDruggedNode] = useState<AtlasNode | null>(null);
 	const reactFlowWrapper = useRef(null);
 	const mathInputRef = useRef<MathInput>(null);
-	const [reactFlowInstance, setReactFlowInstance] = useState(null);
-	const initialElements: Elements = WebInterfaceUtils.getElements(atlasGraph);
-	const [elements, setElements] = useState(initialElements);
+	const [uiNodes, setUiNodes, onUiNodesChange] = useUiNodesState(
+		WebInterfaceUtils.getUiNodes(atlasGraph),
+	);
+	const [uiEdges, setUiEdges, onUiEdgesChange] = useUiEdgesState(
+		WebInterfaceUtils.getUiEdges(atlasGraph),
+	);
+	const webInterfaceUtils = new WebInterfaceUtils(
+		atlasGraph,
+		setUiNodes,
+		setUiEdges,
+		setSelectedNode,
+	);
 
-	const webInterfaceUtils = new WebInterfaceUtils(atlasGraph, setElements, setSelectedNode);
+	function handleUiNodeSelection(event: React.MouseEvent, element: UINode) {}
 
-	function handleBlockSelection(event: React.MouseEvent, element: Block | Edge) {}
-
-	function handleBlockDoubleClick(event: ReactMouseEvent, block: Block) {
+	function handleUiNodeDoubleClick(event: ReactMouseEvent, block: UINode) {
 		setSelectedNode(block.data.node);
 		if (block.data.node instanceof ContentNode) {
 			(mathInputRef.current as MathInput).show(block.data.node.content);
@@ -58,20 +76,18 @@ const DnDFlow: NextPage = () => {
 		setSelectedNode(null);
 	}
 
-	const onConnect = (params: Edge | Connection) =>
-		setElements((els: Elements) => addEdge({ ...params, type: 'defaultEdge' }, els));
-	const onElementsRemove = (elementsToRemove: Elements) =>
-		setElements((els: Elements) => removeElements(elementsToRemove, els));
+	const onConnect = useCallback(
+		(connection: Connection) =>
+			setUiEdges((eds) => addUiEdge({ ...connection, type: 'defaultEdge' }, eds)),
+		[],
+	);
 
-	const onLoad = (_reactFlowInstance: React.SetStateAction<any>) =>
-		setReactFlowInstance(_reactFlowInstance);
-
-	const onDragOver = (event: React.DragEvent) => {
+	const onDragOver = useCallback((event: React.DragEvent) => {
 		event.preventDefault();
 		event.dataTransfer.dropEffect = 'move';
-	};
+	}, []);
 
-	const onDrop = (event: React.DragEvent) => {
+	const onDrop = useCallback((event: React.DragEvent) => {
 		event.preventDefault();
 		// @ts-ignore
 		const reactFlowBounds = reactFlowWrapper.current.getBoundingClientRect();
@@ -84,12 +100,12 @@ const DnDFlow: NextPage = () => {
 		console.assert(druggedNode !== null, 'drugged node should not be assigned before dragging');
 		if (druggedNode !== null)
 			atlasGraph.nodes.push(druggedNode.setPosition(pos.x, pos.y).setDefaultName());
-		webInterfaceUtils.refreshElements();
-	};
+		webInterfaceUtils.refreshUiElements();
+	}, []);
 
 	useEffect(() => {
-		webInterfaceUtils.refreshElements();
-	}, [selectedNode, setElements]);
+		webInterfaceUtils.refreshUiElements();
+	}, [selectedNode, setUiNodes]);
 
 	useEffect(() => {
 		if (selectedNode === null) (mathInputRef.current as MathInput).hide();
@@ -99,21 +115,22 @@ const DnDFlow: NextPage = () => {
 		<ReactFlowProvider>
 			<div className={styles.flowcanvas} ref={reactFlowWrapper}>
 				<ReactFlow
-					// id={styles.blocks_canvas}
-					elements={elements}
-					nodeTypes={nodeTypes}
-					edgeTypes={edgeTypes}
+					nodes={uiNodes}
+					edges={uiEdges}
+					nodeTypes={uiNodeTypes}
+					edgeTypes={uiEdgeTypes}
 					onConnect={onConnect}
-					onElementsRemove={onElementsRemove}
-					onElementClick={handleBlockSelection}
-					onNodeDoubleClick={handleBlockDoubleClick}
+					onNodesChange={onUiNodesChange}
+					onEdgesChange={onUiEdgesChange}
+					onNodeClick={handleUiNodeSelection}
+					onNodeDoubleClick={handleUiNodeDoubleClick}
 					onPaneClick={onPaneClick}
-					onLoad={onLoad}
+					onInit={setReactFlowInstance}
 					onDrop={onDrop}
 					onDragOver={onDragOver}
 				>
 					{/*<MiniMap />*/}
-					{/*<Controls />*/}
+					<Controls />
 					<Background />
 				</ReactFlow>
 				<BlockMenu
