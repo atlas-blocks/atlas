@@ -51,7 +51,7 @@ const DnDFlow: NextPage = () => {
 	const [reactFlowInstance, setReactFlowInstance] = useState<ReactFlowInstance | null>(null);
 	const [selectedNode, setSelectedNode] = useState<AtlasNode | null>(null);
 	const [druggedNode, setDruggedNode] = useState<AtlasNode | null>(null);
-	const reactFlowWrapper = useRef(null);
+	const reactFlowWrapper = useRef<HTMLDivElement | null>(null);
 	const mathInputRef = useRef<MathInput>(null);
 	const [uiNodes, setUiNodes] = useState(WebInterfaceUtils.getUiNodes(atlasGraph));
 	const [uiEdges, setUiEdges] = useState(WebInterfaceUtils.getUiEdges(atlasGraph));
@@ -98,21 +98,24 @@ const DnDFlow: NextPage = () => {
 		event.dataTransfer.dropEffect = 'move';
 	}, []);
 
-	const onDrop = useCallback((event: React.DragEvent) => {
-		event.preventDefault();
-		// @ts-ignore
-		const reactFlowBounds = reactFlowWrapper.current.getBoundingClientRect();
-		// @ts-ignore
-		const pos = reactFlowInstance.project({
-			x: event.clientX - reactFlowBounds.left,
-			y: event.clientY - reactFlowBounds.top,
-		});
+	const onDrop = useCallback(
+		(event: React.DragEvent) => {
+			event.preventDefault();
+			// @ts-ignore
+			const reactFlowBounds = reactFlowWrapper.current.getBoundingClientRect();
+			// @ts-ignore
+			const pos = reactFlowInstance.project({
+				x: event.clientX - reactFlowBounds.left,
+				y: event.clientY - reactFlowBounds.top,
+			});
 
-		console.assert(druggedNode !== null, 'drugged node should not be assigned before dragging');
-		if (druggedNode !== null)
-			atlasGraph.nodes.push(druggedNode.setPosition(pos.x, pos.y).setDefaultName());
-		webInterfaceUtils.refreshUiElements();
-	}, []);
+			console.assert(druggedNode !== null, 'drugged node should be assigned before dragging');
+			if (druggedNode !== null)
+				atlasGraph.nodes.push(druggedNode.setPosition(pos.x, pos.y).setDefaultName());
+			webInterfaceUtils.refreshUiElements();
+		},
+		[reactFlowInstance, druggedNode],
+	);
 
 	useEffect(() => {
 		webInterfaceUtils.refreshUiElements();

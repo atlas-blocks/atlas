@@ -1,10 +1,5 @@
 import React from 'react';
-import {
-	Node as UINode,
-	Edge as UIEdge,
-	NodeChange as UINodeChange,
-	NodePositionChange as UINodePositionChange,
-} from 'react-flow-renderer';
+import { Node as UINode, Edge as UIEdge, NodeChange as UINodeChange } from 'react-flow-renderer';
 import AtlasGraph, { AtlasNode } from '../utils/AtlasGraph';
 import ServerUtils from './ServerUtils';
 
@@ -75,11 +70,10 @@ export default class WebInterfaceUtils {
 		this.refreshUiElements();
 	}
 
-	public async updateNodes(changes: UINodeChange[]) {
+	public updateNodes(changes: UINodeChange[]) {
 		for (const change of changes) {
 			if (change.type === 'position') {
 				if (change.position === undefined) return;
-				console.log(change.position);
 				const node = this.graph.getById(change.id);
 				node.setPosition(change.position.x, change.position.y);
 			}
