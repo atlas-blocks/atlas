@@ -31,6 +31,15 @@ export default class WebInterfaceUtils {
 		};
 	}
 
+	public static toUiEdge(from: AtlasNode, to: AtlasNode): UIEdge {
+		return {
+			id: 'edge' + from.getId() + to.getId(),
+			source: from.getId(),
+			target: to.getId(),
+			type: 'DefaultEdge',
+		};
+	}
+
 	public static getUiNodes(graph: AtlasGraph): UINode[] {
 		let ans: UINode[] = [];
 		for (const node of graph.nodes) {
@@ -48,12 +57,7 @@ export default class WebInterfaceUtils {
 
 			for (const from of froms) {
 				for (const to of tos) {
-					ans.push({
-						id: 'edge' + from.getId() + to.getId(),
-						source: from.getId(),
-						target: to.getId(),
-						type: 'DefaultEdge',
-					});
+					ans.push(this.toUiEdge(from, to));
 				}
 			}
 		}

@@ -5,14 +5,6 @@ import React, {
 	useEffect,
 	MouseEvent as ReactMouseEvent,
 } from 'react';
-import dynamic from 'next/dynamic';
-
-// const Background = dynamic(
-// 	// @ts-ignore
-// 	// without it Next.js don't load background correctly and prints an error in the console.
-// 	import('react-flow-renderer').then((mod) => mod.Background),
-// 	{ ssr: false },
-// ); // disable ssr
 import ReactFlow, {
 	Controls,
 	Background,
@@ -23,8 +15,6 @@ import ReactFlow, {
 	Node as UINode,
 	EdgeChange as UIEdgeChange,
 	NodeChange as UINodeChange,
-	useNodesState as useUiNodesState,
-	useEdgesState as useUiEdgesState,
 	Connection,
 	ReactFlowProvider,
 	ReactFlowInstance,
@@ -69,6 +59,7 @@ const DnDFlow: NextPage = () => {
 		},
 		[setUiNodes],
 	);
+
 	const onUiEdgesChange = useCallback(
 		(changes: UIEdgeChange[]) => setUiEdges((eds) => applyEdgeChanges(changes, eds)),
 		[setUiEdges],
