@@ -8,10 +8,11 @@ export default function LibPanel(props: any) {
     };
 
     const [libSectionBasic, setLibSectionBasic] = useState({open: true})
-    const [libSectionSymbolic, setLibSectionSymbolic] = useState({open: true})
-    const [libSectionGraphic, setLibSectionGraphic] = useState({open: true})
-    const [libSectionImport, setLibSectionImport] = useState({open: true})
-    const [libSectionPhysical, setLibSectionPhysical] = useState({open: true})
+    const [libSectionSymbolic, setLibSectionSymbolic] = useState({open: false})
+    const [libSectionGraphic, setLibSectionGraphic] = useState({open: false})
+    const [libSectionEngineering, setLibSectionEngineering] = useState({open: false})
+    const [libSectionImport, setLibSectionImport] = useState({open: false})
+    const [libSectionPhysical, setLibSectionPhysical] = useState({open: false})
 
 
     return (
@@ -20,7 +21,7 @@ export default function LibPanel(props: any) {
                 <label> {'>'} Basic</label>
             </div>
             <div className={`${styles.elementsContainer}`}
-                 style={libSectionBasic.open ? {maxHeight: "100%"} : {maxHeight: "0px"}}
+                 style={libSectionBasic.open ? {maxHeight: "100%"} : {overflow: "hidden", maxHeight: "0px"}}
             >
                 <div
                     className={styles.elementSingle}
@@ -50,7 +51,7 @@ export default function LibPanel(props: any) {
                 <label> {'>'} Symbolic</label>
             </div>
             <div className={styles.elementsContainer}
-                 style={libSectionSymbolic.open ? {maxHeight: "100%"} : {maxHeight: "0px"}}
+                 style={libSectionSymbolic.open ? {maxHeight: "100%"} : {overflow: "hidden", maxHeight: "0px"}}
             >
                 <div
                     className={styles.elementSingle}
@@ -73,7 +74,7 @@ export default function LibPanel(props: any) {
                 <label> {'>'} Graphics</label>
             </div>
             <div className={styles.elementsContainer}
-                 style={libSectionGraphic.open ? {maxHeight: "100%"} : {maxHeight: "0px"}}
+                 style={libSectionGraphic.open ? {maxHeight: "100%"} : {overflow: "hidden", maxHeight: "0px"}}
             >
                 <div
                     className={styles.elementSingle}
@@ -90,11 +91,26 @@ export default function LibPanel(props: any) {
                     <span>3D Plot</span>
                 </div>
             </div>
+            <div className={styles.libSectionLabel}
+                 onClick={() => setLibSectionEngineering({open: !libSectionEngineering.open})}>
+                <label> {'>'} Engineering</label>
+            </div>
+            <div className={styles.elementsContainer}
+                 style={libSectionEngineering.open ? {maxHeight: "100%"} : {overflow: "hidden", maxHeight: "0px"}}
+            >
+                <div
+                    className={styles.elementSingle}
+                    onDragStart={(event) => onDragStart(event, 'expressionNode')}
+                    draggable
+                >
+                    <span>PID Controller</span>
+                </div>
+            </div>
             <div className={styles.libSectionLabel} onClick={() => setLibSectionImport({open: !libSectionImport.open})}>
                 <label> {'>'} Import</label>
             </div>
             <div className={styles.elementsContainer}
-                 style={libSectionImport.open ? {maxHeight: "100%"} : {maxHeight: "0px"}}
+                 style={libSectionImport.open ? {maxHeight: "100%"} : {overflow: "hidden", maxHeight: "0px"}}
             >
                 <div
                     className={styles.elementSingle}
@@ -117,6 +133,13 @@ export default function LibPanel(props: any) {
                 >
                     <span>XML</span>
                 </div>
+                <div
+                    className={styles.elementSingle}
+                    onDragStart={(event) => onDragStart(event, 'expressionNode')}
+                    draggable
+                >
+                    <span>Form</span>
+                </div>
             </div>
 
             <div className={styles.libSectionLabel}
@@ -124,7 +147,7 @@ export default function LibPanel(props: any) {
                 <label> {'>'} Physical</label>
             </div>
             <div className={styles.elementsContainer}
-                 style={libSectionPhysical.open ? {maxHeight: "100%"} : {maxHeight: "0px"}}
+                 style={libSectionPhysical.open ? {maxHeight: "100%"} : {overflow: "hidden", maxHeight: "0px"}}
             >
                 <div
                     className={styles.elementSingle}
