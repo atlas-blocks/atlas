@@ -7,19 +7,22 @@ import React, {
 } from 'react';
 import dynamic from 'next/dynamic';
 
-const Background = dynamic(
-	// @ts-ignore
-	// without it Next.js don't load background correctly and prints an error in the console.
-	import('react-flow-renderer').then((mod) => mod.Background),
-	{ ssr: false },
-); // disable ssr
+// const Background = dynamic(
+// 	// @ts-ignore
+// 	// without it Next.js don't load background correctly and prints an error in the console.
+// 	import('react-flow-renderer').then((mod) => mod.Background),
+// 	{ ssr: false },
+// ); // disable ssr
 import ReactFlow, {
 	Controls,
+	Background,
 	addEdge as addUiEdge,
 	applyNodeChanges,
 	applyEdgeChanges,
 	Edge as UIEdge,
 	Node as UINode,
+	EdgeChange as UIEdgeChange,
+	NodeChange as UINodeChange,
 	useNodesState as useUiNodesState,
 	useEdgesState as useUiEdgesState,
 	Connection,
@@ -50,17 +53,25 @@ const DnDFlow: NextPage = () => {
 	const [druggedNode, setDruggedNode] = useState<AtlasNode | null>(null);
 	const reactFlowWrapper = useRef(null);
 	const mathInputRef = useRef<MathInput>(null);
-	const [uiNodes, setUiNodes, onUiNodesChange] = useUiNodesState(
-		WebInterfaceUtils.getUiNodes(atlasGraph),
-	);
-	const [uiEdges, setUiEdges, onUiEdgesChange] = useUiEdgesState(
-		WebInterfaceUtils.getUiEdges(atlasGraph),
-	);
+	const [uiNodes, setUiNodes] = useState(WebInterfaceUtils.getUiNodes(atlasGraph));
+	const [uiEdges, setUiEdges] = useState(WebInterfaceUtils.getUiEdges(atlasGraph));
 	const webInterfaceUtils = new WebInterfaceUtils(
 		atlasGraph,
 		setUiNodes,
 		setUiEdges,
 		setSelectedNode,
+	);
+
+	const onUiNodesChange = useCallback(
+		(changes: UINodeChange[]) => {
+			webInterfaceUtils.updateNodes(changes);
+			setUiNodes((nds) => applyNodeChanges(changes, nds));
+		},
+		[setUiNodes],
+	);
+	const onUiEdgesChange = useCallback(
+		(changes: UIEdgeChange[]) => setUiEdges((eds) => applyEdgeChanges(changes, eds)),
+		[setUiEdges],
 	);
 
 	function handleUiNodeSelection(event: React.MouseEvent, element: UINode) {}

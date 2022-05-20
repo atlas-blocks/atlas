@@ -1,5 +1,10 @@
 import React from 'react';
-import { Node as UINode, Edge as UIEdge } from 'react-flow-renderer';
+import {
+	Node as UINode,
+	Edge as UIEdge,
+	NodeChange as UINodeChange,
+	NodePositionChange as UINodePositionChange,
+} from 'react-flow-renderer';
 import AtlasGraph, { AtlasNode } from '../utils/AtlasGraph';
 import ServerUtils from './ServerUtils';
 
@@ -43,8 +48,8 @@ export default class WebInterfaceUtils {
 		let ans: UIEdge[] = [];
 
 		for (const edge of graph.edges) {
-			const froms = graph.nodes.filter((node) => node.name === edge.from);
-			const tos = graph.nodes.filter((node) => node.name === edge.to);
+			const froms = graph.getByName(edge.from);
+			const tos = graph.getByName(edge.to);
 
 			for (const from of froms) {
 				for (const to of tos) {
@@ -68,6 +73,17 @@ export default class WebInterfaceUtils {
 	public async updateGraph() {
 		await ServerUtils.updateGraph(this.graph);
 		this.refreshUiElements();
+	}
+
+	public async updateNodes(changes: UINodeChange[]) {
+		for (const change of changes) {
+			if (change.type === 'position') {
+				if (change.position === undefined) return;
+				console.log(change.position);
+				const node = this.graph.getById(change.id);
+				node.setPosition(change.position.x, change.position.y);
+			}
+		}
 	}
 
 	public getFunctionSignature(name: string, multiline = false): string {
