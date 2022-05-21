@@ -12,7 +12,7 @@ services:
     volumes:
       - ./reverse_proxy/nginx.conf:/etc/nginx/nginx.conf
     ports:
-      - 8080:80
+      - 8081:80
 
   frontend:
     image: frontend
@@ -23,9 +23,8 @@ services:
     depends_on:
         - julia-backend
     ports:
-      - 3000:3000
+      - 3001:3000
     restart: on-failure
-
 
   julia-backend:
     image: julia-backend
@@ -34,5 +33,5 @@ services:
       context: ./backend/AtlasBackend
       target: dev
     ports:
-      - 8000:8000
+      - 8001:8000
     restart: on-failure
