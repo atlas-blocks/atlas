@@ -4,10 +4,6 @@ ENV HOST=0.0.0.0
 ENV PORT=3000
 ENV NODE_ENV=development
 EXPOSE 3000
-# Install the application's dependencies into the node_modules's cache directory.
-COPY package.json ./
-COPY package-lock.json ./
-RUN npm install
 # Run the next server.
 CMD npm run dev
 

@@ -3,7 +3,7 @@ import { Handle, Position } from 'react-flow-renderer';
 import styles from '../../styles/Block.module.css';
 import { AtlasNode, ExpressionNode, TextNode } from '../../utils/AtlasGraph';
 
-export const nodeTypes = {
+export const uiNodeTypes = {
 	[ExpressionNode.structType]: ExpressionBlock,
 	[TextNode.structType]: TextBlock,
 };
