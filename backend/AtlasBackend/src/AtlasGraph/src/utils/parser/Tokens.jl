@@ -17,10 +17,25 @@ export Token, TokenType, gettokens
     LEFT_BRACE  # "{"
     RIGHT_BRACE  # "}"
     COMMA
+    DOT
 end
 
-infix_bin_operators =
-    Set{Symbol}([:+, :-, :*, :/, :^, :(:), :(==), :(<=), :(<), :(>), :(>=), :(=>), :(!=)])
+infix_bin_operators = Set{Symbol}([
+    :+,
+    :-,
+    :*,
+    :/,
+    :^,
+    :(:),
+    :(==),
+    :(<=),
+    :(<),
+    :(>),
+    :(>=),
+    :(=>),
+    :(!=),
+    :(..),
+])
 prefix_unary_operators = Set{Symbol}([:+, :-, :!])
 
 keyword_type = Dict{String,TokenType}(
@@ -31,6 +46,7 @@ keyword_type = Dict{String,TokenType}(
     "{" => LEFT_BRACE,
     "}" => RIGHT_BRACE,
     "," => COMMA,
+    "." => DOT,
 )
 
 
@@ -125,7 +141,7 @@ end
 
 
 function match_keywords(str::AbstractString)::Union{RegexMatch,Nothing}
-    return match(r"^[\(\)\[\]\,]", str)
+    return match(r"^[\(\)\[\]\,\.]", str)
 end
 
 function match_int(str::AbstractString)::Union{RegexMatch,Nothing}
@@ -149,7 +165,7 @@ function match_name(str::AbstractString)::Union{RegexMatch,Nothing}
 end
 
 function match_operator(str::AbstractString)::Union{RegexMatch,Nothing}
-    return match(r"^(\+|\-|\*|\/|\^|\:|<=|<|>=|>|==|=>|=|!=|<|>)", str)
+    return match(r"^(\+|\-|\*|\/|\^|\:|<=|<|>=|>|==|=>|=|!=|<|>|\.\.)", str)
 end
 
 

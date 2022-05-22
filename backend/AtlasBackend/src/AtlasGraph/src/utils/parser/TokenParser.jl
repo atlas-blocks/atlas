@@ -98,6 +98,26 @@ function parse_expression(
     return left
 end
 
+function parse_expression(parser::Parser)::Result{AbstractExpr,Exception}
+    return parse_expression(parser, 0)
+end
+
+function parse_prefix_expression(
+    parser::Parser,
+    token::Token,
+)::Result{AbstractExpr,Exception}
+    return parse_expression(parser, prefix_precedence[token].precedence)
+end
+
+function parse_infix_expression(
+    parser::Parser,
+    token::Token,
+)::Result{AbstractExpr,Exception}
+    info = infix_precedence[token]
+    return parse_expression(parser, info.precedence - (info.left_associative ? 0 : 1))
+end
+
+
 function updateinfixtype(token::Token)::Token
     if token.type != Tokens.NAME || !(token.content in Tokens.infix_bin_operators)
         return token
@@ -112,12 +132,8 @@ function updateprefixtype(token::Token)::Token
     return Token(Tokens.PREFIX_UNARY_OPERATOR, token.content)
 end
 
-function parse_expression(parser::Parser)::Result{AbstractExpr,Exception}
-    return parse_expression(parser, 0)
-end
-
-
 include("./parselets/Parselets.jl")
+include("./parselets/Precedence.jl")
 
 
 end

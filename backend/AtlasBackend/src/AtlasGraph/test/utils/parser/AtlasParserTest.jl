@@ -103,6 +103,12 @@ import .TestUtils as tu
                   [[1, 5], [2, 6], [3, 7]]
         end
 
+        @testset "Dot property accessing" begin
+            @test unwrap(evaluate_content("Base.sind(30)", empty_graph)) == sind(30)
+            @test unwrap(evaluate_content("1 + Base.sind(30)^3", empty_graph)) ==
+                  1 + sind(30)^3
+        end
+
         @testset "Vectors" begin
             @test unwrap(evaluate_content("[]", empty_graph)) == []
             @test unwrap(evaluate_content("[1]", empty_graph)) == [1]
