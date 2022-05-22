@@ -118,6 +118,10 @@ import .TestUtils as tu
             @test unwrap(evaluate_content("[1, \"foo\", 5][1:2]", empty_graph)) ==
                   [1, "foo"]
         end
+
+        @testset "Python libs" begin
+            @test unwrap(evaluate_content("math.sin(1)", empty_graph)) == sin(1)
+        end
     end
 
     @testset "matching" begin

@@ -29,6 +29,8 @@ function evaluate(expr::NameExpr, graph::AbstractGraph)::Result{Any,Exception}
         return nodes[1].content
     elseif isdefined(Functions.Math, expr.name)
         return getproperty(Functions.Math, expr.name)
+    elseif isdefined(Functions.Example, expr.name)
+        return getproperty(Functions.Example, expr.name)
     end
     return EvaluatingException("No such name: " * string(func))
 end
