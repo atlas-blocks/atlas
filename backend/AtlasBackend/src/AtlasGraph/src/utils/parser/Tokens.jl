@@ -90,6 +90,11 @@ function next(lexer::Lexer)::Result{Union{Nothing,Token},Exception}
     elseif match_operator(substr) !== nothing
         token_str = match_operator(substr).match
         token_val = Symbol(token_str)
+        if token_val == :(:)
+            token_val = :(=>)
+        elseif token_val == :(..)
+            token_val = :(:)
+        end
         token_type = NAME
     elseif match_float(substr) !== nothing
         token_str = match_float(substr).match
