@@ -25,7 +25,7 @@ end
 function getjson(elems::Dict)::AbstractString
     ans = "Dict("
     for (key, value) in elems
-        ans *= getjson(key) * " => " * getjson(value) * ", "
+        ans *= getjson(key) * ": " * getjson(value) * ", "
     end
     return replace(ans, r", \Z" => "") * ")"
 end
@@ -35,7 +35,7 @@ function getjson(elem::Nothing)::AbstractString
 end
 
 function getjson(elem::UnitRange)::AbstractString
-    return getjson(elem.start) * ":" * getjson(elem.stop)
+    return getjson(elem.start) * ".." * getjson(elem.stop)
 end
 
 end

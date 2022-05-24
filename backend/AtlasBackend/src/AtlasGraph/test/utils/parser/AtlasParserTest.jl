@@ -114,8 +114,8 @@ import .TestUtils as tu
             @test unwrap(evaluate_content("[1]", empty_graph)) == [1]
             @test unwrap(evaluate_content("[1, \"foo\"]", empty_graph)) == [1, "foo"]
             @test unwrap(evaluate_content("[1, \"foo\"][2]", empty_graph)) == "foo"
-            @test unwrap(evaluate_content("4:5", empty_graph)) == 4:5
-            @test unwrap(evaluate_content("[1, \"foo\", 5][1:2]", empty_graph)) ==
+            @test unwrap(evaluate_content("4..5", empty_graph)) == 4:5
+            @test unwrap(evaluate_content("[1, \"foo\", 5][1..2]", empty_graph)) ==
                   [1, "foo"]
         end
 
