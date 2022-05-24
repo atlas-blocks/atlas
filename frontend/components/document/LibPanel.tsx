@@ -16,7 +16,7 @@ export default function LibPanel(props: any): JSX.Element {
 		Physical: ['Custom Object'],
 	};
 
-	const libColapseStates = {
+	const libCollapseStates = {
 		Basic: useState<string>(''),
 		Symbolic: useState<string>(styles.containerCollapse),
 		Graphics: useState<string>(styles.containerCollapse),
@@ -25,9 +25,9 @@ export default function LibPanel(props: any): JSX.Element {
 		Physical: useState<string>(styles.containerCollapse),
 	};
 
-	const openOrColapseLibSection = (idName: keyof typeof libColapseStates): void => {
-		libColapseStates[idName][1](
-			libColapseStates[idName][0] === '' ? styles.containerCollapse : '',
+	const openOrCollapseLibSection = (idName: keyof typeof libCollapseStates): void => {
+		libCollapseStates[idName][1](
+			libCollapseStates[idName][0] === '' ? styles.containerCollapse : '',
 		);
 	};
 
@@ -51,14 +51,14 @@ export default function LibPanel(props: any): JSX.Element {
 					id={libName}
 					className={styles.libSectionLabel}
 					onClick={(evt) => {
-						openOrColapseLibSection(evt.currentTarget.id as keyof typeof libElements);
+						openOrCollapseLibSection(evt.currentTarget.id as keyof typeof libElements);
 					}}
 				>
 					<label>
 						{'>'} {libName}
 					</label>
 				</div>
-				<div className={`${styles.elementsContainer} ${libColapseStates[libName][0]}`}>
+				<div className={`${styles.elementsContainer} ${libCollapseStates[libName][0]}`}>
 					{libElements[libName].map((elem) => getLibElements(elem))}
 				</div>
 			</div>
@@ -68,7 +68,7 @@ export default function LibPanel(props: any): JSX.Element {
 	return (
 		<div className={`${props.visibleState}`}>
 			{Object.keys(libElements).map((name) =>
-				getLibSections(name as keyof typeof libColapseStates),
+				getLibSections(name as keyof typeof libCollapseStates),
 			)}
 		</div>
 	);
