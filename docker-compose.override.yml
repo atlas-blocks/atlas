@@ -1,11 +1,19 @@
 version: '3.8'
 
 services:
+
+  reverse-proxy:
+    ports:
+      - 8081:80
+
   frontend:
     volumes:
       - ./frontend:/app
-      - /app/node_modules
+    ports:
+      - 3001:3000
 
   julia-backend:
     volumes: 
       - ./backend/AtlasBackend:/home/genie/app
+    ports:
+      - 8001:8000

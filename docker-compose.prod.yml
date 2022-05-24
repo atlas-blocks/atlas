@@ -2,10 +2,21 @@ version: '3.8'
 
 services:
 
+  reverse-proxy:
+    container_name: reverse_proxy_prod
+    ports:
+      - 8080:80
+
   frontend:
+    container_name: frontend_prod
     build:
       target: prod
-    
+    ports:
+      - 3000:3000
+
   julia-backend:
+    container_name: julia_backend_prod
     build:
       target: prod
+    ports:
+      - 8000:8000

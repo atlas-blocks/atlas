@@ -10,7 +10,7 @@ dev:
 	npm run dev
 
 pretty:
-	prettier --write .
+	npx prettier --write .
 
 clean_aws_prod:
 	rm -rf /var/www/atlas/html

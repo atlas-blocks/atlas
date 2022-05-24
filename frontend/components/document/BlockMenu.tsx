@@ -31,7 +31,7 @@ function BlockMenu({ selectedNode, setDruggedNode, webInterfaceUtils }: Props) {
 					onDragStart(
 						event,
 						new ExpressionNode(
-							new AtlasNode(ExpressionNode.structType, 'name1', 'pkg', [0, 0], true),
+							new AtlasNode(ExpressionNode.structType, '', 'pkg', [0, 0], true),
 							'2 + 3',
 							'5',
 						),
@@ -39,7 +39,7 @@ function BlockMenu({ selectedNode, setDruggedNode, webInterfaceUtils }: Props) {
 				}
 				draggable
 			>
-				{ExpressionNode.structType}
+				ExpressionNode
 			</div>
 
 			<div
@@ -55,7 +55,7 @@ function BlockMenu({ selectedNode, setDruggedNode, webInterfaceUtils }: Props) {
 				}
 				draggable
 			>
-				{TextNode.structType}
+				TextNode
 			</div>
 
 			{/* <h3>functions</h3>

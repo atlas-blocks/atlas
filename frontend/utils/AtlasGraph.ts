@@ -10,6 +10,14 @@ export default class AtlasGraph {
 	static getDefaultName() {
 		return 'b' + this.nameCnt++;
 	}
+	getByName(name: string): AtlasNode[] {
+		return this.nodes.filter((node) => node.name === name);
+	}
+	getById(id: string): AtlasNode {
+		const nodes = this.nodes.filter((node) => node.getId() === id);
+		console.assert(nodes.length == 1);
+		return nodes[0];
+	}
 }
 
 export class AtlasEdge {
