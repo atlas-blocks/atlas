@@ -1,11 +1,13 @@
 import styles from '../../styles/LibPanel.module.css';
 import { useState } from 'react';
 
-export default function LibPanel(props: any) {
+export default function LibPanel(props: any): JSX.Element {
 	const onDragStart = (event: any, nodeType: any) => {
 		event.dataTransfer.setData('application/reactflow', nodeType);
 		event.dataTransfer.effectAllowed = 'move';
 	};
+
+	const libs = ['Basic', 'Symbolic', 'Graphics', 'Engineering', 'Import', 'Physical'];
 
 	const libElements = {
 		Basic: ['Expr', 'if', 'for'],
@@ -16,7 +18,7 @@ export default function LibPanel(props: any) {
 		Physical: ['Custom Object'],
 	};
 
-	const [collapseContainer, setCollapseContainer] = useState<any>({
+	const [collapseContainer, setCollapseContainer] = useState<object>({
 		Basic: '',
 		Symbolic: styles.containerCollapse,
 		Graphics: styles.containerCollapse,
@@ -27,9 +29,12 @@ export default function LibPanel(props: any) {
 
 	const openLibSection = (idName: keyof typeof collapseContainer) => {
 		if (collapseContainer[idName] != '') {
-			setCollapseContainer((prev: any) => ({ ...prev, [idName]: '' }));
+			setCollapseContainer((prev: object) => ({ ...prev, [idName]: '' }));
 		} else {
-			setCollapseContainer((prev: any) => ({ ...prev, [idName]: styles.containerCollapse }));
+			setCollapseContainer((prev: object) => ({
+				...prev,
+				[idName]: styles.containerCollapse,
+			}));
 		}
 	};
 
@@ -46,23 +51,28 @@ export default function LibPanel(props: any) {
 		);
 	}
 
-	function loadLibSections(libName: keyof typeof libElements): JSX.Element {
+	function loadLibSections(libName: string): JSX.Element {
 		return (
 			<div key={libName} className={styles.wrapper}>
 				<div
 					id={libName}
 					className={styles.libSectionLabel}
 					onClick={(evt) => {
-						openLibSection(evt.currentTarget.id);
+						openLibSection(evt.currentTarget.id as keyof typeof collapseContainer);
 					}}
 				>
 					<label>
-						{' '}
 						{'>'} {libName}
 					</label>
 				</div>
-				<div className={`${styles.elementsContainer} ${collapseContainer[libName]}`}>
-					{libElements[libName].map((elem) => loadLibElements(elem))}
+				<div
+					className={`${styles.elementsContainer} ${
+						collapseContainer[libName as keyof typeof collapseContainer]
+					}`}
+				>
+					{libElements[libName as keyof typeof libElements].map((elem: string) =>
+						loadLibElements(elem),
+					)}
 				</div>
 			</div>
 		);
@@ -70,7 +80,7 @@ export default function LibPanel(props: any) {
 
 	return (
 		<div className={`${props.visibleState}`}>
-			{Object.keys(libElements).map((els: any) => loadLibSections(els))}
+			{libs.map((els: string) => loadLibSections(els))}
 		</div>
 	);
 }
