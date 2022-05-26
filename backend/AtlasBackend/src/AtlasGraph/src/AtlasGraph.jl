@@ -3,6 +3,7 @@ export AbstractGraph, Graph
 export AbstractEdge, ProviderEdge
 export AbstractNode, Node
 export AbstractTextNode, TextNode
+export AbstractFileNode, FileNode
 export AbstractFunctionNode, FunctionNode
 export AbstractExpressionNode, ExpressionNode
 
@@ -22,12 +23,11 @@ mutable struct TextNode <: AbstractTextNode
     content::String
 end
 
-function Base.getproperty(obj::TextNode, sym::Symbol)
-    if sym === :name
-        return obj.node.name
-    else
-        return getfield(obj, sym)
-    end
+abstract type AbstractFileNode <: AbstractNode end
+mutable struct FileNode <: AbstractFileNode
+    node::Node
+    content::String
+    filename::String
 end
 
 abstract type AbstractFormulaNode <: AbstractNode end
@@ -39,15 +39,6 @@ mutable struct ExpressionNode <: AbstractExpressionNode
     result::Any
 end
 
-function Base.getproperty(obj::ExpressionNode, sym::Symbol)
-    if sym === :name
-        return obj.node.name
-    else
-        return getfield(obj, sym)
-    end
-end
-
-
 abstract type AbstractFunctionNode <: AbstractFormulaNode end
 mutable struct FunctionNode <: AbstractFunctionNode
     node::Node
@@ -55,6 +46,14 @@ mutable struct FunctionNode <: AbstractFunctionNode
 
     priority::Int8
     leftright_order::Bool
+end
+
+function Base.getproperty(obj::Union{AbstractFormulaNode,TextNode,FileNode}, sym::Symbol)
+    if sym === :name
+        return obj.node.name
+    else
+        return getfield(obj, sym)
+    end
 end
 
 abstract type AbstractEdge end

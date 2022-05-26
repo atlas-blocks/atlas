@@ -53,6 +53,10 @@ using JSON3
             JsonUtils.node(JsonUtils.json(node)) ≂ node
         end
         @test begin
+            node = FileNode(Node("name", "pkg", (5, -7), true), "foo", "bar.txt")
+            JsonUtils.node(JsonUtils.json(node)) ≂ node
+        end
+        @test begin
             node1 = Node("name1", "pkg", (5, -7), true)
             node2 = ExpressionNode(Node("name2", "pkg", (5, -7), true), "1 + 2", 3)
             graph = Graph([node1, node2])

@@ -31,6 +31,14 @@ function gentext(name::AbstractString, content::AbstractString)::TextNode
     return TextNode(genenode(name), content)
 end
 
+function genfile(
+    name::AbstractString,
+    content::AbstractString,
+    filename::AbstractString,
+)::FileNode
+    return FileNode(genenode(name), content, filename)
+end
+
 function genexpression(
     name::AbstractString,
     content::AbstractString,

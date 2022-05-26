@@ -57,6 +57,10 @@ function node(json_dict::JSON3.Object)::AbstractNode
     elseif json_dict["type"] == string(TextNode)
         content = json_dict["content"]
         return TextNode(node, content)
+    elseif json_dict["type"] == string(FileNode)
+        content = json_dict["content"]
+        filename = json_dict["filename"]
+        return FileNode(node, content, filename)
     end
 end
 
