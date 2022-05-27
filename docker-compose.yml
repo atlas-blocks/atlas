@@ -18,8 +18,6 @@ services:
     build:
       context: ./frontend
       target: dev
-    depends_on:
-        - julia-backend
     restart: on-failure
 
   julia-backend:
