@@ -88,6 +88,21 @@ export class TextNode extends ContentNode {
 	static structType = 'AtlasGraph.TextNode';
 }
 
+export class FileNode extends AtlasNode {
+	static structType = 'AtlasGraph.FileNode';
+	public content: string;
+	public filename: string;
+
+	constructor(node: AtlasNode, content: string, filename: string) {
+		super(node.type, node.name, node.package, node.position, node.visibility);
+		this.content = content;
+		this.filename = filename;
+	}
+	public static constructorEmpty() {
+		return new FileNode(AtlasNode.constructorEmpty(), '', '');
+	}
+}
+
 export class ExpressionNode extends ContentNode {
 	static structType = 'AtlasGraph.ExpressionNode';
 	public result: string;

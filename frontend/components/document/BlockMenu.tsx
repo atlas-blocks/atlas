@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { AtlasNode, ExpressionNode, TextNode } from '../../utils/AtlasGraph';
+import { AtlasNode, ExpressionNode, TextNode, FileNode } from '../../utils/AtlasGraph';
 
 import styles from '../../styles/BlockMenu.module.css';
 import blockStyles from '../../styles/Block.module.css';
@@ -18,6 +18,32 @@ function BlockMenu({ selectedNode, setDruggedNode, webInterfaceUtils }: Props) {
 	};
 	const elementWidth = '250px';
 
+	const nodesOptions = {
+		ExpressionNode: () =>
+			new ExpressionNode(
+				new AtlasNode(ExpressionNode.structType, '', 'pkg', [0, 0], true),
+				'2 + 3',
+				'5',
+			),
+		TextNode: () =>
+			new TextNode(
+				new AtlasNode(TextNode.structType, 'name1', 'pkg', [0, 0], true),
+				'1, 2, 3',
+			),
+		FileNode: () =>
+			new FileNode(new AtlasNode(FileNode.structType, 'name1', 'pkg', [0, 0], true), '', ''),
+	};
+	const getNodeOption = (option: keyof typeof nodesOptions) => (
+		<div
+			key={option}
+			className={`${styles.dndnode} ${blockStyles.text_block}`}
+			onDragStart={(event) => onDragStart(event, nodesOptions[option]())}
+			draggable
+		>
+			{option}
+		</div>
+	);
+
 	return (
 		<aside
 			id={styles.block_menu}
@@ -25,82 +51,9 @@ function BlockMenu({ selectedNode, setDruggedNode, webInterfaceUtils }: Props) {
 		>
 			<h2>Blocks Menu</h2>
 			<h3>blocks</h3>
-			<div
-				className={`${styles.dndnode} ${blockStyles.expression_block}`}
-				onDragStart={(event) =>
-					onDragStart(
-						event,
-						new ExpressionNode(
-							new AtlasNode(ExpressionNode.structType, '', 'pkg', [0, 0], true),
-							'2 + 3',
-							'5',
-						),
-					)
-				}
-				draggable
-			>
-				ExpressionNode
-			</div>
-
-			<div
-				className={`${styles.dndnode} ${blockStyles.text_block}`}
-				onDragStart={(event) =>
-					onDragStart(
-						event,
-						new TextNode(
-							new AtlasNode(TextNode.structType, 'name1', 'pkg', [0, 0], true),
-							'1, 2, 3',
-						),
-					)
-				}
-				draggable
-			>
-				TextNode
-			</div>
-
-			{/* <h3>functions</h3>
-			<div
-				style={{ textAlign: 'left' }}
-				className={`${styles.dndnode} ${styles.function}`}
-				onDragStart={(event) =>
-					onDragStart(event, new ExpressionNode('', 'simplify("1 + 1")', 0))
-				}
-				draggable
-			>
-				<div className={styles.display_linebreak}>
-					{webInterfaceUtils.getFunctionSignature('simplify', true)}
-				</div>
-			</div>
-			<div
-				style={{ textAlign: 'left' }}
-				className={`${styles.dndnode} ${styles.function}`}
-				onDragStart={(event) =>
-					onDragStart(event, new ExpressionNode('', 'str(1 + 1")', 0))
-				}
-				draggable
-			>
-				<div className={styles.display_linebreak}>
-					{webInterfaceUtils.getFunctionSignature('str', true)}
-				</div>
-			</div>
-			<div
-				className={`${styles.dndnode} ${styles.function}`}
-				onDragStart={(event) =>
-					onDragStart(
-						event,
-						new ExpressionNode(
-							'',
-							'fetch("http://localhost:3000/api/el_simplify", {"latex":"1+1"})',
-							0,
-						),
-					)
-				}
-				draggable
-			>
-				<div className={styles.display_linebreak}>
-					{webInterfaceUtils.getFunctionSignature('fetch', true)}
-				</div>
-			</div> */}
+			{Object.keys(nodesOptions).map((option) =>
+				getNodeOption(option as keyof typeof nodesOptions),
+			)}
 		</aside>
 	);
 }

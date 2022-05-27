@@ -27,12 +27,16 @@ function evaluate(expr::NameExpr, graph::AbstractGraph)::Result{Any,Exception}
         return nodes[1].result
     elseif length(nodes) == 1 && typeof(nodes[1]) == TextNode
         return nodes[1].content
+    elseif length(nodes) == 1 && typeof(nodes[1]) == FileNode
+        return nodes[1].content
+    elseif isdefined(Functions, expr.name)
+        return getproperty(Functions, expr.name)
     elseif isdefined(Functions.Math, expr.name)
         return getproperty(Functions.Math, expr.name)
     elseif isdefined(Functions.Example, expr.name)
         return getproperty(Functions.Example, expr.name)
     end
-    return EvaluatingException("No such name: " * string(func))
+    return EvaluatingException("No such name: " * string(expr.name))
 end
 
 

@@ -1,5 +1,5 @@
 import ErrorUtils from './errors/ErrorUtils';
-import AtlasGraph, { AtlasEdge, AtlasNode, ExpressionNode, TextNode } from './AtlasGraph';
+import AtlasGraph, { AtlasEdge, AtlasNode, ExpressionNode, TextNode, FileNode } from './AtlasGraph';
 
 type Response = {
 	success: boolean;
@@ -77,6 +77,8 @@ abstract class ServerUtils {
 				updatedNodes.push(Object.assign(ExpressionNode.constructorEmpty(), node));
 			} else if (node.type === TextNode.structType) {
 				updatedNodes.push(Object.assign(TextNode.constructorEmpty(), node));
+			} else if (node.type === FileNode.structType) {
+				updatedNodes.push(Object.assign(FileNode.constructorEmpty(), node));
 			} else if (node.type === AtlasNode.structType) {
 				updatedNodes.push(Object.assign(AtlasNode.constructorEmpty(), node));
 			} else {

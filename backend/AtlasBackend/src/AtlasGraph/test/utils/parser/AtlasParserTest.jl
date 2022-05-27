@@ -13,6 +13,7 @@ import .TestUtils as tu
         tu.genexpression("ex3", ""),
         tu.genexpression("ex4", "sin(ex1)"),
         tu.gentext("ex5", "1,2,3\n5,6,7"),
+        tu.genfile("ex6", "abc", "foo.txt"),
     ])
     graph_with_results = Graph([
         tu.genexpression("ex1", "5", 5),
@@ -20,6 +21,7 @@ import .TestUtils as tu
         tu.genexpression("ex3", ""),
         tu.genexpression("ex4", "sin(ex1)", sin(5)),
         tu.gentext("ex5", "1,2,3\n5,6,7"),
+        tu.genfile("ex6", "abc", "foo.txt"),
     ])
 
     @testset "Tokens" begin
@@ -72,6 +74,7 @@ import .TestUtils as tu
 
     @testset "evaluate" begin
         @test unwrap(evaluate_content("42", empty_graph)) == 42
+        @test unwrap(evaluate_content("\"ab\\n\"", empty_graph)) == "ab\n"
         @test unwrap(evaluate_content("42.02", empty_graph)) == 42.02
         @test unwrap(evaluate_content("\"foo\"", empty_graph)) == "foo"
         @test unwrap(evaluate_content("(42)", empty_graph)) == 42
@@ -121,6 +124,10 @@ import .TestUtils as tu
 
         @testset "Python libs" begin
             @test unwrap(evaluate_content("math.sin(1)", empty_graph)) == sin(1)
+        end
+
+        @testset "FileNode" begin
+            @test unwrap(evaluate_content("ex6", graph_with_results)) == "abc"
         end
     end
 

@@ -1,5 +1,5 @@
 module Math
-using CSV
+using CSV, JSON3
 
 struct Operator
     name::Symbol
