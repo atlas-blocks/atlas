@@ -1,5 +1,5 @@
-.wrapper {
-	width: 100%;
+.libWrapper {
+	width: 80%;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
@@ -34,13 +34,11 @@
 	display: flex;
 	flex-direction: row;
 	flex-wrap: wrap;
-	transition: all 2s ease;
 }
 
 .containerCollapse {
 	max-height: 0px;
 	overflow: hidden;
-	transition: all 2s ease;
 }
 
 .elementSingle {
