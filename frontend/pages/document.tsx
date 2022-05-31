@@ -139,27 +139,16 @@ export default function Home() {
 				<ElementsPanel visibleState={styles.leftpanel} />
 				<DnDFlow
 					webInterfaceUtils={webInterfaceUtils}
-					// setSelectedNode={setSelectedNode}
 					druggedNode={druggedNode}
 				/>
 				<PropsPanel
 					propPanelStyleWrapper={propsPanelState}
-					// selectedNode={selectedNode}
 					webInterfaceUtils={webInterfaceUtils}
 				/>
 				<LibPanel
-					// webInterfaceUtils={webInterfaceUtils}
-					// selectedNode={selectedNode}
-
-					// This to go into wiu
 					setDruggedNode={setDruggedNode}
 					libPanelStyleWrapper={libPanelState}
 				/>
-
-				{/*This should stay for further development*/}
-				{/*<ElementsPanel visibleState={styles.leftpanel} nodes={nodes}/>*/}
-				{/*<PropsPanel visibleState={propsPanelState} editNode={editNode} updNode={setUpdNode}/>*/}
-				{/*<LibPanel visibleState={libPanelState}/>*/}
 			</div>
 		</>
 	);

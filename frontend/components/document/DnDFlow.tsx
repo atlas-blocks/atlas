@@ -1,3 +1,4 @@
+import styles from '../../styles/main.module.css';
 import React, {
 	useState,
 	useCallback,
@@ -22,24 +23,14 @@ import ReactFlow, {
 
 import { uiNodeTypes } from '../blocks/UiNode';
 import { uiEdgeTypes } from '../blocks/UiEdge';
-
-import BlockMenu from './BlockMenu';
-import MathInput from './MathInput';
-
-import AtlasGraph, { AtlasNode, ContentNode } from '../../utils/AtlasGraph';
+import AtlasGraph, { AtlasNode } from '../../utils/AtlasGraph';
 import WebInterfaceUtils from '../../utils/WebInterfaceUtils';
-
-import { NextPage } from 'next';
-import styles from '../../styles/main.module.css';
-
 import { exampleNodes } from '../blocks/ExampleNodes';
 
 export const atlasGraph = new AtlasGraph();
 exampleNodes.forEach((node) => atlasGraph.nodes.push(node));
 
-
 type Props = {
-	// setSelectedNode: React.Dispatch<React.SetStateAction<AtlasNode | null>>;
 	druggedNode: AtlasNode | null;
 	webInterfaceUtils: WebInterfaceUtils;
 };
@@ -48,18 +39,9 @@ type Props = {
 
 export default function DnDFlow({druggedNode, webInterfaceUtils}: Props): JSX.Element {
 	const [reactFlowInstance, setReactFlowInstance] = useState<ReactFlowInstance | null>(null);
-	// const [selectedNodeMI, setSelectedNodeMI] = useState<AtlasNode | null>(null);
-	// const [druggedNode, setDruggedNode] = useState<AtlasNode | null>(null);
 	const reactFlowWrapper = useRef<HTMLDivElement | null>(null);
-	const mathInputRef = useRef<MathInput>(null);
 	const [uiNodes, setUiNodes] = useState(WebInterfaceUtils.getUiNodes(atlasGraph));
 	const [uiEdges, setUiEdges] = useState(WebInterfaceUtils.getUiEdges(atlasGraph));
-	// const webInterfaceUtils = new WebInterfaceUtils(
-	// 	atlasGraph,
-	// 	setUiNodes,
-	// 	setUiEdges,
-	// 	setSelectedNode,
-	// );
 
 
 	// This should be updated to new v10 style
@@ -78,26 +60,12 @@ export default function DnDFlow({druggedNode, webInterfaceUtils}: Props): JSX.El
 
 	function handleUiNodeSelection(event: React.MouseEvent, element: UINode) {}
 
-	// function handleUiNodeDoubleClick(event: ReactMouseEvent, block: UINode) {
-	// 	setSelectedNode(block.data.node);
-	// 	if (block.data.node instanceof ContentNode) {
-	// 		(mathInputRef.current as MathInput).show(block.data.node.content);
-	// 	}
-	// }
-
 	function handleUiNodeDoubleClick(event: ReactMouseEvent, node: UINode) {
-		// setSelectedNode(node.data.node);
-		// setSelectedNodeMI(node.data.node)
 		webInterfaceUtils.setSelectedNode(node.data.node)
-		// console.log(node)
-		// if (node.data.node instanceof ContentNode) {
-		// 	(mathInputRef.current as MathInput).show(node.data.node.content);
-		// }
 	}
 
 	function onPaneClick(event: ReactMouseEvent) {
 		webInterfaceUtils.setSelectedNode(null)
-		// setSelectedNode(null);
 	}
 
 	const onConnect = useCallback(
@@ -122,35 +90,19 @@ export default function DnDFlow({druggedNode, webInterfaceUtils}: Props): JSX.El
 				y: event.clientY - reactFlowBounds.top - 20,
 			});
 
-			// console.log(druggedNode)
-
 			console.assert(druggedNode !== null, 'drugged node should be assigned before dragging');
 			if (druggedNode !== null)
 				atlasGraph.nodes.push(druggedNode.setPosition(pos.x, pos.y).setDefaultName());
-			// console.log(atlasGraph.nodes)
-			// console.log(uiNodes)
 			webInterfaceUtils.refreshUiElements();
 			setUiNodes(WebInterfaceUtils.getUiNodes(atlasGraph))
 		},
 		[reactFlowInstance, druggedNode],
 	);
 
-	// console.log(atlasGraph.nodes)
-
 	useEffect(() => {
 		setUiNodes(WebInterfaceUtils.getUiNodes(webInterfaceUtils.graph))
 		setUiEdges(WebInterfaceUtils.getUiEdges(webInterfaceUtils.graph))
 	}, [webInterfaceUtils.graph.nodes])
-
-	// delete this
-	// useEffect(() => {
-	// 	webInterfaceUtils.refreshUiElements();
-	// }, [selectedNodeMI, setUiNodes]);
-
-	// useEffect(() => {
-	// 	if (setSelectedNode === null) (mathInputRef.current as MathInput).hide();
-	// 	webInterfaceUtils.refreshUiElements();
-	// }, [setSelectedNode]);
 
 	return (
 		<ReactFlowProvider>
@@ -174,17 +126,6 @@ export default function DnDFlow({druggedNode, webInterfaceUtils}: Props): JSX.El
 					<Controls />
 					<Background />
 				</ReactFlow>
-				{/*<BlockMenu*/}
-				{/*	webInterfaceUtils={webInterfaceUtils}*/}
-				{/*	// selectedNode={selectedNode}*/}
-				{/*	// setDruggedNode={setDruggedNode}*/}
-				{/*/>*/}
-				{/*<BlockSettings selectedNode={selectedNode} webInterfaceUtils={webInterfaceUtils} />*/}
-				{/*<MathInput*/}
-				{/*	selectedNode={selectedNodeMI}*/}
-				{/*	webInterfaceUtils={webInterfaceUtils}*/}
-				{/*	ref={mathInputRef}*/}
-				{/*/>*/}
 			</div>
 		</ReactFlowProvider>
 	);

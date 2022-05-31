@@ -1,15 +1,9 @@
-import styles from '../../styles/LibPanel.module.css';
-import styles_main from '../../styles/main.module.css';
-
+import styles from '../../styles/LibPanel.module.css'
 import React, {useState} from 'react';
 import {AtlasNode, ExpressionNode, TextNode, FileNode} from '../../utils/AtlasGraph';
-import WebInterfaceUtils from '../../utils/WebInterfaceUtils';
-import blockStyles from "../../styles/Block.module.css";
 
 type Props = {
-    // selectedNode: AtlasNode | null;
     setDruggedNode: React.Dispatch<React.SetStateAction<AtlasNode | null>>;
-    // webInterfaceUtils: WebInterfaceUtils | null;
     libPanelStyleWrapper: string;
 };
 
@@ -19,7 +13,6 @@ export default function LibPanel({setDruggedNode, libPanelStyleWrapper}: Props):
         setDruggedNode(node);
         event.dataTransfer.effectAllowed = 'move';
     };
-    // const elementWidth = '250px';
 
     const nodesOptions = {
         ExpressionNode: () =>
@@ -36,20 +29,6 @@ export default function LibPanel({setDruggedNode, libPanelStyleWrapper}: Props):
         FileNode: () =>
             new FileNode(new AtlasNode(FileNode.structType, 'name1', 'pkg', [0, 0], true), '', ''),
     };
-    // const getNodeOption = (option: keyof typeof nodesOptions) => (
-    //     <div className={styles.libWrapper}>
-    //
-    //     <div
-    //         key={option}
-    //         className={`${styles.dndnode} ${blockStyles.text_block}`}
-    //         onDragStart={(event) => onDragStart(event, nodesOptions[option]())}
-    //         draggable
-    //     >
-    //         {option}
-    //     </div>
-    //     </div>
-    //
-    // );
 
 
     const libElements = {
@@ -110,11 +89,7 @@ export default function LibPanel({setDruggedNode, libPanelStyleWrapper}: Props):
                     </label>
                 </div>
                 <div className={`${styles.elementsContainer} ${libCollapseStates[libName][0]}`}>
-                    {/*{libElements[libName].map((elem) => getLibElements(elem))}*/}
                     {Object.keys(libElements[libName]).map((elem) => getLibElements(elem as keyof typeof nodesOptions))}
-                    {/*{Object.keys(nodesOptions).map((option) =>*/}
-                    {/*    getNodeOption(option as keyof typeof nodesOptions),*/}
-                    {/*)}*/}
                 </div>
             </div>
         );
@@ -122,10 +97,6 @@ export default function LibPanel({setDruggedNode, libPanelStyleWrapper}: Props):
 
     return (
         <div className={`${libPanelStyleWrapper}`}>
-            {/*{Object.keys(nodesOptions).map((option) =>*/}
-            {/*    getNodeOption(option as keyof typeof nodesOptions),*/}
-            {/*)}*/}
-
             {Object.keys(libElements).map((name) =>
                 getLibSections(name as keyof typeof libCollapseStates),
             )}

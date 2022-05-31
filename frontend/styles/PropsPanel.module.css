@@ -1,5 +1,4 @@
 .propsPanelWrapper {
-	/*border-bottom: 1px solid #eaeaea;*/
 	height: fit-content;
 	margin: 5px;
 	padding-top: 10px;
@@ -16,7 +15,6 @@
 	color: #30a5be;
 }
 .inpName {
-	/*border: 1px solid #eaeaea;*/
 	border-style: none;
 	border-bottom: 1px solid black;
 	margin: 5px;
