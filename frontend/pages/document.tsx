@@ -15,14 +15,6 @@ import logoImg from '/img/logo/atlas_long_white_cut.png';
 import WebInterfaceUtils from '../utils/WebInterfaceUtils';
 import {AtlasNode} from "../utils/AtlasGraph";
 
-// export const togglePropLibPanels = () => {
-// 	const [libBtnState, setLibBtnState] = useState(
-// 		`${btnStyles.justBtn} ${btnStyles.libBtn} ${btnStyles.actBtn}`,
-// 	);
-// 	return (
-// 		libBtnState
-// 	)
-// }
 
 
 export default function Home() {
@@ -55,6 +47,7 @@ export default function Home() {
 	const [uiEdges, setUiEdges] = useState(WebInterfaceUtils.getUiEdges(atlasGraph));
 	const webInterfaceUtils = new WebInterfaceUtils(
 		atlasGraph,
+		selectedNode,
 		setUiNodes,
 		setUiEdges,
 		setSelectedNode,
@@ -146,16 +139,19 @@ export default function Home() {
 				<ElementsPanel visibleState={styles.leftpanel} />
 				<DnDFlow
 					webInterfaceUtils={webInterfaceUtils}
-					setSelectedNode={setSelectedNode}
+					// setSelectedNode={setSelectedNode}
 					druggedNode={druggedNode}
 				/>
 				<PropsPanel
 					propPanelStyleWrapper={propsPanelState}
-					selectedNode={selectedNode}
+					// selectedNode={selectedNode}
+					webInterfaceUtils={webInterfaceUtils}
 				/>
 				<LibPanel
 					// webInterfaceUtils={webInterfaceUtils}
 					// selectedNode={selectedNode}
+
+					// This to go into wiu
 					setDruggedNode={setDruggedNode}
 					libPanelStyleWrapper={libPanelState}
 				/>

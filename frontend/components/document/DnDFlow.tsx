@@ -39,16 +39,16 @@ exampleNodes.forEach((node) => atlasGraph.nodes.push(node));
 
 
 type Props = {
-	setSelectedNode: React.Dispatch<React.SetStateAction<AtlasNode | null>>;
+	// setSelectedNode: React.Dispatch<React.SetStateAction<AtlasNode | null>>;
 	druggedNode: AtlasNode | null;
 	webInterfaceUtils: WebInterfaceUtils;
 };
 
 
 
-export default function DnDFlow({setSelectedNode, druggedNode, webInterfaceUtils}: Props): JSX.Element {
+export default function DnDFlow({druggedNode, webInterfaceUtils}: Props): JSX.Element {
 	const [reactFlowInstance, setReactFlowInstance] = useState<ReactFlowInstance | null>(null);
-	const [selectedNodeMI, setSelectedNodeMI] = useState<AtlasNode | null>(null);
+	// const [selectedNodeMI, setSelectedNodeMI] = useState<AtlasNode | null>(null);
 	// const [druggedNode, setDruggedNode] = useState<AtlasNode | null>(null);
 	const reactFlowWrapper = useRef<HTMLDivElement | null>(null);
 	const mathInputRef = useRef<MathInput>(null);
@@ -61,6 +61,8 @@ export default function DnDFlow({setSelectedNode, druggedNode, webInterfaceUtils
 	// 	setSelectedNode,
 	// );
 
+
+	// This should be updated to new v10 style
 	const onUiNodesChange = useCallback(
 		(changes: UINodeChange[]) => {
 			webInterfaceUtils.updateNodes(changes);
@@ -84,18 +86,18 @@ export default function DnDFlow({setSelectedNode, druggedNode, webInterfaceUtils
 	// }
 
 	function handleUiNodeDoubleClick(event: ReactMouseEvent, node: UINode) {
-		setSelectedNode(node.data.node);
-		setSelectedNodeMI(node.data.node)
+		// setSelectedNode(node.data.node);
+		// setSelectedNodeMI(node.data.node)
+		webInterfaceUtils.setSelectedNode(node.data.node)
 		// console.log(node)
-		if (node.data.node instanceof ContentNode) {
-			(mathInputRef.current as MathInput).show(node.data.node.content);
-		}
+		// if (node.data.node instanceof ContentNode) {
+		// 	(mathInputRef.current as MathInput).show(node.data.node.content);
+		// }
 	}
 
-
-
 	function onPaneClick(event: ReactMouseEvent) {
-		setSelectedNode(null);
+		webInterfaceUtils.setSelectedNode(null)
+		// setSelectedNode(null);
 	}
 
 	const onConnect = useCallback(
@@ -127,26 +129,28 @@ export default function DnDFlow({setSelectedNode, druggedNode, webInterfaceUtils
 				atlasGraph.nodes.push(druggedNode.setPosition(pos.x, pos.y).setDefaultName());
 			// console.log(atlasGraph.nodes)
 			// console.log(uiNodes)
-
 			webInterfaceUtils.refreshUiElements();
 			setUiNodes(WebInterfaceUtils.getUiNodes(atlasGraph))
 		},
 		[reactFlowInstance, druggedNode],
 	);
 
+	// console.log(atlasGraph.nodes)
+
+	useEffect(() => {
+		setUiNodes(WebInterfaceUtils.getUiNodes(webInterfaceUtils.graph))
+		setUiEdges(WebInterfaceUtils.getUiEdges(webInterfaceUtils.graph))
+	}, [webInterfaceUtils.graph.nodes])
+
+	// delete this
 	// useEffect(() => {
 	// 	webInterfaceUtils.refreshUiElements();
-	// }, [selectedNode, setUiNodes]);
-	useEffect(() => {
-		webInterfaceUtils.refreshUiElements();
-	}, [setSelectedNode, setUiNodes]);
+	// }, [selectedNodeMI, setUiNodes]);
 
 	// useEffect(() => {
-	// 	if (selectedNode === null) (mathInputRef.current as MathInput).hide();
-	// }, [selectedNode]);
-	useEffect(() => {
-		if (setSelectedNode === null) (mathInputRef.current as MathInput).hide();
-	}, [setSelectedNode]);
+	// 	if (setSelectedNode === null) (mathInputRef.current as MathInput).hide();
+	// 	webInterfaceUtils.refreshUiElements();
+	// }, [setSelectedNode]);
 
 	return (
 		<ReactFlowProvider>
@@ -176,11 +180,11 @@ export default function DnDFlow({setSelectedNode, druggedNode, webInterfaceUtils
 				{/*	// setDruggedNode={setDruggedNode}*/}
 				{/*/>*/}
 				{/*<BlockSettings selectedNode={selectedNode} webInterfaceUtils={webInterfaceUtils} />*/}
-				<MathInput
-					selectedNode={selectedNodeMI}
-					webInterfaceUtils={webInterfaceUtils}
-					ref={mathInputRef}
-				/>
+				{/*<MathInput*/}
+				{/*	selectedNode={selectedNodeMI}*/}
+				{/*	webInterfaceUtils={webInterfaceUtils}*/}
+				{/*	ref={mathInputRef}*/}
+				{/*/>*/}
 			</div>
 		</ReactFlowProvider>
 	);
