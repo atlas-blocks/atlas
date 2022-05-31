@@ -1,50 +1,50 @@
 .propsPanelWrapper {
-	height: fit-content;
-	margin: 5px;
-	padding-top: 10px;
-	display: flex;
-	flex-wrap: wrap;
-	align-items: flex-start;
+    height: fit-content;
+    margin: 5px;
+    padding-top: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    font-size: 14px;
 }
 
 .propsPanelWrapper label {
-	font-size: 14px;
-	width: 100%;
-	margin: 5px;
-	margin-top: 7px;
-	color: #30a5be;
+    width: 100%;
+    margin: 5px;
+    margin-top: 7px;
+    color: #30a5be;
 }
+
 .inpName {
-	border-style: none;
-	border-bottom: 1px solid black;
-	margin: 5px;
-	outline: none;
-	font-size: 15px;
-	flex: 1;
+    border-style: none;
+    border-bottom: 1px solid black;
+    margin: 5px;
+    outline: none;
+    flex: 1;
 }
 
 .inpContent {
-	border: 1px solid #eaeaea;
-	border-bottom: 1px solid black;
-	height: 100px;
-	margin: 5px;
-	outline: none;
-	font-size: 15px;
-	flex: 1;
+    border: 1px solid #eaeaea;
+    border-bottom: 1px solid black;
+    height: 100px;
+    margin: 5px;
+    outline: none;
+    flex: 1;
 }
 
 .btnSubmit {
-	border-style: none;
-	margin-left: 5px;
-	width: 80px;
-	height: 30px;
-	background-color: #30a5be;
-	color: white;
-	justify-self: center;
+    border-style: none;
+    margin-left: 5px;
+    width: 80px;
+    height: 30px;
+    background-color: #30a5be;
+    color: white;
 }
+
 .btnSubmit:hover {
-	background-color: #1b6d85;
+    background-color: #1b6d85;
 }
+
 .btnSubmit:active {
-	background-color: #30a5be;
+    background-color: #30a5be;
 }
