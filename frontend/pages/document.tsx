@@ -1,4 +1,4 @@
-import DnDFlow from '../components/document/DnDFlow';
+import DnDFlow, {atlasGraph} from '../components/document/DnDFlow';
 import Head from 'next/head';
 import styles from '../styles/main.module.css';
 import btnStyles from '../styles/BtnStyle.module.css';
@@ -12,6 +12,9 @@ import questionImg from '/img/icons/question.png';
 import settingsImg from '/img/icons/settings.png';
 import exportImg from '/img/icons/export.png';
 import logoImg from '/img/logo/atlas_long_white_cut.png';
+import WebInterfaceUtils from '../utils/WebInterfaceUtils';
+import {AtlasNode} from "../utils/AtlasGraph";
+
 
 export default function Home() {
 	const [libBtnState, setLibBtnState] = useState(
@@ -35,6 +38,18 @@ export default function Home() {
 		setLibPanelState(`${styles.libPanel} ${styles.panelHidden}`);
 		setPropsPanelState(`${styles.propsPanel}`);
 	};
+
+	const [druggedNode, setDruggedNode] = useState<AtlasNode | null>(null);
+	const [selectedNode, setSelectedNode] = useState<AtlasNode | null>(null);
+	const [uiNodes, setUiNodes] = useState(WebInterfaceUtils.getUiNodes(atlasGraph));
+	const [uiEdges, setUiEdges] = useState(WebInterfaceUtils.getUiEdges(atlasGraph));
+	const webInterfaceUtils = new WebInterfaceUtils(
+		atlasGraph,
+		setUiNodes,
+		setUiEdges,
+		setSelectedNode,
+	);
+
 
 	return (
 		<>
@@ -116,9 +131,18 @@ export default function Home() {
 
 				{/*-----Panels*/}
 				<ElementsPanel visibleState={styles.leftpanel} />
-				<DnDFlow />
+				<DnDFlow
+					webInterfaceUtils={webInterfaceUtils}
+					selectedNode={selectedNode}
+					druggedNode={druggedNode}
+				/>
 				<PropsPanel visibleState={propsPanelState} />
-				<LibPanel visibleState={libPanelState} />
+				<LibPanel
+					webInterfaceUtils={webInterfaceUtils}
+					selectedNode={selectedNode}
+					setDruggedNode={setDruggedNode}
+					libPanelStyleWrapper={libPanelState}
+				/>
 
 				{/*This should stay for further development*/}
 				{/*<ElementsPanel visibleState={styles.leftpanel} nodes={nodes}/>*/}

@@ -37,20 +37,31 @@ import { exampleNodes } from '../blocks/ExampleNodes';
 export const atlasGraph = new AtlasGraph();
 exampleNodes.forEach((node) => atlasGraph.nodes.push(node));
 
-const DnDFlow: NextPage = () => {
+
+type Props = {
+	selectedNode: AtlasNode | null;
+	druggedNode: AtlasNode | null;
+	webInterfaceUtils: WebInterfaceUtils;
+};
+
+
+
+
+
+export default function DnDFlow({selectedNode, druggedNode, webInterfaceUtils}: Props): JSX.Element {
 	const [reactFlowInstance, setReactFlowInstance] = useState<ReactFlowInstance | null>(null);
-	const [selectedNode, setSelectedNode] = useState<AtlasNode | null>(null);
-	const [druggedNode, setDruggedNode] = useState<AtlasNode | null>(null);
+	// const [selectedNode, setSelectedNode] = useState<AtlasNode | null>(null);
+	// const [druggedNode, setDruggedNode] = useState<AtlasNode | null>(null);
 	const reactFlowWrapper = useRef<HTMLDivElement | null>(null);
 	const mathInputRef = useRef<MathInput>(null);
 	const [uiNodes, setUiNodes] = useState(WebInterfaceUtils.getUiNodes(atlasGraph));
 	const [uiEdges, setUiEdges] = useState(WebInterfaceUtils.getUiEdges(atlasGraph));
-	const webInterfaceUtils = new WebInterfaceUtils(
-		atlasGraph,
-		setUiNodes,
-		setUiEdges,
-		setSelectedNode,
-	);
+	// const webInterfaceUtils = new WebInterfaceUtils(
+	// 	atlasGraph,
+	// 	setUiNodes,
+	// 	setUiEdges,
+	// 	setSelectedNode,
+	// );
 
 	const onUiNodesChange = useCallback(
 		(changes: UINodeChange[]) => {
@@ -65,18 +76,18 @@ const DnDFlow: NextPage = () => {
 		[setUiEdges],
 	);
 
-	function handleUiNodeSelection(event: React.MouseEvent, element: UINode) {}
+	// function handleUiNodeSelection(event: React.MouseEvent, element: UINode) {}
 
-	function handleUiNodeDoubleClick(event: ReactMouseEvent, block: UINode) {
-		setSelectedNode(block.data.node);
-		if (block.data.node instanceof ContentNode) {
-			(mathInputRef.current as MathInput).show(block.data.node.content);
-		}
-	}
+	// function handleUiNodeDoubleClick(event: ReactMouseEvent, block: UINode) {
+	// 	setSelectedNode(block.data.node);
+	// 	if (block.data.node instanceof ContentNode) {
+	// 		(mathInputRef.current as MathInput).show(block.data.node.content);
+	// 	}
+	// }
 
-	function onPaneClick(event: ReactMouseEvent) {
-		setSelectedNode(null);
-	}
+	// function onPaneClick(event: ReactMouseEvent) {
+	// 	setSelectedNode(null);
+	// }
 
 	const onConnect = useCallback(
 		(connection: Connection) =>
@@ -96,14 +107,20 @@ const DnDFlow: NextPage = () => {
 			const reactFlowBounds = reactFlowWrapper.current.getBoundingClientRect();
 			// @ts-ignore
 			const pos = reactFlowInstance.project({
-				x: event.clientX - reactFlowBounds.left,
-				y: event.clientY - reactFlowBounds.top,
+				x: event.clientX - reactFlowBounds.left - 70,
+				y: event.clientY - reactFlowBounds.top - 20,
 			});
+
+			// console.log(druggedNode)
 
 			console.assert(druggedNode !== null, 'drugged node should be assigned before dragging');
 			if (druggedNode !== null)
 				atlasGraph.nodes.push(druggedNode.setPosition(pos.x, pos.y).setDefaultName());
+			// console.log(atlasGraph.nodes)
+			// console.log(uiNodes)
+
 			webInterfaceUtils.refreshUiElements();
+			setUiNodes(WebInterfaceUtils.getUiNodes(atlasGraph))
 		},
 		[reactFlowInstance, druggedNode],
 	);
@@ -127,9 +144,9 @@ const DnDFlow: NextPage = () => {
 					onConnect={onConnect}
 					onNodesChange={onUiNodesChange}
 					onEdgesChange={onUiEdgesChange}
-					onNodeClick={handleUiNodeSelection}
-					onNodeDoubleClick={handleUiNodeDoubleClick}
-					onPaneClick={onPaneClick}
+					// onNodeClick={handleUiNodeSelection}
+					// onNodeDoubleClick={handleUiNodeDoubleClick}
+					// onPaneClick={onPaneClick}
 					onInit={setReactFlowInstance}
 					onDrop={onDrop}
 					onDragOver={onDragOver}
@@ -138,11 +155,11 @@ const DnDFlow: NextPage = () => {
 					<Controls />
 					<Background />
 				</ReactFlow>
-				<BlockMenu
-					webInterfaceUtils={webInterfaceUtils}
-					selectedNode={selectedNode}
-					setDruggedNode={setDruggedNode}
-				/>
+				{/*<BlockMenu*/}
+				{/*	webInterfaceUtils={webInterfaceUtils}*/}
+				{/*	// selectedNode={selectedNode}*/}
+				{/*	// setDruggedNode={setDruggedNode}*/}
+				{/*/>*/}
 				{/*<BlockSettings selectedNode={selectedNode} webInterfaceUtils={webInterfaceUtils} />*/}
 				<MathInput
 					selectedNode={selectedNode}
@@ -153,5 +170,3 @@ const DnDFlow: NextPage = () => {
 		</ReactFlowProvider>
 	);
 };
-
-export default DnDFlow;
