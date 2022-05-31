@@ -7,14 +7,14 @@ import WebInterfaceUtils from '../../utils/WebInterfaceUtils';
 import blockStyles from "../../styles/Block.module.css";
 
 type Props = {
-    selectedNode: AtlasNode | null;
+    // selectedNode: AtlasNode | null;
     setDruggedNode: React.Dispatch<React.SetStateAction<AtlasNode | null>>;
-    webInterfaceUtils: WebInterfaceUtils | null;
+    // webInterfaceUtils: WebInterfaceUtils | null;
     libPanelStyleWrapper: string;
 };
 
 
-export default function LibPanel({selectedNode, setDruggedNode, webInterfaceUtils, libPanelStyleWrapper}: Props): JSX.Element {
+export default function LibPanel({setDruggedNode, libPanelStyleWrapper}: Props): JSX.Element {
     const onDragStart = (event: React.DragEvent<HTMLDivElement>, node: AtlasNode) => {
         setDruggedNode(node);
         event.dataTransfer.effectAllowed = 'move';
@@ -36,20 +36,20 @@ export default function LibPanel({selectedNode, setDruggedNode, webInterfaceUtil
         FileNode: () =>
             new FileNode(new AtlasNode(FileNode.structType, 'name1', 'pkg', [0, 0], true), '', ''),
     };
-    const getNodeOption = (option: keyof typeof nodesOptions) => (
-        <div className={styles.libWrapper}>
-
-        <div
-            key={option}
-            className={`${styles.dndnode} ${blockStyles.text_block}`}
-            onDragStart={(event) => onDragStart(event, nodesOptions[option]())}
-            draggable
-        >
-            {option}
-        </div>
-        </div>
-
-    );
+    // const getNodeOption = (option: keyof typeof nodesOptions) => (
+    //     <div className={styles.libWrapper}>
+    //
+    //     <div
+    //         key={option}
+    //         className={`${styles.dndnode} ${blockStyles.text_block}`}
+    //         onDragStart={(event) => onDragStart(event, nodesOptions[option]())}
+    //         draggable
+    //     >
+    //         {option}
+    //     </div>
+    //     </div>
+    //
+    // );
 
 
     const libElements = {

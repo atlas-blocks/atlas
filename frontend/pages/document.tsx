@@ -5,7 +5,7 @@ import btnStyles from '../styles/BtnStyle.module.css';
 import ElementsPanel from '../components/document/ElementsPanel';
 import PropsPanel from '../components/document/PropsPanel';
 import LibPanel from '../components/document/LibPanel';
-import { useState } from 'react';
+import {useEffect, useState} from 'react';
 import Image from 'next/image';
 import menuImg from '/img/icons/menu.png';
 import questionImg from '/img/icons/question.png';
@@ -14,6 +14,15 @@ import exportImg from '/img/icons/export.png';
 import logoImg from '/img/logo/atlas_long_white_cut.png';
 import WebInterfaceUtils from '../utils/WebInterfaceUtils';
 import {AtlasNode} from "../utils/AtlasGraph";
+
+// export const togglePropLibPanels = () => {
+// 	const [libBtnState, setLibBtnState] = useState(
+// 		`${btnStyles.justBtn} ${btnStyles.libBtn} ${btnStyles.actBtn}`,
+// 	);
+// 	return (
+// 		libBtnState
+// 	)
+// }
 
 
 export default function Home() {
@@ -39,6 +48,7 @@ export default function Home() {
 		setPropsPanelState(`${styles.propsPanel}`);
 	};
 
+
 	const [druggedNode, setDruggedNode] = useState<AtlasNode | null>(null);
 	const [selectedNode, setSelectedNode] = useState<AtlasNode | null>(null);
 	const [uiNodes, setUiNodes] = useState(WebInterfaceUtils.getUiNodes(atlasGraph));
@@ -50,6 +60,9 @@ export default function Home() {
 		setSelectedNode,
 	);
 
+	useEffect(() => {
+		selectedNode ? showProperties(): showLibraries()
+	}, [selectedNode])
 
 	return (
 		<>
@@ -133,13 +146,16 @@ export default function Home() {
 				<ElementsPanel visibleState={styles.leftpanel} />
 				<DnDFlow
 					webInterfaceUtils={webInterfaceUtils}
-					selectedNode={selectedNode}
+					setSelectedNode={setSelectedNode}
 					druggedNode={druggedNode}
 				/>
-				<PropsPanel visibleState={propsPanelState} />
-				<LibPanel
-					webInterfaceUtils={webInterfaceUtils}
+				<PropsPanel
+					propPanelStyleWrapper={propsPanelState}
 					selectedNode={selectedNode}
+				/>
+				<LibPanel
+					// webInterfaceUtils={webInterfaceUtils}
+					// selectedNode={selectedNode}
 					setDruggedNode={setDruggedNode}
 					libPanelStyleWrapper={libPanelState}
 				/>
