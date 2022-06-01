@@ -1,17 +1,10 @@
 import styles from '../../styles/PropsPanel.module.css';
-// import {setNodeName} from "./reactflow"
 import React, { ChangeEvent, useEffect, useImperativeHandle, useState } from 'react';
-import { any } from 'prop-types';
 import AtlasGraph, { AtlasNode, ContentNode } from '../../utils/AtlasGraph';
-// import {useNodesState} from "react-flow-renderer";
-// import {initialNodes} from "./nodes_edges";
-// import Flow from "./reactflow";
 import WebInterfaceUtils from '../../utils/WebInterfaceUtils';
-import { atlasGraph } from './DnDFlow';
 
 type Props = {
 	propPanelStyleWrapper: string;
-	// selectedNode: AtlasNode | null;
 	webInterfaceUtils: WebInterfaceUtils;
 };
 
