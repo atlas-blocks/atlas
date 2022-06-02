@@ -5,17 +5,20 @@ import ServerUtils from './ServerUtils';
 
 export default class WebInterfaceUtils {
 	graph: AtlasGraph;
+	selectedNode: AtlasNode | null;
 	setUINodes: React.Dispatch<React.SetStateAction<UINode[]>>;
 	setUIEdges: React.Dispatch<React.SetStateAction<UIEdge[]>>;
 	setSelectedNode: React.Dispatch<React.SetStateAction<AtlasNode | null>>;
 
 	constructor(
 		graph: AtlasGraph,
+		selectedNode: AtlasNode | null,
 		setUINodes: React.Dispatch<React.SetStateAction<UINode[]>>,
 		setUIEdges: React.Dispatch<React.SetStateAction<UIEdge[]>>,
 		setSelectedNode: React.Dispatch<React.SetStateAction<AtlasNode | null>>,
 	) {
 		this.graph = graph;
+		this.selectedNode = selectedNode;
 		this.setUINodes = setUINodes;
 		this.setUIEdges = setUIEdges;
 		this.setSelectedNode = setSelectedNode;
@@ -82,6 +85,14 @@ export default class WebInterfaceUtils {
 				node.setPosition(change.position.x, change.position.y);
 			}
 		}
+	}
+
+	public getUiNodeWidth(node: AtlasNode): number {
+		return 100;
+	}
+
+	public getUiNodeHeight(node: AtlasNode): number {
+		return 100;
 	}
 
 	public getFunctionSignature(name: string, multiline = false): string {

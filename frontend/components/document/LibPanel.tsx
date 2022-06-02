@@ -1,19 +1,46 @@
 import styles from '../../styles/LibPanel.module.css';
-import { useState } from 'react';
+import React, { useState } from 'react';
+import { AtlasNode, ExpressionNode, TextNode, FileNode } from '../../utils/AtlasGraph';
 
-export default function LibPanel(props: any): JSX.Element {
-	const onDragStart = (event: any, nodeType: any) => {
-		event.dataTransfer.setData('application/reactflow', nodeType);
+type Props = {
+	setDruggedNode: React.Dispatch<React.SetStateAction<AtlasNode | null>>;
+	libPanelStyleWrapper: string;
+};
+
+export default function LibPanel({ setDruggedNode, libPanelStyleWrapper }: Props): JSX.Element {
+	const onDragStart = (event: React.DragEvent<HTMLDivElement>, node: AtlasNode) => {
+		setDruggedNode(node);
 		event.dataTransfer.effectAllowed = 'move';
 	};
 
+	const nodesOptions = {
+		ExpressionNode: () =>
+			new ExpressionNode(
+				new AtlasNode(ExpressionNode.structType, '', 'pkg', [0, 0], true),
+				'2 + 3',
+				'5',
+			),
+		TextNode: () =>
+			new TextNode(
+				new AtlasNode(TextNode.structType, 'name1', 'pkg', [0, 0], true),
+				'1, 2, 3',
+			),
+		FileNode: () =>
+			new FileNode(new AtlasNode(FileNode.structType, 'name1', 'pkg', [0, 0], true), '', ''),
+	};
+
 	const libElements = {
-		Basic: ['Expr', 'if', 'for'],
-		Symbolic: ['Simplify', 'Equal'],
-		Graphics: ['2D-plot', '3D-plot'],
-		Engineering: ['PID Controller'],
-		Import: ['JSON', 'CSV', 'XML', 'Form'],
-		Physical: ['Custom Object'],
+		// Symbolic: ['Simplify', 'Equal'],
+		// Graphics: ['2D-plot', '3D-plot'],
+		// Engineering: ['PID Controller'],
+		// Import: ['JSON', 'CSV', 'XML', 'Form'],
+		// Physical: ['Custom Object'],
+		Basic: nodesOptions,
+		Symbolic: nodesOptions,
+		Graphics: nodesOptions,
+		Engineering: nodesOptions,
+		Import: nodesOptions,
+		Physical: nodesOptions,
 	};
 
 	const libCollapseStates = {
@@ -31,15 +58,19 @@ export default function LibPanel(props: any): JSX.Element {
 		);
 	};
 
-	function getLibElements(name: string): JSX.Element {
+	function getShortName(name: keyof typeof nodesOptions): string {
+		return name.slice(0, 4);
+	}
+
+	function getLibElements(name: keyof typeof nodesOptions): JSX.Element {
 		return (
 			<div
 				key={name}
 				className={styles.elementSingle}
-				onDragStart={(event) => onDragStart(event, 'expressionNode')}
+				onDragStart={(event) => onDragStart(event, nodesOptions[name]())}
 				draggable
 			>
-				<span>{name}</span>
+				<span>{getShortName(name)}</span>
 			</div>
 		);
 	}
@@ -59,14 +90,16 @@ export default function LibPanel(props: any): JSX.Element {
 					</label>
 				</div>
 				<div className={`${styles.elementsContainer} ${libCollapseStates[libName][0]}`}>
-					{libElements[libName].map((elem) => getLibElements(elem))}
+					{Object.keys(libElements[libName]).map((elem) =>
+						getLibElements(elem as keyof typeof nodesOptions),
+					)}
 				</div>
 			</div>
 		);
 	}
 
 	return (
-		<div className={`${props.visibleState}`}>
+		<div className={`${libPanelStyleWrapper}`}>
 			{Object.keys(libElements).map((name) =>
 				getLibSections(name as keyof typeof libCollapseStates),
 			)}

@@ -1,40 +1,62 @@
 import styles from '../../styles/PropsPanel.module.css';
-// import {setNodeName} from "./reactflow"
-import { useEffect, useRef, useState } from 'react';
-import { any } from 'prop-types';
-// import {useNodesState} from "react-flow-renderer";
-// import {initialNodes} from "./nodes_edges";
-// import Flow from "./reactflow";
+import React, { ChangeEvent, useEffect, useImperativeHandle, useState } from 'react';
+import AtlasGraph, { AtlasNode, ContentNode } from '../../utils/AtlasGraph';
+import WebInterfaceUtils from '../../utils/WebInterfaceUtils';
 
-export default function PropsPanel(props: any) {
-	// const [updNode, setUpdNode] = useState<any>()
-	//
-	// useEffect(() => {
-	//     setUpdNode(props.editNode)
-	// }, [props.editNode])
-	//
-	// useEffect(() => {
-	//     props.updNode(updNode)
-	// }, [updNode])
+type Props = {
+	propPanelStyleWrapper: string;
+	webInterfaceUtils: WebInterfaceUtils;
+};
 
-	// const changeName = (evt: any) => {
-	//     setUpdNode(prev => ({...prev, data: {...prev.data, name: evt.target.value}}))
-	// }
-	// const changeContent = (evt) => {
-	//     setUpdNode(prev => ({...prev, data: {...prev.data, content: evt.target.value}}))
-	// }
+export default function PropsPanel({
+	propPanelStyleWrapper,
+	webInterfaceUtils,
+}: Props): JSX.Element {
+	const [newContentValue, setNewContentValue] = useState<string>('');
+	const [newNameValue, setNewNameValue] = useState<string>('');
+
+	const updContVal = (evt: ChangeEvent<HTMLTextAreaElement>) => {
+		setNewContentValue(evt.target.value);
+	};
+	const updNameVal = (evt: ChangeEvent<HTMLInputElement>) => {
+		setNewNameValue(evt.target.value);
+	};
+
+	const submitChanges = async () => {
+		if (webInterfaceUtils.selectedNode instanceof ContentNode) {
+			webInterfaceUtils.selectedNode.content = newContentValue;
+			webInterfaceUtils.selectedNode.name = newNameValue;
+			await webInterfaceUtils.updateGraph();
+
+			webInterfaceUtils.setSelectedNode(null);
+		}
+	};
+
+	useEffect(() => {
+		if (webInterfaceUtils.selectedNode instanceof ContentNode) {
+			setNewContentValue(webInterfaceUtils.selectedNode.content);
+			setNewNameValue(webInterfaceUtils.selectedNode.name);
+		}
+	}, [webInterfaceUtils.selectedNode]);
 
 	return (
-		<div className={props.visibleState}>
+		<div className={`${propPanelStyleWrapper}`}>
 			<div className={styles.propsPanelWrapper}>
 				<label>Name</label>
-				{/*<input type="light" value={updNode?.data.name ?? ""} onChange={changeName} disabled={!updNode} />*/}
-				<input className={styles.inpName} />
+				<input className={styles.inpName} value={newNameValue} onChange={updNameVal} />
 			</div>
 			<div className={styles.propsPanelWrapper}>
-				<label style={{ width: '100%' }}>Content</label>
-				{/*<input type="content" value={updNode?.data.content ?? ""} onChange={changeContent} disabled={!updNode} />*/}
-				<input className={styles.inpContent} />
+				<label>Content</label>
+				<textarea
+					className={styles.inpContent}
+					value={newContentValue}
+					onChange={updContVal}
+				/>
+			</div>
+			<div className={styles.propsPanelWrapper}>
+				<button className={styles.btnSubmit} onClick={submitChanges}>
+					Submit
+				</button>
 			</div>
 		</div>
 	);
