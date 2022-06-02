@@ -2,12 +2,12 @@ import { AtlasNode, ExpressionNode, TextNode } from '../../utils/AtlasGraph';
 
 export const exampleNodes = [
 	new ExpressionNode(
-		new AtlasNode('AtlasGraph.ExpressionNode', 'ex1', 'pkg', [300, 100], true),
+		new AtlasNode('AtlasGraph.ExpressionNode', 'ex1', 'pkg', [100, 100], true),
 		'sin(5)',
 		'-0.9589',
 	),
 	new ExpressionNode(
-		new AtlasNode('AtlasGraph.ExpressionNode', 'ex2', 'pkg', [200, 200], true),
+		new AtlasNode('AtlasGraph.ExpressionNode', 'ex2', 'pkg', [350, 150], true),
 		'ifthenelse(2 == 3, asin(ex1), ex1 * 2)',
 		'-1.9178',
 	),
