@@ -58,6 +58,10 @@ export default function LibPanel({ setDruggedNode, libPanelStyleWrapper }: Props
 		);
 	};
 
+	function getShortName(name: keyof typeof nodesOptions): string {
+		return name.slice(0, 4);
+	}
+
 	function getLibElements(name: keyof typeof nodesOptions): JSX.Element {
 		return (
 			<div
@@ -66,7 +70,7 @@ export default function LibPanel({ setDruggedNode, libPanelStyleWrapper }: Props
 				onDragStart={(event) => onDragStart(event, nodesOptions[name]())}
 				draggable
 			>
-				<span>{name.slice(0, 4)}</span>
+				<span>{getShortName(name)}</span>
 			</div>
 		);
 	}

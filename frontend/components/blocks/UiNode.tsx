@@ -9,9 +9,9 @@ export const uiNodeTypes = {
 	[FileNode.structType]: FileBlock,
 };
 
-export function FormulaBlockWrapper(content: JSX.Element, blockClass: string) {
+export function FormulaBlockWrapper(content: JSX.Element, blockClass: string, uiNodeId: string) {
 	return (
-		<div className={`${styles.block} ${blockClass}`}>
+		<div className={`${styles.block} ${blockClass}`} id={uiNodeId}>
 			<Handle type="target" position={Position.Left} />
 			<Handle type="source" position={Position.Right} id="a" />
 			<div className={styles.display_linebreak}>{content}</div>
@@ -31,6 +31,7 @@ export function TextBlock({ data }: { data: { node: TextNode } }) {
 			</div>
 		</div>,
 		styles.text_block,
+		data.node.getId(),
 	);
 }
 
@@ -67,6 +68,7 @@ export function FileBlock({ data }: { data: { node: FileNode } }) {
 			</div>
 		</div>,
 		styles.text_block,
+		data.node.getId(),
 	);
 }
 
@@ -84,6 +86,7 @@ export function ExpressionBlock({ data }: { data: { node: ExpressionNode } }) {
 			</div>
 		</div>,
 		styles.expression_block,
+		data.node.getId(),
 	);
 }
 

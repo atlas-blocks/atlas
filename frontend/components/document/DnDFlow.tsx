@@ -77,19 +77,20 @@ export default function DnDFlow({ druggedNode, webInterfaceUtils }: Props): JSX.
 	const onDrop = useCallback(
 		(event: React.DragEvent) => {
 			event.preventDefault();
-			// @ts-ignore
-			const reactFlowBounds = reactFlowWrapper.current.getBoundingClientRect();
-			// @ts-ignore
-			const pos = reactFlowInstance.project({
-				x: event.clientX - reactFlowBounds.left - 70,
-				y: event.clientY - reactFlowBounds.top - 20,
-			});
-
-			console.log(reactFlowBounds.width);
 
 			console.assert(druggedNode !== null, 'drugged node should be assigned before dragging');
-			if (druggedNode !== null)
+			if (druggedNode !== null) {
+				const width = webInterfaceUtils.getUiNodeWidth(druggedNode);
+				const height = webInterfaceUtils.getUiNodeHeight(druggedNode);
+				// @ts-ignore
+				const reactFlowBounds = reactFlowWrapper.current.getBoundingClientRect();
+				// @ts-ignore
+				const pos = reactFlowInstance.project({
+					x: event.clientX - reactFlowBounds.left - height / 2,
+					y: event.clientY - reactFlowBounds.top - height / 2,
+				});
 				atlasGraph.nodes.push(druggedNode.setPosition(pos.x, pos.y).setDefaultName());
+			}
 			setUiNodes(WebInterfaceUtils.getUiNodes(atlasGraph));
 		},
 		[reactFlowInstance, druggedNode],

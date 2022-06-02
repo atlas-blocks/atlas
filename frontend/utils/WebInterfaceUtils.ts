@@ -87,6 +87,14 @@ export default class WebInterfaceUtils {
 		}
 	}
 
+	public getUiNodeWidth(node: AtlasNode): number {
+		return 200;
+	}
+
+	public getUiNodeHeight(node: AtlasNode): number {
+		return 100;
+	}
+
 	public getFunctionSignature(name: string, multiline = false): string {
 		// const func = this.graph.getNodeByNameOrNull(name);
 		// if (!(func instanceof FunctionNode)) return '';

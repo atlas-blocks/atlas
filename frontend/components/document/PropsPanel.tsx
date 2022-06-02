@@ -25,8 +25,7 @@ export default function PropsPanel({
 	const submitChanges = async () => {
 		if (webInterfaceUtils.selectedNode instanceof ContentNode) {
 			webInterfaceUtils.selectedNode.content = newContentValue;
-			// webInterfaceUtils.selectedNode.name = newNameValue
-			// webInterfaceUtils.refreshUiElements()
+			webInterfaceUtils.selectedNode.name = newNameValue;
 			await webInterfaceUtils.updateGraph();
 
 			webInterfaceUtils.setSelectedNode(null);
