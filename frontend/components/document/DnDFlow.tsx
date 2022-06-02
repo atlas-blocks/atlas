@@ -19,8 +19,6 @@ import ReactFlow, {
 	Connection,
 	ReactFlowProvider,
 	ReactFlowInstance,
-	useNodesState,
-	useEdgesState,
 } from 'react-flow-renderer';
 
 import { uiNodeTypes } from '../blocks/UiNode';
@@ -42,10 +40,7 @@ export default function DnDFlow({ druggedNode, webInterfaceUtils }: Props): JSX.
 	const reactFlowWrapper = useRef<HTMLDivElement | null>(null);
 	const [uiNodes, setUiNodes] = useState(WebInterfaceUtils.getUiNodes(atlasGraph));
 	const [uiEdges, setUiEdges] = useState(WebInterfaceUtils.getUiEdges(atlasGraph));
-	// const [uiNodes, setUiNodes, onUiNodesChange] = useNodesState(WebInterfaceUtils.getUiNodes(atlasGraph));
-	// const [uiEdges, setUiEdges, onUiEdgesChange] = useEdgesState(WebInterfaceUtils.getUiEdges(atlasGraph));
 
-	// This should be updated to new v10 style with useNodeState
 	const onUiNodesChange = useCallback(
 		(changes: UINodeChange[]) => {
 			webInterfaceUtils.updateNodes(changes);
@@ -90,10 +85,11 @@ export default function DnDFlow({ druggedNode, webInterfaceUtils }: Props): JSX.
 				y: event.clientY - reactFlowBounds.top - 20,
 			});
 
+			console.log(reactFlowBounds.width);
+
 			console.assert(druggedNode !== null, 'drugged node should be assigned before dragging');
 			if (druggedNode !== null)
 				atlasGraph.nodes.push(druggedNode.setPosition(pos.x, pos.y).setDefaultName());
-			// webInterfaceUtils.refreshUiElements();
 			setUiNodes(WebInterfaceUtils.getUiNodes(atlasGraph));
 		},
 		[reactFlowInstance, druggedNode],
