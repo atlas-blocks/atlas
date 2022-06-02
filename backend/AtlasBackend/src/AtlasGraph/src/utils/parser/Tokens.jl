@@ -1,7 +1,7 @@
 module Tokens
 import ..AtlasParser: ParsingException
 using ResultTypes
-export Token, TokenType, gettokens
+export Token, TokenType, gettokens, Precedences
 
 @enum TokenType begin
     VALUE
@@ -20,22 +20,21 @@ export Token, TokenType, gettokens
     DOT
 end
 
-infix_bin_operators = Set{Symbol}([
-    :+,
-    :-,
-    :*,
-    :/,
-    :^,
-    :(:),
-    :(==),
-    :(<=),
-    :(<),
-    :(>),
-    :(>=),
-    :(=>),
-    :(!=),
-    :(..),
-])
+mutable struct Lexer
+    text::String
+    index::Int64
+
+    Lexer(text::String) = new(text, 1)
+end
+
+struct Token{T}
+    type::TokenType
+    content::T
+end
+
+include("./parselets/Precedences.jl")
+
+infix_bin_operators = Set{Symbol}(map(x -> x.content, collect(keys(Precedences.infix_bin_operators_precedence))))
 prefix_unary_operators = Set{Symbol}([:+, :-, :!])
 
 keyword_type = Dict{String,TokenType}(
@@ -49,18 +48,6 @@ keyword_type = Dict{String,TokenType}(
     "." => DOT,
 )
 
-
-mutable struct Lexer
-    text::String
-    index::Int64
-
-    Lexer(text::String) = new(text, 1)
-end
-
-struct Token{T}
-    type::TokenType
-    content::T
-end
 
 isempty(lexer::Lexer) = lexer.index > length(lexer.text)
 nextchar(lexer::Lexer) = lexer.text[lexer.index]
@@ -169,8 +156,18 @@ function match_name(str::AbstractString)::Union{RegexMatch,Nothing}
     return match(r"^(_|[a-zA-Z])\w*", str)
 end
 
+
+function get_operator_matching_regex()::Regex
+    all_operators = union(infix_bin_operators, prefix_unary_operators)
+    sorted_operators = sort(map(x -> string(x), collect(all_operators)), by=x -> -length(x))
+    escaped_operators = map(op -> join(map(x-> "\\" * x, split(op, ""))), sorted_operators)
+    return Regex("^\\.?(" * join(escaped_operators, "|") * ")")
+end
+
+operator_matching_regex = get_operator_matching_regex()
+
 function match_operator(str::AbstractString)::Union{RegexMatch,Nothing}
-    return match(r"^(\+|\-|\*|\/|\^|\:|<=|<|>=|>|==|=>|=|!=|<|>|\.\.)", str)
+    return match(operator_matching_regex, str)
 end
 
 

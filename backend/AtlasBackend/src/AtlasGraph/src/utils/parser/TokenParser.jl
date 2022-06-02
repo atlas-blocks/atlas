@@ -57,14 +57,14 @@ function match(parser::Parser, expected::TokenType)::Bool
 end
 
 function isinfix(token::Token)
-    return haskey(infix_precedence, token)
+    return haskey(Precedences.infix_precedence, token)
 end
 
 function getinfixprecedence(token::Token)
     if !isinfix(token)
         return 0
     end
-    return infix_precedence[token].precedence
+    return Precedences.infix_precedence[token].precedence
 end
 
 function parse_expression(
@@ -107,23 +107,32 @@ function parse_prefix_expression(
     parser::Parser,
     token::Token,
 )::Result{AbstractExpr,Exception}
-    return parse_expression(parser, prefix_precedence[token].precedence)
+    return parse_expression(parser, Precedences.prefix_precedence[token].precedence)
 end
 
 function parse_infix_expression(
     parser::Parser,
     token::Token,
 )::Result{AbstractExpr,Exception}
-    info = infix_precedence[token]
+    info = Precedences.infix_precedence[token]
     return parse_expression(parser, info.precedence - (info.left_associative ? 0 : 1))
 end
 
 
 function updateinfixtype(token::Token)::Token
-    if token.type != Tokens.NAME || !(token.content in Tokens.infix_bin_operators)
+    if token.type != Tokens.NAME
         return token
     end
-    return Token(Tokens.INFIX_BIN_OPERATOR, token.content)
+
+    if token.content in Tokens.infix_bin_operators
+        return Token(Tokens.INFIX_BIN_OPERATOR, token.content)
+    end
+
+    if string(token.content)[1:1] == "." && Symbol(string(token.content)[2:end]) in Tokens.infix_bin_operators
+        return Token(Tokens.INFIX_BIN_OPERATOR, token.content)
+    end
+
+    return token
 end
 
 function updateprefixtype(token::Token)::Token
@@ -134,7 +143,6 @@ function updateprefixtype(token::Token)::Token
 end
 
 include("./parselets/Parselets.jl")
-include("./parselets/Precedence.jl")
 
 
 end
