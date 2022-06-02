@@ -77,7 +77,6 @@ function parse_expression(
     token::Token = updateprefixtype(unwrap(consume(parser)))
 
     if !haskey(prefix_parselets, token.type)
-        println(parser.tokens)
         return ParsingException("Couldn't parse \"$(string(token.content))\".")
     end
     left = prefix_parselets[token.type](parser, token)

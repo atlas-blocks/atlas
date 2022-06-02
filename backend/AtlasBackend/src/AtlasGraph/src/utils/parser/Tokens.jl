@@ -164,7 +164,7 @@ function get_operator_matching_regex()::Regex
     sorted_operators =
         sort(map(x -> string(x), collect(all_operators)), by = x -> -length(x))
     escaped_operators = map(op -> join(map(x -> "\\" * x, split(op, ""))), sorted_operators)
-    return Regex("^\\.?(" * join(escaped_operators, "|") * ")")
+    return Regex("^(" * join(escaped_operators, "|") * ")")
 end
 
 operator_matching_regex = get_operator_matching_regex()
