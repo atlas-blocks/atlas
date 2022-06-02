@@ -86,7 +86,7 @@ export default function DnDFlow({ druggedNode, webInterfaceUtils }: Props): JSX.
 				const reactFlowBounds = reactFlowWrapper.current.getBoundingClientRect();
 				// @ts-ignore
 				const pos = reactFlowInstance.project({
-					x: event.clientX - reactFlowBounds.left - height / 2,
+					x: event.clientX - reactFlowBounds.left - width / 2,
 					y: event.clientY - reactFlowBounds.top - height / 2,
 				});
 				atlasGraph.nodes.push(druggedNode.setPosition(pos.x, pos.y).setDefaultName());

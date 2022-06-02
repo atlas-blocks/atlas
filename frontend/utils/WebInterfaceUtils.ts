@@ -88,7 +88,7 @@ export default class WebInterfaceUtils {
 	}
 
 	public getUiNodeWidth(node: AtlasNode): number {
-		return 200;
+		return 100;
 	}
 
 	public getUiNodeHeight(node: AtlasNode): number {
