@@ -34,7 +34,9 @@ end
 
 include("./parselets/Precedences.jl")
 
-infix_bin_operators = Set{Symbol}(map(x -> x.content, collect(keys(Precedences.infix_bin_operators_precedence))))
+infix_bin_operators = Set{Symbol}(
+    map(x -> x.content, collect(keys(Precedences.infix_bin_operators_precedence))),
+)
 prefix_unary_operators = Set{Symbol}([:+, :-, :!])
 
 keyword_type = Dict{String,TokenType}(
@@ -159,8 +161,9 @@ end
 
 function get_operator_matching_regex()::Regex
     all_operators = union(infix_bin_operators, prefix_unary_operators)
-    sorted_operators = sort(map(x -> string(x), collect(all_operators)), by=x -> -length(x))
-    escaped_operators = map(op -> join(map(x-> "\\" * x, split(op, ""))), sorted_operators)
+    sorted_operators =
+        sort(map(x -> string(x), collect(all_operators)), by = x -> -length(x))
+    escaped_operators = map(op -> join(map(x -> "\\" * x, split(op, ""))), sorted_operators)
     return Regex("^\\.?(" * join(escaped_operators, "|") * ")")
 end
 

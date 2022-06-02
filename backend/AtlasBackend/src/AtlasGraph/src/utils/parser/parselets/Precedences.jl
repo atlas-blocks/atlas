@@ -28,24 +28,24 @@ struct InfixTokenInfo
 end
 
 infix_bin_operators_precedence = Dict{Token,InfixTokenInfo}(
-    Token(Tokens.NAME, :+) => InfixTokenInfo(SUM, true),
-    Token(Tokens.NAME, :-) => InfixTokenInfo(SUM, true),
-    Token(Tokens.NAME, :*) => InfixTokenInfo(PRODUCT, true),
-    Token(Tokens.NAME, :/) => InfixTokenInfo(PRODUCT, true),
-    Token(Tokens.NAME, :^) => InfixTokenInfo(EXPONENT, false),
-    Token(Tokens.NAME, :|) => InfixTokenInfo(BIT_OR, true),
-    Token(Tokens.NAME, :||) => InfixTokenInfo(LOGICAL_OR, true),
-    Token(Tokens.NAME, :&) => InfixTokenInfo(BIT_AND, true),
-    Token(Tokens.NAME, :&&) => InfixTokenInfo(LOGICAL_AND, true),
-    Token(Tokens.NAME, :(:)) => InfixTokenInfo(UNIT_RANGE, true),
-    Token(Tokens.NAME, :(==)) => InfixTokenInfo(EQUALITY, true),
-    Token(Tokens.NAME, :(<=)) => InfixTokenInfo(EQUALITY, true),
-    Token(Tokens.NAME, :(<)) => InfixTokenInfo(EQUALITY, true),
-    Token(Tokens.NAME, :(>=)) => InfixTokenInfo(EQUALITY, true),
-    Token(Tokens.NAME, :(>)) => InfixTokenInfo(EQUALITY, true),
-    Token(Tokens.NAME, :(!=)) => InfixTokenInfo(EQUALITY, true),
-    Token(Tokens.NAME, :(=>)) => InfixTokenInfo(EQUALITY, true),
-    Token(Tokens.NAME, :(..)) => InfixTokenInfo(UNIT_RANGE, true),
+    Token(Tokens.INFIX_BIN_OPERATOR, :+) => InfixTokenInfo(SUM, true),
+    Token(Tokens.INFIX_BIN_OPERATOR, :-) => InfixTokenInfo(SUM, true),
+    Token(Tokens.INFIX_BIN_OPERATOR, :*) => InfixTokenInfo(PRODUCT, true),
+    Token(Tokens.INFIX_BIN_OPERATOR, :/) => InfixTokenInfo(PRODUCT, true),
+    Token(Tokens.INFIX_BIN_OPERATOR, :^) => InfixTokenInfo(EXPONENT, false),
+    Token(Tokens.INFIX_BIN_OPERATOR, :|) => InfixTokenInfo(BIT_OR, true),
+    Token(Tokens.INFIX_BIN_OPERATOR, :||) => InfixTokenInfo(LOGICAL_OR, true),
+    Token(Tokens.INFIX_BIN_OPERATOR, :&) => InfixTokenInfo(BIT_AND, true),
+    Token(Tokens.INFIX_BIN_OPERATOR, :&&) => InfixTokenInfo(LOGICAL_AND, true),
+    Token(Tokens.INFIX_BIN_OPERATOR, :(:)) => InfixTokenInfo(UNIT_RANGE, true),
+    Token(Tokens.INFIX_BIN_OPERATOR, :(==)) => InfixTokenInfo(EQUALITY, true),
+    Token(Tokens.INFIX_BIN_OPERATOR, :(<=)) => InfixTokenInfo(EQUALITY, true),
+    Token(Tokens.INFIX_BIN_OPERATOR, :(<)) => InfixTokenInfo(EQUALITY, true),
+    Token(Tokens.INFIX_BIN_OPERATOR, :(>=)) => InfixTokenInfo(EQUALITY, true),
+    Token(Tokens.INFIX_BIN_OPERATOR, :(>)) => InfixTokenInfo(EQUALITY, true),
+    Token(Tokens.INFIX_BIN_OPERATOR, :(!=)) => InfixTokenInfo(EQUALITY, true),
+    Token(Tokens.INFIX_BIN_OPERATOR, :(=>)) => InfixTokenInfo(EQUALITY, true),
+    Token(Tokens.INFIX_BIN_OPERATOR, :(..)) => InfixTokenInfo(UNIT_RANGE, true),
 )
 
 infix_keywords_precedence = Dict{Token,InfixTokenInfo}(
@@ -57,9 +57,9 @@ infix_keywords_precedence = Dict{Token,InfixTokenInfo}(
 infix_precedence = merge(infix_keywords_precedence, infix_bin_operators_precedence)
 
 prefix_precedence = Dict{Token,InfixTokenInfo}(
-    Token(Tokens.NAME, :-) => InfixTokenInfo(PREFIX, true),
-    Token(Tokens.NAME, :+) => InfixTokenInfo(PREFIX, true),
-    Token(Tokens.NAME, :!) => InfixTokenInfo(PREFIX, true),
+    Token(Tokens.PREFIX_UNARY_OPERATOR, :-) => InfixTokenInfo(PREFIX, true),
+    Token(Tokens.PREFIX_UNARY_OPERATOR, :+) => InfixTokenInfo(PREFIX, true),
+    Token(Tokens.PREFIX_UNARY_OPERATOR, :!) => InfixTokenInfo(PREFIX, true),
 )
 
 end

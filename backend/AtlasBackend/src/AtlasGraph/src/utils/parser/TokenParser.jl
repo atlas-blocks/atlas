@@ -74,22 +74,21 @@ function parse_expression(
     if !hasnext(parser)
         return ValueExpr(nothing)
     end
-    token::Token = unwrap(consume(parser))
+    token::Token = updateprefixtype(unwrap(consume(parser)))
 
-
-    if !haskey(prefix_parselets, updateprefixtype(token).type)
+    if !haskey(prefix_parselets, token.type)
         println(parser.tokens)
         return ParsingException("Couldn't parse \"$(string(token.content))\".")
     end
-    left = prefix_parselets[updateprefixtype(token).type](parser, token)
+    left = prefix_parselets[token.type](parser, token)
     if ResultTypes.iserror(left)
         return unwrap_error(left)
     end
     left = unwrap(left)
 
-    while hasnext(parser) && precedence < getinfixprecedence(peek(parser))
-        token = unwrap(consume(parser))
-        left = infix_parselets[updateinfixtype(token).type](parser, left, token)
+    while hasnext(parser) && precedence < getinfixprecedence(updateinfixtype(peek(parser)))
+        token = updateinfixtype(unwrap(consume(parser)))
+        left = infix_parselets[token.type](parser, left, token)
         if ResultTypes.iserror(left)
             return unwrap_error(left)
         end
@@ -120,19 +119,10 @@ end
 
 
 function updateinfixtype(token::Token)::Token
-    if token.type != Tokens.NAME
+    if token.type != Tokens.NAME || !(token.content in Tokens.infix_bin_operators)
         return token
     end
-
-    if token.content in Tokens.infix_bin_operators
-        return Token(Tokens.INFIX_BIN_OPERATOR, token.content)
-    end
-
-    if string(token.content)[1:1] == "." && Symbol(string(token.content)[2:end]) in Tokens.infix_bin_operators
-        return Token(Tokens.INFIX_BIN_OPERATOR, token.content)
-    end
-
-    return token
+    return Token(Tokens.INFIX_BIN_OPERATOR, token.content)
 end
 
 function updateprefixtype(token::Token)::Token
