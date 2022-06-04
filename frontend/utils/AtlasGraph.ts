@@ -6,13 +6,17 @@ export default class AtlasGraph {
 		this.nodes = [];
 		this.edges = [];
 	}
+
 	private static nameCnt = 0;
+
 	static getDefaultName() {
 		return 'b' + this.nameCnt++;
 	}
+
 	getByName(name: string): AtlasNode[] {
 		return this.nodes.filter((node) => node.name === name);
 	}
+
 	getById(id: string): AtlasNode {
 		const nodes = this.nodes.filter((node) => node.getId() === id);
 		console.assert(nodes.length == 1);
@@ -28,6 +32,7 @@ export class AtlasEdge {
 		this.to = to;
 		this.from = from;
 	}
+
 	public static constructorEmpty() {
 		return new AtlasEdge('', '');
 	}
@@ -54,6 +59,7 @@ export class AtlasNode {
 		this.position = position;
 		this.visibility = visibility;
 	}
+
 	public static constructorEmpty() {
 		return new AtlasNode('', '', '', [0, 0], false);
 	}
@@ -62,10 +68,12 @@ export class AtlasNode {
 		this.position = [x, y];
 		return this;
 	}
+
 	setDefaultName() {
 		this.name = AtlasGraph.getDefaultName();
 		return this;
 	}
+
 	getId() {
 		return this.package + '/' + this.name;
 	}
@@ -98,6 +106,7 @@ export class FileNode extends AtlasNode {
 		this.content = content;
 		this.filename = filename;
 	}
+
 	public static constructorEmpty() {
 		return new FileNode(AtlasNode.constructorEmpty(), '', '');
 	}
@@ -114,5 +123,17 @@ export class ExpressionNode extends ContentNode {
 
 	public static constructorEmpty() {
 		return new ExpressionNode(AtlasNode.constructorEmpty(), '', '');
+	}
+}
+
+export class MatrixFilterNode extends ExpressionNode {
+	static uitype = 'MatrixFilterNode'
+
+	// constructor(node: AtlasNode, content: string, result: string) {
+	// 	super(node, content, result);
+	// }
+
+	public static constructorEmpty() {
+		return new MatrixFilterNode(AtlasNode.constructorEmpty(), '', '',);
 	}
 }

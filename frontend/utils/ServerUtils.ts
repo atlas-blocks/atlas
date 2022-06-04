@@ -1,5 +1,12 @@
 import ErrorUtils from './errors/ErrorUtils';
-import AtlasGraph, { AtlasEdge, AtlasNode, ExpressionNode, TextNode, FileNode } from './AtlasGraph';
+import AtlasGraph, {
+	AtlasEdge,
+	AtlasNode,
+	ExpressionNode,
+	TextNode,
+	FileNode,
+	MatrixFilterNode,
+} from './AtlasGraph';
 
 type Response = {
 	success: boolean;
@@ -70,10 +77,13 @@ abstract class ServerUtils {
 		Object.assign(graph, updatedGraph);
 	}
 
-	public static extractNodes(nodes: { type: string }[]): AtlasNode[] {
+	public static extractNodes(nodes: { type: string; uitype?: string }[]): AtlasNode[] {
 		const updatedNodes: AtlasNode[] = [];
 		for (const node of nodes) {
 			if (node.type === ExpressionNode.structType) {
+				if (node.uitype === MatrixFilterNode.uitype) {
+					updatedNodes.push(Object.assign(MatrixFilterNode.constructorEmpty(), node));
+				}
 				updatedNodes.push(Object.assign(ExpressionNode.constructorEmpty(), node));
 			} else if (node.type === TextNode.structType) {
 				updatedNodes.push(Object.assign(TextNode.constructorEmpty(), node));
@@ -87,6 +97,7 @@ abstract class ServerUtils {
 		}
 		return updatedNodes;
 	}
+
 	public static extractEdges(edges: []): AtlasEdge[] {
 		const updated: AtlasEdge[] = [];
 

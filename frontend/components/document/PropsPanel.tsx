@@ -1,7 +1,8 @@
 import styles from '../../styles/PropsPanel.module.css';
-import React, { ChangeEvent, useEffect, useImperativeHandle, useState } from 'react';
+import React, { ChangeEvent, useEffect, useState } from 'react';
 import AtlasGraph, { AtlasNode, ContentNode } from '../../utils/AtlasGraph';
 import WebInterfaceUtils from '../../utils/WebInterfaceUtils';
+import MatrixFilterBuilder from './MatrixFilterBuilder';
 
 type Props = {
 	propPanelStyleWrapper: string;
@@ -32,6 +33,11 @@ export default function PropsPanel({
 		}
 	};
 
+	function chooseProperties(): JSX.Element {
+		console.log(webInterfaceUtils.setSelectedNode);
+		return <MatrixFilterBuilder setNewContentValue={setNewContentValue} />;
+	}
+
 	useEffect(() => {
 		if (webInterfaceUtils.selectedNode instanceof ContentNode) {
 			setNewContentValue(webInterfaceUtils.selectedNode.content);
@@ -53,6 +59,7 @@ export default function PropsPanel({
 					onChange={updContVal}
 				/>
 			</div>
+			{chooseProperties()}
 			<div className={styles.propsPanelWrapper}>
 				<button className={styles.btnSubmit} onClick={submitChanges}>
 					Submit

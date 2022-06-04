@@ -1,6 +1,12 @@
 import styles from '../../styles/LibPanel.module.css';
 import React, { useState } from 'react';
-import { AtlasNode, ExpressionNode, TextNode, FileNode } from '../../utils/AtlasGraph';
+import {
+	AtlasNode,
+	ExpressionNode,
+	TextNode,
+	FileNode,
+	MatrixFilterNode,
+} from '../../utils/AtlasGraph';
 
 type Props = {
 	setDruggedNode: React.Dispatch<React.SetStateAction<AtlasNode | null>>;
@@ -27,6 +33,12 @@ export default function LibPanel({ setDruggedNode, libPanelStyleWrapper }: Props
 			),
 		FileNode: () =>
 			new FileNode(new AtlasNode(FileNode.structType, 'name1', 'pkg', [0, 0], true), '', ''),
+		MatrixFilterNode: () =>
+			new MatrixFilterNode(
+				new AtlasNode(ExpressionNode.structType, '', 'pkg', [0, 0], true),
+				'2 + 3',
+				'5',
+			),
 	};
 
 	const libElements = {
