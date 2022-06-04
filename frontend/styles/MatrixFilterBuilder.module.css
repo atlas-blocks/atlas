@@ -1,42 +1,39 @@
 .filterWrapper {
-    border: 1px solid #eaeaea;
-    height: fit-content;
-    margin: 10px;
-    padding-left: 5px;
-    display: flex;
-    font-size: 14px;
-    flex-direction: column;
-    line-height: 30px;
+	border: 1px solid #eaeaea;
+	height: fit-content;
+	margin: 10px;
+	padding-left: 5px;
+	display: flex;
+	font-size: 14px;
+	flex-direction: column;
+	line-height: 30px;
 }
-
 
 .title {
-    margin: 10px;
-    color: #30a5be;
-    font-size: 14px;
+	margin: 10px;
+	color: #30a5be;
+	font-size: 14px;
 }
 
-
 .filterWrapper input {
-    border-style: none;
-    border-bottom: 1px solid black;
-    margin-left: 5px;
-    width: 30px;
-    outline: none;
+	border-style: none;
+	border-bottom: 1px solid black;
+	margin-left: 5px;
+	width: 30px;
+	outline: none;
 }
 
 .btnFilter {
-    border-style: none;
-    width: fit-content;
-    height: 20px;
-    font-size: 10px;
+	border-style: none;
+	width: fit-content;
+	height: 20px;
+	font-size: 10px;
 }
 
 .btnFilter:hover {
-    background-color: lightgray;
+	background-color: lightgray;
 }
 
 .btnFilter:active {
-    background-color: #30a5be;
+	background-color: #30a5be;
 }
-

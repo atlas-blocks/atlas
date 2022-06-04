@@ -1,76 +1,76 @@
 .layout {
-    display: grid;
-    grid-template-columns: repeat(12, 1fr);
-    grid-template-rows: 8vh 5vh 5vh 82vh;
+	display: grid;
+	grid-template-columns: repeat(12, 1fr);
+	grid-template-rows: 8vh 5vh 5vh 82vh;
 }
 
 .leftpanel {
-    border: 1px solid #eaeaea;
-    grid-column: 1 / 3;
-    grid-row: 4;
+	border: 1px solid #eaeaea;
+	grid-column: 1 / 3;
+	grid-row: 4;
 }
 
 .flowcanvas {
-    grid-column: 3 / 11;
-    justify-content: center;
-    text-align: center;
-    grid-row: 2/5;
-    border: 1px solid #eaeaea;
-    width: 100%;
-    height: 100%;
-    font-size: 5px;
-    display: flex;
+	grid-column: 3 / 11;
+	justify-content: center;
+	text-align: center;
+	grid-row: 2/5;
+	border: 1px solid #eaeaea;
+	width: 100%;
+	height: 100%;
+	font-size: 5px;
+	display: flex;
 }
 
 .propsPanel {
-    /*border: 1px solid #eaeaea;*/
-    grid-column: 11/13;
-    grid-row: 4;
-    display: flex;
-    flex-direction: column;
-    overflow-y: scroll;
+	/*border: 1px solid #eaeaea;*/
+	grid-column: 11/13;
+	grid-row: 4;
+	display: flex;
+	flex-direction: column;
+	overflow-y: scroll;
 }
 
 .panelHidden {
-    visibility: hidden;
+	visibility: hidden;
 }
 
 .libPanel {
-    /*border: 1px solid #eaeaea;*/
-    grid-column: 11/13;
-    grid-row: 4;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    overflow-y: scroll;
+	/*border: 1px solid #eaeaea;*/
+	grid-column: 11/13;
+	grid-row: 4;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	overflow-y: scroll;
 }
 
 .leftTop {
-    grid-column: 1 / 3;
-    grid-row: 1;
-    /*border: 1px solid #eaeaea;*/
-    display: flex;
-    justify-content: space-between;
-    margin-left: 10px;
-    margin-right: 5px;
+	grid-column: 1 / 3;
+	grid-row: 1;
+	/*border: 1px solid #eaeaea;*/
+	display: flex;
+	justify-content: space-between;
+	margin-left: 10px;
+	margin-right: 5px;
 }
 
 .centerTop {
-    grid-column: 3 / 11;
-    grid-row: 1;
-    /*border: 1px solid #eaeaea;*/
-    text-align: center;
-    margin-top: 15px;
+	grid-column: 3 / 11;
+	grid-row: 1;
+	/*border: 1px solid #eaeaea;*/
+	text-align: center;
+	margin-top: 15px;
 }
 
 .rightTop {
-    grid-column: 11 / 13;
-    grid-row: 1;
-    /*border: 1px solid #eaeaea;*/
-    display: flex;
-    justify-content: space-between;
-    margin-left: 10px;
-    margin-right: 10px;
+	grid-column: 11 / 13;
+	grid-row: 1;
+	/*border: 1px solid #eaeaea;*/
+	display: flex;
+	justify-content: space-between;
+	margin-left: 10px;
+	margin-right: 10px;
 }
 
 /*.expressionNode {*/
