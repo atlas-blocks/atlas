@@ -129,10 +129,6 @@ export class ExpressionNode extends ContentNode {
 export class MatrixFilterNode extends ExpressionNode {
 	static uitype = 'MatrixFilterNode';
 
-	// constructor(node: AtlasNode, content: string, result: string) {
-	// 	super(node, content, result);
-	// }
-
 	public static constructorEmpty() {
 		return new MatrixFilterNode(AtlasNode.constructorEmpty(), '', '');
 	}

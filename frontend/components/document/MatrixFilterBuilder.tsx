@@ -19,23 +19,23 @@ export default function MatrixFilterBuilder({ setNewContentValue }: Props): JSX.
 		},
 	];
 
-	const [fltrCols, setFltrCols] = useState<any>(initFltrCols);
-	const [fltrRows, setFltrRows] = useState<any>(initFltrRows);
-	const refCol = useRef<any>([[], [], []]);
-	const refRow = useRef<any>([[], [], []]);
-	const refMxName = useRef<any>('');
+	const [filterCols, setFilterCols] = useState<typeof initFltrCols>(initFltrCols);
+	const [filterRows, setFilterRows] = useState<typeof initFltrRows>(initFltrRows);
+	const refCol = useRef<HTMLInputElement[][]>([[], [], []]);
+	const refRow = useRef<HTMLInputElement[][]>([[], [], []]);
+	const refMatrixName = useRef<HTMLInputElement>(null);
 
 	const getExprCols = (mxName: string, num: string, opr: string, val: string) =>
-		'broadcast(' + opr + ',' + mxName + '[..,' + num + '], ' + val + ')';
+		'broadcast(' + opr + ', getindex(' + mxName + ', .., ' + num + '), ' + val + ')';
 	const getExprRows = (mxName: string, num: string, opr: string, val: string) =>
-		'broadcast(' + opr + ',' + mxName + '[' + num + ',..], ' + val + ')';
+		'broadcast(' + opr + ', getindex(' + mxName + ', ' + num + ', ..), ' + val + ')';
 
-	const fltrChange = () => {
-		setFltrCols(() =>
-			fltrCols.map((obj: any, index: number) =>
-				Object.assign(obj, {
+	const filterChange = () => {
+		setFilterCols(() =>
+			filterCols.map((item: { cond: string; exp: string }, index) =>
+				Object.assign(item, {
 					exp: getExprCols(
-						refMxName.current.value,
+						refMatrixName.current !== null ? refMatrixName.current.value : '',
 						refCol.current[0][index].value,
 						refCol.current[1][index].value,
 						refCol.current[2][index].value,
@@ -44,11 +44,11 @@ export default function MatrixFilterBuilder({ setNewContentValue }: Props): JSX.
 			),
 		);
 
-		setFltrRows(() =>
-			fltrRows.map((obj: any, index: any) =>
-				Object.assign(obj, {
+		setFilterRows(() =>
+			filterRows.map((item, index) =>
+				Object.assign(item, {
 					exp: getExprRows(
-						refMxName.current.value,
+						refMatrixName.current !== null ? refMatrixName.current.value : '',
 						refRow.current[0][index].value,
 						refRow.current[1][index].value,
 						refRow.current[2][index].value,
@@ -58,32 +58,35 @@ export default function MatrixFilterBuilder({ setNewContentValue }: Props): JSX.
 		);
 	};
 
-	const addFltr = (cols: boolean, cond: string) => {
+	const addFilter = (cols: boolean, cond: string) => {
 		cols
-			? setFltrCols(() => fltrCols.concat({ cond: cond, exp: '' }))
-			: setFltrRows(() => fltrRows.concat({ cond: cond, exp: '' }));
+			? setFilterCols(() => filterCols.concat({ cond: cond, exp: '' }))
+			: setFilterRows(() => filterRows.concat({ cond: cond, exp: '' }));
 	};
 
 	let resCols = '';
 	let resRows = '';
 	let finalExp = '';
-	fltrCols.forEach((item: any, index: number) => {
+	filterCols.forEach((item, index) => {
 		index !== 0
 			? (resCols = 'broadcast(' + item.cond + ',' + resCols + ',' + item.exp + ')')
 			: (resCols = item.exp);
 	});
-	fltrRows.forEach((item: any, index: number) => {
+	filterRows.forEach((item, index) => {
 		index !== 0
 			? (resRows = 'broadcast(' + item.cond + ',' + resRows + ',' + item.exp + ')')
 			: (resRows = item.exp);
 	});
-	finalExp = refMxName.current.value + '[' + resCols + ', ' + resRows + ']';
+	finalExp =
+		refMatrixName.current !== null
+			? 'getindex(' + refMatrixName.current.value + ', ' + resCols + ', ' + resRows + ')'
+			: '';
 
 	useEffect(() => {
 		setNewContentValue(finalExp);
 	}, [finalExp]);
 
-	function listFltr(item: any, index: any, cols: boolean): JSX.Element {
+	function listFilters(item: any, index: number, cols: boolean): JSX.Element {
 		return (
 			<div key={index}>
 				<label>{cols ? 'col:' : 'row:'}</label>
@@ -91,21 +94,21 @@ export default function MatrixFilterBuilder({ setNewContentValue }: Props): JSX.
 					ref={(el: any) =>
 						cols ? (refCol.current[0][index] = el) : (refRow.current[0][index] = el)
 					}
-					onChange={fltrChange}
+					onChange={filterChange}
 				/>
 				<label>opr:</label>
 				<input
 					ref={(el: any) =>
 						cols ? (refCol.current[1][index] = el) : (refRow.current[1][index] = el)
 					}
-					onChange={fltrChange}
+					onChange={filterChange}
 				/>
 				<label>val:</label>
 				<input
 					ref={(el: any) =>
 						cols ? (refCol.current[2][index] = el) : (refRow.current[2][index] = el)
 					}
-					onChange={fltrChange}
+					onChange={filterChange}
 				/>
 			</div>
 		);
@@ -119,44 +122,36 @@ export default function MatrixFilterBuilder({ setNewContentValue }: Props): JSX.
 					<label>matrix:</label>
 					<input
 						style={{ width: '120px' }}
-						ref={refMxName}
+						ref={refMatrixName}
 						className={styles.inpName}
-						onChange={fltrChange}
+						onChange={filterChange}
 					/>
 				</div>
 
-				{fltrCols.map((item: any, index: any) => listFltr(item, index, true))}
+				{filterCols.map((item, index) => listFilters(item, index, true))}
 
 				<div>
-					<button
-						id={'cols'}
-						className={styles.btnFilter}
-						onClick={() => addFltr(true, '&')}
-					>
+					<button className={styles.btnFilter} onClick={() => addFilter(true, '&')}>
 						and
 					</button>
-					<button
-						id={'cols'}
-						className={styles.btnFilter}
-						onClick={() => addFltr(true, '||')}
-					>
+					<button className={styles.btnFilter} onClick={() => addFilter(true, '||')}>
 						or
 					</button>
 				</div>
 
-				{fltrRows.map((item: any, index: any) => listFltr(item, index, false))}
+				{filterRows.map((item, index) => listFilters(item, index, false))}
 				<div>
 					<button
 						id={'rows'}
 						className={styles.btnFilter}
-						onClick={() => addFltr(false, '&')}
+						onClick={() => addFilter(false, '&')}
 					>
 						and
 					</button>
 					<button
 						id={'rows'}
 						className={styles.btnFilter}
-						onClick={() => addFltr(false, '||')}
+						onClick={() => addFilter(false, '||')}
 					>
 						or
 					</button>
