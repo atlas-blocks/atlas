@@ -1,6 +1,6 @@
 import styles from '../../styles/PropsPanel.module.css';
 import React, { ChangeEvent, useEffect, useState } from 'react';
-import AtlasGraph, { AtlasNode, ContentNode } from '../../utils/AtlasGraph';
+import AtlasGraph, { AtlasNode, ContentNode, MatrixFilterNode } from '../../utils/AtlasGraph';
 import WebInterfaceUtils from '../../utils/WebInterfaceUtils';
 import MatrixFilterBuilder from './MatrixFilterBuilder';
 
@@ -34,8 +34,11 @@ export default function PropsPanel({
 	};
 
 	function chooseProperties(): JSX.Element {
-		console.log(webInterfaceUtils.setSelectedNode);
-		return <MatrixFilterBuilder setNewContentValue={setNewContentValue} />;
+		return webInterfaceUtils.selectedNode instanceof MatrixFilterNode ? (
+			<MatrixFilterBuilder setNewContentValue={setNewContentValue} />
+		) : (
+			<></>
+		);
 	}
 
 	useEffect(() => {

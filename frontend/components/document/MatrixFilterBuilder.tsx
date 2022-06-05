@@ -23,7 +23,7 @@ export default function MatrixFilterBuilder({ setNewContentValue }: Props): JSX.
 	const [filterRows, setFilterRows] = useState<typeof initFltrRows>(initFltrRows);
 	const refCol = useRef<HTMLInputElement[][]>([[], [], []]);
 	const refRow = useRef<HTMLInputElement[][]>([[], [], []]);
-	const refMatrixName = useRef<HTMLInputElement>(null);
+	const refMatrixName = useRef<HTMLInputElement>(null!);
 
 	const getExprCols = (mxName: string, num: string, opr: string, val: string) =>
 		'broadcast(' + opr + ', getindex(' + mxName + ', .., ' + num + '), ' + val + ')';
@@ -32,12 +32,14 @@ export default function MatrixFilterBuilder({ setNewContentValue }: Props): JSX.
 
 	const filterChange = () => {
 		setFilterCols(() =>
-			filterCols.map((item: { cond: string; exp: string }, index) =>
+			filterCols.map((item, index) =>
 				Object.assign(item, {
 					exp: getExprCols(
-						refMatrixName.current !== null ? refMatrixName.current.value : '',
+						refMatrixName.current.value,
 						refCol.current[0][index].value,
-						refCol.current[1][index].value,
+						refCol.current[1][index].value === '='
+							? '=='
+							: refCol.current[1][index].value,
 						refCol.current[2][index].value,
 					),
 				}),
@@ -48,9 +50,11 @@ export default function MatrixFilterBuilder({ setNewContentValue }: Props): JSX.
 			filterRows.map((item, index) =>
 				Object.assign(item, {
 					exp: getExprRows(
-						refMatrixName.current !== null ? refMatrixName.current.value : '',
+						refMatrixName.current.value,
 						refRow.current[0][index].value,
-						refRow.current[1][index].value,
+						refCol.current[1][index].value === '='
+							? '=='
+							: refCol.current[1][index].value,
 						refRow.current[2][index].value,
 					),
 				}),
@@ -68,44 +72,41 @@ export default function MatrixFilterBuilder({ setNewContentValue }: Props): JSX.
 	let resRows = '';
 	let finalExp = '';
 	filterCols.forEach((item, index) => {
-		index !== 0
+		index
 			? (resCols = 'broadcast(' + item.cond + ',' + resCols + ',' + item.exp + ')')
 			: (resCols = item.exp);
 	});
 	filterRows.forEach((item, index) => {
-		index !== 0
+		index
 			? (resRows = 'broadcast(' + item.cond + ',' + resRows + ',' + item.exp + ')')
 			: (resRows = item.exp);
 	});
-	finalExp =
-		refMatrixName.current !== null
-			? 'getindex(' + refMatrixName.current.value + ', ' + resCols + ', ' + resRows + ')'
-			: '';
+	finalExp = 'getindex(' + refMatrixName.current?.value + ', ' + resCols + ', ' + resRows + ')';
 
 	useEffect(() => {
 		setNewContentValue(finalExp);
 	}, [finalExp]);
 
-	function listFilters(item: any, index: number, cols: boolean): JSX.Element {
+	function listFilters(index: number, cols: boolean): JSX.Element {
 		return (
 			<div key={index}>
 				<label>{cols ? 'col:' : 'row:'}</label>
 				<input
-					ref={(el: any) =>
+					ref={(el: HTMLInputElement) =>
 						cols ? (refCol.current[0][index] = el) : (refRow.current[0][index] = el)
 					}
 					onChange={filterChange}
 				/>
 				<label>opr:</label>
 				<input
-					ref={(el: any) =>
+					ref={(el: HTMLInputElement) =>
 						cols ? (refCol.current[1][index] = el) : (refRow.current[1][index] = el)
 					}
 					onChange={filterChange}
 				/>
 				<label>val:</label>
 				<input
-					ref={(el: any) =>
+					ref={(el: HTMLInputElement) =>
 						cols ? (refCol.current[2][index] = el) : (refRow.current[2][index] = el)
 					}
 					onChange={filterChange}
@@ -128,7 +129,7 @@ export default function MatrixFilterBuilder({ setNewContentValue }: Props): JSX.
 					/>
 				</div>
 
-				{filterCols.map((item, index) => listFilters(item, index, true))}
+				{filterCols.map((item, index) => listFilters(index, true))}
 
 				<div>
 					<button className={styles.btnFilter} onClick={() => addFilter(true, '&')}>
@@ -139,7 +140,7 @@ export default function MatrixFilterBuilder({ setNewContentValue }: Props): JSX.
 					</button>
 				</div>
 
-				{filterRows.map((item, index) => listFilters(item, index, false))}
+				{filterRows.map((item, index) => listFilters(index, false))}
 				<div>
 					<button
 						id={'rows'}
