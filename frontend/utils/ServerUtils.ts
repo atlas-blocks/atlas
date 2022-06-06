@@ -81,10 +81,9 @@ abstract class ServerUtils {
 		const updatedNodes: AtlasNode[] = [];
 		for (const node of nodes) {
 			if (node.type === ExpressionNode.structType) {
-				if (node.uitype === MatrixFilterNode.uitype) {
-					updatedNodes.push(Object.assign(MatrixFilterNode.constructorEmpty(), node));
-				}
 				updatedNodes.push(Object.assign(ExpressionNode.constructorEmpty(), node));
+			} else if (node.type === MatrixFilterNode.structType) {
+				updatedNodes.push(Object.assign(MatrixFilterNode.constructorEmpty(), node));
 			} else if (node.type === TextNode.structType) {
 				updatedNodes.push(Object.assign(TextNode.constructorEmpty(), node));
 			} else if (node.type === FileNode.structType) {

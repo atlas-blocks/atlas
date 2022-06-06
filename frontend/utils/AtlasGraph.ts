@@ -127,9 +127,20 @@ export class ExpressionNode extends ContentNode {
 }
 
 export class MatrixFilterNode extends ExpressionNode {
-	static uitype = 'MatrixFilterNode';
+	static structType: string = 'AtlasNode.MatrixFilterNode';
+	public uitype: string;
+
+	constructor(node: AtlasNode, content: string, result: string, uitype: string) {
+		super(node, content, result);
+		this.uitype = uitype;
+	}
 
 	public static constructorEmpty() {
-		return new MatrixFilterNode(AtlasNode.constructorEmpty(), '', '');
+		return new MatrixFilterNode(
+			AtlasNode.constructorEmpty(),
+			'',
+			'',
+			'AtlasNode.MatrixFilterNode',
+		);
 	}
 }
