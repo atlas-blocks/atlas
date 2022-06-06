@@ -77,22 +77,21 @@ abstract class ServerUtils {
 		Object.assign(graph, updatedGraph);
 	}
 
-	public static extractNodes(nodes: { type: string; uitype?: string }[]): AtlasNode[] {
+	private static typeMap = {
+		[ExpressionNode.type]: (uitype: string) => ExpressionNode.buildWithUitype(uitype),
+		[TextNode.type]: (uitype: string) => TextNode.build(),
+		[FileNode.type]: (uitype: string) => FileNode.build(),
+		[AtlasNode.type]: (uitype: string) => AtlasNode.build(),
+	};
+
+	public static extractNodes(nodes: { type: string; uitype: string }[]): AtlasNode[] {
 		const updatedNodes: AtlasNode[] = [];
 		for (const node of nodes) {
-			if (node.type === ExpressionNode.structType) {
-				updatedNodes.push(Object.assign(ExpressionNode.constructorEmpty(), node));
-			} else if (node.type === MatrixFilterNode.structType) {
-				updatedNodes.push(Object.assign(MatrixFilterNode.constructorEmpty(), node));
-			} else if (node.type === TextNode.structType) {
-				updatedNodes.push(Object.assign(TextNode.constructorEmpty(), node));
-			} else if (node.type === FileNode.structType) {
-				updatedNodes.push(Object.assign(FileNode.constructorEmpty(), node));
-			} else if (node.type === AtlasNode.structType) {
-				updatedNodes.push(Object.assign(AtlasNode.constructorEmpty(), node));
-			} else {
+			if (ServerUtils.typeMap[node.type] == undefined) {
 				throw new Error('no such node type: ' + node.type);
 			}
+			const newNode: AtlasNode = ServerUtils.typeMap[node.type](node.uitype);
+			updatedNodes.push(Object.assign(newNode, node));
 		}
 		return updatedNodes;
 	}
@@ -101,7 +100,7 @@ abstract class ServerUtils {
 		const updated: AtlasEdge[] = [];
 
 		for (const edge of edges) {
-			updated.push(Object.assign(AtlasEdge.constructorEmpty(), edge));
+			updated.push(Object.assign(AtlasEdge.build(), edge));
 		}
 
 		return updated;
