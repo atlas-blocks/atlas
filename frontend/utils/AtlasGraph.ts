@@ -41,7 +41,7 @@ export class AtlasEdge {
 export class AtlasNode {
 	static type: string = 'AtlasGraph.Node';
 	public type: string;
-	static uitype: string = '';
+	static uitype: string = AtlasNode.type;
 	public uitype: string;
 	public name: string;
 	public position: [number, number];
@@ -55,6 +55,7 @@ export class AtlasNode {
 		visibility: boolean,
 	) {
 		this.type = type;
+		this.uitype = uitype;
 		this.name = name;
 		this.uitype = uitype;
 		this.position = position;
@@ -110,21 +111,23 @@ export class ContentNode extends AtlasNode {
 
 export class TextNode extends ContentNode {
 	static type = 'AtlasGraph.TextNode';
+	static uitype = TextNode.type;
 
 	constructor(node: AtlasNode, content: string) {
 		super(node, content);
 		this.type = TextNode.type;
+		this.uitype = TextNode.uitype;
 	}
 }
 
 export class FileNode extends AtlasNode {
 	static type = 'AtlasGraph.FileNode';
+	static uitype = FileNode.type;
 	public content: string;
 	public filename: string;
 
 	constructor(node: AtlasNode, content: string, filename: string) {
-		super(node.type, node.name, node.uitype, node.position, node.visibility);
-		this.type = FileNode.type;
+		super(FileNode.type, node.name, FileNode.uitype, node.position, node.visibility);
 		this.content = content;
 		this.filename = filename;
 	}
@@ -136,11 +139,13 @@ export class FileNode extends AtlasNode {
 
 export class ExpressionNode extends ContentNode {
 	static type = 'AtlasGraph.ExpressionNode';
+	static uitype = ExpressionNode.type;
 	public result: string;
 
 	constructor(node: AtlasNode, content: string, result: string) {
 		super(node, content);
 		this.type = ExpressionNode.type;
+		this.uitype = ExpressionNode.uitype;
 		this.result = result;
 	}
 
