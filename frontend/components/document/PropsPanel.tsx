@@ -1,6 +1,13 @@
 import styles from '../../styles/PropsPanel.module.css';
 import React, { ChangeEvent, useEffect, useState } from 'react';
-import AtlasGraph, { AtlasNode, ContentNode, MatrixFilterNode } from '../../utils/AtlasGraph';
+import AtlasGraph, {
+	AtlasNode,
+	ContentNode,
+	ExpressionNode,
+	FileNode,
+	MatrixFilterNode,
+	TextNode,
+} from '../../utils/AtlasGraph';
 import WebInterfaceUtils from '../../utils/WebInterfaceUtils';
 import MatrixFilterBuilder from './MatrixFilterBuilder';
 
@@ -41,6 +48,23 @@ export default function PropsPanel({
 		);
 	}
 
+	const propsDescription = () => {
+		if (webInterfaceUtils.selectedNode instanceof ExpressionNode) {
+			return webInterfaceUtils.selectedNode instanceof MatrixFilterNode
+				? 'Matrix Filter' +
+						'\n\nYou can choose Matrix and add a special filter to any Columns and/or Rows with the logic Operator and Value:' +
+						'\n\nmatrix: A\ncol: 1, opr: <, val: 4' +
+						'\n-- provides all rows of matrix A with values less than 4 in Column 1' +
+						'\nrow: 2, opr: >, val: 0' +
+						'\n-- provides all columns of matrix A with values more than 0 in Row 2'
+				: 'Expression' + '\n\nYou can use any formula you like';
+		} else if (webInterfaceUtils.selectedNode instanceof TextNode) {
+			return 'Text' + '\n\nLoad any text, like CSV';
+		} else if (webInterfaceUtils.selectedNode instanceof FileNode) {
+			return 'File' + '\n\nUpload a file';
+		} else return '';
+	};
+
 	useEffect(() => {
 		if (webInterfaceUtils.selectedNode instanceof ContentNode) {
 			setNewContentValue(webInterfaceUtils.selectedNode.content);
@@ -62,8 +86,11 @@ export default function PropsPanel({
 					onChange={updContVal}
 				/>
 			</div>
-			{chooseProperties()}
+			<div className={styles.propsPanelWrapper}>{chooseProperties()}</div>
 			<div className={styles.propsPanelWrapper}>
+				<label>Description</label>
+				<p>{propsDescription()}</p>
+				<p></p>
 				<button className={styles.btnSubmit} onClick={submitChanges}>
 					Submit
 				</button>

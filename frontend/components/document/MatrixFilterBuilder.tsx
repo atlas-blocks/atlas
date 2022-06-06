@@ -26,9 +26,13 @@ export default function MatrixFilterBuilder({ setNewContentValue }: Props): JSX.
 	const refMatrixName = useRef<HTMLInputElement>(null!);
 
 	const getExprCols = (mxName: string, num: string, opr: string, val: string) =>
-		'broadcast(' + opr + ', getindex(' + mxName + ', .., ' + num + '), ' + val + ')';
+		num !== '' && num !== '..'
+			? 'broadcast(' + opr + ', getindex(' + mxName + ', .., ' + num + '), ' + val + ')'
+			: '..';
 	const getExprRows = (mxName: string, num: string, opr: string, val: string) =>
-		'broadcast(' + opr + ', getindex(' + mxName + ', ' + num + ', ..), ' + val + ')';
+		num !== '' && num !== '..'
+			? 'broadcast(' + opr + ', getindex(' + mxName + ', ' + num + ', ..), ' + val + ')'
+			: '..';
 
 	const filterChange = () => {
 		setFilterCols(() =>
@@ -117,12 +121,12 @@ export default function MatrixFilterBuilder({ setNewContentValue }: Props): JSX.
 
 	return (
 		<div>
-			<label className={styles.title}>Filter Builder</label>
+			<label>Filter Builder</label>
 			<div className={styles.filterWrapper}>
 				<div>
 					<label>matrix:</label>
 					<input
-						style={{ width: '120px' }}
+						style={{ width: '140px' }}
 						ref={refMatrixName}
 						className={styles.inpName}
 						onChange={filterChange}
