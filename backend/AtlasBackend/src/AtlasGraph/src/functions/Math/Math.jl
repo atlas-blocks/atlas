@@ -36,4 +36,8 @@ function csv2vector(csv_string::AbstractString)::Vector{Vector}
     return length(ans) == 0 ? ans : collect(eachrow(reduce(hcat, ans)))
 end
 
+function csv2matrix(csv_string::AbstractString)::Matrix
+    return reduce(hcat, csv2vector(csv_string))
+end
+
 end
