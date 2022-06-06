@@ -59,7 +59,7 @@ export default function DnDFlow({ druggedNode, webInterfaceUtils }: Props): JSX.
 		webInterfaceUtils.setSelectedNode(node.data.node);
 	}
 
-	function onPaneClick(event: ReactMouseEvent) {
+	function onPanelClick(event: ReactMouseEvent) {
 		webInterfaceUtils.setSelectedNode(null);
 	}
 
@@ -114,10 +114,11 @@ export default function DnDFlow({ druggedNode, webInterfaceUtils }: Props): JSX.
 					onEdgesChange={onUiEdgesChange}
 					onNodeClick={handleUiNodeSelection}
 					onNodeDoubleClick={handleUiNodeDoubleClick}
-					onPaneClick={onPaneClick}
+					onPaneClick={onPanelClick}
 					onInit={setReactFlowInstance}
 					onDrop={onDrop}
 					onDragOver={onDragOver}
+					defaultZoom={0.8}
 				>
 					{/*<MiniMap />*/}
 					<Controls />

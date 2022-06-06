@@ -1,7 +1,6 @@
 import styles from '../../styles/PropsPanel.module.css';
 import React, { ChangeEvent, useEffect, useState } from 'react';
-import AtlasGraph, {
-	AtlasNode,
+import {
 	ContentNode,
 	ExpressionNode,
 	FileNode,
@@ -57,7 +56,9 @@ export default function PropsPanel({
 						'\n-- provides all rows of matrix A with values less than 4 in Column 1' +
 						'\nrow: 2, opr: >, val: 0' +
 						'\n-- provides all columns of matrix A with values more than 0 in Row 2'
-				: 'Expression' + '\n\nYou can use any formula you like';
+				: 'Expression' +
+						'\n\nYou can use any expression or formula that Julia language supports.' +
+						'\n\nSee more information on expressions in Julia Docs: https://docs.julialang.org\n/en/v1/base/math/';
 		} else if (webInterfaceUtils.selectedNode instanceof TextNode) {
 			return 'Text' + '\n\nLoad any text, like CSV';
 		} else if (webInterfaceUtils.selectedNode instanceof FileNode) {
@@ -76,24 +77,22 @@ export default function PropsPanel({
 		<div className={`${propPanelStyleWrapper}`}>
 			<div className={styles.propsPanelWrapper}>
 				<label>Name</label>
-				<input className={styles.inpName} value={newNameValue} onChange={updNameVal} />
+				<input value={newNameValue} onChange={updNameVal} />
 			</div>
 			<div className={styles.propsPanelWrapper}>
 				<label>Content</label>
-				<textarea
-					className={styles.inpContent}
-					value={newContentValue}
-					onChange={updContVal}
-				/>
+				<textarea value={newContentValue} onChange={updContVal} />
 			</div>
 			<div className={styles.propsPanelWrapper}>{chooseProperties()}</div>
+			<div className={styles.propsPanelWrapper}>
+				<button className={styles.btnSubmit} onClick={submitChanges}>
+					Submit
+				</button>
+			</div>
 			<div className={styles.propsPanelWrapper}>
 				<label>Description</label>
 				<p>{propsDescription()}</p>
 				<p></p>
-				<button className={styles.btnSubmit} onClick={submitChanges}>
-					Submit
-				</button>
 			</div>
 		</div>
 	);

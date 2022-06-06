@@ -21,21 +21,21 @@
 	white-space: pre-wrap;
 }
 
-.inpName {
+.propsPanelWrapper input {
 	border-style: none;
 	border-bottom: 1px solid black;
 	margin: 5px;
 	outline: none;
-	flex: 1;
 }
 
-.inpContent {
+.propsPanelWrapper textarea {
+	resize: none;
 	border: 1px solid #eaeaea;
 	border-bottom: 1px solid black;
-	height: 100px;
-	margin: 5px;
+	row-span: initial;
 	outline: none;
-	flex: 1;
+	margin: 5px;
+	height: 100px;
 }
 
 .btnSubmit {
