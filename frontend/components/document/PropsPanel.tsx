@@ -40,11 +40,11 @@ export default function PropsPanel({
 	};
 
 	function chooseProperties(): JSX.Element {
-		return webInterfaceUtils.selectedNode instanceof MatrixFilterNode ? (
-			<MatrixFilterBuilder setNewContentValue={setNewContentValue} />
-		) : (
-			<></>
-		);
+		if (webInterfaceUtils.selectedNode instanceof MatrixFilterNode) {
+			return <MatrixFilterBuilder setNewContentValue={setNewContentValue} />;
+		} else {
+			return <></>;
+		}
 	}
 
 	const propsDescription = () => {
