@@ -32,7 +32,7 @@ export default function MatrixFilterBuilder({ setNewContentValue }: Props): JSX.
 
 	const filterChange = () => {
 		setFilterCols(() =>
-			filterCols.map((item, index) =>
+			filterCols.map((item: { cond: string; exp: string }, index: number) =>
 				Object.assign(item, {
 					exp: getExprCols(
 						refMatrixName.current.value,
@@ -47,14 +47,14 @@ export default function MatrixFilterBuilder({ setNewContentValue }: Props): JSX.
 		);
 
 		setFilterRows(() =>
-			filterRows.map((item, index) =>
+			filterRows.map((item: { cond: string; exp: string }, index: number) =>
 				Object.assign(item, {
 					exp: getExprRows(
 						refMatrixName.current.value,
 						refRow.current[0][index].value,
-						refCol.current[1][index].value === '='
+						refRow.current[1][index].value === '='
 							? '=='
-							: refCol.current[1][index].value,
+							: refRow.current[1][index].value,
 						refRow.current[2][index].value,
 					),
 				}),
@@ -71,12 +71,12 @@ export default function MatrixFilterBuilder({ setNewContentValue }: Props): JSX.
 	let resCols = '';
 	let resRows = '';
 	let finalExp = '';
-	filterCols.forEach((item, index) => {
+	filterCols.forEach((item: { cond: string; exp: string }, index: number) => {
 		index
 			? (resCols = 'broadcast(' + item.cond + ',' + resCols + ',' + item.exp + ')')
 			: (resCols = item.exp);
 	});
-	filterRows.forEach((item, index) => {
+	filterRows.forEach((item: { cond: string; exp: string }, index: number) => {
 		index
 			? (resRows = 'broadcast(' + item.cond + ',' + resRows + ',' + item.exp + ')')
 			: (resRows = item.exp);
@@ -129,7 +129,9 @@ export default function MatrixFilterBuilder({ setNewContentValue }: Props): JSX.
 					/>
 				</div>
 
-				{filterCols.map((item, index) => listFilters(index, true))}
+				{filterCols.map((item: { cond: string; exp: string }, index: number) =>
+					listFilters(index, true),
+				)}
 
 				<div>
 					<button className={styles.btnFilter} onClick={() => addFilter(true, '&')}>
@@ -140,20 +142,14 @@ export default function MatrixFilterBuilder({ setNewContentValue }: Props): JSX.
 					</button>
 				</div>
 
-				{filterRows.map((item, index) => listFilters(index, false))}
+				{filterRows.map((item: { cond: string; exp: string }, index: number) =>
+					listFilters(index, false),
+				)}
 				<div>
-					<button
-						id={'rows'}
-						className={styles.btnFilter}
-						onClick={() => addFilter(false, '&')}
-					>
+					<button className={styles.btnFilter} onClick={() => addFilter(false, '&')}>
 						and
 					</button>
-					<button
-						id={'rows'}
-						className={styles.btnFilter}
-						onClick={() => addFilter(false, '||')}
-					>
+					<button className={styles.btnFilter} onClick={() => addFilter(false, '||')}>
 						or
 					</button>
 				</div>
