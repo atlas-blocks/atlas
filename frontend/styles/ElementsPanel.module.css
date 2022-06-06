@@ -9,7 +9,7 @@
 }
 
 .elsElementSelected {
-	background-color: #eaeaea;
+	border: 1px solid #30a5be;
 }
 
 .elsElement:hover {

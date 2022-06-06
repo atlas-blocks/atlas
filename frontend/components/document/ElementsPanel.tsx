@@ -3,11 +3,10 @@ import WebInterfaceUtils from '../../utils/WebInterfaceUtils';
 import { AtlasNode } from '../../utils/AtlasGraph';
 
 type Props = {
-	elsPanelStyleWrapper: string;
 	webInterfaceUtils: WebInterfaceUtils;
 };
 
-export default function ElementsPanel({ elsPanelStyleWrapper, webInterfaceUtils }: Props) {
+export default function ElementsPanel({ webInterfaceUtils }: Props) {
 	let selectedStyle: string = styles.elsElement;
 
 	function listElements(node: AtlasNode): JSX.Element {
@@ -29,9 +28,5 @@ export default function ElementsPanel({ elsPanelStyleWrapper, webInterfaceUtils 
 		);
 	}
 
-	return (
-		<div className={elsPanelStyleWrapper}>
-			{webInterfaceUtils.graph.nodes.map((node) => listElements(node))}
-		</div>
-	);
+	return <>{webInterfaceUtils.graph.nodes.map((node) => listElements(node))}</>;
 }
