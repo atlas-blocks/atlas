@@ -24,7 +24,7 @@ function equals(graph1::AbstractGraph, graph2::AbstractGraph)::Bool
 end
 
 function genenode(name::AbstractString)::Node
-    return Node(name, "pkg", (0, 0), false)
+    return Node(name, "", (0, 0), false)
 end
 
 function gentext(name::AbstractString, content::AbstractString)::TextNode
