@@ -18,7 +18,7 @@
 }
 
 .libSectionLabel:hover {
-	background-color: #ececec;
+	background-color: #f5f5f5;
 }
 
 .libSectionLabel label {
@@ -37,7 +37,7 @@
 }
 
 .containerCollapse {
-	max-height: 0px;
+	max-height: 0;
 	overflow: hidden;
 }
 

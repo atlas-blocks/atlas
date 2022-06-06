@@ -133,7 +133,10 @@ export default function Home() {
 				</div>
 
 				{/*-----Panels*/}
-				<ElementsPanel visibleState={styles.leftpanel} />
+				<ElementsPanel
+					webInterfaceUtils={webInterfaceUtils}
+					elsPanelStyleWrapper={styles.elementsPanel}
+				/>
 				<DnDFlow webInterfaceUtils={webInterfaceUtils} druggedNode={druggedNode} />
 				<PropsPanel
 					propPanelStyleWrapper={propsPanelState}

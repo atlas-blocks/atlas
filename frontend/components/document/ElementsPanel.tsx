@@ -1,18 +1,37 @@
-import styles from '../../styles/main.module.css';
+import styles from '../../styles/ElementsPanel.module.css';
+import WebInterfaceUtils from '../../utils/WebInterfaceUtils';
+import { AtlasNode } from '../../utils/AtlasGraph';
 
-export default function ElementsPanel(props: any) {
-	const showNodes = () => {
-		let result = JSON.stringify(props.nodes, null, 2);
-		// let result = props?.nodes.map(node => JSON.stringify(node))
-		return result;
-		// return props?.nodes.toString() ?? ""
-	};
+type Props = {
+	elsPanelStyleWrapper: string;
+	webInterfaceUtils: WebInterfaceUtils;
+};
+
+export default function ElementsPanel({ elsPanelStyleWrapper, webInterfaceUtils }: Props) {
+	let selectedStyle: string = styles.elsElement;
+
+	function listElements(node: AtlasNode): JSX.Element {
+		webInterfaceUtils.selectedNode == node
+			? (selectedStyle =
+					`${styles.elsElement}` +
+					' ' +
+					`${styles.elsElementSelected}
+		}`)
+			: (selectedStyle = styles.elsElement);
+
+		const selectElement = () => webInterfaceUtils.setSelectedNode(node);
+
+		return (
+			<div key={node.name} className={selectedStyle} onClick={selectElement}>
+				<span style={{ color: '#30a5be' }}>{node.name}</span>
+				<span>: {node.type.slice(11, node.type.length)}</span>
+			</div>
+		);
+	}
 
 	return (
-		<div className={props.visibleState}>
-			<div className={styles.elementsWrapper}>
-				{/*<pre>{JSON.stringify(props.nodes, null, 2)}</pre>*/}
-			</div>
+		<div className={elsPanelStyleWrapper}>
+			{webInterfaceUtils.graph.nodes.map((node) => listElements(node))}
 		</div>
 	);
 }
