@@ -7,13 +7,13 @@ export default class AtlasGraph {
 		this.edges = [];
 	}
 
-	private isInDefaultNmaeFomat(name: string) {
+	private isInDefaultNameFormat(name: string) {
 		return name[0] === 'b' && !isNaN(Number(name.slice(1)));
 	}
 
 	public getDefaultName() {
 		const defaultNodesNameNumbers: number[] = this.nodes
-			.filter((node) => this.isInDefaultNmaeFomat(node.name))
+			.filter((node) => this.isInDefaultNameFormat(node.name))
 			.map((node) => Number(node.name.slice(1)));
 		return 'b' + (Math.max(...defaultNodesNameNumbers, 0) + 1);
 	}
