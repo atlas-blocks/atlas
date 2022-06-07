@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import styles from '../../styles/main.module.css';
-import btnStyles from '../../styles/BtnStyle.module.css';
+import buttonStyles from '../../styles/BtnStyle.module.css';
 import WebInterfaceUtils from '../../utils/WebInterfaceUtils';
 import ElementsPanel from './ElementsPanel';
 import PropsPanel from './PropsPanel';
@@ -11,67 +11,79 @@ type Props = {
 };
 
 export default function Panels({ wiu }: Props) {
-	const [libBtnState, setLibBtnState] = useState(
-		`${btnStyles.generalBtn} ${btnStyles.libBtn} ${btnStyles.actBtn}`,
-	);
-	const [propBtnState, setPropBtnState] = useState(
-		`${btnStyles.generalBtn} ${btnStyles.propBtn}`,
-	);
-	const [propsPanelState, setPropsPanelState] = useState(
-		`${styles.propsPanel} ${styles.panelHidden}`,
-	);
-	const [libPanelState, setLibPanelState] = useState(`${styles.libPanel}`);
+	const [isLibrariessActive, setIsLibrariesActive] = useState<boolean>(true);
+	const [isPropertiesActive, setIsPropertiesActive] = useState<boolean>(true);
 
+	const hideAll = () => {
+		setIsLibrariesActive(false);
+		setIsPropertiesActive(false);
+	};
 	const showLibraries = () => {
-		setLibBtnState(`${btnStyles.generalBtn} ${btnStyles.libBtn} ${btnStyles.actBtn}`);
-		setPropBtnState(`${btnStyles.generalBtn} ${btnStyles.propBtn}`);
-		setPropsPanelState(`${styles.propsPanel} ${styles.panelHidden}`);
-		setLibPanelState(`${styles.libPanel}`);
+		hideAll();
+		setIsLibrariesActive(true);
 	};
 	const showProperties = () => {
-		setPropBtnState(`${btnStyles.generalBtn} ${btnStyles.propBtn} ${btnStyles.actBtn}`);
-		setLibBtnState(`${btnStyles.generalBtn} ${btnStyles.libBtn}`);
-		setLibPanelState(`${styles.libPanel} ${styles.panelHidden}`);
-		setPropsPanelState(`${styles.propsPanel}`);
+		hideAll();
+		setIsPropertiesActive(true);
+	};
+
+	const getButtonClass = (isActive: boolean): string => {
+		return buttonStyles.generalBtn + ' ' + (isActive ? buttonStyles.actBtn : '');
+	};
+	const getPanelClass = (isActive: boolean): string => {
+		return isActive ? '' : styles.panelHidden;
 	};
 
 	useEffect(() => {
 		wiu.selectedNode ? showProperties() : showLibraries();
 	}, [wiu.selectedNode]);
+
 	return (
 		<>
 			{/* ------- Buttons ------- */}
-			<div className={libBtnState} onClick={showLibraries}>
+			<div
+				id={buttonStyles.libBtn}
+				className={getButtonClass(isLibrariessActive)}
+				onClick={showLibraries}
+			>
 				<label>Libraries</label>
 			</div>
-			<div className={`${btnStyles.generalBtn} ${btnStyles.assetsBtn}`}>
+			<div id={buttonStyles.assetsBtn} className={getButtonClass(false)}>
 				<label>Assets</label>
 			</div>
-			<div className={propBtnState} onClick={showProperties}>
+			<div
+				id={buttonStyles.propBtn}
+				className={getButtonClass(isPropertiesActive)}
+				onClick={showProperties}
+			>
 				<label>Properties</label>
 			</div>
-			<div className={`${btnStyles.generalBtn} ${btnStyles.objBtn}`}>
+			<div id={buttonStyles.objBtn} className={getButtonClass(false)}>
 				<label>Object</label>
 			</div>
-			<div className={`${btnStyles.generalBtn} ${btnStyles.mockupBtn}`}>
+			<div id={buttonStyles.mockupBtn} className={getButtonClass(false)}>
 				<label>Mockup</label>
 			</div>
-			<div className={`${btnStyles.generalBtn} ${btnStyles.envBtn}`}>
+			<div id={buttonStyles.envBtn} className={getButtonClass(false)}>
 				<label>Environment</label>
 			</div>
-			<div className={`${btnStyles.generalBtn} ${btnStyles.elementsBtn} ${btnStyles.actBtn}`}>
+			<div id={buttonStyles.elementsBtn} className={getButtonClass(true)}>
 				<label>Elements</label>
 			</div>
-			<div className={`${btnStyles.generalBtn} ${btnStyles.layersBtn}`}>
+			<div id={buttonStyles.layersBtn} className={getButtonClass(false)}>
 				<label>Layers</label>
 			</div>
 
 			{/* ------- Panels ------- */}
-			<section className={styles.elementsPanel}>
+			<section id={styles.elementsPanel} className={styles.elementsPanel}>
 				<ElementsPanel wiu={wiu} />
 			</section>
-			<PropsPanel propPanelStyleWrapper={propsPanelState} wiu={wiu} />
-			<LibPanel wiu={wiu} libPanelStyleWrapper={libPanelState} />
+			<section id={styles.propsPanel} className={getPanelClass(isPropertiesActive)}>
+				<PropsPanel wiu={wiu} />
+			</section>
+			<section id={styles.libPanel} className={getPanelClass(isLibrariessActive)}>
+				<LibPanel wiu={wiu} />
+			</section>
 		</>
 	);
 }

@@ -11,10 +11,9 @@ import {
 
 type Props = {
 	wiu: WebInterfaceUtils;
-	libPanelStyleWrapper: string;
 };
 
-export default function LibPanel({ wiu, libPanelStyleWrapper }: Props): JSX.Element {
+export default function LibPanel({ wiu }: Props): JSX.Element {
 	const onDragStart = (event: React.DragEvent<HTMLDivElement>, node: AtlasNode) => {
 		wiu.setDruggedNode(node);
 		event.dataTransfer.effectAllowed = 'move';
@@ -98,10 +97,10 @@ export default function LibPanel({ wiu, libPanelStyleWrapper }: Props): JSX.Elem
 	}
 
 	return (
-		<div className={`${libPanelStyleWrapper}`}>
+		<>
 			{Object.keys(libElements).map((name) =>
 				getLibSections(name as keyof typeof libCollapseStates),
 			)}
-		</div>
+		</>
 	);
 }

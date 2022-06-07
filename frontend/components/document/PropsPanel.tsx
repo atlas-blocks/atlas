@@ -11,11 +11,10 @@ import WebInterfaceUtils from '../../utils/WebInterfaceUtils';
 import MatrixFilterBuilder from './MatrixFilterBuilder';
 
 type Props = {
-	propPanelStyleWrapper: string;
 	wiu: WebInterfaceUtils;
 };
 
-export default function PropsPanel({ propPanelStyleWrapper, wiu }: Props): JSX.Element {
+export default function PropsPanel({ wiu }: Props): JSX.Element {
 	const [newContentValue, setNewContentValue] = useState<string>('');
 	const [newNameValue, setNewNameValue] = useState<string>('');
 
@@ -75,7 +74,7 @@ export default function PropsPanel({ propPanelStyleWrapper, wiu }: Props): JSX.E
 	}, [wiu.selectedNode]);
 
 	return (
-		<div className={`${propPanelStyleWrapper}`}>
+		<>
 			<div className={styles.propsPanelWrapper}>
 				<label>Name</label>
 				<input value={newNameValue} onChange={updNameVal} />
@@ -95,6 +94,6 @@ export default function PropsPanel({ propPanelStyleWrapper, wiu }: Props): JSX.E
 				<p>{propsDescription()}</p>
 				<p></p>
 			</div>
-		</div>
+		</>
 	);
 }
