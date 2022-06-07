@@ -3,10 +3,10 @@ import WebInterfaceUtils from '../../utils/WebInterfaceUtils';
 import { AtlasNode } from '../../utils/AtlasGraph';
 
 type Props = {
-	webInterfaceUtils: WebInterfaceUtils;
+	wiu: WebInterfaceUtils;
 };
 
-export default function ElementsPanel({ webInterfaceUtils }: Props) {
+export default function ElementsPanel({ wiu }: Props) {
 	function getNodeTypeName(type: string) {
 		return type.slice(11, type.length);
 	}
@@ -14,19 +14,19 @@ export default function ElementsPanel({ webInterfaceUtils }: Props) {
 	function getPanelElement(node: AtlasNode): JSX.Element {
 		let selectedStyle: string = styles.element;
 
-		if (webInterfaceUtils.selectedNode == node) {
+		if (wiu.selectedNode == node) {
 			selectedStyle += ' ' + styles.elementSelected;
 		}
 
-		const selectElement = () => webInterfaceUtils.setSelectedNode(node);
+		const selectElement = () => wiu.setSelectedNode(node);
 
 		return (
-			<div key={node.name} className={selectedStyle} onClick={selectElement}>
+			<div key={node.getId()} className={selectedStyle} onClick={selectElement}>
 				<span className={styles.elementName}>{node.name}</span>
 				<span>: {getNodeTypeName(node.type)}</span>
 			</div>
 		);
 	}
 
-	return <>{webInterfaceUtils.graph.nodes.map((node) => getPanelElement(node))}</>;
+	return <>{wiu.graph.nodes.map((node) => getPanelElement(node))}</>;
 }

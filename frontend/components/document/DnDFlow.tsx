@@ -32,10 +32,10 @@ exampleNodes.forEach((node) => atlasGraph.nodes.push(node));
 
 type Props = {
 	druggedNode: AtlasNode | null;
-	webInterfaceUtils: WebInterfaceUtils;
+	wiu: WebInterfaceUtils;
 };
 
-export default function DnDFlow({ druggedNode, webInterfaceUtils }: Props): JSX.Element {
+export default function DnDFlow({ druggedNode, wiu }: Props): JSX.Element {
 	const [reactFlowInstance, setReactFlowInstance] = useState<ReactFlowInstance | null>(null);
 	const reactFlowWrapper = useRef<HTMLDivElement | null>(null);
 	const [uiNodes, setUiNodes] = useState(WebInterfaceUtils.getUiNodes(atlasGraph));
@@ -43,7 +43,7 @@ export default function DnDFlow({ druggedNode, webInterfaceUtils }: Props): JSX.
 
 	const onUiNodesChange = useCallback(
 		(changes: UINodeChange[]) => {
-			webInterfaceUtils.updateNodes(changes);
+			wiu.updateNodes(changes);
 			setUiNodes((nds) => applyNodeChanges(changes, nds));
 		},
 		[setUiNodes],
@@ -56,11 +56,11 @@ export default function DnDFlow({ druggedNode, webInterfaceUtils }: Props): JSX.
 	function handleUiNodeSelection(event: React.MouseEvent, element: UINode) {}
 
 	function handleUiNodeDoubleClick(event: ReactMouseEvent, node: UINode) {
-		webInterfaceUtils.setSelectedNode(node.data.node);
+		wiu.setSelectedNode(node.data.node);
 	}
 
 	function onPanelClick(event: ReactMouseEvent) {
-		webInterfaceUtils.setSelectedNode(null);
+		wiu.setSelectedNode(null);
 	}
 
 	const onConnect = useCallback(
@@ -80,8 +80,8 @@ export default function DnDFlow({ druggedNode, webInterfaceUtils }: Props): JSX.
 
 			console.assert(druggedNode !== null, 'drugged node should be assigned before dragging');
 			if (druggedNode !== null) {
-				const width = webInterfaceUtils.getUiNodeWidth(druggedNode);
-				const height = webInterfaceUtils.getUiNodeHeight(druggedNode);
+				const width = wiu.getUiNodeWidth(druggedNode);
+				const height = wiu.getUiNodeHeight(druggedNode);
 				// @ts-ignore
 				const reactFlowBounds = reactFlowWrapper.current.getBoundingClientRect();
 				// @ts-ignore
@@ -92,15 +92,15 @@ export default function DnDFlow({ druggedNode, webInterfaceUtils }: Props): JSX.
 				atlasGraph.nodes.push(druggedNode.setPosition(pos.x, pos.y));
 			}
 			setUiNodes(WebInterfaceUtils.getUiNodes(atlasGraph));
-			webInterfaceUtils.setSelectedNode(druggedNode);
+			wiu.setSelectedNode(druggedNode);
 		},
 		[reactFlowInstance, druggedNode],
 	);
 
 	useEffect(() => {
-		setUiNodes(WebInterfaceUtils.getUiNodes(webInterfaceUtils.graph));
-		setUiEdges(WebInterfaceUtils.getUiEdges(webInterfaceUtils.graph));
-	}, [webInterfaceUtils.graph.nodes]);
+		setUiNodes(WebInterfaceUtils.getUiNodes(wiu.graph));
+		setUiEdges(WebInterfaceUtils.getUiEdges(wiu.graph));
+	}, [wiu.graph.nodes]);
 
 	return (
 		<ReactFlowProvider>

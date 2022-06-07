@@ -9,6 +9,7 @@ export default class WebInterfaceUtils {
 	setUINodes: React.Dispatch<React.SetStateAction<UINode[]>>;
 	setUIEdges: React.Dispatch<React.SetStateAction<UIEdge[]>>;
 	setSelectedNode: React.Dispatch<React.SetStateAction<AtlasNode | null>>;
+	setDruggedNode: React.Dispatch<React.SetStateAction<AtlasNode | null>>;
 
 	constructor(
 		graph: AtlasGraph,
@@ -16,12 +17,14 @@ export default class WebInterfaceUtils {
 		setUINodes: React.Dispatch<React.SetStateAction<UINode[]>>,
 		setUIEdges: React.Dispatch<React.SetStateAction<UIEdge[]>>,
 		setSelectedNode: React.Dispatch<React.SetStateAction<AtlasNode | null>>,
+		setDruggedNode: React.Dispatch<React.SetStateAction<AtlasNode | null>>,
 	) {
 		this.graph = graph;
 		this.selectedNode = selectedNode;
 		this.setUINodes = setUINodes;
 		this.setUIEdges = setUIEdges;
 		this.setSelectedNode = setSelectedNode;
+		this.setDruggedNode = setDruggedNode;
 	}
 
 	public static toUiNode(node: AtlasNode): UINode {

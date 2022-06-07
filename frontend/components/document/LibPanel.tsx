@@ -1,4 +1,5 @@
 import styles from '../../styles/LibPanel.module.css';
+import WebInterfaceUtils from '../../utils/WebInterfaceUtils';
 import React, { useState } from 'react';
 import {
 	AtlasNode,
@@ -9,21 +10,22 @@ import {
 } from '../../utils/AtlasGraph';
 
 type Props = {
-	setDruggedNode: React.Dispatch<React.SetStateAction<AtlasNode | null>>;
+	wiu: WebInterfaceUtils;
 	libPanelStyleWrapper: string;
 };
 
-export default function LibPanel({ setDruggedNode, libPanelStyleWrapper }: Props): JSX.Element {
+export default function LibPanel({ wiu, libPanelStyleWrapper }: Props): JSX.Element {
 	const onDragStart = (event: React.DragEvent<HTMLDivElement>, node: AtlasNode) => {
-		setDruggedNode(node);
+		wiu.setDruggedNode(node);
 		event.dataTransfer.effectAllowed = 'move';
 	};
 
 	const nodesOptions = {
-		ExpressionNode: () => ExpressionNode.build().setResult('5').setContent('2 + 3'),
-		TextNode: () => TextNode.build().setContent('1, 2, 3'),
-		FileNode: () => FileNode.build(),
-		MatrixFilterNode: () => MatrixFilterNode.build(),
+		ExpressionNode: () =>
+			ExpressionNode.build().setResult('5').setContent('2 + 3').setDefaultName(wiu.graph),
+		TextNode: () => TextNode.build().setContent('1, 2, 3').setDefaultName(wiu.graph),
+		FileNode: () => FileNode.build().setDefaultName(wiu.graph),
+		MatrixFilterNode: () => MatrixFilterNode.build().setDefaultName(wiu.graph),
 	};
 
 	const libElements = {

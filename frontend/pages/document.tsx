@@ -1,58 +1,31 @@
-import DnDFlow, { atlasGraph } from '../components/document/DnDFlow';
-import Head from 'next/head';
-import styles from '../styles/main.module.css';
-import btnStyles from '../styles/BtnStyle.module.css';
-import ElementsPanel from '../components/document/ElementsPanel';
-import PropsPanel from '../components/document/PropsPanel';
-import LibPanel from '../components/document/LibPanel';
-import { useEffect, useState } from 'react';
-import Image from 'next/image';
-import menuImg from '/img/icons/menu.png';
-import questionImg from '/img/icons/question.png';
-import settingsImg from '/img/icons/settings.png';
-import exportImg from '/img/icons/export.png';
-import logoImg from '/img/logo/atlas_long_white_cut.png';
+import { useState } from 'react';
+
 import WebInterfaceUtils from '../utils/WebInterfaceUtils';
+import DnDFlow, { atlasGraph } from '../components/document/DnDFlow';
+import Panels from '../components/document/Panels';
 import { AtlasNode } from '../utils/AtlasGraph';
+import styles from '../styles/main.module.css';
+import Head from 'next/head';
+import Image from 'next/image';
+import menuImg from '../public/icons/menu.png';
+import questionImg from '../public/icons/question.png';
+import settingsImg from '../public/icons/settings.png';
+import exportImg from '../public/icons/export.png';
+import logoImg from '../public/logo/atlas_long_white_cut.png';
 
 export default function Home() {
-	const [libBtnState, setLibBtnState] = useState(
-		`${btnStyles.justBtn} ${btnStyles.libBtn} ${btnStyles.actBtn}`,
-	);
-	const [propBtnState, setPropBtnState] = useState(`${btnStyles.justBtn} ${btnStyles.propBtn}`);
-	const [propsPanelState, setPropsPanelState] = useState(
-		`${styles.propsPanel} ${styles.panelHidden}`,
-	);
-	const [libPanelState, setLibPanelState] = useState(`${styles.libPanel}`);
-
-	const showLibraries = () => {
-		setLibBtnState(`${btnStyles.justBtn} ${btnStyles.libBtn} ${btnStyles.actBtn}`);
-		setPropBtnState(`${btnStyles.justBtn} ${btnStyles.propBtn}`);
-		setPropsPanelState(`${styles.propsPanel} ${styles.panelHidden}`);
-		setLibPanelState(`${styles.libPanel}`);
-	};
-	const showProperties = () => {
-		setPropBtnState(`${btnStyles.justBtn} ${btnStyles.propBtn} ${btnStyles.actBtn}`);
-		setLibBtnState(`${btnStyles.justBtn} ${btnStyles.libBtn}`);
-		setLibPanelState(`${styles.libPanel} ${styles.panelHidden}`);
-		setPropsPanelState(`${styles.propsPanel}`);
-	};
-
 	const [druggedNode, setDruggedNode] = useState<AtlasNode | null>(null);
 	const [selectedNode, setSelectedNode] = useState<AtlasNode | null>(null);
 	const [uiNodes, setUiNodes] = useState(WebInterfaceUtils.getUiNodes(atlasGraph));
 	const [uiEdges, setUiEdges] = useState(WebInterfaceUtils.getUiEdges(atlasGraph));
-	const webInterfaceUtils = new WebInterfaceUtils(
+	const wiu = new WebInterfaceUtils(
 		atlasGraph,
 		selectedNode,
 		setUiNodes,
 		setUiEdges,
 		setSelectedNode,
+		setDruggedNode,
 	);
-
-	useEffect(() => {
-		selectedNode ? showProperties() : showLibraries();
-	}, [selectedNode]);
 
 	return (
 		<>
@@ -104,44 +77,8 @@ export default function Home() {
 					/>
 				</div>
 
-				{/*------- Buttons*/}
-				<div className={libBtnState} onClick={showLibraries}>
-					<label>Libraries</label>
-				</div>
-				<div className={`${btnStyles.justBtn} ${btnStyles.assetsBtn}`}>
-					<label>Assets</label>
-				</div>
-				<div className={propBtnState} onClick={showProperties}>
-					<label>Properties</label>
-				</div>
-				<div className={`${btnStyles.justBtn} ${btnStyles.objBtn}`}>
-					<label>Object</label>
-				</div>
-				<div className={`${btnStyles.justBtn} ${btnStyles.mockupBtn}`}>
-					<label>Mockup</label>
-				</div>
-				<div className={`${btnStyles.justBtn} ${btnStyles.envBtn}`}>
-					<label>Environment</label>
-				</div>
-				<div
-					className={`${btnStyles.justBtn} ${btnStyles.elementsBtn} ${btnStyles.actBtn}`}
-				>
-					<label>Elements</label>
-				</div>
-				<div className={`${btnStyles.justBtn} ${btnStyles.layersBtn}`}>
-					<label>Layers</label>
-				</div>
-
-				{/*-----Panels*/}
-				<div className={styles.elementsPanel}>
-					<ElementsPanel webInterfaceUtils={webInterfaceUtils} />
-				</div>
-				<DnDFlow webInterfaceUtils={webInterfaceUtils} druggedNode={druggedNode} />
-				<PropsPanel
-					propPanelStyleWrapper={propsPanelState}
-					webInterfaceUtils={webInterfaceUtils}
-				/>
-				<LibPanel setDruggedNode={setDruggedNode} libPanelStyleWrapper={libPanelState} />
+				<DnDFlow wiu={wiu} druggedNode={druggedNode} />
+				<Panels wiu={wiu} />
 			</div>
 		</>
 	);

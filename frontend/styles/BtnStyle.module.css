@@ -1,15 +1,15 @@
-.justBtn {
+.generalBtn {
 	border: 1px solid #eaeaea;
 	display: flex;
 	align-items: center;
 	justify-content: center;
 }
 
-.justBtn:hover {
+.generalBtn:hover {
 	background-color: #eaeaea;
 }
 
-.justBtn label {
+.generalBtn label {
 	font-size: 15px;
 }
 
