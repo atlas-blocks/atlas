@@ -6,21 +6,21 @@ type Props = {
 };
 
 export default function MatrixFilterBuilder({ setNewContentValue }: Props): JSX.Element {
-	const initFltrCols = [
+	const initFilterCols = [
 		{
 			cond: '',
 			exp: '',
 		},
 	];
-	const initFltrRows = [
+	const initFilterRows = [
 		{
 			cond: '',
 			exp: '',
 		},
 	];
 
-	const [filterCols, setFilterCols] = useState<typeof initFltrCols>(initFltrCols);
-	const [filterRows, setFilterRows] = useState<typeof initFltrRows>(initFltrRows);
+	const [filterCols, setFilterCols] = useState<typeof initFilterCols>(initFilterCols);
+	const [filterRows, setFilterRows] = useState<typeof initFilterRows>(initFilterRows);
 	const refCol = useRef<HTMLInputElement[][]>([[], [], []]);
 	const refRow = useRef<HTMLInputElement[][]>([[], [], []]);
 	const refMatrixName = useRef<HTMLInputElement>(null!);

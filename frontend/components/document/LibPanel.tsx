@@ -20,25 +20,10 @@ export default function LibPanel({ setDruggedNode, libPanelStyleWrapper }: Props
 	};
 
 	const nodesOptions = {
-		ExpressionNode: () =>
-			new ExpressionNode(
-				new AtlasNode(ExpressionNode.structType, '', 'pkg', [0, 0], true),
-				'2 + 3',
-				'5',
-			),
-		TextNode: () =>
-			new TextNode(
-				new AtlasNode(TextNode.structType, 'name1', 'pkg', [0, 0], true),
-				'1, 2, 3',
-			),
-		FileNode: () =>
-			new FileNode(new AtlasNode(FileNode.structType, 'name1', 'pkg', [0, 0], true), '', ''),
-		MatrixFilterNode: () =>
-			new MatrixFilterNode(
-				new AtlasNode(ExpressionNode.structType, '', 'pkg', [0, 0], true),
-				'2 + 3',
-				'5',
-			),
+		ExpressionNode: () => ExpressionNode.build().setResult('5').setContent('2 + 3'),
+		TextNode: () => TextNode.build().setContent('1, 2, 3'),
+		FileNode: () => FileNode.build(),
+		MatrixFilterNode: () => MatrixFilterNode.build(),
 	};
 
 	const libElements = {

@@ -47,23 +47,27 @@ export default function PropsPanel({
 		}
 	}
 
-	const propsDescription = () => {
-		if (webInterfaceUtils.selectedNode instanceof ExpressionNode) {
-			return webInterfaceUtils.selectedNode instanceof MatrixFilterNode
-				? 'Matrix Filter' +
-						'\n\nYou can choose Matrix and add a special filter to any Columns and/or Rows with the logic Operator and Value:' +
-						'\n\nmatrix: A\ncol: 1, opr: <, val: 4' +
-						'\n-- provides all rows of matrix A with values less than 4 in Column 1' +
-						'\nrow: 2, opr: >, val: 0' +
-						'\n-- provides all columns of matrix A with values more than 0 in Row 2'
-				: 'Expression' +
-						'\n\nYou can use any expression or formula that Julia language supports.' +
-						'\n\nSee more information on expressions in Julia Docs: https://docs.julialang.org\n/en/v1/base/math/';
-		} else if (webInterfaceUtils.selectedNode instanceof TextNode) {
-			return 'Text' + '\n\nLoad any text, like CSV';
-		} else if (webInterfaceUtils.selectedNode instanceof FileNode) {
-			return 'File' + '\n\nUpload a file';
-		} else return '';
+	const typeDescriptions = {
+		[MatrixFilterNode.uitype]:
+			'Matrix Filter' +
+			'\n\nYou can choose Matrix and add a special filter to any Columns and/or Rows with the logic Operator and Value:' +
+			'\n\nmatrix: A\ncol: 1, opr: <, val: 4' +
+			'\n-- provides all rows of matrix A with values less than 4 in Column 1' +
+			'\nrow: 2, opr: >, val: 0' +
+			'\n-- provides all columns of matrix A with values more than 0 in Row 2',
+		[ExpressionNode.uitype]:
+			'Expression' +
+			'\n\nYou can use any expression or formula that Julia language supports.' +
+			'\n\nSee more information on expressions in Julia Docs: https://docs.julialang.org\n/en/v1/base/math/',
+		[TextNode.uitype]: 'Text' + '\n\nLoad any text, like CSV',
+		[FileNode.uitype]: 'File' + '\n\nUpload a file',
+	};
+
+	const propsDescription = (): string => {
+		const node = webInterfaceUtils.selectedNode;
+		if (node === null || typeof typeDescriptions[node.uitype] === undefined) return '';
+
+		return typeDescriptions[node.uitype];
 	};
 
 	useEffect(() => {

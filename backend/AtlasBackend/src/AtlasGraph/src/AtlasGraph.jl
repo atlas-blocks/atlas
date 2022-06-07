@@ -12,7 +12,7 @@ using JSON3, StructTypes, ResultTypes
 abstract type AbstractNode end
 mutable struct Node <: AbstractNode
     name::String
-    package::String
+    uitype::String
     position::Tuple{Int32,Int32}
     visibility::Bool
 end
