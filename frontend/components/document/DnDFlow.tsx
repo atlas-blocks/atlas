@@ -31,11 +31,10 @@ export const atlasGraph = new AtlasGraph();
 exampleNodes.forEach((node) => atlasGraph.nodes.push(node));
 
 type Props = {
-	druggedNode: AtlasNode | null;
 	wiu: WebInterfaceUtils;
 };
 
-export default function DnDFlow({ druggedNode, wiu }: Props): JSX.Element {
+export default function DnDFlow({ wiu }: Props): JSX.Element {
 	const [reactFlowInstance, setReactFlowInstance] = useState<ReactFlowInstance | null>(null);
 	const reactFlowWrapper = useRef<HTMLDivElement | null>(null);
 	const [uiNodes, setUiNodes] = useState(WebInterfaceUtils.getUiNodes(atlasGraph));
@@ -78,10 +77,13 @@ export default function DnDFlow({ druggedNode, wiu }: Props): JSX.Element {
 		(event: React.DragEvent) => {
 			event.preventDefault();
 
-			console.assert(druggedNode !== null, 'drugged node should be assigned before dragging');
-			if (druggedNode !== null) {
-				const width = wiu.getUiNodeWidth(druggedNode);
-				const height = wiu.getUiNodeHeight(druggedNode);
+			console.assert(
+				wiu.druggedNode !== null,
+				'drugged node should be assigned before dragging',
+			);
+			if (wiu.druggedNode !== null) {
+				const width = wiu.getUiNodeWidth(wiu.druggedNode);
+				const height = wiu.getUiNodeHeight(wiu.druggedNode);
 				// @ts-ignore
 				const reactFlowBounds = reactFlowWrapper.current.getBoundingClientRect();
 				// @ts-ignore
@@ -89,12 +91,12 @@ export default function DnDFlow({ druggedNode, wiu }: Props): JSX.Element {
 					x: event.clientX - reactFlowBounds.left - width / 2,
 					y: event.clientY - reactFlowBounds.top - height / 2,
 				});
-				atlasGraph.nodes.push(druggedNode.setPosition(pos.x, pos.y));
+				atlasGraph.nodes.push(wiu.druggedNode.setPosition(pos.x, pos.y));
 			}
 			setUiNodes(WebInterfaceUtils.getUiNodes(atlasGraph));
-			wiu.setSelectedNode(druggedNode);
+			wiu.setSelectedNode(wiu.druggedNode);
 		},
-		[reactFlowInstance, druggedNode],
+		[reactFlowInstance, wiu.druggedNode],
 	);
 
 	useEffect(() => {

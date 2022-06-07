@@ -20,10 +20,11 @@ export default function Home() {
 	const [uiEdges, setUiEdges] = useState(WebInterfaceUtils.getUiEdges(atlasGraph));
 	const wiu = new WebInterfaceUtils(
 		atlasGraph,
-		selectedNode,
 		setUiNodes,
 		setUiEdges,
+		selectedNode,
 		setSelectedNode,
+		druggedNode,
 		setDruggedNode,
 	);
 
@@ -77,7 +78,7 @@ export default function Home() {
 					/>
 				</div>
 
-				<DnDFlow wiu={wiu} druggedNode={druggedNode} />
+				<DnDFlow wiu={wiu} />
 				<Panels wiu={wiu} />
 			</div>
 		</>
