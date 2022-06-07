@@ -7,26 +7,26 @@ type Props = {
 };
 
 export default function ElementsPanel({ webInterfaceUtils }: Props) {
-	let selectedStyle: string = styles.elsElement;
+	function getNodeTypeName(type: string) {
+		return type.slice(11, type.length);
+	}
 
-	function listElements(node: AtlasNode): JSX.Element {
-		webInterfaceUtils.selectedNode == node
-			? (selectedStyle =
-					`${styles.elsElement}` +
-					' ' +
-					`${styles.elsElementSelected}
-		}`)
-			: (selectedStyle = styles.elsElement);
+	function getElements(node: AtlasNode): JSX.Element {
+		let selectedStyle: string = styles.elsElement;
+
+		if (webInterfaceUtils.selectedNode == node) {
+			selectedStyle += ' ' + `${styles.elsElementSelected}`;
+		}
 
 		const selectElement = () => webInterfaceUtils.setSelectedNode(node);
 
 		return (
 			<div key={node.name} className={selectedStyle} onClick={selectElement}>
-				<span style={{ color: '#30a5be' }}>{node.name}</span>
-				<span>: {node.type.slice(11, node.type.length)}</span>
+				<span className={styles.elementName}>{node.name}</span>
+				<span>: {getNodeTypeName(node.type)}</span>
 			</div>
 		);
 	}
 
-	return <>{webInterfaceUtils.graph.nodes.map((node) => listElements(node))}</>;
+	return <>{webInterfaceUtils.graph.nodes.map((node) => getElements(node))}</>;
 }
