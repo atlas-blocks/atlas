@@ -59,7 +59,7 @@ export default function DnDFlow({ druggedNode, webInterfaceUtils }: Props): JSX.
 		webInterfaceUtils.setSelectedNode(node.data.node);
 	}
 
-	function onPaneClick(event: ReactMouseEvent) {
+	function onPanelClick(event: ReactMouseEvent) {
 		webInterfaceUtils.setSelectedNode(null);
 	}
 
@@ -89,7 +89,7 @@ export default function DnDFlow({ druggedNode, webInterfaceUtils }: Props): JSX.
 					x: event.clientX - reactFlowBounds.left - width / 2,
 					y: event.clientY - reactFlowBounds.top - height / 2,
 				});
-				atlasGraph.nodes.push(druggedNode.setPosition(pos.x, pos.y).setDefaultName());
+				atlasGraph.nodes.push(druggedNode.setPosition(pos.x, pos.y));
 			}
 			setUiNodes(WebInterfaceUtils.getUiNodes(atlasGraph));
 		},
@@ -114,10 +114,11 @@ export default function DnDFlow({ druggedNode, webInterfaceUtils }: Props): JSX.
 					onEdgesChange={onUiEdgesChange}
 					onNodeClick={handleUiNodeSelection}
 					onNodeDoubleClick={handleUiNodeDoubleClick}
-					onPaneClick={onPaneClick}
+					onPaneClick={onPanelClick}
 					onInit={setReactFlowInstance}
 					onDrop={onDrop}
 					onDragOver={onDragOver}
+					defaultZoom={0.8}
 				>
 					{/*<MiniMap />*/}
 					<Controls />

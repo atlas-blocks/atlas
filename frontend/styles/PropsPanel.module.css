@@ -1,35 +1,41 @@
 .propsPanelWrapper {
 	height: fit-content;
 	margin: 5px;
-	padding-top: 10px;
 	display: flex;
-	flex-wrap: wrap;
-	align-items: flex-start;
+	flex-direction: column;
 	font-size: 14px;
 }
 
 .propsPanelWrapper label {
 	width: 100%;
-	margin: 5px;
-	margin-top: 7px;
+	margin-top: 10px;
+	margin-left: 5px;
 	color: #30a5be;
 }
 
-.inpName {
+.propsPanelWrapper p {
+	margin: 5px;
+	margin-top: 10px;
+	padding-left: 5px;
+	font-size: 12px;
+	white-space: pre-wrap;
+}
+
+.propsPanelWrapper input {
 	border-style: none;
 	border-bottom: 1px solid black;
 	margin: 5px;
 	outline: none;
-	flex: 1;
 }
 
-.inpContent {
+.propsPanelWrapper textarea {
+	resize: none;
 	border: 1px solid #eaeaea;
 	border-bottom: 1px solid black;
-	height: 100px;
-	margin: 5px;
+	row-span: initial;
 	outline: none;
-	flex: 1;
+	margin: 5px;
+	height: 100px;
 }
 
 .btnSubmit {

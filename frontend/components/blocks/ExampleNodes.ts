@@ -1,28 +1,25 @@
 import { AtlasNode, ExpressionNode, TextNode } from '../../utils/AtlasGraph';
 
-export const exampleNodes = [
-	new ExpressionNode(
-		new AtlasNode('AtlasGraph.ExpressionNode', 'ex1', 'pkg', [300, 100], true),
-		'sin(5)',
-		'-0.9589',
-	),
-	new ExpressionNode(
-		new AtlasNode('AtlasGraph.ExpressionNode', 'ex2', 'pkg', [200, 200], true),
-		'ifthenelse(2 == 3, asin(ex1), ex1 * 2)',
-		'-1.9178',
-	),
-	new ExpressionNode(
-		new AtlasNode('AtlasGraph.ExpressionNode', 'ex3', 'pkg', [100, 300], true),
-		'[-1, -2, -3]',
-		'[-1, -2, -3]',
-	),
-	new TextNode(
-		new AtlasNode('AtlasGraph.TextNode', 'ex4', 'pkg', [300, 300], true),
-		'1,2,3\n4,5,6',
-	),
-	new ExpressionNode(
-		new AtlasNode('AtlasGraph.ExpressionNode', 'ex5', 'pkg', [500, 300], true),
-		'csv2vector(ex4)',
-		'[[1, 4], [2, 5], [3, 6]]',
-	),
+export const exampleNodes: AtlasNode[] = [
+	ExpressionNode.build()
+		.setResult('-0.9589')
+		.setContent('sin(5)')
+		.setPosition(100, 100)
+		.setName('ex1'),
+	ExpressionNode.build()
+		.setResult('[-1, -2, -3]')
+		.setContent('[-1, -2, -3]')
+		.setPosition(100, 300)
+		.setName('ex2'),
+	TextNode.build().setContent('1,2,3\n4,5,6').setPosition(300, 300).setName('ex3'),
+	ExpressionNode.build()
+		.setResult('[[1, 4], [2, 5], [3, 6]]')
+		.setContent('csv2vector(ex3)')
+		.setPosition(500, 300)
+		.setName('ex4'),
+	ExpressionNode.build()
+		.setResult('-1.9178')
+		.setContent('ifthenelse(2 == 3, asin(ex1), ex1 * 2)')
+		.setPosition(350, 150)
+		.setName('ex5'),
 ];

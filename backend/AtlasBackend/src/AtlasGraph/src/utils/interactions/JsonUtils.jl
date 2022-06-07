@@ -41,7 +41,7 @@ end
 function node(json_dict::JSON3.Object)::AbstractNode
     node = Node(
         json_dict["name"],
-        json_dict["package"],
+        json_dict["uitype"],
         (
             convert(Int32, floor(json_dict["position"][1])),
             convert(Int32, floor(json_dict["position"][2])),

@@ -4,9 +4,9 @@ import styles from '../../styles/Block.module.css';
 import { ExpressionNode, TextNode, FileNode } from '../../utils/AtlasGraph';
 
 export const uiNodeTypes = {
-	[ExpressionNode.structType]: ExpressionBlock,
-	[TextNode.structType]: TextBlock,
-	[FileNode.structType]: FileBlock,
+	[ExpressionNode.type]: ExpressionBlock,
+	[TextNode.type]: TextBlock,
+	[FileNode.type]: FileBlock,
 };
 
 export function FormulaBlockWrapper(content: JSX.Element, blockClass: string) {

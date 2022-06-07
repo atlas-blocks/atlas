@@ -1,0 +1,38 @@
+.filterWrapper {
+	border: 1px solid #eaeaea;
+	max-height: fit-content;
+	padding: 5px;
+	margin: 5px;
+	margin-top: 10px;
+	display: flex;
+	flex-direction: column;
+	line-height: 25px;
+}
+
+.filterWrapper input {
+	border-style: none;
+	border-bottom: 1px solid black;
+	width: 30px;
+	outline: none;
+}
+
+.filterWrapper label {
+	color: black;
+	font-size: 12px;
+}
+
+.btnFilter {
+	border-style: none;
+	width: fit-content;
+	margin-left: 5px;
+	height: 20px;
+	font-size: 10px;
+}
+
+.btnFilter:hover {
+	background-color: lightgray;
+}
+
+.btnFilter:active {
+	background-color: #30a5be;
+}
