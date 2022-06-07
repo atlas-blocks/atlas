@@ -92,6 +92,7 @@ export default function DnDFlow({ druggedNode, webInterfaceUtils }: Props): JSX.
 				atlasGraph.nodes.push(druggedNode.setPosition(pos.x, pos.y));
 			}
 			setUiNodes(WebInterfaceUtils.getUiNodes(atlasGraph));
+			webInterfaceUtils.setSelectedNode(druggedNode);
 		},
 		[reactFlowInstance, druggedNode],
 	);

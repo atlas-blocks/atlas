@@ -5,6 +5,10 @@
 	justify-content: center;
 }
 
+.justBtn:hover {
+	background-color: #eaeaea;
+}
+
 .justBtn label {
 	font-size: 15px;
 }

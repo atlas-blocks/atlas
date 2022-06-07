@@ -1,18 +1,32 @@
-import styles from '../../styles/main.module.css';
+import styles from '../../styles/ElementsPanel.module.css';
+import WebInterfaceUtils from '../../utils/WebInterfaceUtils';
+import { AtlasNode } from '../../utils/AtlasGraph';
 
-export default function ElementsPanel(props: any) {
-	const showNodes = () => {
-		let result = JSON.stringify(props.nodes, null, 2);
-		// let result = props?.nodes.map(node => JSON.stringify(node))
-		return result;
-		// return props?.nodes.toString() ?? ""
-	};
+type Props = {
+	webInterfaceUtils: WebInterfaceUtils;
+};
 
-	return (
-		<div className={props.visibleState}>
-			<div className={styles.elementsWrapper}>
-				{/*<pre>{JSON.stringify(props.nodes, null, 2)}</pre>*/}
+export default function ElementsPanel({ webInterfaceUtils }: Props) {
+	function getNodeTypeName(type: string) {
+		return type.slice(11, type.length);
+	}
+
+	function getPanelElement(node: AtlasNode): JSX.Element {
+		let selectedStyle: string = styles.element;
+
+		if (webInterfaceUtils.selectedNode == node) {
+			selectedStyle += ' ' + styles.elementSelected;
+		}
+
+		const selectElement = () => webInterfaceUtils.setSelectedNode(node);
+
+		return (
+			<div key={node.name} className={selectedStyle} onClick={selectElement}>
+				<span className={styles.elementName}>{node.name}</span>
+				<span>: {getNodeTypeName(node.type)}</span>
 			</div>
-		</div>
-	);
+		);
+	}
+
+	return <>{webInterfaceUtils.graph.nodes.map((node) => getPanelElement(node))}</>;
 }

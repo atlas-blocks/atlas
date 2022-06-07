@@ -4,10 +4,13 @@
 	grid-template-rows: 8vh 5vh 5vh 82vh;
 }
 
-.leftpanel {
-	border: 1px solid #eaeaea;
-	grid-column: 1 / 3;
+.elementsPanel {
+	grid-column: 1/3;
 	grid-row: 4;
+	display: flex;
+	flex-direction: column;
+	overflow: auto;
+	margin-top: 10px;
 }
 
 .flowcanvas {
@@ -23,7 +26,6 @@
 }
 
 .propsPanel {
-	/*border: 1px solid #eaeaea;*/
 	grid-column: 11/13;
 	grid-row: 4;
 	display: flex;
@@ -36,7 +38,6 @@
 }
 
 .libPanel {
-	/*border: 1px solid #eaeaea;*/
 	grid-column: 11/13;
 	grid-row: 4;
 	display: flex;
@@ -48,7 +49,6 @@
 .leftTop {
 	grid-column: 1 / 3;
 	grid-row: 1;
-	/*border: 1px solid #eaeaea;*/
 	display: flex;
 	justify-content: space-between;
 	margin-left: 10px;
@@ -58,7 +58,6 @@
 .centerTop {
 	grid-column: 3 / 11;
 	grid-row: 1;
-	/*border: 1px solid #eaeaea;*/
 	text-align: center;
 	margin-top: 15px;
 }
@@ -66,26 +65,8 @@
 .rightTop {
 	grid-column: 11 / 13;
 	grid-row: 1;
-	/*border: 1px solid #eaeaea;*/
 	display: flex;
 	justify-content: space-between;
 	margin-left: 10px;
 	margin-right: 10px;
 }
-
-/*.expressionNode {*/
-/*    height: auto;*/
-/*    width: auto;*/
-/*    border: 1px solid black;*/
-/*    padding: 5px;*/
-/*    border-radius: 5px;*/
-/*    background: white;*/
-/*    display: flex;*/
-/*}*/
-
-/*.expressionNode div {*/
-/*    display: flex;*/
-/*    flex-direction: column;*/
-/*    align-items: flex-start;*/
-/*    line-height: 5px;*/
-/*}*/
