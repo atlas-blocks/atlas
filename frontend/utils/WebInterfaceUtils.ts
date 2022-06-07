@@ -5,23 +5,29 @@ import ServerUtils from './ServerUtils';
 
 export default class WebInterfaceUtils {
 	graph: AtlasGraph;
-	selectedNode: AtlasNode | null;
 	setUINodes: React.Dispatch<React.SetStateAction<UINode[]>>;
 	setUIEdges: React.Dispatch<React.SetStateAction<UIEdge[]>>;
+	selectedNode: AtlasNode | null;
 	setSelectedNode: React.Dispatch<React.SetStateAction<AtlasNode | null>>;
+	druggedNode: AtlasNode | null;
+	setDruggedNode: React.Dispatch<React.SetStateAction<AtlasNode | null>>;
 
 	constructor(
 		graph: AtlasGraph,
-		selectedNode: AtlasNode | null,
 		setUINodes: React.Dispatch<React.SetStateAction<UINode[]>>,
 		setUIEdges: React.Dispatch<React.SetStateAction<UIEdge[]>>,
+		selectedNode: AtlasNode | null,
 		setSelectedNode: React.Dispatch<React.SetStateAction<AtlasNode | null>>,
+		druggedNode: AtlasNode | null,
+		setDruggedNode: React.Dispatch<React.SetStateAction<AtlasNode | null>>,
 	) {
 		this.graph = graph;
-		this.selectedNode = selectedNode;
 		this.setUINodes = setUINodes;
 		this.setUIEdges = setUIEdges;
+		this.selectedNode = selectedNode;
 		this.setSelectedNode = setSelectedNode;
+		this.druggedNode = druggedNode;
+		this.setDruggedNode = setDruggedNode;
 	}
 
 	public static toUiNode(node: AtlasNode): UINode {

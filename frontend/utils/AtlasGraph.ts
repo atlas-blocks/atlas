@@ -7,10 +7,15 @@ export default class AtlasGraph {
 		this.edges = [];
 	}
 
-	private static nameCnt = 0;
+	private isInDefaultNameFormat(name: string) {
+		return name[0] === 'b' && !isNaN(Number(name.slice(1)));
+	}
 
-	static getDefaultName() {
-		return 'b' + this.nameCnt++;
+	public getDefaultName() {
+		const defaultNodesNameNumbers: number[] = this.nodes
+			.filter((node) => this.isInDefaultNameFormat(node.name))
+			.map((node) => Number(node.name.slice(1)));
+		return 'b' + (Math.max(...defaultNodesNameNumbers, 0) + 1);
 	}
 
 	getByName(name: string): AtlasNode[] {
@@ -63,11 +68,11 @@ export class AtlasNode {
 	}
 
 	public static build() {
-		return new AtlasNode('', '', '', [0, 0], true).setDefaultName();
+		return new AtlasNode('', '', '', [0, 0], true);
 	}
 
-	setDefaultName() {
-		this.name = AtlasGraph.getDefaultName();
+	setDefaultName(graph: AtlasGraph) {
+		this.name = graph.getDefaultName();
 		return this;
 	}
 

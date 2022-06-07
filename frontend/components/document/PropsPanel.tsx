@@ -11,14 +11,10 @@ import WebInterfaceUtils from '../../utils/WebInterfaceUtils';
 import MatrixFilterBuilder from './MatrixFilterBuilder';
 
 type Props = {
-	propPanelStyleWrapper: string;
-	webInterfaceUtils: WebInterfaceUtils;
+	wiu: WebInterfaceUtils;
 };
 
-export default function PropsPanel({
-	propPanelStyleWrapper,
-	webInterfaceUtils,
-}: Props): JSX.Element {
+export default function PropsPanel({ wiu }: Props): JSX.Element {
 	const [newContentValue, setNewContentValue] = useState<string>('');
 	const [newNameValue, setNewNameValue] = useState<string>('');
 
@@ -30,17 +26,17 @@ export default function PropsPanel({
 	};
 
 	const submitChanges = async () => {
-		if (webInterfaceUtils.selectedNode instanceof ContentNode) {
-			webInterfaceUtils.selectedNode.content = newContentValue;
-			webInterfaceUtils.selectedNode.name = newNameValue;
-			await webInterfaceUtils.updateGraph();
+		if (wiu.selectedNode instanceof ContentNode) {
+			wiu.selectedNode.content = newContentValue;
+			wiu.selectedNode.name = newNameValue;
+			await wiu.updateGraph();
 
-			webInterfaceUtils.setSelectedNode(null);
+			wiu.setSelectedNode(null);
 		}
 	};
 
 	function chooseProperties(): JSX.Element {
-		if (webInterfaceUtils.selectedNode instanceof MatrixFilterNode) {
+		if (wiu.selectedNode instanceof MatrixFilterNode) {
 			return <MatrixFilterBuilder setNewContentValue={setNewContentValue} />;
 		} else {
 			return <></>;
@@ -64,21 +60,21 @@ export default function PropsPanel({
 	};
 
 	const propsDescription = (): string => {
-		const node = webInterfaceUtils.selectedNode;
+		const node = wiu.selectedNode;
 		if (node === null || typeof typeDescriptions[node.uitype] === undefined) return '';
 
 		return typeDescriptions[node.uitype];
 	};
 
 	useEffect(() => {
-		if (webInterfaceUtils.selectedNode instanceof ContentNode) {
-			setNewContentValue(webInterfaceUtils.selectedNode.content);
-			setNewNameValue(webInterfaceUtils.selectedNode.name);
+		if (wiu.selectedNode instanceof ContentNode) {
+			setNewContentValue(wiu.selectedNode.content);
+			setNewNameValue(wiu.selectedNode.name);
 		}
-	}, [webInterfaceUtils.selectedNode]);
+	}, [wiu.selectedNode]);
 
 	return (
-		<div className={`${propPanelStyleWrapper}`}>
+		<>
 			<div className={styles.propsPanelWrapper}>
 				<label>Name</label>
 				<input value={newNameValue} onChange={updNameVal} />
@@ -98,6 +94,6 @@ export default function PropsPanel({
 				<p>{propsDescription()}</p>
 				<p></p>
 			</div>
-		</div>
+		</>
 	);
 }

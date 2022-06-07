@@ -4,48 +4,6 @@
 	grid-template-rows: 8vh 5vh 5vh 82vh;
 }
 
-.elementsPanel {
-	grid-column: 1/3;
-	grid-row: 4;
-	display: flex;
-	flex-direction: column;
-	overflow: auto;
-	margin-top: 10px;
-}
-
-.flowcanvas {
-	grid-column: 3 / 11;
-	justify-content: center;
-	text-align: center;
-	grid-row: 2/5;
-	border: 1px solid #eaeaea;
-	width: 100%;
-	height: 100%;
-	font-size: 5px;
-	display: flex;
-}
-
-.propsPanel {
-	grid-column: 11/13;
-	grid-row: 4;
-	display: flex;
-	flex-direction: column;
-	overflow-y: scroll;
-}
-
-.panelHidden {
-	visibility: hidden;
-}
-
-.libPanel {
-	grid-column: 11/13;
-	grid-row: 4;
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	overflow-y: scroll;
-}
-
 .leftTop {
 	grid-column: 1 / 3;
 	grid-row: 1;
@@ -69,4 +27,46 @@
 	justify-content: space-between;
 	margin-left: 10px;
 	margin-right: 10px;
+}
+
+.panelHidden {
+	visibility: hidden;
+}
+
+#elementsPanel {
+	grid-column: 1/3;
+	grid-row: 4;
+	display: flex;
+	flex-direction: column;
+	overflow: auto;
+	margin-top: 10px;
+}
+
+.flowcanvas {
+	grid-column: 3 / 11;
+	justify-content: center;
+	text-align: center;
+	grid-row: 2/5;
+	border: 1px solid #eaeaea;
+	width: 100%;
+	height: 100%;
+	font-size: 5px;
+	display: flex;
+}
+
+#propsPanel {
+	grid-column: 11/13;
+	grid-row: 4;
+	display: flex;
+	flex-direction: column;
+	overflow-y: scroll;
+}
+
+#libPanel {
+	grid-column: 11/13;
+	grid-row: 4;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	overflow-y: scroll;
 }
