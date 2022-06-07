@@ -12,10 +12,10 @@ export default function ElementsPanel({ webInterfaceUtils }: Props) {
 	}
 
 	function getElements(node: AtlasNode): JSX.Element {
-		let selectedStyle: string = styles.elsElement;
+		let selectedStyle: string = styles.element;
 
 		if (webInterfaceUtils.selectedNode == node) {
-			selectedStyle += ' ' + `${styles.elsElementSelected}`;
+			selectedStyle += ' ' + `${styles.elementSelected}`;
 		}
 
 		const selectElement = () => webInterfaceUtils.setSelectedNode(node);
