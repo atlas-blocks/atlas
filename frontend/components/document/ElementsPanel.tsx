@@ -11,11 +11,11 @@ export default function ElementsPanel({ webInterfaceUtils }: Props) {
 		return type.slice(11, type.length);
 	}
 
-	function getElements(node: AtlasNode): JSX.Element {
+	function getPanelElement(node: AtlasNode): JSX.Element {
 		let selectedStyle: string = styles.element;
 
 		if (webInterfaceUtils.selectedNode == node) {
-			selectedStyle += ' ' + `${styles.elementSelected}`;
+			selectedStyle += ' ' + styles.elementSelected;
 		}
 
 		const selectElement = () => webInterfaceUtils.setSelectedNode(node);
@@ -28,5 +28,5 @@ export default function ElementsPanel({ webInterfaceUtils }: Props) {
 		);
 	}
 
-	return <>{webInterfaceUtils.graph.nodes.map((node) => getElements(node))}</>;
+	return <>{webInterfaceUtils.graph.nodes.map((node) => getPanelElement(node))}</>;
 }
