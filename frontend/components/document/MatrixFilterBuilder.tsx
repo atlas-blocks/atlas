@@ -88,7 +88,7 @@ export default function MatrixFilterBuilder({ setNewContentValue }: Props): JSX.
 	finalExp = 'getindex(' + refMatrixName.current?.value + ', ' + resCols + ', ' + resRows + ')';
 
 	useEffect(() => {
-		setNewContentValue(finalExp);
+		refMatrixName.current?.value ? setNewContentValue(finalExp) : '';
 	}, [finalExp]);
 
 	function listFilters(index: number, cols: boolean): JSX.Element {

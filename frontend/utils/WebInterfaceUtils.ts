@@ -90,6 +90,10 @@ export default class WebInterfaceUtils {
 				const node = this.graph.getById(change.id);
 				node.setPosition(change.position.x, change.position.y);
 			}
+			if (change.type === 'remove') {
+				this.graph.removeById(change.id);
+				this.setSelectedNode(null);
+			}
 		}
 	}
 

@@ -18,6 +18,11 @@ export default class AtlasGraph {
 		return 'b' + (Math.max(...defaultNodesNameNumbers, 0) + 1);
 	}
 
+	public removeById(id: string) {
+		const nodeToRemove = this.getById(id);
+		this.nodes.splice(this.nodes.indexOf(nodeToRemove), 1);
+	}
+
 	getByName(name: string): AtlasNode[] {
 		return this.nodes.filter((node) => node.name === name);
 	}
