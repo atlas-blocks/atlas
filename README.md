@@ -18,7 +18,7 @@
 ## About The Project
 
 ### About Us
-We (2.5 folks) are a young but crazy ambitious startup "Atlas". In short, we are planning to create a better MATLAB. 
+We are a young and crazy ambitious startup "Atlas". We are building a revolutionary graph-like frontend for the Julia Jupyter kernel. The goal is to create a better MATLAB!
 
 We are doing an interface where you can create complex formulas and models using blocks. You can put your mathematical formulas inside blocks and reference other blocks to create compound expressions. And, of course, you can define your functions and classes and use them. 
 
