@@ -1,73 +1,104 @@
 import React from 'react';
-import { Node as Block, Elements } from 'react-flow-renderer';
+import { Node as UINode, Edge as UIEdge, NodeChange as UINodeChange } from 'react-flow-renderer';
 import AtlasGraph, { AtlasNode } from '../utils/AtlasGraph';
 import ServerUtils from './ServerUtils';
 
 export default class WebInterfaceUtils {
 	graph: AtlasGraph;
-	setElements: React.Dispatch<React.SetStateAction<Elements>>;
+	setUINodes: React.Dispatch<React.SetStateAction<UINode[]>>;
+	setUIEdges: React.Dispatch<React.SetStateAction<UIEdge[]>>;
+	selectedNode: AtlasNode | null;
 	setSelectedNode: React.Dispatch<React.SetStateAction<AtlasNode | null>>;
+	druggedNode: AtlasNode | null;
+	setDruggedNode: React.Dispatch<React.SetStateAction<AtlasNode | null>>;
 
 	constructor(
 		graph: AtlasGraph,
-		setElements: React.Dispatch<React.SetStateAction<Elements>>,
+		setUINodes: React.Dispatch<React.SetStateAction<UINode[]>>,
+		setUIEdges: React.Dispatch<React.SetStateAction<UIEdge[]>>,
+		selectedNode: AtlasNode | null,
 		setSelectedNode: React.Dispatch<React.SetStateAction<AtlasNode | null>>,
+		druggedNode: AtlasNode | null,
+		setDruggedNode: React.Dispatch<React.SetStateAction<AtlasNode | null>>,
 	) {
 		this.graph = graph;
-		this.setElements = setElements;
+		this.setUINodes = setUINodes;
+		this.setUIEdges = setUIEdges;
+		this.selectedNode = selectedNode;
 		this.setSelectedNode = setSelectedNode;
+		this.druggedNode = druggedNode;
+		this.setDruggedNode = setDruggedNode;
 	}
 
-	public static toBlock(node: AtlasNode): Block {
+	public static toUiNode(node: AtlasNode): UINode {
 		return {
 			id: node.getId(),
 			type: node.type,
 			position: { x: node.position[0], y: node.position[1] },
 			data: { node: node },
-			isHidden: !node.visibility,
+			hidden: !node.visibility,
 		};
 	}
 
-	public static getElements(graph: AtlasGraph): Elements {
-		return WebInterfaceUtils.getBlocks(graph).concat(WebInterfaceUtils.getEdges(graph));
+	public static toUiEdge(from: AtlasNode, to: AtlasNode): UIEdge {
+		return {
+			id: 'edge' + from.getId() + to.getId(),
+			source: from.getId(),
+			target: to.getId(),
+			type: 'DefaultEdge',
+		};
 	}
 
-	public static getBlocks(graph: AtlasGraph): Elements {
-		let ans: Elements = [];
+	public static getUiNodes(graph: AtlasGraph): UINode[] {
+		let ans: UINode[] = [];
 		for (const node of graph.nodes) {
-			ans.push(this.toBlock(node));
+			ans.push(this.toUiNode(node));
 		}
 		return ans;
 	}
 
-	public static getEdges(graph: AtlasGraph): Elements {
-		let ans: Elements = [];
+	public static getUiEdges(graph: AtlasGraph): UIEdge[] {
+		let ans: UIEdge[] = [];
 
 		for (const edge of graph.edges) {
-			const froms = graph.nodes.filter((node) => node.name === edge.from);
-			const tos = graph.nodes.filter((node) => node.name === edge.to);
+			const froms = graph.getByName(edge.from);
+			const tos = graph.getByName(edge.to);
 
 			for (const from of froms) {
 				for (const to of tos) {
-					ans.push({
-						id: 'edge' + from.getId() + to.getId(),
-						source: from.getId(),
-						target: to.getId(),
-						type: 'DefaultEdge',
-					});
+					ans.push(this.toUiEdge(from, to));
 				}
 			}
 		}
 		return ans;
 	}
 
-	public refreshElements() {
-		this.setElements((els) => WebInterfaceUtils.getElements(this.graph));
+	public refreshUiElements() {
+		this.setUINodes((els) => WebInterfaceUtils.getUiNodes(this.graph));
+		this.setUIEdges((els) => WebInterfaceUtils.getUiEdges(this.graph));
 	}
 
 	public async updateGraph() {
 		await ServerUtils.updateGraph(this.graph);
-		this.refreshElements();
+		this.refreshUiElements();
+	}
+
+	public updateNodes(changes: UINodeChange[]) {
+		for (const change of changes) {
+			if (change.type === 'position') {
+				if (change.position === undefined) return;
+				const node = this.graph.getById(change.id);
+				node.setPosition(change.position.x, change.position.y);
+			}
+		}
+	}
+
+	public getUiNodeWidth(node: AtlasNode): number {
+		return 100;
+	}
+
+	public getUiNodeHeight(node: AtlasNode): number {
+		return 100;
 	}
 
 	public getFunctionSignature(name: string, multiline = false): string {

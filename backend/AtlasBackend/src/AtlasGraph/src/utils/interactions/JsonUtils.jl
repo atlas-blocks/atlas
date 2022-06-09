@@ -41,10 +41,10 @@ end
 function node(json_dict::JSON3.Object)::AbstractNode
     node = Node(
         json_dict["name"],
-        json_dict["package"],
+        json_dict["uitype"],
         (
-            convert(Int32, json_dict["position"][1]),
-            convert(Int32, json_dict["position"][2]),
+            convert(Int32, floor(json_dict["position"][1])),
+            convert(Int32, floor(json_dict["position"][2])),
         ),
         json_dict["visibility"],
     )
@@ -57,6 +57,10 @@ function node(json_dict::JSON3.Object)::AbstractNode
     elseif json_dict["type"] == string(TextNode)
         content = json_dict["content"]
         return TextNode(node, content)
+    elseif json_dict["type"] == string(FileNode)
+        content = json_dict["content"]
+        filename = json_dict["filename"]
+        return FileNode(node, content, filename)
     end
 end
 

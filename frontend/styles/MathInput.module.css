@@ -1,5 +1,7 @@
 #math_input {
 	position: absolute;
+	top: 600px;
+	left: 100px;
 	width: 80%;
 	margin-left: 10%;
 	background: var(--elements-background);
@@ -8,6 +10,7 @@
 	border-top-right-radius: 20px;
 	text-align: center;
 	transition: 1s;
+	z-index: 5;
 }
 
 #math_input textarea {

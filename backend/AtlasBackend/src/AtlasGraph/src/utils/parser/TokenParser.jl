@@ -57,14 +57,14 @@ function match(parser::Parser, expected::TokenType)::Bool
 end
 
 function isinfix(token::Token)
-    return haskey(infix_precedence, token)
+    return haskey(Precedences.infix_precedence, token)
 end
 
 function getinfixprecedence(token::Token)
     if !isinfix(token)
         return 0
     end
-    return infix_precedence[token].precedence
+    return Precedences.infix_precedence[token].precedence
 end
 
 function parse_expression(
@@ -74,21 +74,20 @@ function parse_expression(
     if !hasnext(parser)
         return ValueExpr(nothing)
     end
-    token::Token = unwrap(consume(parser))
+    token::Token = updateprefixtype(unwrap(consume(parser)))
 
-
-    if !haskey(prefix_parselets, updateprefixtype(token).type)
+    if !haskey(prefix_parselets, token.type)
         return ParsingException("Couldn't parse \"$(string(token.content))\".")
     end
-    left = prefix_parselets[updateprefixtype(token).type](parser, token)
+    left = prefix_parselets[token.type](parser, token)
     if ResultTypes.iserror(left)
         return unwrap_error(left)
     end
     left = unwrap(left)
 
-    while hasnext(parser) && precedence < getinfixprecedence(peek(parser))
-        token = unwrap(consume(parser))
-        left = infix_parselets[updateinfixtype(token).type](parser, left, token)
+    while hasnext(parser) && precedence < getinfixprecedence(updateinfixtype(peek(parser)))
+        token = updateinfixtype(unwrap(consume(parser)))
+        left = infix_parselets[token.type](parser, left, token)
         if ResultTypes.iserror(left)
             return unwrap_error(left)
         end
@@ -97,6 +96,26 @@ function parse_expression(
 
     return left
 end
+
+function parse_expression(parser::Parser)::Result{AbstractExpr,Exception}
+    return parse_expression(parser, 0)
+end
+
+function parse_prefix_expression(
+    parser::Parser,
+    token::Token,
+)::Result{AbstractExpr,Exception}
+    return parse_expression(parser, Precedences.prefix_precedence[token].precedence)
+end
+
+function parse_infix_expression(
+    parser::Parser,
+    token::Token,
+)::Result{AbstractExpr,Exception}
+    info = Precedences.infix_precedence[token]
+    return parse_expression(parser, info.precedence - (info.left_associative ? 0 : 1))
+end
+
 
 function updateinfixtype(token::Token)::Token
     if token.type != Tokens.NAME || !(token.content in Tokens.infix_bin_operators)
@@ -111,11 +130,6 @@ function updateprefixtype(token::Token)::Token
     end
     return Token(Tokens.PREFIX_UNARY_OPERATOR, token.content)
 end
-
-function parse_expression(parser::Parser)::Result{AbstractExpr,Exception}
-    return parse_expression(parser, 0)
-end
-
 
 include("./parselets/Parselets.jl")
 

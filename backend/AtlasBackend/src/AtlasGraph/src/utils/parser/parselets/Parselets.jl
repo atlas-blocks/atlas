@@ -1,6 +1,3 @@
-include("./Precedence.jl")
-
-
 function group_with_commas_helper(
     parser::Parser,
     closing::TokenType,
@@ -69,7 +66,7 @@ function prefix_unary_operator_parselet(
     parser::Parser,
     token::Token,
 )::Result{CallExpr,Exception}
-    right = parse_expression(parser, prefix_precedence[token].precedence)
+    right = parse_prefix_expression(parser, token)
     if ResultTypes.iserror(right)
         return unwrap_error(right)
     end
@@ -103,8 +100,7 @@ function infix_bin_operator_parselet(
     left::AbstractExpr,
     token::Token{Symbol},
 )::Result{CallExpr,Exception}
-    info = infix_precedence[token]
-    right = parse_expression(parser, info.precedence - (info.left_associative ? 0 : 1))
+    right = parse_infix_expression(parser, token)
     if ResultTypes.iserror(right)
         return unwrap_error(right)
     end
@@ -124,8 +120,26 @@ function getindex_parselet(
     return CallExpr(NameExpr(:getindex), [left, unwrap(expr)])
 end
 
+function dot_property_parselet(
+    parser::Parser,
+    left::AbstractExpr,
+    token::Token,
+)::Result{CallExpr,Exception}
+    right = parse_infix_expression(parser, token)
+    if ResultTypes.iserror(right)
+        return unwrap_error(right)
+    end
+    right = unwrap(right)
+    if !isa(right, NameExpr)
+        return ParsingException("can't get the property: " * string(right))
+    end
+
+    return CallExpr(NameExpr(:getproperty), [left, ValueExpr{Symbol}(right.name)])
+end
+
 infix_parselets = Dict{TokenType,Function}(
     Tokens.LEFT_PAREN => call_parselet,
+    Tokens.DOT => dot_property_parselet,
     Tokens.LEFT_BRACKET => getindex_parselet,
     Tokens.INFIX_BIN_OPERATOR => infix_bin_operator_parselet,
 )

@@ -1,0 +1,60 @@
+.generalBtn {
+	border: 1px solid #eaeaea;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.generalBtn:hover {
+	background-color: #eaeaea;
+}
+
+.generalBtn label {
+	font-size: 15px;
+}
+
+.actBtn {
+	border-bottom: 2px solid #30a5be;
+}
+
+#libBtn {
+	grid-column: 11/12;
+	grid-row: 2;
+}
+
+#assetsBtn {
+	border: 1px solid #eaeaea;
+	grid-column: 12/13;
+	grid-row: 2;
+	text-align: center;
+}
+
+#propBtn {
+	grid-column: 11/12;
+	grid-row: 3;
+}
+
+#objBtn {
+	grid-column: 12/13;
+	grid-row: 3;
+}
+
+#mockupBtn {
+	grid-column: 1/2;
+	grid-row: 2;
+}
+
+#envBtn {
+	grid-column: 2/3;
+	grid-row: 2;
+}
+
+#elementsBtn {
+	grid-column: 1/2;
+	grid-row: 3;
+}
+
+#layersBtn {
+	grid-column: 2/3;
+	grid-row: 3;
+}

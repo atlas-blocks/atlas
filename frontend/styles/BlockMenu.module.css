@@ -1,7 +1,7 @@
 /*===== sidebar ======*/
 
 #block_menu {
-	position: absolute;
+	position: relative;
 	right: 0;
 	background: var(--elements-background);
 	border-left: 1px solid #eee;
