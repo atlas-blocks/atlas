@@ -18,7 +18,7 @@
 ## About The Project
 
 ### About Us
-We are a young and crazy ambitious startup "Atlas". We are building a revolutionary graph-like frontend for the Julia Jupyter kernel. The goal is to create a better MATLAB!
+We are a young and crazy ambitious startup "Atlas", which is building a revolutionary computer-model environment for engineers and scientists worldwide. The aim is to help them visualize ideas, conduct scientific research, create digital twins or simulate mathematical and functional models in a lightweight low-code visual interface. Anchored in the #1 scientific performance language "Julia", we tend to outperform heavy legacy systems like MatLab, Mathematica, etc., not only in performance but, more importantly - in user experience.
 
 We are doing an interface where you can create complex formulas and models using blocks. You can put your mathematical formulas inside blocks and reference other blocks to create compound expressions. And, of course, you can define your functions and classes and use them. 
 
