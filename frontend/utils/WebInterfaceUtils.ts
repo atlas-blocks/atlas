@@ -5,6 +5,8 @@ import ServerUtils from './ServerUtils';
 
 export default class WebInterfaceUtils {
 	graph: AtlasGraph;
+	graphName: string;
+	setGraphName: React.Dispatch<React.SetStateAction<string>>;
 	uiNodes: UINode[];
 	uiEdges: UIEdge[];
 	setUiNodes: React.Dispatch<React.SetStateAction<UINode[]>>;
@@ -16,6 +18,8 @@ export default class WebInterfaceUtils {
 
 	constructor(
 		graph: AtlasGraph,
+		graphName: string,
+		setGraphName: React.Dispatch<React.SetStateAction<string>>,
 		uiNodes: UINode[],
 		uiEdges: UIEdge[],
 		setUiNodes: React.Dispatch<React.SetStateAction<UINode[]>>,
@@ -26,6 +30,8 @@ export default class WebInterfaceUtils {
 		setDruggedNode: React.Dispatch<React.SetStateAction<AtlasNode | null>>,
 	) {
 		this.graph = graph;
+		this.graphName = graphName;
+		this.setGraphName = setGraphName;
 		this.uiNodes = uiNodes;
 		this.uiEdges = uiEdges;
 		this.setUiNodes = setUiNodes;
@@ -104,6 +110,7 @@ export default class WebInterfaceUtils {
 				this.graph.removeById(change.id);
 				this.setSelectedNode(null);
 			}
+			this.saveGraphToLocalStorage();
 		}
 	}
 
@@ -113,6 +120,10 @@ export default class WebInterfaceUtils {
 
 	public getUiNodeHeight(node: AtlasNode): number {
 		return 100;
+	}
+
+	public saveGraphToLocalStorage() {
+		localStorage.setItem(this.graphName, JSON.stringify(this.graph));
 	}
 
 	public getFunctionSignature(name: string, multiline = false): string {

@@ -32,7 +32,7 @@ export default function DnDFlow({ wiu }: Props): JSX.Element {
 			wiu.updateNodes(changes);
 			wiu.setUiNodes((nds) => applyNodeChanges(changes, nds));
 		},
-		[wiu.setUiNodes],
+		[wiu.graphName, wiu.setUiNodes],
 	);
 	const onUiEdgesChange = useCallback(
 		(changes: UIEdgeChange[]) => wiu.setUiEdges((eds) => applyEdgeChanges(changes, eds)),

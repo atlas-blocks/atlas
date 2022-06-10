@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import { useRef, useState } from 'react';
+import { ChangeEvent, useEffect, useRef, useState } from 'react';
 import WebInterfaceUtils from '../../utils/WebInterfaceUtils';
 import styles from '../../styles/main.module.css';
 import menuImg from '../../public/icons/menu.png';
@@ -21,11 +21,7 @@ export default function Navbar({ wiu }: Props) {
 		? styles.fileMenu
 		: styles.fileMenu + ' ' + styles.fileMenuHidden;
 
-	const getCurrentFilename = (extension: string) => {
-		return refSchemaName.current
-			? refSchemaName.current.value + extension
-			: 'atlas_schema' + extension;
-	};
+	const changeGraphName = (newName: string) => wiu.setGraphName(newName);
 
 	const exportToFile = (extension: string) => {
 		setIsFileMenuOpen(false);
@@ -35,38 +31,60 @@ export default function Navbar({ wiu }: Props) {
 		const href = URL.createObjectURL(blob);
 		const link = document.createElement('a');
 		link.href = href;
-		link.download = getCurrentFilename(extension);
+		link.download = wiu.graphName + extension;
 		document.body.appendChild(link);
 		link.click();
 		document.body.removeChild(link);
 	};
 
-	const loadNewGraph = (fileData: string) => {
-		const newGraph = ServerUtils.jsonToGraph(JSON.parse(fileData));
-		wiu.graph.nodes = newGraph.nodes;
-		wiu.graph.edges = newGraph.edges;
-		wiu.refreshUiElements();
+	const [cacheLocalStorage, setCacheLocalStorage] = useState<Storage>();
+
+	const loadNewGraph = (newGraphName: string, fileData: string | null) => {
+		setIsFileMenuOpen(false);
+		if (!fileData) return;
+		try {
+			const newGraph = ServerUtils.jsonToGraph(JSON.parse(fileData));
+			wiu.graph.nodes = newGraph.nodes;
+			wiu.graph.edges = newGraph.edges;
+			wiu.setSelectedNode(null);
+			wiu.refreshUiElements();
+
+			refSchemaName.current!.value = newGraphName;
+			changeGraphName(newGraphName);
+		} catch (e) {
+			console.log(e);
+		}
 	};
 
-	const handleOpenFile = () => {
-		setIsFileMenuOpen(false);
-
-		if (refOpenFile.current?.files) {
+	const handleOpenFile = (fileToLoad: File | null) => {
+		if (fileToLoad) {
 			let jsonFile = new FileReader();
-			jsonFile.readAsText(refOpenFile.current.files[0]);
-			jsonFile.onload = (evt: ProgressEvent<FileReader>) => {
-				if (typeof evt.target?.result === 'string') loadNewGraph(evt.target.result);
-			};
+			jsonFile.readAsText(fileToLoad);
+			jsonFile.onload = (evt: ProgressEvent<FileReader>) =>
+				typeof evt.target?.result === 'string'
+					? loadNewGraph(fileToLoad.name, evt.target.result)
+					: null;
 		}
 	};
 
 	const handleNewSchema = () => {
-		setIsFileMenuOpen(false);
-
-		wiu.graph.nodes = [];
-		wiu.graph.edges = [];
-		wiu.refreshUiElements();
+		loadNewGraph(wiu.graphName + '_new', '{"nodes": [], "edges": []}');
 	};
+
+	useEffect(() => {
+		setCacheLocalStorage(localStorage);
+	}, []);
+
+	function getRecentGraphs(graphName: string, graphFromLS: string | null): JSX.Element {
+		return (
+			<div
+				className={styles.elementFileMenu}
+				onClick={() => (graphFromLS ? loadNewGraph(graphName, graphFromLS) : null)}
+			>
+				<label>{graphName}</label>
+			</div>
+		);
+	}
 
 	return (
 		<>
@@ -87,7 +105,8 @@ export default function Navbar({ wiu }: Props) {
 				<input
 					className={styles.inputFileName}
 					ref={refSchemaName}
-					defaultValue={'atlas_schema_1'}
+					defaultValue={wiu.graphName}
+					onChange={() => changeGraphName(refSchemaName.current!.value)}
 				/>
 				<div className={styles.iconSmall}>
 					<Image
@@ -99,17 +118,26 @@ export default function Navbar({ wiu }: Props) {
 				</div>
 				<div className={fileMenuStyle}>
 					<div className={styles.elementFileMenu} onClick={handleNewSchema}>
-						New
+						<label>New</label>
 					</div>
-					<div className={styles.elementFileMenu}>Recent</div>
 					<div
 						className={styles.elementFileMenu}
 						onClick={() => refOpenFile.current?.click()}
 					>
-						Open...
+						<label>Open...</label>
 					</div>
 					<div className={styles.elementFileMenu} onClick={() => exportToFile('.ca')}>
-						Download
+						<label>Download</label>
+					</div>
+					<div className={styles.elementFileMenu}>
+						<label>Recent</label>
+					</div>
+					<div>
+						{cacheLocalStorage
+							? Object.keys(cacheLocalStorage).map((key) =>
+									getRecentGraphs(key, cacheLocalStorage.getItem(key)),
+							  )
+							: ''}
 					</div>
 				</div>
 			</div>
@@ -132,7 +160,9 @@ export default function Navbar({ wiu }: Props) {
 					type={'file'}
 					ref={refOpenFile}
 					style={{ display: 'none' }}
-					onChange={handleOpenFile}
+					onChange={(evt: ChangeEvent<HTMLInputElement>) =>
+						handleOpenFile(evt.target.files ? evt.target.files[0] : null)
+					}
 				/>
 			</div>
 		</>

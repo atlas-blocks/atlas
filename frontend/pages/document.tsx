@@ -18,8 +18,11 @@ export default function Home() {
 	const [selectedNode, setSelectedNode] = useState<AtlasNode | null>(null);
 	const [uiNodes, setUiNodes] = useState(WebInterfaceUtils.getUiNodes(atlasGraph));
 	const [uiEdges, setUiEdges] = useState(WebInterfaceUtils.getUiEdges(atlasGraph));
+	const [graphName, setGraphName] = useState<string>('atlas_schema');
 	const wiu = new WebInterfaceUtils(
 		atlasGraph,
+		graphName,
+		setGraphName,
 		uiNodes,
 		uiEdges,
 		setUiNodes,
