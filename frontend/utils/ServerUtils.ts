@@ -1,12 +1,5 @@
 import ErrorUtils from './errors/ErrorUtils';
-import AtlasGraph, {
-	AtlasEdge,
-	AtlasNode,
-	ExpressionNode,
-	TextNode,
-	FileNode,
-	MatrixFilterNode,
-} from './AtlasGraph';
+import AtlasGraph, { AtlasEdge, AtlasNode, ExpressionNode, TextNode, FileNode } from './AtlasGraph';
 
 type Response = {
 	success: boolean;
@@ -60,8 +53,7 @@ abstract class ServerUtils {
 		});
 	}
 
-	public static async updateGraph(graph: AtlasGraph) {
-		const graphJsonStr: string = JSON.stringify({ nodes: graph.nodes, edges: graph.edges });
+	public static async updateGraph(graph: AtlasGraph): Promise<void> {
 		const responseJson = await this.post(
 			this.getHostHref() + '/api/graph',
 			{},
@@ -71,10 +63,20 @@ abstract class ServerUtils {
 			ErrorUtils.showAlert('error while updating graph: ' + responseJson.message);
 			return;
 		}
-		const updatedGraph = responseJson.graph;
-		updatedGraph.nodes = ServerUtils.extractNodes(updatedGraph.nodes);
-		updatedGraph.edges = ServerUtils.extractEdges(updatedGraph.edges);
-		Object.assign(graph, updatedGraph);
+
+		const updatedGraph: AtlasGraph = this.jsonToGraph(responseJson.graph);
+		graph.nodes = updatedGraph.nodes;
+		graph.edges = updatedGraph.edges;
+	}
+
+	public static jsonToGraph(graphJson: {
+		nodes: { type: string; uitype: string }[];
+		edges: object[];
+	}): AtlasGraph {
+		const graph: AtlasGraph = new AtlasGraph();
+		graph.nodes = ServerUtils.extractNodes(graphJson.nodes);
+		graph.edges = ServerUtils.extractEdges(graphJson.edges);
+		return graph;
 	}
 
 	private static typeMap = {
@@ -96,7 +98,7 @@ abstract class ServerUtils {
 		return updatedNodes;
 	}
 
-	public static extractEdges(edges: []): AtlasEdge[] {
+	public static extractEdges(edges: object[]): AtlasEdge[] {
 		const updated: AtlasEdge[] = [];
 
 		for (const edge of edges) {

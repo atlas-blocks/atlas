@@ -1,6 +1,6 @@
 export default class AtlasGraph {
-	public readonly nodes: AtlasNode[];
-	public readonly edges: AtlasEdge[];
+	public nodes: AtlasNode[];
+	public edges: AtlasEdge[];
 
 	constructor() {
 		this.nodes = [];
