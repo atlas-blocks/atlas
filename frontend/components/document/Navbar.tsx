@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import { ChangeEvent, useEffect, useRef, useState } from 'react';
 import WebInterfaceUtils from '../../utils/WebInterfaceUtils';
-import styles from '../../styles/main.module.css';
+import styles from '../../styles/Navbar.module.css';
 import menuImg from '../../public/icons/menu.png';
 import logoImg from '../../public/logo/atlas_long_white_cut.png';
 import exportImg from '../../public/icons/export.png';
@@ -17,6 +17,8 @@ export default function Navbar({ wiu }: Props) {
 	const refSchemaName = useRef<HTMLInputElement>(null);
 	const refOpenFile = useRef<HTMLInputElement>(null);
 	const [isFileMenuOpen, setIsFileMenuOpen] = useState<boolean>(false);
+	const [cacheLocalStorage, setCacheLocalStorage] = useState<Storage>();
+	const [refreshRecentList, setRefreshRecentList] = useState<boolean>(false);
 	const fileMenuStyle = isFileMenuOpen
 		? styles.fileMenu
 		: styles.fileMenu + ' ' + styles.fileMenuHidden;
@@ -36,8 +38,6 @@ export default function Navbar({ wiu }: Props) {
 		link.click();
 		document.body.removeChild(link);
 	};
-
-	const [cacheLocalStorage, setCacheLocalStorage] = useState<Storage>();
 
 	const loadNewGraph = (newGraphName: string, fileData: string | null) => {
 		setIsFileMenuOpen(false);
@@ -71,17 +71,33 @@ export default function Navbar({ wiu }: Props) {
 		loadNewGraph(wiu.graphName + '_new', '{"nodes": [], "edges": []}');
 	};
 
+	const removeRecent = (evt: React.MouseEvent<HTMLDivElement>) => {
+		evt.stopPropagation();
+		localStorage.removeItem(evt.currentTarget.id);
+		console.log(evt.currentTarget.id);
+		setCacheLocalStorage(localStorage);
+		setRefreshRecentList(!refreshRecentList);
+	};
+
 	useEffect(() => {
 		setCacheLocalStorage(localStorage);
-	}, []);
+	}, [refreshRecentList]);
 
 	function getRecentGraphs(graphName: string, graphFromLS: string | null): JSX.Element {
 		return (
 			<div
+				key={graphName}
 				className={styles.elementFileMenu}
 				onClick={() => (graphFromLS ? loadNewGraph(graphName, graphFromLS) : null)}
 			>
-				<label>{graphName}</label>
+				<label className={styles.recentGraphName}>{'-- ' + graphName}</label>
+				<div
+					id={graphName}
+					className={styles.removeStyle}
+					onClick={(evt: React.MouseEvent<HTMLDivElement>) => removeRecent(evt)}
+				>
+					<label>remove</label>
+				</div>
 			</div>
 		);
 	}
@@ -130,7 +146,7 @@ export default function Navbar({ wiu }: Props) {
 						<label>Download</label>
 					</div>
 					<div className={styles.elementFileMenu}>
-						<label>Recent</label>
+						<label className={styles.recentStyle}>Recent</label>
 					</div>
 					<div>
 						{cacheLocalStorage
