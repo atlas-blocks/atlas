@@ -5,8 +5,6 @@ import ServerUtils from './ServerUtils';
 
 export default class WebInterfaceUtils {
 	graph: AtlasGraph;
-	graphName: string;
-	setGraphName: React.Dispatch<React.SetStateAction<string>>;
 	uiNodes: UINode[];
 	uiEdges: UIEdge[];
 	setUiNodes: React.Dispatch<React.SetStateAction<UINode[]>>;
@@ -18,8 +16,6 @@ export default class WebInterfaceUtils {
 
 	constructor(
 		graph: AtlasGraph,
-		graphName: string,
-		setGraphName: React.Dispatch<React.SetStateAction<string>>,
 		uiNodes: UINode[],
 		uiEdges: UIEdge[],
 		setUiNodes: React.Dispatch<React.SetStateAction<UINode[]>>,
@@ -30,8 +26,6 @@ export default class WebInterfaceUtils {
 		setDruggedNode: React.Dispatch<React.SetStateAction<AtlasNode | null>>,
 	) {
 		this.graph = graph;
-		this.graphName = graphName;
-		this.setGraphName = setGraphName;
 		this.uiNodes = uiNodes;
 		this.uiEdges = uiEdges;
 		this.setUiNodes = setUiNodes;
@@ -123,8 +117,42 @@ export default class WebInterfaceUtils {
 	}
 
 	public saveGraphToLocalStorage() {
-		localStorage.setItem(this.graphName, JSON.stringify(this.graph));
+		let modified: boolean = false;
+		let strFromStorage: string | null = localStorage.getItem('AtlasStorage');
+		let atlasStorage: AtlasGraph[] = strFromStorage ? JSON.parse(strFromStorage) : [];
+
+		atlasStorage.map((graphFromLS: AtlasGraph) => {
+			if (graphFromLS.name === this.graph.name) {
+				graphFromLS.nodes = this.graph.nodes;
+				graphFromLS.edges = this.graph.edges;
+				modified = true;
+			}
+		});
+		!modified ? atlasStorage.push(this.graph) : '';
+
+		localStorage.setItem('AtlasStorage', JSON.stringify(atlasStorage));
 	}
+
+	public loadGraphToUi = (graphData: string | null) => {
+		if (!graphData) return;
+		try {
+			const newGraph = ServerUtils.jsonToGraph(JSON.parse(graphData));
+			this.graph.nodes = newGraph.nodes;
+			this.graph.edges = newGraph.edges;
+			this.graph.name = newGraph.name;
+			this.setSelectedNode(null);
+			this.refreshUiElements();
+		} catch (e) {
+			alert(e);
+		}
+	};
+
+	public removeGraphFromStorage = (index: number) => {
+		let strFromStorage: string | null = localStorage.getItem('AtlasStorage');
+		let atlasStorage: AtlasGraph[] = strFromStorage ? JSON.parse(strFromStorage) : [];
+		atlasStorage.splice(index, 1);
+		localStorage.setItem('AtlasStorage', JSON.stringify(atlasStorage));
+	};
 
 	public getFunctionSignature(name: string, multiline = false): string {
 		// const func = this.graph.getNodeByNameOrNull(name);

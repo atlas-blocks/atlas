@@ -7,7 +7,7 @@ import logoImg from '../../public/logo/atlas_long_white_cut.png';
 import exportImg from '../../public/icons/export.png';
 import questionImg from '../../public/icons/question-mark.png';
 import settingsImg from '../../public/icons/settings.png';
-import ServerUtils from '../../utils/ServerUtils';
+import AtlasGraph from '../../utils/AtlasGraph';
 
 type Props = {
 	wiu: WebInterfaceUtils;
@@ -17,13 +17,10 @@ export default function Navbar({ wiu }: Props) {
 	const refSchemaName = useRef<HTMLInputElement>(null);
 	const refOpenFile = useRef<HTMLInputElement>(null);
 	const [isFileMenuOpen, setIsFileMenuOpen] = useState<boolean>(false);
-	const [cacheLocalStorage, setCacheLocalStorage] = useState<Storage>();
-	const [refreshRecentList, setRefreshRecentList] = useState<boolean>(false);
+	const [recentFromLocalStorage, setRecentFromLocalStorage] = useState<string | null>();
 	const fileMenuStyle = isFileMenuOpen
 		? styles.fileMenu
 		: styles.fileMenu + ' ' + styles.fileMenuHidden;
-
-	const changeGraphName = (newName: string) => wiu.setGraphName(newName);
 
 	const exportToFile = (extension: string) => {
 		setIsFileMenuOpen(false);
@@ -33,66 +30,50 @@ export default function Navbar({ wiu }: Props) {
 		const href = URL.createObjectURL(blob);
 		const link = document.createElement('a');
 		link.href = href;
-		link.download = wiu.graphName + extension;
+		link.download = wiu.graph.name + extension;
 		document.body.appendChild(link);
 		link.click();
 		document.body.removeChild(link);
-	};
-
-	const loadNewGraph = (newGraphName: string, fileData: string | null) => {
-		setIsFileMenuOpen(false);
-		if (!fileData) return;
-		try {
-			const newGraph = ServerUtils.jsonToGraph(JSON.parse(fileData));
-			wiu.graph.nodes = newGraph.nodes;
-			wiu.graph.edges = newGraph.edges;
-			wiu.setSelectedNode(null);
-			wiu.refreshUiElements();
-
-			refSchemaName.current!.value = newGraphName;
-			changeGraphName(newGraphName);
-		} catch (e) {
-			console.log(e);
-		}
 	};
 
 	const handleOpenFile = (fileToLoad: File | null) => {
 		if (fileToLoad) {
 			let jsonFile = new FileReader();
 			jsonFile.readAsText(fileToLoad);
-			jsonFile.onload = (evt: ProgressEvent<FileReader>) =>
-				typeof evt.target?.result === 'string'
-					? loadNewGraph(fileToLoad.name, evt.target.result)
-					: null;
+			jsonFile.onload = (evt: ProgressEvent<FileReader>) => {
+				if (typeof evt.target?.result === 'string') {
+					wiu.loadGraphToUi(evt.target.result);
+				}
+			};
 		}
 	};
 
 	const handleNewSchema = () => {
-		loadNewGraph(wiu.graphName + '_new', '{"nodes": [], "edges": []}');
+		wiu.loadGraphToUi(`{"name": "${wiu.graph.name}_new", "nodes": [], "edges": []}`);
 	};
 
 	const removeRecent = (evt: React.MouseEvent<HTMLDivElement>) => {
 		evt.stopPropagation();
-		localStorage.removeItem(evt.currentTarget.id);
-		console.log(evt.currentTarget.id);
-		setCacheLocalStorage(localStorage);
-		setRefreshRecentList(!refreshRecentList);
+		wiu.removeGraphFromStorage(parseInt(evt.currentTarget.id));
+		setRecentFromLocalStorage(localStorage.getItem('AtlasStorage'));
 	};
 
 	useEffect(() => {
-		setCacheLocalStorage(localStorage);
-	}, [refreshRecentList]);
+		setIsFileMenuOpen(false);
+		refSchemaName.current!.value = wiu.graph.name;
+		setRecentFromLocalStorage(localStorage.getItem('AtlasStorage'));
+	}, [wiu.graph.name]);
 
-	function getRecentGraphs(graphName: string, graphFromLS: string | null): JSX.Element {
+	function getRecentGraphs(graphFromLS: AtlasGraph, index: number): JSX.Element {
 		return (
 			<div
-				key={graphName}
+				key={index}
 				className={styles.elementFileMenu}
-				onClick={() => (graphFromLS ? loadNewGraph(graphName, graphFromLS) : null)}
+				onClick={() => wiu.loadGraphToUi(JSON.stringify(graphFromLS))}
 			>
-				<label className={styles.recentGraphName}>{'-- ' + graphName}</label>
+				<label className={styles.recentGraphName}>{'-- ' + graphFromLS.name}</label>
 				<div
-					id={graphName}
+					id={index.toString()}
 					className={styles.removeStyle}
 					onClick={(evt: React.MouseEvent<HTMLDivElement>) => removeRecent(evt)}
 				>
@@ -121,8 +102,8 @@ export default function Navbar({ wiu }: Props) {
 				<input
 					className={styles.inputFileName}
 					ref={refSchemaName}
-					defaultValue={wiu.graphName}
-					onChange={() => changeGraphName(refSchemaName.current!.value)}
+					defaultValue={wiu.graph.name}
+					onChange={() => (wiu.graph.name = refSchemaName.current!.value)}
 				/>
 				<div className={styles.iconSmall}>
 					<Image
@@ -149,9 +130,10 @@ export default function Navbar({ wiu }: Props) {
 						<label className={styles.recentStyle}>Recent</label>
 					</div>
 					<div>
-						{cacheLocalStorage
-							? Object.keys(cacheLocalStorage).map((key) =>
-									getRecentGraphs(key, cacheLocalStorage.getItem(key)),
+						{recentFromLocalStorage
+							? JSON.parse(recentFromLocalStorage).map(
+									(graph: AtlasGraph, index: number) =>
+										getRecentGraphs(graph, index),
 							  )
 							: ''}
 					</div>

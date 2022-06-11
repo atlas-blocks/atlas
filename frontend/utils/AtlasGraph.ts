@@ -1,8 +1,10 @@
 export default class AtlasGraph {
+	public name: string;
 	public nodes: AtlasNode[];
 	public edges: AtlasEdge[];
 
 	constructor() {
+		this.name = '';
 		this.nodes = [];
 		this.edges = [];
 	}

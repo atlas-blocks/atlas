@@ -65,15 +65,20 @@ abstract class ServerUtils {
 		}
 
 		const updatedGraph: AtlasGraph = this.jsonToGraph(responseJson.graph);
+
+		// TODO: new property "name" should be returned from backend
+		// graph.name = updatedGraph.name
 		graph.nodes = updatedGraph.nodes;
 		graph.edges = updatedGraph.edges;
 	}
 
 	public static jsonToGraph(graphJson: {
+		name: string;
 		nodes: { type: string; uitype: string }[];
 		edges: object[];
 	}): AtlasGraph {
 		const graph: AtlasGraph = new AtlasGraph();
+		graph.name = graphJson.name;
 		graph.nodes = ServerUtils.extractNodes(graphJson.nodes);
 		graph.edges = ServerUtils.extractEdges(graphJson.edges);
 		return graph;
