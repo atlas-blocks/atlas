@@ -5,8 +5,8 @@ import .TestUtils as tu
 
 @testset "AtlasGraph" begin
     begin
-        graph = Graph([])
-        expected = Graph([])
+        graph = Graph(:name, AbstractNode[])
+        expected = Graph(:name, AbstractNode[])
         @test tu.equals(unwrap(AtlasGraph.updategraph!(graph)), expected)
     end
     begin

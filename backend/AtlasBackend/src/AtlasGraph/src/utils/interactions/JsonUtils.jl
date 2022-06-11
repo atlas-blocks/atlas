@@ -34,7 +34,7 @@ function json(graph::AbstractGraph)::JSON3.Object
     nodes::Vector{JSON3.Object} = map(node -> json(node), graph.nodes)
     edges::Vector{JSON3.Object} = map(edge -> json(edge), AtlasGraph.getedges(graph))
 
-    return jsonwriteread(Dict("nodes" => nodes, "edges" => edges))
+    return jsonwriteread(Dict("name" => graph.name, "nodes" => nodes, "edges" => edges))
 end
 
 function node(json_dict::JSON3.Object)::AbstractNode
@@ -56,7 +56,7 @@ function graph(json_dict::JSON3.Object)::AbstractGraph
     for node_json in nodes_json_arr
         push!(nodes, node(node_json))
     end
-    return Graph(nodes)
+    return Graph(Symbol(json_dict["name"]), nodes)
 end
 
 end

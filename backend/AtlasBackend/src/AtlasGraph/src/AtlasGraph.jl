@@ -66,7 +66,11 @@ StructTypes.StructType(::Type{ProviderEdge}) = StructTypes.Struct()
 
 abstract type AbstractGraph end
 struct Graph <: AbstractGraph
+    name::Symbol
     nodes::Vector{AbstractNode}
+
+    Graph(name::Symbol, nodes::Vector{<:AbstractNode}) = new(name, nodes)
+    Graph(nodes::Vector{<:AbstractNode}) = new(:graph, nodes)
 end
 
 function filternodes(nodes::Vector{AbstractNode}, name::Symbol)::Vector{AbstractNode}

@@ -6,7 +6,7 @@ using DataStructures, ResultTypes
 
 
 @testset "topological_order" begin
-    empty_graph = Graph([])
+    empty_graph = Graph(AbstractNode[])
     graph_no_results = Graph([
         tu.genexpression(:ex1, "5"),
         tu.genexpression(:ex2, "\"str\"", "st"),

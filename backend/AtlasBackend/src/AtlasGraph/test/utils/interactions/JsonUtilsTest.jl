@@ -26,8 +26,8 @@ using JSON3
             graph = Graph([node1, node2])
             graph_json =
                 """{"nodes":[{"name":"name1","uidata":"data","type":"Node"},""" *
-                """{"name":"name2","uidata":"data","content":"name1","type":"ExpressionNode","result":"3"}],""" *
-                """"edges":[{"from":"name1","to":"name2"}]}"""
+                """{"name":"name2","uidata":"data","content":"name1","type":"ExpressionNode","result":"3"}]""" *
+                ""","name":"graph","edges":[{"from":"name1","to":"name2"}]}"""
             @test JsonUtils.json(graph) == JSON3.read(graph_json)
         end
 
