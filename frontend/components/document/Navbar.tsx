@@ -74,7 +74,7 @@ export default function Navbar({ wiu }: Props) {
 				<label className={styles.recentGraphName}>{'-- ' + graphFromLS.name}</label>
 				<div
 					id={index.toString()}
-					className={styles.removeStyle}
+					className={styles.remove}
 					onClick={(evt: React.MouseEvent<HTMLDivElement>) => removeRecent(evt)}
 				>
 					<label>remove</label>
@@ -86,7 +86,7 @@ export default function Navbar({ wiu }: Props) {
 	return (
 		<>
 			<div className={styles.leftTop}>
-				<div className={styles.iconStyle}>
+				<div className={styles.icon}>
 					<Image src={menuImg} layout={'responsive'} objectFit={'contain'} />
 				</div>
 				<Image
@@ -127,7 +127,7 @@ export default function Navbar({ wiu }: Props) {
 						<label>Download</label>
 					</div>
 					<div className={styles.elementFileMenu}>
-						<label className={styles.recentStyle}>Recent</label>
+						<label className={styles.recent}>Recent</label>
 					</div>
 					<div>
 						{recentFromLocalStorage
@@ -140,7 +140,7 @@ export default function Navbar({ wiu }: Props) {
 				</div>
 			</div>
 			<div className={styles.rightTop}>
-				<div className={styles.iconStyle}>
+				<div className={styles.icon}>
 					<Image
 						src={exportImg}
 						layout={'responsive'}
@@ -148,10 +148,10 @@ export default function Navbar({ wiu }: Props) {
 						onClick={() => exportToFile('.json')}
 					/>
 				</div>
-				<div className={styles.iconStyle}>
+				<div className={styles.icon}>
 					<Image src={questionImg} layout={'responsive'} objectFit={'contain'} />
 				</div>
-				<div className={styles.iconStyle}>
+				<div className={styles.icon}>
 					<Image src={settingsImg} layout={'responsive'} objectFit={'contain'} />
 				</div>
 				<input

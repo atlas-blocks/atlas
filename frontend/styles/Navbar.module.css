@@ -26,7 +26,7 @@
 	margin-right: 10px;
 }
 
-.iconStyle {
+.icon {
 	display: block;
 	position: relative;
 	height: 30px;
@@ -34,7 +34,7 @@
 	padding: 5px;
 }
 
-.iconStyle:hover {
+.icon:hover {
 	border: 1px solid #30a5be;
 	background-color: #eaeaea;
 }
@@ -104,7 +104,7 @@
 	padding-right: 5px;
 }
 
-.removeStyle {
+.remove {
 	position: relative;
 	border: 1px solid transparent;
 	background-color: #eaeaea;
@@ -118,12 +118,12 @@
 	z-index: 6;
 }
 
-.removeStyle:hover {
+.remove:hover {
 	border: 1px solid #30a5be;
 	border-style: outset;
 }
 
-.removeStyle:active {
+.remove:active {
 	border: 1px solid #30a5be;
 	border-style: inset;
 }
