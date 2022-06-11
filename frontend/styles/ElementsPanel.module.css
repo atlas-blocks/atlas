@@ -1,23 +1,23 @@
 .element {
-    border: 1px solid #eaeaea;
-    border-radius: 3px;
-    margin: 5px;
-    margin-left: 10px;
-    margin-right: 10px;
-    font-size: 14px;
-    line-height: 35px;
-    padding-left: 5px;
+	border: 1px solid #eaeaea;
+	border-radius: 3px;
+	margin: 5px;
+	margin-left: 10px;
+	margin-right: 10px;
+	font-size: 14px;
+	line-height: 35px;
+	padding-left: 5px;
 }
 
 .element:hover {
-    background-color: #eaeaea;
-    cursor: pointer;
+	background-color: #eaeaea;
+	cursor: pointer;
 }
 
 .elementSelected {
-    border: 1px solid #30a5be;
+	border: 1px solid #30a5be;
 }
 
 .elementName {
-    color: #30a5be;
+	color: #30a5be;
 }
