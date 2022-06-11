@@ -1,5 +1,6 @@
 import ErrorUtils from './errors/ErrorUtils';
 import AtlasGraph, { AtlasEdge, AtlasNode, ExpressionNode, TextNode, FileNode } from './AtlasGraph';
+import JsonUtils from './JsonUtils';
 
 type Response = {
 	success: boolean;
@@ -64,24 +65,7 @@ abstract class ServerUtils {
 			return;
 		}
 
-		const updatedGraph: AtlasGraph = this.jsonToGraph(responseJson.graph);
-
-		// TODO: new property "name" should be returned from backend
-		// graph.name = updatedGraph.name
-		graph.nodes = updatedGraph.nodes;
-		graph.edges = updatedGraph.edges;
-	}
-
-	public static jsonToGraph(graphJson: {
-		name: string;
-		nodes: { type: string; uitype: string }[];
-		edges: object[];
-	}): AtlasGraph {
-		const graph: AtlasGraph = new AtlasGraph();
-		graph.name = graphJson.name;
-		graph.nodes = ServerUtils.extractNodes(graphJson.nodes);
-		graph.edges = ServerUtils.extractEdges(graphJson.edges);
-		return graph;
+		Object.assign(graph, JsonUtils.jsonToGraph(responseJson.graph));
 	}
 
 	private static typeMap = {
@@ -104,13 +88,9 @@ abstract class ServerUtils {
 	}
 
 	public static extractEdges(edges: object[]): AtlasEdge[] {
-		const updated: AtlasEdge[] = [];
-
-		for (const edge of edges) {
-			updated.push(Object.assign(AtlasEdge.build(), edge));
-		}
-
-		return updated;
+		const updatedEdges: AtlasEdge[] = [];
+		edges.forEach((edge: object) => updatedEdges.push(Object.assign(AtlasEdge.build(), edge)));
+		return updatedEdges;
 	}
 }
 

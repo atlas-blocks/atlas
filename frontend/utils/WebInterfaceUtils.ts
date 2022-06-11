@@ -2,6 +2,7 @@ import React from 'react';
 import { Node as UINode, Edge as UIEdge, NodeChange as UINodeChange } from 'react-flow-renderer';
 import AtlasGraph, { AtlasNode } from '../utils/AtlasGraph';
 import ServerUtils from './ServerUtils';
+import StorageUtils from './StorageUtils';
 
 export default class WebInterfaceUtils {
 	graph: AtlasGraph;
@@ -104,7 +105,7 @@ export default class WebInterfaceUtils {
 				this.graph.removeById(change.id);
 				this.setSelectedNode(null);
 			}
-			this.saveGraphToLocalStorage();
+			StorageUtils.saveGraphToLocalStorage(this.graph);
 		}
 	}
 
@@ -116,40 +117,11 @@ export default class WebInterfaceUtils {
 		return 100;
 	}
 
-	public saveGraphToLocalStorage() {
-		let modified: boolean = false;
-		let strFromStorage: string | null = localStorage.getItem('AtlasStorage');
-		let atlasStorage: AtlasGraph[] = strFromStorage ? JSON.parse(strFromStorage) : [];
-
-		atlasStorage.map((graphFromLS: AtlasGraph) => {
-			if (graphFromLS.name === this.graph.name) {
-				graphFromLS.nodes = this.graph.nodes;
-				graphFromLS.edges = this.graph.edges;
-				modified = true;
-			}
-		});
-		!modified ? atlasStorage.push(this.graph) : '';
-
-		localStorage.setItem('AtlasStorage', JSON.stringify(atlasStorage));
-	}
-
-	public loadGraphToUi = (graphData: string | null) => {
-		if (!graphData) return;
-		try {
-			const newGraph = ServerUtils.jsonToGraph(JSON.parse(graphData));
-			Object.assign(this.graph, newGraph);
-			this.setSelectedNode(null);
-			this.refreshUiElements();
-		} catch (e) {
-			alert(`Something went wrong while loading the graph: ${e}`);
-		}
-	};
-
-	public removeGraphFromStorage = (index: number) => {
-		let strFromStorage: string | null = localStorage.getItem('AtlasStorage');
-		let atlasStorage: AtlasGraph[] = strFromStorage ? JSON.parse(strFromStorage) : [];
-		atlasStorage.splice(index, 1);
-		localStorage.setItem('AtlasStorage', JSON.stringify(atlasStorage));
+	public loadGraphToUi = (newGraph: AtlasGraph) => {
+		if (!newGraph.name) newGraph.name = 'undefined_name';
+		Object.assign(this.graph, newGraph);
+		this.setSelectedNode(null);
+		this.refreshUiElements();
 	};
 
 	public getFunctionSignature(name: string, multiline = false): string {

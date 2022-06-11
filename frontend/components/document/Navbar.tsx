@@ -8,6 +8,8 @@ import exportImg from '../../public/icons/export.png';
 import questionImg from '../../public/icons/question-mark.png';
 import settingsImg from '../../public/icons/settings.png';
 import AtlasGraph from '../../utils/AtlasGraph';
+import StorageUtils from '../../utils/StorageUtils';
+import JsonUtils from '../../utils/JsonUtils';
 
 type Props = {
 	wiu: WebInterfaceUtils;
@@ -17,10 +19,9 @@ export default function Navbar({ wiu }: Props) {
 	const refSchemaName = useRef<HTMLInputElement>(null);
 	const refOpenFile = useRef<HTMLInputElement>(null);
 	const [isFileMenuOpen, setIsFileMenuOpen] = useState<boolean>(false);
-	const [recentFromLocalStorage, setRecentFromLocalStorage] = useState<string | null>();
-	const fileMenuStyle = isFileMenuOpen
-		? styles.fileMenu
-		: styles.fileMenu + ' ' + styles.fileMenuHidden;
+	const [recentFromLocalStorage, setRecentFromLocalStorage] = useState<AtlasGraph[]>();
+	const [removeTrigger, setRemoveTrigger] = useState<boolean>(false);
+	const fileMenuStyle = styles.fileMenu + (isFileMenuOpen ? '' : ' ' + styles.fileMenuHidden);
 
 	const exportToFile = (extension: string) => {
 		setIsFileMenuOpen(false);
@@ -42,41 +43,52 @@ export default function Navbar({ wiu }: Props) {
 			jsonFile.readAsText(fileToLoad);
 			jsonFile.onload = (evt: ProgressEvent<FileReader>) => {
 				if (typeof evt.target?.result === 'string') {
-					wiu.loadGraphToUi(evt.target.result);
+					wiu.loadGraphToUi(JsonUtils.jsonStringToGraph(evt.target.result));
 				}
 			};
 		}
 	};
 
 	const handleNewSchema = () => {
-		wiu.loadGraphToUi(`{"name": "${wiu.graph.name}_new", "nodes": [], "edges": []}`);
+		const newGraph = new AtlasGraph();
+		newGraph.name = wiu.graph.name + '_new';
+		wiu.loadGraphToUi(newGraph);
 	};
 
-	const removeRecent = (evt: React.MouseEvent<HTMLDivElement>) => {
+	const removeGraphFromRecent = (evt: React.MouseEvent<HTMLDivElement>) => {
 		evt.stopPropagation();
-		wiu.removeGraphFromStorage(parseInt(evt.currentTarget.id));
-		setRecentFromLocalStorage(localStorage.getItem('AtlasStorage'));
+		StorageUtils.removeGraphFromStorage(evt.currentTarget.id);
+		setRemoveTrigger(!removeTrigger);
 	};
 
 	useEffect(() => {
+		const strFromStorage: string | null = localStorage.getItem('AtlasStorage');
+		const atlasStorage: AtlasGraph[] = [];
+
+		if (strFromStorage) {
+			JSON.parse(strFromStorage).map((item: AtlasGraph) =>
+				atlasStorage.push(JsonUtils.jsonToGraph(item)),
+			);
+		}
+		setRecentFromLocalStorage(atlasStorage.reverse());
 		setIsFileMenuOpen(false);
 		refSchemaName.current!.value = wiu.graph.name;
-		setRecentFromLocalStorage(localStorage.getItem('AtlasStorage'));
-	}, [wiu.graph.name]);
+	}, [removeTrigger, wiu.graph.name]);
 
-	function getRecentGraphs(graphFromLS: AtlasGraph, index: number): JSX.Element {
-		if (graphFromLS.name === wiu.graph.name) return <></>;
+	function getRecentGraphs(graphFromRecentList: AtlasGraph): JSX.Element {
+		if (graphFromRecentList.name === wiu.graph.name)
+			return <div key={graphFromRecentList.name}></div>;
 		return (
 			<div
-				key={index}
+				key={graphFromRecentList.name}
 				className={styles.elementFileMenu}
-				onClick={() => wiu.loadGraphToUi(JSON.stringify(graphFromLS))}
+				onClick={() => wiu.loadGraphToUi(graphFromRecentList)}
 			>
-				<label className={styles.recentGraphName}>{'-- ' + graphFromLS.name}</label>
+				<label className={styles.recentGraphName}>{'> ' + graphFromRecentList.name}</label>
 				<div
-					id={index.toString()}
+					id={graphFromRecentList.name}
 					className={styles.remove}
-					onClick={(evt: React.MouseEvent<HTMLDivElement>) => removeRecent(evt)}
+					onClick={removeGraphFromRecent}
 				>
 					<label>remove</label>
 				</div>
@@ -130,14 +142,7 @@ export default function Navbar({ wiu }: Props) {
 					<div className={styles.elementFileMenu}>
 						<label className={styles.recent}>Recent</label>
 					</div>
-					<div>
-						{recentFromLocalStorage
-							? JSON.parse(recentFromLocalStorage).map(
-									(graph: AtlasGraph, index: number) =>
-										getRecentGraphs(graph, index),
-							  )
-							: ''}
-					</div>
+					<div>{recentFromLocalStorage?.map((graph) => getRecentGraphs(graph))}</div>
 				</div>
 			</div>
 			<div className={styles.rightTop}>

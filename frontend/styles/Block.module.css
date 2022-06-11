@@ -31,9 +31,3 @@
 	white-space: pre;
 	text-align: left;
 }
-
-.formatUiNodeContent {
-	/*text-wrap: normal;*/
-	word-wrap: normal;
-	max-width: 200px;
-}
