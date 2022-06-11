@@ -137,13 +137,11 @@ export default class WebInterfaceUtils {
 		if (!graphData) return;
 		try {
 			const newGraph = ServerUtils.jsonToGraph(JSON.parse(graphData));
-			this.graph.nodes = newGraph.nodes;
-			this.graph.edges = newGraph.edges;
-			this.graph.name = newGraph.name;
+			Object.assign(this.graph, newGraph);
 			this.setSelectedNode(null);
 			this.refreshUiElements();
 		} catch (e) {
-			alert(e);
+			alert(`Something went wrong while loading the graph: ${e}`);
 		}
 	};
 
