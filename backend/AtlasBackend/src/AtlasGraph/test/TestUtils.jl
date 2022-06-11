@@ -23,30 +23,22 @@ function equals(graph1::AbstractGraph, graph2::AbstractGraph)::Bool
     return check
 end
 
-function genenode(name::AbstractString)::Node
-    return Node(name, "", (0, 0), false)
+function gennode(name::Symbol)::Node
+    return Node(name, "")
 end
 
-function gentext(name::AbstractString, content::AbstractString)::TextNode
-    return TextNode(genenode(name), content)
+function gentext(name::Symbol, content::AbstractString)::TextNode
+    return TextNode(gennode(name), content)
 end
 
-function genfile(
-    name::AbstractString,
-    content::AbstractString,
-    filename::AbstractString,
-)::FileNode
-    return FileNode(genenode(name), content, filename)
+function genfile(name::Symbol, content::AbstractString, filename::AbstractString)::FileNode
+    return FileNode(gennode(name), content, filename)
 end
 
-function genexpression(
-    name::AbstractString,
-    content::AbstractString,
-    result::Any,
-)::ExpressionNode
-    return ExpressionNode(genenode(name), content, result)
+function genexpression(name::Symbol, content::AbstractString, result::Any)::ExpressionNode
+    return ExpressionNode(gennode(name), content, result)
 end
-function genexpression(name::AbstractString, content::AbstractString)::ExpressionNode
+function genexpression(name::Symbol, content::AbstractString)::ExpressionNode
     return genexpression(name, content, nothing)
 end
 
