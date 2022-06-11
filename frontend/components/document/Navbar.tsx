@@ -65,6 +65,7 @@ export default function Navbar({ wiu }: Props) {
 	}, [wiu.graph.name]);
 
 	function getRecentGraphs(graphFromLS: AtlasGraph, index: number): JSX.Element {
+		if (graphFromLS.name === wiu.graph.name) return <></>;
 		return (
 			<div
 				key={index}

@@ -94,9 +94,9 @@
 	background-color: #eaeaea;
 }
 
-.recentStyle {
+.recent {
 	font-weight: bolder;
-	color: gray;
+	/*color: gray;*/
 }
 
 .recentGraphName {
