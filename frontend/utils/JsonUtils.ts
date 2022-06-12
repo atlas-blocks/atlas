@@ -34,21 +34,45 @@ export default class JsonUtils {
 		[AtlasNode.type]: (uitype: string) => AtlasNode.build(),
 	};
 
-	public static extractNodes(nodes: { type: string; uitype: string }[]): AtlasNode[] {
+	public static extractNodes(nodes: {}[]): AtlasNode[] {
 		const updatedNodes: AtlasNode[] = [];
 		for (const node of nodes) {
-			if (this.typeMap[node.type] == undefined) {
-				throw new Error('no such node type: ' + node.type);
-			}
-			const newNode: AtlasNode = this.typeMap[node.type](node.uitype);
-			updatedNodes.push(Object.assign(newNode, node));
+			updatedNodes.push(this.extractNode(node));
 		}
 		return updatedNodes;
+	}
+
+	public static extractNode(node: any): AtlasNode {
+		Object.assign(node);
+		if (this.typeMap[node.type] == undefined) {
+			throw new Error('no such node type: ' + node.type);
+		}
+		Object.assign(node, JSON.parse(node.uidata));
+		return Object.assign(this.typeMap[node.type](node.uitype), node);
 	}
 
 	public static extractEdges(edges: object[]): AtlasEdge[] {
 		const updatedEdges: AtlasEdge[] = [];
 		edges.forEach((edge: object) => updatedEdges.push(Object.assign(AtlasEdge.build(), edge)));
 		return updatedEdges;
+	}
+
+	private static getNodeToJsonString(node: AtlasNode, space?: number): string {
+		return JSON.stringify({ ...node, uidata: node.getUiData() }, null, space);
+	}
+
+	private static jsonStringifyReplacer(key: string, value: any) {
+		if (value instanceof AtlasNode) {
+			return JSON.parse(JsonUtils.getNodeToJsonString(value));
+		}
+		return value;
+	}
+
+	public static stringify(object: any, space?: number): string {
+		return JSON.stringify(object, this.jsonStringifyReplacer, space);
+	}
+
+	public static getJson(object: any): any {
+		return JSON.parse(this.stringify(object));
 	}
 }

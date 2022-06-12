@@ -5,20 +5,17 @@ export default class StorageUtils {
 	private static readonly recentGraphStorageName = 'AtlasStorage';
 
 	public static saveGraphToLocalStorage(saveGraph: AtlasGraph) {
-		const strFromStorage: string | null = localStorage.getItem(this.recentGraphStorageName);
-		let atlasStorage: AtlasGraph[] = strFromStorage ? JSON.parse(strFromStorage) : [];
-
-		atlasStorage = atlasStorage.filter((graph: AtlasGraph) => graph.name !== saveGraph.name);
-		atlasStorage.push(saveGraph);
-		localStorage.setItem(this.recentGraphStorageName, JSON.stringify(atlasStorage));
+		const recentGraphs: AtlasGraph[] = this.getRecentGraphsFromLocalStorageExceptWithName(
+			saveGraph.name,
+		);
+		recentGraphs.push(saveGraph);
+		localStorage.setItem(this.recentGraphStorageName, JsonUtils.stringify(recentGraphs));
 	}
 
 	public static removeGraphFromStorage = (graphName: string) => {
-		const strFromStorage: string | null = localStorage.getItem(this.recentGraphStorageName);
-		let atlasStorage: AtlasGraph[] = strFromStorage ? JSON.parse(strFromStorage) : [];
-
-		atlasStorage = atlasStorage.filter((graph: AtlasGraph) => graph.name !== graphName);
-		localStorage.setItem(this.recentGraphStorageName, JSON.stringify(atlasStorage));
+		const recentGraphs: AtlasGraph[] =
+			this.getRecentGraphsFromLocalStorageExceptWithName(graphName);
+		localStorage.setItem(this.recentGraphStorageName, JsonUtils.stringify(recentGraphs));
 	};
 
 	public static getRecentGraphsFromLocalStorage(): AtlasGraph[] {
@@ -28,10 +25,16 @@ export default class StorageUtils {
 		if (jsonStringWithGraphs === null) return [];
 
 		const recentGraphs: AtlasGraph[] = [];
-		JSON.parse(jsonStringWithGraphs).map((item: AtlasGraph) =>
+		JSON.parse(jsonStringWithGraphs).map((item: { name: string; nodes: any[]; edges: any[] }) =>
 			recentGraphs.push(JsonUtils.jsonToGraph(item)),
 		);
 
 		return recentGraphs;
+	}
+
+	public static getRecentGraphsFromLocalStorageExceptWithName(name: string) {
+		return this.getRecentGraphsFromLocalStorage().filter(
+			(graph: AtlasGraph) => graph.name !== name,
+		);
 	}
 }

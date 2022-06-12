@@ -2,6 +2,7 @@ import React from 'react';
 import { Node as UINode, Edge as UIEdge, NodeChange as UINodeChange } from 'react-flow-renderer';
 import AtlasGraph, { AtlasNode } from '../utils/AtlasGraph';
 import ServerUtils from './ServerUtils';
+import JsonUtils from './JsonUtils';
 
 export default class WebInterfaceUtils {
 	graph: AtlasGraph;
@@ -97,7 +98,10 @@ export default class WebInterfaceUtils {
 				const node = this.graph.getById(change.id);
 				console.assert(
 					node !== undefined,
-					`Node with id ${change.id} not found in graph ${JSON.stringify(this.graph)}`,
+					`Node with id ${change.id} not found in graph ${JsonUtils.stringify(
+						this.graph,
+						2,
+					)}`,
 				);
 				node.setPosition(change.position.x, change.position.y);
 			}

@@ -7,13 +7,12 @@ route("/") do
 end
 
 route("/graph", method = Router.POST) do
-    println("server < client: " * string(Requests.jsonpayload()))
+    println("server < client: " * string(Requests.jsonpayload())[1:min(end,100)])
 
     if (Requests.jsonpayload() === nothing)
         return json(Dict("success" => false, "message" => "error during parsing json: \n" * Requests.rawpayload() ))
     end
 
-    @show typeof(Requests.jsonpayload())
     result = Endpoints.updategraph(Requests.jsonpayload()["graph"])
     if ResultTypes.iserror(result)
         return json(Dict("success" => false, "message" => string(unwrap_error(result))))

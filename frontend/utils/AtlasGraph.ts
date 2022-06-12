@@ -74,6 +74,7 @@ export class AtlasNode {
 	static type: string = 'AtlasGraph.Node';
 	public type: string;
 	static uitype: string = AtlasNode.type;
+
 	public uitype: string;
 	public name: string;
 	public position: [number, number];
@@ -98,13 +99,21 @@ export class AtlasNode {
 		return new AtlasNode('', '', '', [0, 0], true);
 	}
 
-	setDefaultName(graph: AtlasGraph) {
+	public setDefaultName(graph: AtlasGraph) {
 		this.name = graph.getDefaultName();
 		return this;
 	}
 
-	getId() {
+	public getId() {
 		return this.name;
+	}
+
+	public getUiData() {
+		return JSON.stringify({
+			uitype: this.uitype,
+			position: this.position,
+			visibility: this.visibility,
+		});
 	}
 
 	public setType(type: string): AtlasNode {
