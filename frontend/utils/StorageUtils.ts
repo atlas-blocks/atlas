@@ -25,7 +25,7 @@ export default class StorageUtils {
 		if (jsonStringWithGraphs === null) return [];
 
 		const recentGraphs: AtlasGraph[] = [];
-		JSON.parse(jsonStringWithGraphs).map((item: any) =>
+		JSON.parse(jsonStringWithGraphs).map((item: {name: string, nodes: any[], edges: any[]}) =>
 			recentGraphs.push(JsonUtils.jsonToGraph(item)),
 		);
 
