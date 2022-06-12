@@ -11,7 +11,7 @@ type Props = {
 };
 
 export default function Panels({ wiu }: Props) {
-	const [isLibrariessActive, setIsLibrariesActive] = useState<boolean>(true);
+	const [isLibrariesActive, setIsLibrariesActive] = useState<boolean>(true);
 	const [isPropertiesActive, setIsPropertiesActive] = useState<boolean>(true);
 
 	const hideAll = () => {
@@ -43,7 +43,7 @@ export default function Panels({ wiu }: Props) {
 			{/* ------- Buttons ------- */}
 			<div
 				id={buttonStyles.libBtn}
-				className={getButtonClass(isLibrariessActive)}
+				className={getButtonClass(isLibrariesActive)}
 				onClick={showLibraries}
 			>
 				<label>Libraries</label>
@@ -81,7 +81,7 @@ export default function Panels({ wiu }: Props) {
 			<section id={styles.propsPanel} className={getPanelClass(isPropertiesActive)}>
 				<PropsPanel wiu={wiu} />
 			</section>
-			<section id={styles.libPanel} className={getPanelClass(isLibrariessActive)}>
+			<section id={styles.libPanel} className={getPanelClass(isLibrariesActive)}>
 				<LibPanel wiu={wiu} />
 			</section>
 		</>

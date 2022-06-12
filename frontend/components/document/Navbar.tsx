@@ -10,6 +10,7 @@ import settingsImg from '../../public/icons/settings.png';
 import AtlasGraph from '../../utils/AtlasGraph';
 import StorageUtils from '../../utils/StorageUtils';
 import JsonUtils from '../../utils/JsonUtils';
+import FileUtils from '../../utils/FileUtils';
 
 type Props = {
 	wiu: WebInterfaceUtils;
@@ -23,66 +24,46 @@ export default function Navbar({ wiu }: Props) {
 	const [removeTrigger, setRemoveTrigger] = useState<boolean>(false);
 	const fileMenuStyle = styles.fileMenu + (isFileMenuOpen ? '' : ' ' + styles.fileMenuHidden);
 
-	const exportToFile = (extension: string) => {
+	const makeUserDownloadFile = (extension: keyof typeof FileUtils.filetypeMap): void => {
 		setIsFileMenuOpen(false);
-
-		const graphJson = JSON.stringify(wiu.graph, null, 2);
-		const blob = new Blob([graphJson], { type: 'application/json' });
-		const href = URL.createObjectURL(blob);
-		const link = document.createElement('a');
-		link.href = href;
-		link.download = wiu.graph.name + extension;
-		document.body.appendChild(link);
-		link.click();
-		document.body.removeChild(link);
+		FileUtils.makeUserDownloadFileFromGraph(wiu.graph, extension);
 	};
 
-	const handleOpenFile = (fileToLoad: File | null) => {
-		if (fileToLoad) {
-			let jsonFile = new FileReader();
-			jsonFile.readAsText(fileToLoad);
-			jsonFile.onload = (evt: ProgressEvent<FileReader>) => {
-				if (typeof evt.target?.result === 'string') {
-					wiu.loadGraphToUi(JsonUtils.jsonStringToGraph(evt.target.result));
-				}
-			};
-		}
-	};
-
-	const handleNewSchema = () => {
+	const handleNewSchema = (): void => {
 		const newGraph = new AtlasGraph();
 		newGraph.name = wiu.graph.name + '_new';
-		wiu.loadGraphToUi(newGraph);
+		wiu.replaceGraphWithNew(newGraph);
 	};
 
-	const removeGraphFromRecent = (evt: React.MouseEvent<HTMLDivElement>) => {
+	const handleOpenFile = (filepath: File): void => {
+		setIsFileMenuOpen(false);
+		FileUtils.getFileContentString(filepath, (content: string) =>
+			wiu.replaceGraphWithNew(JsonUtils.jsonStringToGraph(content)),
+		);
+	};
+
+	const removeGraphFromRecent = (evt: React.MouseEvent<HTMLDivElement>): void => {
 		evt.stopPropagation();
 		StorageUtils.removeGraphFromStorage(evt.currentTarget.id);
 		setRemoveTrigger(!removeTrigger);
 	};
 
-	useEffect(() => {
-		const strFromStorage: string | null = localStorage.getItem('AtlasStorage');
-		const atlasStorage: AtlasGraph[] = [];
-
-		if (strFromStorage) {
-			JSON.parse(strFromStorage).map((item: AtlasGraph) =>
-				atlasStorage.push(JsonUtils.jsonToGraph(item)),
-			);
-		}
-		setRecentFromLocalStorage(atlasStorage.reverse());
+	const updateRecentElementsUi = () => {
+		setRecentFromLocalStorage(StorageUtils.getRecentGraphsFromLocalStorage().reverse());
 		setIsFileMenuOpen(false);
 		refSchemaName.current!.value = wiu.graph.name;
-	}, [removeTrigger, wiu.graph.name]);
+	};
+	useEffect(updateRecentElementsUi, [removeTrigger]);
 
-	function getRecentGraphs(graphFromRecentList: AtlasGraph): JSX.Element {
-		if (graphFromRecentList.name === wiu.graph.name)
+	function getRecentGraphElement(graphFromRecentList: AtlasGraph): JSX.Element {
+		if (graphFromRecentList.name === wiu.graph.name) {
 			return <div key={graphFromRecentList.name}></div>;
+		}
 		return (
 			<div
 				key={graphFromRecentList.name}
 				className={styles.elementFileMenu}
-				onClick={() => wiu.loadGraphToUi(graphFromRecentList)}
+				onClick={() => wiu.replaceGraphWithNew(graphFromRecentList)}
 			>
 				<label className={styles.recentGraphName}>{'> ' + graphFromRecentList.name}</label>
 				<div
@@ -100,14 +81,13 @@ export default function Navbar({ wiu }: Props) {
 		<>
 			<div className={styles.leftTop}>
 				<div className={styles.icon}>
-					<Image src={menuImg} layout={'responsive'} objectFit={'contain'} />
+					<Image src={menuImg} objectFit={'contain'} />
 				</div>
 				<Image
 					src={logoImg}
 					alt="Atlas Logo"
 					width={'100%'}
 					height={'100%'}
-					layout={'intrinsic'}
 					objectFit={'contain'}
 				/>
 			</div>
@@ -121,7 +101,6 @@ export default function Navbar({ wiu }: Props) {
 				<div className={styles.iconSmall}>
 					<Image
 						src={menuImg}
-						layout={'responsive'}
 						objectFit={'contain'}
 						onClick={() => setIsFileMenuOpen(!isFileMenuOpen)}
 					/>
@@ -136,37 +115,41 @@ export default function Navbar({ wiu }: Props) {
 					>
 						<label>Open...</label>
 					</div>
-					<div className={styles.elementFileMenu} onClick={() => exportToFile('.ca')}>
+					<div
+						className={styles.elementFileMenu}
+						onClick={() => makeUserDownloadFile('ca')}
+					>
 						<label>Download</label>
 					</div>
 					<div className={styles.elementFileMenu}>
 						<label className={styles.recent}>Recent</label>
 					</div>
-					<div>{recentFromLocalStorage?.map((graph) => getRecentGraphs(graph))}</div>
+					<div>
+						{recentFromLocalStorage?.map((graph) => getRecentGraphElement(graph))}
+					</div>
 				</div>
 			</div>
 			<div className={styles.rightTop}>
 				<div className={styles.icon}>
 					<Image
 						src={exportImg}
-						layout={'responsive'}
 						objectFit={'contain'}
-						onClick={() => exportToFile('.json')}
+						onClick={() => makeUserDownloadFile('json')}
 					/>
 				</div>
 				<div className={styles.icon}>
-					<Image src={questionImg} layout={'responsive'} objectFit={'contain'} />
+					<Image src={questionImg} objectFit={'contain'} />
 				</div>
 				<div className={styles.icon}>
-					<Image src={settingsImg} layout={'responsive'} objectFit={'contain'} />
+					<Image src={settingsImg} objectFit={'contain'} />
 				</div>
 				<input
 					type={'file'}
 					ref={refOpenFile}
 					style={{ display: 'none' }}
-					onChange={(evt: ChangeEvent<HTMLInputElement>) =>
-						handleOpenFile(evt.target.files ? evt.target.files[0] : null)
-					}
+					onChange={(evt: ChangeEvent<HTMLInputElement>) => {
+						if (evt.target.files !== null) handleOpenFile(evt.target.files[0]);
+					}}
 				/>
 			</div>
 		</>

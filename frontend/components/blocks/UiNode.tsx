@@ -2,6 +2,7 @@ import React from 'react';
 import { Handle, Position } from 'react-flow-renderer';
 import styles from '../../styles/Block.module.css';
 import { ExpressionNode, TextNode, FileNode } from '../../utils/AtlasGraph';
+import FileUtils from '../../utils/FileUtils';
 
 export const uiNodeTypes = {
 	[ExpressionNode.type]: ExpressionBlock,
@@ -36,16 +37,7 @@ export function TextBlock({ data }: { data: { node: TextNode } }) {
 
 export function FileBlock({ data }: { data: { node: FileNode } }) {
 	const uploadFile = (node: FileNode, filepath: File) => {
-		if (filepath == undefined) return;
-		node.filename = filepath.name;
-		const reader = new FileReader();
-		reader.onload = (event) => {
-			node.content = reader.result === null ? '' : reader.result.toString();
-		};
-		reader.onerror = () => {
-			console.log('Error loading');
-		};
-		reader.readAsText(filepath);
+		FileUtils.getFileContentString(filepath, (content: string) => (node.content = content));
 	};
 	return FormulaBlockWrapper(
 		<div className={`${styles.text_block}`}>
@@ -86,18 +78,3 @@ export function ExpressionBlock({ data }: { data: { node: ExpressionNode } }) {
 		styles.expression_block,
 	);
 }
-
-// export function FunctionBlock({ data }: { data: { node: FunctionNode } }) {
-// 	return FormulaBlockWrapper(
-// 		<div>
-// 			<div>
-// 				name: {data.node.getName()}(
-// 				{data.node
-// 					.getArgs()
-// 					.map((arg) => arg.name + ': ' + arg.type)
-// 					.join(', ')}
-// 				)
-// 			</div>
-// 		</div>,
-// 	);
-// }

@@ -1,5 +1,5 @@
 import styles from '../../styles/main.module.css';
-import React, { useState, useCallback, useRef, MouseEvent as ReactMouseEvent } from 'react';
+import React, { useState, useCallback, useRef, useEffect } from 'react';
 import ReactFlow, {
 	Controls,
 	Background,
@@ -42,11 +42,11 @@ export default function DnDFlow({ wiu }: Props): JSX.Element {
 
 	function handleUiNodeSelection(event: React.MouseEvent, element: UINode) {}
 
-	function handleUiNodeDoubleClick(event: ReactMouseEvent, node: UINode) {
+	function handleUiNodeDoubleClick(event: React.MouseEvent, node: UINode) {
 		wiu.setSelectedNode(node.data.node);
 	}
 
-	function onPanelClick(event: ReactMouseEvent) {
+	function onPanelClick(event: React.MouseEvent) {
 		wiu.setSelectedNode(null);
 	}
 
@@ -60,6 +60,10 @@ export default function DnDFlow({ wiu }: Props): JSX.Element {
 		event.preventDefault();
 		event.dataTransfer.dropEffect = 'move';
 	}, []);
+
+	useEffect(() => {
+		StorageUtils.saveGraphToLocalStorage(wiu.graph);
+	}, [wiu.uiNodes, wiu.uiEdges]);
 
 	const onDrop = useCallback(
 		(event: React.DragEvent) => {
@@ -89,7 +93,7 @@ export default function DnDFlow({ wiu }: Props): JSX.Element {
 
 	return (
 		<ReactFlowProvider>
-			<div className={styles.flowcanvas} ref={reactFlowWrapper}>
+			<div className={styles.flowCanvas} ref={reactFlowWrapper}>
 				<ReactFlow
 					nodes={wiu.uiNodes}
 					edges={wiu.uiEdges}
