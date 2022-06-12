@@ -1,3 +1,4 @@
+import { withRouter } from 'next/router';
 import React from 'react';
 import { Node as UINode, Edge as UIEdge, NodeChange as UINodeChange } from 'react-flow-renderer';
 import AtlasGraph, { AtlasNode } from '../utils/AtlasGraph';
@@ -87,6 +88,7 @@ export default class WebInterfaceUtils {
 	public async updateGraph() {
 		const updatedGraph = await ServerUtils.getUpdatedGraph(this.graph);
 		if (updatedGraph !== null) this.replaceGraphWithNew(updatedGraph);
+		this.refreshUiElements();
 	}
 
 	public updateNodes(changes: UINodeChange[]) {
