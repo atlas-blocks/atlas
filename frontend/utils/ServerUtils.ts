@@ -1,5 +1,5 @@
 import ErrorUtils from './errors/ErrorUtils';
-import AtlasGraph, { AtlasEdge, AtlasNode, ExpressionNode, TextNode, FileNode } from './AtlasGraph';
+import AtlasGraph from './AtlasGraph';
 import JsonUtils from './JsonUtils';
 
 type Response = {
@@ -7,7 +7,7 @@ type Response = {
 	latex: string;
 };
 
-abstract class ServerUtils {
+export default abstract class ServerUtils {
 	public static async fetchAsync(urlString: string, params: any, settings = {}): Promise<any> {
 		const url = new URL(urlString);
 		Object.keys(params).forEach((key) => url.searchParams.append(key, params[key]));
@@ -54,7 +54,7 @@ abstract class ServerUtils {
 		});
 	}
 
-	public static async updateGraph(graph: AtlasGraph): Promise<void> {
+	public static async getUpdatedGraph(graph: AtlasGraph): Promise<AtlasGraph | null> {
 		const responseJson = await this.post(
 			this.getHostHref() + '/api/graph',
 			{},
@@ -62,36 +62,9 @@ abstract class ServerUtils {
 		);
 		if (!responseJson.success) {
 			ErrorUtils.showAlert('error while updating graph: ' + responseJson.message);
-			return;
+			return null;
 		}
 
-		Object.assign(graph, JsonUtils.jsonToGraph(responseJson.graph));
-	}
-
-	private static typeMap = {
-		[ExpressionNode.type]: (uitype: string) => ExpressionNode.buildWithUitype(uitype),
-		[TextNode.type]: (uitype: string) => TextNode.build(),
-		[FileNode.type]: (uitype: string) => FileNode.build(),
-		[AtlasNode.type]: (uitype: string) => AtlasNode.build(),
-	};
-
-	public static extractNodes(nodes: { type: string; uitype: string }[]): AtlasNode[] {
-		const updatedNodes: AtlasNode[] = [];
-		for (const node of nodes) {
-			if (ServerUtils.typeMap[node.type] == undefined) {
-				throw new Error('no such node type: ' + node.type);
-			}
-			const newNode: AtlasNode = ServerUtils.typeMap[node.type](node.uitype);
-			updatedNodes.push(Object.assign(newNode, node));
-		}
-		return updatedNodes;
-	}
-
-	public static extractEdges(edges: object[]): AtlasEdge[] {
-		const updatedEdges: AtlasEdge[] = [];
-		edges.forEach((edge: object) => updatedEdges.push(Object.assign(AtlasEdge.build(), edge)));
-		return updatedEdges;
+		return JsonUtils.jsonToGraph(responseJson.graph);
 	}
 }
-
-export default ServerUtils;

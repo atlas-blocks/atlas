@@ -1,5 +1,5 @@
 import styles from '../../styles/main.module.css';
-import React, { useState, useCallback, useRef, MouseEvent as ReactMouseEvent } from 'react';
+import React, { useState, useCallback, useRef, useEffect } from 'react';
 import ReactFlow, {
 	Controls,
 	Background,
@@ -18,6 +18,7 @@ import ReactFlow, {
 import { uiNodeTypes } from '../blocks/UiNode';
 import { uiEdgeTypes } from '../blocks/UiEdge';
 import WebInterfaceUtils from '../../utils/WebInterfaceUtils';
+import StorageUtils from '../../utils/StorageUtils';
 
 type Props = {
 	wiu: WebInterfaceUtils;
@@ -32,7 +33,7 @@ export default function DnDFlow({ wiu }: Props): JSX.Element {
 			wiu.updateNodes(changes);
 			wiu.setUiNodes((nds) => applyNodeChanges(changes, nds));
 		},
-		[wiu.graph.name, wiu.setUiNodes],
+		[wiu.setUiNodes],
 	);
 	const onUiEdgesChange = useCallback(
 		(changes: UIEdgeChange[]) => wiu.setUiEdges((eds) => applyEdgeChanges(changes, eds)),
@@ -41,11 +42,11 @@ export default function DnDFlow({ wiu }: Props): JSX.Element {
 
 	function handleUiNodeSelection(event: React.MouseEvent, element: UINode) {}
 
-	function handleUiNodeDoubleClick(event: ReactMouseEvent, node: UINode) {
+	function handleUiNodeDoubleClick(event: React.MouseEvent, node: UINode) {
 		wiu.setSelectedNode(node.data.node);
 	}
 
-	function onPanelClick(event: ReactMouseEvent) {
+	function onPanelClick(event: React.MouseEvent) {
 		wiu.setSelectedNode(null);
 	}
 
@@ -59,6 +60,10 @@ export default function DnDFlow({ wiu }: Props): JSX.Element {
 		event.preventDefault();
 		event.dataTransfer.dropEffect = 'move';
 	}, []);
+
+	useEffect(() => {
+		StorageUtils.saveGraphToLocalStorage(wiu.graph);
+	}, [wiu.uiNodes, wiu.uiEdges]);
 
 	const onDrop = useCallback(
 		(event: React.DragEvent) => {
@@ -88,7 +93,7 @@ export default function DnDFlow({ wiu }: Props): JSX.Element {
 
 	return (
 		<ReactFlowProvider>
-			<div className={styles.flowcanvas} ref={reactFlowWrapper}>
+			<div className={styles.flowCanvas} ref={reactFlowWrapper}>
 				<ReactFlow
 					nodes={wiu.uiNodes}
 					edges={wiu.uiEdges}

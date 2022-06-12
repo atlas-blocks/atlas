@@ -2,7 +2,6 @@ import React from 'react';
 import { Node as UINode, Edge as UIEdge, NodeChange as UINodeChange } from 'react-flow-renderer';
 import AtlasGraph, { AtlasNode } from '../utils/AtlasGraph';
 import ServerUtils from './ServerUtils';
-import StorageUtils from './StorageUtils';
 
 export default class WebInterfaceUtils {
 	graph: AtlasGraph;
@@ -86,8 +85,8 @@ export default class WebInterfaceUtils {
 	}
 
 	public async updateGraph() {
-		await ServerUtils.updateGraph(this.graph);
-		this.refreshUiElements();
+		const updatedGraph = await ServerUtils.getUpdatedGraph(this.graph);
+		if (updatedGraph !== null) this.replaceGraphWithNew(updatedGraph);
 	}
 
 	public updateNodes(changes: UINodeChange[]) {
@@ -105,7 +104,6 @@ export default class WebInterfaceUtils {
 				this.graph.removeById(change.id);
 				this.setSelectedNode(null);
 			}
-			StorageUtils.saveGraphToLocalStorage(this.graph);
 		}
 	}
 
@@ -117,28 +115,9 @@ export default class WebInterfaceUtils {
 		return 100;
 	}
 
-	public loadGraphToUi = (newGraph: AtlasGraph) => {
-		if (!newGraph.name) newGraph.name = 'undefined_name';
-		Object.assign(this.graph, newGraph);
+	public replaceGraphWithNew(newGraph: AtlasGraph): void {
+		this.graph.replaceWithNew(newGraph);
 		this.setSelectedNode(null);
 		this.refreshUiElements();
-	};
-
-	public getFunctionSignature(name: string, multiline = false): string {
-		// const func = this.graph.getNodeByNameOrNull(name);
-		// if (!(func instanceof FunctionNode)) return '';
-		// return (
-		// 	func.getName() +
-		// 	'(' +
-		// 	(multiline ? '\n    ' : '') +
-		// 	func
-		// 		.getArgs()
-		// 		.map((arg) => arg.name + ': ' + arg.type)
-		// 		.join(',' + (multiline ? '\n    ' : ' ')) +
-		// 	(multiline ? '\n' : '') +
-		// 	'): ' +
-		// 	func.getReturnType()
-		// );
-		return 'signature';
 	}
 }
