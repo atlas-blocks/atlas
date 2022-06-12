@@ -1,8 +1,9 @@
 import AtlasGraph from './AtlasGraph';
+import JsonUtils from './JsonUtils';
 
 export default class FileUtils {
-	public static convertToJson(graph: AtlasGraph): string {
-		return JSON.stringify(graph, null, 2);
+	private static convertGraphToJson(graph: AtlasGraph): string {
+		return JsonUtils.stringify(graph, 2);
 	}
 
 	public static readonly filetypeMap = {
@@ -11,8 +12,8 @@ export default class FileUtils {
 	};
 
 	public static readonly converterMap = {
-		json: this.convertToJson,
-		ca: this.convertToJson,
+		json: this.convertGraphToJson,
+		ca: this.convertGraphToJson,
 	};
 
 	public static makeUserDownloadFile(

@@ -58,7 +58,7 @@ export default abstract class ServerUtils {
 		const responseJson = await this.post(
 			this.getHostHref() + '/api/graph',
 			{},
-			{ graph: graph },
+			{ graph: JsonUtils.getJson(graph) },
 		);
 		if (!responseJson.success) {
 			ErrorUtils.showAlert('error while updating graph: ' + responseJson.message);

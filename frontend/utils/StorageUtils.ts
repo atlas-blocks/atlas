@@ -9,13 +9,13 @@ export default class StorageUtils {
 			saveGraph.name,
 		);
 		recentGraphs.push(saveGraph);
-		localStorage.setItem(this.recentGraphStorageName, JSON.stringify(recentGraphs));
+		localStorage.setItem(this.recentGraphStorageName, JsonUtils.stringify(recentGraphs));
 	}
 
 	public static removeGraphFromStorage = (graphName: string) => {
 		const recentGraphs: AtlasGraph[] =
 			this.getRecentGraphsFromLocalStorageExceptWithName(graphName);
-		localStorage.setItem(this.recentGraphStorageName, JSON.stringify(recentGraphs));
+		localStorage.setItem(this.recentGraphStorageName, JsonUtils.stringify(recentGraphs));
 	};
 
 	public static getRecentGraphsFromLocalStorage(): AtlasGraph[] {
