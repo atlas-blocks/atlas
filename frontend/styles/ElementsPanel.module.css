@@ -1,5 +1,6 @@
 .element {
 	border: 1px solid #eaeaea;
+	border-radius: 3px;
 	margin: 5px;
 	margin-left: 10px;
 	margin-right: 10px;

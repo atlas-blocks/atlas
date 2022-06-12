@@ -5,8 +5,10 @@ import ServerUtils from './ServerUtils';
 
 export default class WebInterfaceUtils {
 	graph: AtlasGraph;
-	setUINodes: React.Dispatch<React.SetStateAction<UINode[]>>;
-	setUIEdges: React.Dispatch<React.SetStateAction<UIEdge[]>>;
+	uiNodes: UINode[];
+	uiEdges: UIEdge[];
+	setUiNodes: React.Dispatch<React.SetStateAction<UINode[]>>;
+	setUiEdges: React.Dispatch<React.SetStateAction<UIEdge[]>>;
 	selectedNode: AtlasNode | null;
 	setSelectedNode: React.Dispatch<React.SetStateAction<AtlasNode | null>>;
 	druggedNode: AtlasNode | null;
@@ -14,16 +16,20 @@ export default class WebInterfaceUtils {
 
 	constructor(
 		graph: AtlasGraph,
-		setUINodes: React.Dispatch<React.SetStateAction<UINode[]>>,
-		setUIEdges: React.Dispatch<React.SetStateAction<UIEdge[]>>,
+		uiNodes: UINode[],
+		uiEdges: UIEdge[],
+		setUiNodes: React.Dispatch<React.SetStateAction<UINode[]>>,
+		setUiEdges: React.Dispatch<React.SetStateAction<UIEdge[]>>,
 		selectedNode: AtlasNode | null,
 		setSelectedNode: React.Dispatch<React.SetStateAction<AtlasNode | null>>,
 		druggedNode: AtlasNode | null,
 		setDruggedNode: React.Dispatch<React.SetStateAction<AtlasNode | null>>,
 	) {
 		this.graph = graph;
-		this.setUINodes = setUINodes;
-		this.setUIEdges = setUIEdges;
+		this.uiNodes = uiNodes;
+		this.uiEdges = uiEdges;
+		this.setUiNodes = setUiNodes;
+		this.setUiEdges = setUiEdges;
 		this.selectedNode = selectedNode;
 		this.setSelectedNode = setSelectedNode;
 		this.druggedNode = druggedNode;
@@ -74,12 +80,13 @@ export default class WebInterfaceUtils {
 	}
 
 	public refreshUiElements() {
-		this.setUINodes((els) => WebInterfaceUtils.getUiNodes(this.graph));
-		this.setUIEdges((els) => WebInterfaceUtils.getUiEdges(this.graph));
+		this.setUiNodes((els) => WebInterfaceUtils.getUiNodes(this.graph));
+		this.setUiEdges((els) => WebInterfaceUtils.getUiEdges(this.graph));
 	}
 
 	public async updateGraph() {
-		await ServerUtils.updateGraph(this.graph);
+		const updatedGraph = await ServerUtils.getUpdatedGraph(this.graph);
+		if (updatedGraph !== null) this.replaceGraphWithNew(updatedGraph);
 		this.refreshUiElements();
 	}
 
@@ -88,7 +95,15 @@ export default class WebInterfaceUtils {
 			if (change.type === 'position') {
 				if (change.position === undefined) return;
 				const node = this.graph.getById(change.id);
+				console.assert(
+					node !== undefined,
+					`Node with id ${change.id} not found in graph ${JSON.stringify(this.graph)}`,
+				);
 				node.setPosition(change.position.x, change.position.y);
+			}
+			if (change.type === 'remove') {
+				this.graph.removeById(change.id);
+				this.setSelectedNode(null);
 			}
 		}
 	}
@@ -101,21 +116,9 @@ export default class WebInterfaceUtils {
 		return 100;
 	}
 
-	public getFunctionSignature(name: string, multiline = false): string {
-		// const func = this.graph.getNodeByNameOrNull(name);
-		// if (!(func instanceof FunctionNode)) return '';
-		// return (
-		// 	func.getName() +
-		// 	'(' +
-		// 	(multiline ? '\n    ' : '') +
-		// 	func
-		// 		.getArgs()
-		// 		.map((arg) => arg.name + ': ' + arg.type)
-		// 		.join(',' + (multiline ? '\n    ' : ' ')) +
-		// 	(multiline ? '\n' : '') +
-		// 	'): ' +
-		// 	func.getReturnType()
-		// );
-		return 'signature';
+	public replaceGraphWithNew(newGraph: AtlasGraph): void {
+		this.graph.replaceWithNew(newGraph);
+		this.setSelectedNode(null);
+		this.refreshUiElements();
 	}
 }

@@ -67,9 +67,11 @@ export default function PropsPanel({ wiu }: Props): JSX.Element {
 	};
 
 	useEffect(() => {
+		if (wiu.selectedNode === null) return;
+
+		setNewNameValue(wiu.selectedNode.name);
 		if (wiu.selectedNode instanceof ContentNode) {
 			setNewContentValue(wiu.selectedNode.content);
-			setNewNameValue(wiu.selectedNode.name);
 		}
 	}, [wiu.selectedNode]);
 

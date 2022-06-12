@@ -1,10 +1,32 @@
 export default class AtlasGraph {
+	public name: string;
 	public readonly nodes: AtlasNode[];
 	public readonly edges: AtlasEdge[];
 
 	constructor() {
+		this.name = '';
 		this.nodes = [];
 		this.edges = [];
+	}
+
+	public replaceWithNew(newGraph: AtlasGraph): void {
+		this.setName(newGraph.name).setNodes(newGraph.nodes).setEdges(newGraph.edges);
+	}
+
+	public setName(name: string): AtlasGraph {
+		this.name = name;
+		return this;
+	}
+	public setNodes(nodes: AtlasNode[]): AtlasGraph {
+		this.nodes.splice(0, this.nodes.length);
+		this.nodes.push(...nodes);
+		return this;
+	}
+
+	public setEdges(edges: AtlasEdge[]): AtlasGraph {
+		this.edges.splice(0, this.edges.length);
+		this.edges.push(...edges);
+		return this;
 	}
 
 	private isInDefaultNameFormat(name: string) {
@@ -16,6 +38,11 @@ export default class AtlasGraph {
 			.filter((node) => this.isInDefaultNameFormat(node.name))
 			.map((node) => Number(node.name.slice(1)));
 		return 'b' + (Math.max(...defaultNodesNameNumbers, 0) + 1);
+	}
+
+	public removeById(id: string) {
+		const nodeToRemove = this.getById(id);
+		this.nodes.splice(this.nodes.indexOf(nodeToRemove), 1);
 	}
 
 	getByName(name: string): AtlasNode[] {
