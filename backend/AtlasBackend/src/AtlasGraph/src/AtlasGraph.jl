@@ -2,6 +2,7 @@ module AtlasGraph
 export AbstractGraph, Graph
 export AbstractEdge, ProviderEdge
 export AbstractNode, Node
+export AbstractContentNode
 export AbstractTextNode, TextNode
 export AbstractFileNode, FileNode
 export AbstractFunctionNode, FunctionNode
@@ -11,11 +12,11 @@ using JSON3, StructTypes, ResultTypes
 
 abstract type AbstractNode end
 mutable struct Node <: AbstractNode
-    name::String
-    uitype::String
-    position::Tuple{Int32,Int32}
-    visibility::Bool
+    name::Symbol
+    uidata::String
 end
+
+StructTypes.StructType(::Type{Node}) = StructTypes.Struct()
 
 abstract type AbstractTextNode <: AbstractNode end
 mutable struct TextNode <: AbstractTextNode
@@ -23,32 +24,31 @@ mutable struct TextNode <: AbstractTextNode
     content::String
 end
 
-abstract type AbstractFileNode <: AbstractNode end
+abstract type AbstractContentNode <: AbstractNode end
+
+abstract type AbstractFileNode <: AbstractContentNode end
 mutable struct FileNode <: AbstractFileNode
     node::Node
     content::String
     filename::String
 end
 
-abstract type AbstractFormulaNode <: AbstractNode end
 
-abstract type AbstractExpressionNode <: AbstractFormulaNode end
+abstract type AbstractExpressionNode <: AbstractContentNode end
 mutable struct ExpressionNode <: AbstractExpressionNode
     node::Node
     content::String
     result::Any
 end
 
-abstract type AbstractFunctionNode <: AbstractFormulaNode end
+abstract type AbstractFunctionNode <: AbstractContentNode end
 mutable struct FunctionNode <: AbstractFunctionNode
     node::Node
+    args::String
     content::String
-
-    priority::Int8
-    leftright_order::Bool
 end
 
-function Base.getproperty(obj::Union{AbstractFormulaNode,TextNode,FileNode}, sym::Symbol)
+function Base.getproperty(obj::AbstractContentNode, sym::Symbol)
     if sym === :name
         return obj.node.name
     else
@@ -58,19 +58,22 @@ end
 
 abstract type AbstractEdge end
 struct ProviderEdge <: AbstractEdge
-    from::String
-    to::String
+    from::Symbol
+    to::Symbol
 end
+
+StructTypes.StructType(::Type{ProviderEdge}) = StructTypes.Struct()
 
 abstract type AbstractGraph end
 struct Graph <: AbstractGraph
+    name::Symbol
     nodes::Vector{AbstractNode}
+
+    Graph(name::Symbol, nodes::Vector{<:AbstractNode}) = new(name, nodes)
+    Graph(nodes::Vector{<:AbstractNode}) = new(:graph, nodes)
 end
 
-function filternodes(
-    nodes::Vector{AbstractNode},
-    name::AbstractString,
-)::Vector{AbstractNode}
+function filternodes(nodes::Vector{AbstractNode}, name::Symbol)::Vector{AbstractNode}
     return filter(node -> node.name == name, nodes)
 end
 
@@ -80,28 +83,13 @@ end
 
 function filternodes(
     nodes::Vector{AbstractNode},
-    name::AbstractString,
+    name::Symbol,
     type::DataType,
 )::Vector{AbstractNode}
     return filternodes(filternodes(nodes, name), type)
 end
 
-function isexpression(graph::AbstractGraph, name::AbstractString)
-    return length(filternodes(graph.nodes, name, ExpressionNode)) > 0
-end
-
-function getexpression(graph::AbstractGraph, name::AbstractString)
-    return filternodes(graph.nodes, name, ExpressionNode)[1]
-end
-
-function isfunction(graph::AbstractGraph, name::AbstractString)
-    return length(filternodes(graph.nodes, name, AbstractFunctionNode)) > 0
-end
-
-StructTypes.StructType(::Type{Node}) = StructTypes.Struct()
-StructTypes.StructType(::Type{ProviderEdge}) = StructTypes.Struct()
-
-function updategraph!(graph::AbstractGraph)::Result{AbstractGraph,Exception}
+function updategraph!(graph::AbstractGraph)::AbstractGraph
     expressions = filternodes(graph.nodes, AbstractExpressionNode)
     ordered_nodes = FormulaUtils.topological_order(
         convert(Vector{AbstractExpressionNode}, expressions),
@@ -109,11 +97,7 @@ function updategraph!(graph::AbstractGraph)::Result{AbstractGraph,Exception}
     )
 
     for node in ordered_nodes
-        result = AtlasParser.evaluate_content(node.content, graph)
-        if ResultTypes.iserror(result)
-            return unwrap_error(result)
-        end
-        node.result = unwrap(result)
+        Executer.execute_node(node)
     end
 
     return graph
@@ -123,24 +107,13 @@ function getedges(graph::Graph)::Vector{AbstractEdge}
     expressions = filternodes(graph.nodes, ExpressionNode)
 
     rawedges = map(
-        node -> (
-            node.name,
-            map(
-                token -> string(token.content),
-                unique(
-                    filter!(
-                        token -> token.type == AtlasParser.Tokens.NAME,
-                        unwrap(AtlasParser.Tokens.gettokens(node.content)),
-                    ),
-                ),
-            ),
-        ),
+        node -> Dict("to" => node.name, "from" => Tokens.getnames(node.content)),
         expressions,
     )
     edges = Vector{AbstractEdge}()
-    for i = 1:length(rawedges)
-        for j = 1:length(rawedges[i][2])
-            push!(edges, ProviderEdge(rawedges[i][2][j], rawedges[i][1]))
+    for raw_edge in rawedges
+        for from in raw_edge["from"]
+            push!(edges, ProviderEdge(from, raw_edge["to"]))
         end
     end
     return edges
@@ -148,8 +121,8 @@ end
 
 include("./functions/Functions.jl")
 include("./utils/algorithms/FormulaUtils.jl")
-include("./utils/parser/AtlasParser.jl")
-include("./utils/interactions/Types.jl")
+include("./utils/parser/Tokens.jl")
+include("./utils/kernels/execution/Executer.jl")
 include("./utils/interactions/JsonUtils.jl")
 include("./utils/interactions/Interactions.jl")
 
