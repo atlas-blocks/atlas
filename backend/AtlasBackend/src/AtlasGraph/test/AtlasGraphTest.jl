@@ -14,11 +14,15 @@ import .TestUtils as tu
             tu.genexpression(:ex1, "5"),
             tu.genexpression(:ex2, "\"str\"", "st"),
             tu.genexpression(:ex3, ""),
+            tu.gentext(:ex4, "abc"),
+            tu.genexpression(:ex5, "ex4 * \"123\""),
         ])
         expected = Graph([
             tu.genexpression(:ex1, "5", 5),
             tu.genexpression(:ex2, "\"str\"", "str"),
             tu.genexpression(:ex3, ""),
+            tu.gentext(:ex4, "abc"),
+            tu.genexpression(:ex5, "ex4 * \"123\"", "abc123"),
         ])
         @test tu.equals(AtlasGraph.updategraph!(graph), expected)
     end

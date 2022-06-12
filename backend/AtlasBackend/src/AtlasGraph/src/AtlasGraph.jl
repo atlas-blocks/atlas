@@ -18,13 +18,13 @@ end
 
 StructTypes.StructType(::Type{Node}) = StructTypes.Struct()
 
-abstract type AbstractTextNode <: AbstractNode end
+abstract type AbstractContentNode <: AbstractNode end
+
+abstract type AbstractTextNode <: AbstractContentNode end
 mutable struct TextNode <: AbstractTextNode
     node::Node
     content::String
 end
-
-abstract type AbstractContentNode <: AbstractNode end
 
 abstract type AbstractFileNode <: AbstractContentNode end
 mutable struct FileNode <: AbstractFileNode
@@ -32,7 +32,6 @@ mutable struct FileNode <: AbstractFileNode
     content::String
     filename::String
 end
-
 
 abstract type AbstractExpressionNode <: AbstractContentNode end
 mutable struct ExpressionNode <: AbstractExpressionNode
@@ -77,26 +76,31 @@ function filternodes(nodes::Vector{AbstractNode}, name::Symbol)::Vector{Abstract
     return filter(node -> node.name == name, nodes)
 end
 
-function filternodes(nodes::Vector{AbstractNode}, type::DataType)::Vector{AbstractNode}
+function filternodes(
+    nodes::Vector{AbstractNode},
+    type::Union{DataType,Union},
+)::Vector{AbstractNode}
     return filter(node -> isa(node, type), nodes)
 end
 
 function filternodes(
     nodes::Vector{AbstractNode},
     name::Symbol,
-    type::DataType,
+    type::Union{DataType,Union},
 )::Vector{AbstractNode}
     return filternodes(filternodes(nodes, name), type)
 end
 
 function updategraph!(graph::AbstractGraph)::AbstractGraph
+    data_nodes = filternodes(graph.nodes, Union{FileNode,TextNode})
+
     expressions = filternodes(graph.nodes, AbstractExpressionNode)
     ordered_nodes = FormulaUtils.topological_order(
         convert(Vector{AbstractExpressionNode}, expressions),
         graph,
     )
 
-    for node in ordered_nodes
+    for node in vcat(data_nodes, ordered_nodes)
         Executer.execute_node(node)
     end
 
