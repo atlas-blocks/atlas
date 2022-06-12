@@ -1,7 +1,6 @@
 module JsonUtils
-using ..AtlasGraph, ..AtlasParser
+using ..AtlasGraph
 using JSON3, ResultTypes
-using ..Types
 
 function jsonwriteread(x)
     return JSON3.read(JSON3.write(x))
@@ -14,7 +13,7 @@ function dictionary(node::AbstractNode)::Dict{AbstractString,Any}
         if (typeof(value) <: AbstractNode)
             merge!(dic, dictionary(value))
         elseif field == :result
-            push!(dic, string(field) => Types.getjson(value))
+            push!(dic, string(field) => string(value))
         else
             push!(dic, string(field) => value)
         end
@@ -35,32 +34,19 @@ function json(graph::AbstractGraph)::JSON3.Object
     nodes::Vector{JSON3.Object} = map(node -> json(node), graph.nodes)
     edges::Vector{JSON3.Object} = map(edge -> json(edge), AtlasGraph.getedges(graph))
 
-    return jsonwriteread(Dict("nodes" => nodes, "edges" => edges))
+    return jsonwriteread(Dict("name" => graph.name, "nodes" => nodes, "edges" => edges))
 end
 
 function node(json_dict::JSON3.Object)::AbstractNode
-    node = Node(
-        json_dict["name"],
-        json_dict["uitype"],
-        (
-            convert(Int32, floor(json_dict["position"][1])),
-            convert(Int32, floor(json_dict["position"][2])),
-        ),
-        json_dict["visibility"],
-    )
+    node = Node(Symbol(json_dict["name"]), json_dict["uidata"])
     if json_dict["type"] == string(Node)
         return node
     elseif json_dict["type"] == string(ExpressionNode)
-        content = json_dict["content"]
-        result = unwrap(evaluate_content(json_dict["result"]))
-        return ExpressionNode(node, content, result)
+        return ExpressionNode(node, json_dict["content"], nothing)
     elseif json_dict["type"] == string(TextNode)
-        content = json_dict["content"]
-        return TextNode(node, content)
+        return TextNode(node, json_dict["content"])
     elseif json_dict["type"] == string(FileNode)
-        content = json_dict["content"]
-        filename = json_dict["filename"]
-        return FileNode(node, content, filename)
+        return FileNode(node, json_dict["content"], json_dict["filename"])
     end
 end
 
@@ -70,7 +56,7 @@ function graph(json_dict::JSON3.Object)::AbstractGraph
     for node_json in nodes_json_arr
         push!(nodes, node(node_json))
     end
-    return Graph(nodes)
+    return Graph(Symbol(json_dict["name"]), nodes)
 end
 
 end
