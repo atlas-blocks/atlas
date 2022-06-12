@@ -53,7 +53,7 @@ export default function Navbar({ wiu }: Props) {
 		setIsFileMenuOpen(false);
 		refSchemaName.current!.value = wiu.graph.name;
 	};
-	useEffect(updateRecentElementsUi, [removeTrigger]);
+	useEffect(updateRecentElementsUi, [wiu.graph.name, removeTrigger]);
 
 	function getRecentGraphElement(graphFromRecentList: AtlasGraph): JSX.Element {
 		if (graphFromRecentList.name === wiu.graph.name) {
@@ -96,11 +96,12 @@ export default function Navbar({ wiu }: Props) {
 					className={styles.inputFileName}
 					ref={refSchemaName}
 					defaultValue={wiu.graph.name}
-					onChange={() => (wiu.graph.name = refSchemaName.current!.value)}
+					onChange={() => wiu.graph.setName(refSchemaName.current!.value)}
 				/>
 				<div className={styles.iconSmall}>
 					<Image
 						src={menuImg}
+						layout={'responsive'}
 						objectFit={'contain'}
 						onClick={() => setIsFileMenuOpen(!isFileMenuOpen)}
 					/>
