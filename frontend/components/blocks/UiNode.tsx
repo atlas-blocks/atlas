@@ -10,46 +10,43 @@ export const uiNodeTypes = {
 	[FileNode.type]: FileBlock,
 };
 
-export function FormulaBlockWrapper(content: JSX.Element, blockClass: string) {
+export function UiBlockWrapper(
+	blockClass: string,
+	name: string,
+	content: JSX.Element,
+	result: string | null = null,
+) {
+	function insertResult(): JSX.Element {
+		if (!result) return <></>;
+		return <div className={styles.nameAndResult}>{result}</div>;
+	}
+
 	return (
 		<div className={`${styles.block} ${blockClass}`}>
 			<Handle type="target" position={Position.Left} />
 			<Handle type="source" position={Position.Right} id="a" />
-			<div className={styles.display_linebreak}>{content}</div>
+			<div className={styles.name}>{name}</div>
+			<div className={styles.contentWrapper}>{content}</div>
+			{insertResult()}
 		</div>
 	);
 }
 
 export function TextBlock({ data }: { data: { node: TextNode } }) {
-	return FormulaBlockWrapper(
-		<div className={`${styles.text_block}`}>
-			<div>
-				<span className={styles.attribute_name}>name:</span> {data.node.name}
-			</div>
-			<div>
-				<span className={styles.attribute_name}>content:</span>
-				<br /> {data.node.content}
-			</div>
-		</div>,
-		styles.text_block,
-	);
+	return UiBlockWrapper(styles.text_block, data.node.name, <div>{data.node.content}</div>);
 }
 
 export function FileBlock({ data }: { data: { node: FileNode } }) {
 	const uploadFile = (node: FileNode, filepath: File) => {
 		FileUtils.getFileContentString(filepath, (content: string) => (node.content = content));
 	};
-	return FormulaBlockWrapper(
-		<div className={`${styles.text_block}`}>
-			<div>
-				<span className={styles.attribute_name}>name:</span> {data.node.name}
-			</div>
-			<div>
-				<span className={styles.attribute_name}>filename:</span> {data.node.filename}
-			</div>
+	return UiBlockWrapper(
+		styles.text_block,
+		data.node.name,
+		<div>
+			<div>filename {data.node.filename}</div>
 			<div>
 				<input
-					id="file_input"
 					type="file"
 					onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
 						if (event.target.files === null) return;
@@ -58,23 +55,14 @@ export function FileBlock({ data }: { data: { node: FileNode } }) {
 				/>
 			</div>
 		</div>,
-		styles.text_block,
 	);
 }
 
 export function ExpressionBlock({ data }: { data: { node: ExpressionNode } }) {
-	return FormulaBlockWrapper(
-		<div>
-			<div>
-				<span className={styles.attribute_name}>name:</span> {data.node.name}
-			</div>
-			<div>
-				<span className={styles.attribute_name}>content:</span> {data.node.content}
-			</div>
-			<div>
-				<span className={styles.attribute_name}>result:</span> {data.node.result}
-			</div>
-		</div>,
+	return UiBlockWrapper(
 		styles.expression_block,
+		data.node.name,
+		<div>{data.node.content}</div>,
+		data.node.result,
 	);
 }
