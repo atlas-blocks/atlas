@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Handle, Position } from 'react-flow-renderer';
 import styles from '../../styles/Block.module.css';
 import { ExpressionNode, TextNode, FileNode } from '../../utils/AtlasGraph';
@@ -18,7 +18,7 @@ export function UiBlockWrapper(
 ) {
 	function insertResult(): JSX.Element {
 		if (!result) return <></>;
-		return <div className={styles.nameAndResult}>{result}</div>;
+		return <div className={styles.result}>{result}</div>;
 	}
 
 	return (
@@ -37,24 +37,36 @@ export function TextBlock({ data }: { data: { node: TextNode } }) {
 }
 
 export function FileBlock({ data }: { data: { node: FileNode } }) {
-	const uploadFile = (node: FileNode, filepath: File) => {
-		FileUtils.getFileContentString(filepath, (content: string) => (node.content = content));
+	const [contentToShow, setcontentToShow] = useState<string | null>(null);
+	const [importedFileName, setImportedFileName] = useState<string>(data.node.filename);
+
+	const uploadFile = (event: React.ChangeEvent<HTMLInputElement>) => {
+		if (event.target.files === null) return;
+
+		FileUtils.getFileContentString(
+			event.target.files[0],
+			(content: string) => (data.node.content = content),
+		);
+		data.node.filename = event.target.files[0].name;
+		setImportedFileName(event.target.files[0].name);
 	};
+
+	const showFileContent = (event: React.ChangeEvent<HTMLInputElement>) => {
+		event.target.checked ? setcontentToShow(data.node.content) : setcontentToShow(null);
+	};
+
 	return UiBlockWrapper(
 		styles.text_block,
 		data.node.name,
-		<div>
-			<div>filename {data.node.filename}</div>
-			<div>
-				<input
-					type="file"
-					onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-						if (event.target.files === null) return;
-						uploadFile(data.node, event.target.files[0]);
-					}}
-				/>
-			</div>
-		</div>,
+		<>
+			<input className={styles.inputFile} type="file" onChange={uploadFile} />
+			<div style={{ lineHeight: '30px' }}>Imported file: {importedFileName}</div>
+			<label>
+				<input className={styles.inputFile} type="checkbox" onChange={showFileContent} />{' '}
+				Show content
+			</label>
+		</>,
+		contentToShow,
 	);
 }
 
