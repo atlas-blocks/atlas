@@ -8,6 +8,8 @@ body {
 
 :root {
 	--elements-background: #fcfcfccc;
+	--theme-color-blue: #30a5be;
+	--theme-color-grey: #eaeaea;
 }
 
 a {

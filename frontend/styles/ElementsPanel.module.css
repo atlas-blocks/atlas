@@ -7,6 +7,8 @@
 	font-size: 14px;
 	line-height: 35px;
 	padding-left: 5px;
+	word-break: break-word;
+	white-space: pre-wrap;
 }
 
 .element:hover {

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Handle, Position } from 'react-flow-renderer';
 import styles from '../../styles/Block.module.css';
 import { ExpressionNode, TextNode, FileNode } from '../../utils/AtlasGraph';
@@ -10,71 +10,57 @@ export const uiNodeTypes = {
 	[FileNode.type]: FileBlock,
 };
 
-export function FormulaBlockWrapper(content: JSX.Element, blockClass: string) {
+export function UiBlockWrapper(
+	name: string,
+	content: JSX.Element | string,
+	result: string | null = null,
+): JSX.Element {
 	return (
-		<div className={`${styles.block} ${blockClass}`}>
+		<div className={styles.block}>
 			<Handle type="target" position={Position.Left} />
 			<Handle type="source" position={Position.Right} id="a" />
-			<div className={styles.display_linebreak}>{content}</div>
+			<div className={styles.name}>{name}</div>
+			<div className={styles.contentWrapper}>{content}</div>
+			<div className={result !== null ? styles.result : ''}>{result}</div>
 		</div>
 	);
 }
 
 export function TextBlock({ data }: { data: { node: TextNode } }) {
-	return FormulaBlockWrapper(
-		<div className={`${styles.text_block}`}>
-			<div>
-				<span className={styles.attribute_name}>name:</span> {data.node.name}
-			</div>
-			<div>
-				<span className={styles.attribute_name}>content:</span>
-				<br /> {data.node.content}
-			</div>
-		</div>,
-		styles.text_block,
-	);
+	return UiBlockWrapper(data.node.name, data.node.content);
 }
 
 export function FileBlock({ data }: { data: { node: FileNode } }) {
-	const uploadFile = (node: FileNode, filepath: File) => {
-		FileUtils.getFileContentString(filepath, (content: string) => (node.content = content));
+	const [contentToShow, setcontentToShow] = useState<string | null>(null);
+	const [importedFileName, setImportedFileName] = useState<string>(data.node.filename);
+
+	const uploadFile = (event: React.ChangeEvent<HTMLInputElement>) => {
+		if (event.target.files === null) return;
+		FileUtils.getFileContentString(
+			event.target.files[0],
+			(content: string) => (data.node.content = content),
+		);
+		setImportedFileName(event.target.files[0].name);
 	};
-	return FormulaBlockWrapper(
-		<div className={`${styles.text_block}`}>
-			<div>
-				<span className={styles.attribute_name}>name:</span> {data.node.name}
-			</div>
-			<div>
-				<span className={styles.attribute_name}>filename:</span> {data.node.filename}
-			</div>
-			<div>
-				<input
-					id="file_input"
-					type="file"
-					onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-						if (event.target.files === null) return;
-						uploadFile(data.node, event.target.files[0]);
-					}}
-				/>
-			</div>
-		</div>,
-		styles.text_block,
+
+	const showFileContent = (event: React.ChangeEvent<HTMLInputElement>) => {
+		event.target.checked ? setcontentToShow(data.node.content) : setcontentToShow(null);
+	};
+
+	return UiBlockWrapper(
+		data.node.name,
+		<>
+			<input className={styles.inputFile} type="file" onChange={uploadFile} />
+			<div className={styles.importedFiletext}>Imported file: {importedFileName}</div>
+			<label>
+				<input className={styles.inputFile} type="checkbox" onChange={showFileContent} />{' '}
+				Show content
+			</label>
+		</>,
+		contentToShow,
 	);
 }
 
 export function ExpressionBlock({ data }: { data: { node: ExpressionNode } }) {
-	return FormulaBlockWrapper(
-		<div>
-			<div>
-				<span className={styles.attribute_name}>name:</span> {data.node.name}
-			</div>
-			<div>
-				<span className={styles.attribute_name}>content:</span> {data.node.content}
-			</div>
-			<div>
-				<span className={styles.attribute_name}>result:</span> {data.node.result}
-			</div>
-		</div>,
-		styles.expression_block,
-	);
+	return UiBlockWrapper(data.node.name, data.node.content, data.node.result);
 }
