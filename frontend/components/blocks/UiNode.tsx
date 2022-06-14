@@ -21,7 +21,7 @@ export function UiBlockWrapper(
 			<Handle type="source" position={Position.Right} id="a" />
 			<div className={styles.name}>{name}</div>
 			<div className={styles.contentWrapper}>{content}</div>
-			<div className={result !== null || undefined ? styles.result : ''}>{result}</div>
+			<div className={result !== null ? styles.result : ''}>{result}</div>
 		</div>
 	);
 }
