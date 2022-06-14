@@ -15,18 +15,13 @@ export function UiBlockWrapper(
 	content: JSX.Element | string,
 	result: string | null = null,
 ): JSX.Element {
-	function insertResult(): JSX.Element {
-		if (!result) return <></>;
-		return <div className={styles.result}>{result}</div>;
-	}
-
 	return (
 		<div className={styles.block}>
 			<Handle type="target" position={Position.Left} />
 			<Handle type="source" position={Position.Right} id="a" />
 			<div className={styles.name}>{name}</div>
 			<div className={styles.contentWrapper}>{content}</div>
-			{insertResult()}
+			<div className={result ? styles.result : ''}>{result}</div>
 		</div>
 	);
 }
