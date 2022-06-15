@@ -73,7 +73,10 @@ export default function PropsPanel({ wiu }: Props): JSX.Element {
 		if (wiu.selectedNode instanceof ContentNode) {
 			setNewContentValue(wiu.selectedNode.content);
 		}
-	}, [wiu.selectedNode]);
+	}, [
+		wiu.selectedNode instanceof ContentNode ? wiu.selectedNode.content : null,
+		wiu.selectedNode,
+	]);
 
 	return (
 		<>

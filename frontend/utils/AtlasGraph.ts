@@ -17,6 +17,7 @@ export default class AtlasGraph {
 		this.name = name;
 		return this;
 	}
+
 	public setNodes(nodes: AtlasNode[]): AtlasGraph {
 		this.nodes.splice(0, this.nodes.length);
 		this.nodes.push(...nodes);
@@ -219,5 +220,18 @@ export class MatrixFilterNode extends ExpressionNode {
 
 	public static build(): MatrixFilterNode {
 		return new MatrixFilterNode(AtlasNode.build(), '', '');
+	}
+}
+
+export class SelectNode extends ExpressionNode {
+	static uitype: string = 'AtlasGraph.SelectNode';
+
+	constructor(node: AtlasNode, content: string, result: string) {
+		super(node, content, result);
+		this.uitype = SelectNode.uitype;
+	}
+
+	public static build(): SelectNode {
+		return new SelectNode(AtlasNode.build(), '', '');
 	}
 }

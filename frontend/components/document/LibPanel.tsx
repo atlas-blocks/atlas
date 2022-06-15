@@ -7,6 +7,7 @@ import {
 	TextNode,
 	FileNode,
 	MatrixFilterNode,
+	SelectNode,
 } from '../../utils/AtlasGraph';
 
 type Props = {
@@ -25,6 +26,7 @@ export default function LibPanel({ wiu }: Props): JSX.Element {
 		TextNode: () => TextNode.build().setContent('1, 2, 3').setDefaultName(wiu.graph),
 		FileNode: () => FileNode.build().setDefaultName(wiu.graph),
 		MatrixFilterNode: () => MatrixFilterNode.build().setDefaultName(wiu.graph),
+		SelectNode: () => SelectNode.build().setDefaultName(wiu.graph),
 	};
 
 	const libElements = {
