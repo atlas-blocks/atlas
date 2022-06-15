@@ -67,54 +67,29 @@ export function ExpressionBlock({ data }: { data: { node: ExpressionNode } }) {
 }
 
 export function SelectBlock({ data }: { data: { node: SelectNode } }) {
-	const [selected, setSelected] = useState<number>(1);
-	const [sourceSelect, setSourceSelect] = useState<string>('');
-
 	const handleSelect = (event: React.ChangeEvent<HTMLSelectElement>) => {
-		setSelected(parseInt(event.target.value));
+		data.node.selectedOption = parseInt(event.target.value);
 	};
 
-	function getOption(item: any, index: number): JSX.Element {
-		return <option value={index}>[{item.toString()}]</option>;
+	function getOption(option: string, index: number): JSX.Element {
+		return (
+			<option key={index} value={index}>
+				{option}
+			</option>
+		);
 	}
-
-	data.node.content = `[JSON3.write(${sourceSelect}[${
-		selected + 1
-	}]), JSON3.write(${sourceSelect})]`;
-
-	let parsedResult: [] | null = null;
-	let parsedOptions: [] = [];
-	if (data.node.result) {
-		parsedResult = JSON.parse(data.node.result)[0];
-		parsedOptions = JSON.parse(JSON.parse(data.node.result)[1]);
-	}
-
-	console.log(parsedOptions);
 
 	return UiBlockWrapper(
 		data.node.name,
 		<>
 			<div>
-				<label>Source: </label>
-				<input
-					className={styles.inputSelectSource}
-					type={'text'}
-					value={sourceSelect}
-					onChange={(event) => setSourceSelect(event.target.value)}
-				/>
-			</div>
-			<div>
-				<label>Select: </label>
-				<select className={styles.selectBlock} value={selected} onChange={handleSelect}>
-					{parsedOptions.map((item, index) => getOption(item, index))}
+				<select className={styles.selectBlock} onChange={handleSelect}>
+					{data.node.options.map((option: string, index: number) =>
+						getOption(option, index),
+					)}
+					<option value={1}>dummy option</option>
 				</select>
 			</div>
-			<div>
-				<label className={styles.thickLine}>
-					Use index {data.node.name}[1] to access selected
-				</label>
-			</div>
 		</>,
-		parsedResult ? parsedResult.toString() : null,
 	);
 }

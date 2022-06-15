@@ -1,3 +1,6 @@
+import React, { SetStateAction, useState } from 'react';
+import { Node as UINode } from 'react-flow-renderer/dist/esm/types/nodes';
+
 export default class AtlasGraph {
 	public name: string;
 	public readonly nodes: AtlasNode[];
@@ -225,13 +228,26 @@ export class MatrixFilterNode extends ExpressionNode {
 
 export class SelectNode extends ExpressionNode {
 	static uitype: string = 'AtlasGraph.SelectNode';
+	public options: string[];
+	public selectedOption: number;
+	public setSelectedOption: React.Dispatch<React.SetStateAction<number>>;
 
-	constructor(node: AtlasNode, content: string, result: string) {
+	constructor(
+		node: AtlasNode,
+		content: string,
+		result: string,
+		options: string[],
+		selectedOption: number,
+		setSelectedOption: React.Dispatch<React.SetStateAction<number>>,
+	) {
 		super(node, content, result);
 		this.uitype = SelectNode.uitype;
+		this.options = options;
+		this.selectedOption = selectedOption;
+		this.setSelectedOption = setSelectedOption;
 	}
 
 	public static build(): SelectNode {
-		return new SelectNode(AtlasNode.build(), '', '');
+		return new SelectNode(AtlasNode.build(), '', '', [''], 0, useState);
 	}
 }

@@ -1,10 +1,12 @@
 import styles from '../../styles/PropsPanel.module.css';
 import React, { ChangeEvent, useEffect, useState } from 'react';
 import {
+	AtlasNode,
 	ContentNode,
 	ExpressionNode,
 	FileNode,
 	MatrixFilterNode,
+	SelectNode,
 	TextNode,
 } from '../../utils/AtlasGraph';
 import WebInterfaceUtils from '../../utils/WebInterfaceUtils';
@@ -17,6 +19,7 @@ type Props = {
 export default function PropsPanel({ wiu }: Props): JSX.Element {
 	const [newContentValue, setNewContentValue] = useState<string>('');
 	const [newNameValue, setNewNameValue] = useState<string>('');
+	const [sourceSelect, setSourceSelect] = useState<string>('');
 
 	const updContVal = (evt: ChangeEvent<HTMLTextAreaElement>) => {
 		setNewContentValue(evt.target.value);
@@ -38,10 +41,37 @@ export default function PropsPanel({ wiu }: Props): JSX.Element {
 	function chooseProperties(): JSX.Element {
 		if (wiu.selectedNode instanceof MatrixFilterNode) {
 			return <MatrixFilterBuilder setNewContentValue={setNewContentValue} />;
+		} else if (wiu.selectedNode instanceof SelectNode) {
+			return (
+				<div>
+					<label>Source: </label>
+					<input
+						className={styles.inputSourceSelect}
+						type={'text'}
+						value={sourceSelect}
+						onChange={(event) => setSourceSelect(event.target.value)}
+					/>
+					<button className={styles.btnUpload} onClick={uploadSelectOptions}>
+						upload options
+					</button>
+				</div>
+			);
 		} else {
 			return <></>;
 		}
 	}
+
+	const uploadSelectOptions = () => {
+		const sourceNodeForSelect: AtlasNode = wiu.graph.nodes.filter(
+			(item) => item.name === sourceSelect,
+		)[0];
+		if (
+			wiu.selectedNode instanceof SelectNode &&
+			sourceNodeForSelect instanceof ExpressionNode
+		) {
+			wiu.selectedNode.options[0] = sourceNodeForSelect.result;
+		}
+	};
 
 	const typeDescriptions = {
 		[MatrixFilterNode.uitype]:
@@ -77,6 +107,14 @@ export default function PropsPanel({ wiu }: Props): JSX.Element {
 		wiu.selectedNode instanceof ContentNode ? wiu.selectedNode.content : null,
 		wiu.selectedNode,
 	]);
+
+	useEffect(() => {
+		if (wiu.selectedNode instanceof SelectNode) {
+			setNewContentValue(
+				sourceSelect + '[' + (wiu.selectedNode.selectedOption + 1).toString() + ']',
+			);
+		}
+	}, [wiu.selectedNode instanceof SelectNode ? wiu.selectedNode.selectedOption : null]);
 
 	return (
 		<>
