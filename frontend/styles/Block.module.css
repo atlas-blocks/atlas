@@ -52,21 +52,17 @@
 }
 
 .selectBlock {
-	margin-top: 15px;
+	margin-top: 10px;
+	margin-bottom: 10px;
 	border: 1px solid #dddddd;
 	padding: 5px;
 	border-radius: 3px;
 }
 
-.inputSelectSrc {
-	border-radius: 3px;
-	border: 1px solid gray;
-	padding: 5px;
-	padding-left: 10px;
+.inputSelectSource {
+	border-style: none;
+	border-bottom: 1px solid black;
+	margin: 5px;
+	outline: none;
 	width: 50px;
-	margin-right: 10px;
-}
-
-.inputSelectSrc:focus {
-	outline-color: #30a5be;
 }

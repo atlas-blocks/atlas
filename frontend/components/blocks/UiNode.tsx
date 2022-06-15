@@ -68,7 +68,7 @@ export function ExpressionBlock({ data }: { data: { node: ExpressionNode } }) {
 
 export function SelectBlock({ data }: { data: { node: SelectNode } }) {
 	const [selected, setSelected] = useState<number>(1);
-	const [srcSelect, setSrcSelect] = useState<string>('');
+	const [sourceSelect, setSourceSelect] = useState<string>('');
 
 	const handleSelect = (event: React.ChangeEvent<HTMLSelectElement>) => {
 		setSelected(parseInt(event.target.value));
@@ -78,10 +78,18 @@ export function SelectBlock({ data }: { data: { node: SelectNode } }) {
 		return <option value={index}>[{item.toString()}]</option>;
 	}
 
-	data.node.content = `[JSON3.write(${srcSelect}[${selected + 1}]), JSON3.write(${srcSelect})]`;
+	data.node.content = `[JSON3.write(${sourceSelect}[${
+		selected + 1
+	}]), JSON3.write(${sourceSelect})]`;
 
-	let parsedResult: [] = data.node.result ? JSON.parse(data.node.result)[0] : [];
-	let parsedOptions: [] = data.node.result ? JSON.parse(JSON.parse(data.node.result)[1]) : [];
+	let parsedResult: [] | null = null;
+	let parsedOptions: [] = [];
+	if (data.node.result) {
+		parsedResult = JSON.parse(data.node.result)[0];
+		parsedOptions = JSON.parse(JSON.parse(data.node.result)[1]);
+	}
+
+	console.log(parsedOptions);
 
 	return UiBlockWrapper(
 		data.node.name,
@@ -89,19 +97,24 @@ export function SelectBlock({ data }: { data: { node: SelectNode } }) {
 			<div>
 				<label>Source: </label>
 				<input
-					className={styles.inputSelectSrc}
+					className={styles.inputSelectSource}
 					type={'text'}
-					value={srcSelect}
-					onChange={(event) => setSrcSelect(event.target.value)}
+					value={sourceSelect}
+					onChange={(event) => setSourceSelect(event.target.value)}
 				/>
+			</div>
+			<div>
+				<label>Select: </label>
 				<select className={styles.selectBlock} value={selected} onChange={handleSelect}>
 					{parsedOptions.map((item, index) => getOption(item, index))}
 				</select>
 			</div>
-			<label className={styles.thickLine}>
-				Use index {data.node.name}[1] to access selected
-			</label>
+			<div>
+				<label className={styles.thickLine}>
+					Use index {data.node.name}[1] to access selected
+				</label>
+			</div>
 		</>,
-		parsedResult.toString(),
+		parsedResult ? parsedResult.toString() : null,
 	);
 }
