@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import { Handle, Position } from 'react-flow-renderer';
 import styles from '../../styles/Block.module.css';
 import { ExpressionNode, TextNode, FileNode, SelectNode } from '../../utils/AtlasGraph';
@@ -67,34 +67,41 @@ export function ExpressionBlock({ data }: { data: { node: ExpressionNode } }) {
 }
 
 export function SelectBlock({ data }: { data: { node: SelectNode } }) {
-	const srcSelect = useRef<any>();
 	const [selected, setSelected] = useState<number>(1);
+	const [srcSelect, setSrcSelect] = useState<string>('');
 
 	const handleSelect = (event: React.ChangeEvent<HTMLSelectElement>) => {
 		setSelected(parseInt(event.target.value));
 	};
 
 	function getOption(item: any, index: number): JSX.Element {
-		if (index === 0 || index === data.node.result.split('%%%').length - 1) return <></>;
-		return <option value={index}>{item}</option>;
+		return <option value={index}>[{item.toString()}]</option>;
 	}
 
-	data.node.content = `[${srcSelect?.current?.value}[${selected}], "%%%"*join(repr.(${srcSelect?.current?.value}), "%%%")*"%%%"]`;
+	data.node.content = `[JSON3.write(${srcSelect}[${selected + 1}]), JSON3.write(${srcSelect})]`;
+
+	let parsedResult: [] = data.node.result ? JSON.parse(data.node.result)[0] : [];
+	let parsedOptions: [] = data.node.result ? JSON.parse(JSON.parse(data.node.result)[1]) : [];
 
 	return UiBlockWrapper(
 		data.node.name,
 		<>
 			<div>
 				<label>Source: </label>
-				<input className={styles.inputSelectSrc} type={'text'} ref={srcSelect} />
+				<input
+					className={styles.inputSelectSrc}
+					type={'text'}
+					value={srcSelect}
+					onChange={(event) => setSrcSelect(event.target.value)}
+				/>
 				<select className={styles.selectBlock} value={selected} onChange={handleSelect}>
-					{data.node.result.split('%%%').map((item, index) => getOption(item, index))}
+					{parsedOptions.map((item, index) => getOption(item, index))}
 				</select>
 			</div>
 			<label className={styles.thickLine}>
 				Use index {data.node.name}[1] to access selected
 			</label>
 		</>,
-		data.node.result.split('%%%')[selected],
+		parsedResult.toString(),
 	);
 }
