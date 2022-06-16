@@ -38,7 +38,6 @@ export function TextBlock({ data }: { data: { node: TextNode } }) {
 
 export function FileBlock({ data }: { data: { node: FileNode } }) {
 	const [contentToShow, setContentToShow] = useState<string | null>(null);
-	const [importedFileName, setImportedFileName] = useState<string>(data.node.filename);
 
 	const uploadFile = (event: React.ChangeEvent<HTMLInputElement>) => {
 		if (event.target.files === null) return;
@@ -46,7 +45,7 @@ export function FileBlock({ data }: { data: { node: FileNode } }) {
 			event.target.files[0],
 			(content: string) => (data.node.content = content),
 		);
-		setImportedFileName(event.target.files[0].name);
+		data.node.setFilename(event.target.files[0].name);
 	};
 
 	const showFileContent = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -57,7 +56,7 @@ export function FileBlock({ data }: { data: { node: FileNode } }) {
 		data.node.name,
 		<>
 			<input className={styles.inputFile} type="file" onChange={uploadFile} />
-			<div className={styles.importedFiletext}>Imported file: {importedFileName}</div>
+			<div className={styles.importedFiletext}>Imported file: {data.node.filename}</div>
 			<label>
 				<input className={styles.inputFile} type="checkbox" onChange={showFileContent} />{' '}
 				Show content

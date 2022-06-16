@@ -68,7 +68,7 @@ export default class JsonUtils {
 	}
 
 	private static getNodeToJsonString(node: AtlasNode, space?: number): string {
-		return JSON.stringify({ ...node, uidata: node.getUiData() }, null, space);
+		return JSON.stringify({ ...node, uidata: JSON.stringify(node.getUiData()) }, null, space);
 	}
 
 	private static jsonStringifyReplacer(key: string, value: any) {

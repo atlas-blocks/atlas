@@ -87,25 +87,25 @@ export class AtlasNode {
 		this.visibility = true;
 	}
 
-	public static build() {
+	public static build(): AtlasNode {
 		return new AtlasNode();
 	}
 
-	public setDefaultName(graph: AtlasGraph) {
+	public setDefaultName(graph: AtlasGraph): AtlasNode {
 		this.name = graph.getDefaultName();
 		return this;
 	}
 
-	public getId() {
+	public getId(): string {
 		return this.name;
 	}
 
-	public getUiData() {
-		return JSON.stringify({
+	public getUiData(): object {
+		return {
 			uitype: this.uitype,
 			position: this.position,
 			visibility: this.visibility,
-		});
+		};
 	}
 
 	public setName(name: string): AtlasNode {
@@ -152,24 +152,32 @@ export class TextNode extends ContentNode {
 		this.uitype = TextNode.uitype;
 	}
 
-	public static build() {
+	public static build(): TextNode {
 		return new TextNode();
 	}
 }
 
-export class FileNode extends ContentNode {
+export class FileNode extends TextNode {
 	static uitype = 'AtlasGraph.FileNode';
 	public filename: string;
 
 	constructor() {
 		super();
-		this.type = FileNode.uitype;
 		this.uitype = FileNode.uitype;
 		this.filename = '';
 	}
 
-	public static build() {
+	public static build(): FileNode {
 		return new FileNode();
+	}
+
+	public getUiData(): object {
+		return { ...super.getUiData(), filename: this.filename };
+	}
+
+	public setFilename(filename: string): FileNode {
+		this.filename = filename;
+		return this;
 	}
 }
 
@@ -190,7 +198,7 @@ export class ExpressionNode extends ContentNode {
 		this.helper_results = [];
 	}
 
-	public static build() {
+	public static build(): ExpressionNode {
 		return new ExpressionNode();
 	}
 
