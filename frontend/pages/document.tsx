@@ -17,6 +17,7 @@ atlasGraph.name = 'atlas_schema';
 export default function Home() {
 	const [druggedNode, setDruggedNode] = useState<AtlasNode | null>(null);
 	const [selectedNode, setSelectedNode] = useState<AtlasNode | null>(null);
+	const [selectedOption, setSelectedOption] = useState<number | null>(null);
 	const [uiNodes, setUiNodes] = useState(WebInterfaceUtils.getUiNodes(atlasGraph));
 	const [uiEdges, setUiEdges] = useState(WebInterfaceUtils.getUiEdges(atlasGraph));
 	const wiu = new WebInterfaceUtils(
@@ -29,6 +30,8 @@ export default function Home() {
 		setSelectedNode,
 		druggedNode,
 		setDruggedNode,
+		selectedOption,
+		setSelectedOption,
 	);
 
 	return (

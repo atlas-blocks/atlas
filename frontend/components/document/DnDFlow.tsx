@@ -19,6 +19,7 @@ import { uiNodeTypes } from '../blocks/UiNode';
 import { uiEdgeTypes } from '../blocks/UiEdge';
 import WebInterfaceUtils from '../../utils/WebInterfaceUtils';
 import StorageUtils from '../../utils/StorageUtils';
+import { SelectNode } from '../../utils/AtlasGraph';
 
 type Props = {
 	wiu: WebInterfaceUtils;
@@ -40,9 +41,41 @@ export default function DnDFlow({ wiu }: Props): JSX.Element {
 		[wiu.setUiEdges],
 	);
 
-	function handleUiNodeSelection(event: React.MouseEvent, element: UINode) {}
+	const [sel, setSel] = useState<any>();
+	const [trigger, setTrigger] = useState<boolean>(false);
+
+	function handleUiNodeSelection(event: React.MouseEvent, node: UINode) {
+		if (node.data.node instanceof SelectNode) {
+			// setSel(node.data.node.selectedOption);
+			wiu.setSelectedOption(node.data.node.selectedOption);
+			wiu.setSelectedNode(node.data.node);
+
+			// if (node.data.node.selectedOption) wiu.setSelectedOption(node.data.node.selectedOption);
+			// node.data.node.content = 'AAA';
+			// wiu.setSelectedNode(node.data.node);
+			console.log();
+		}
+		{
+			// wiu.setSelectedNode(node.data.node)
+			// setSel(node.data.node);
+			// setTrigger(!trigger);
+		}
+
+		// console.log(node.data.node.selectedOption);
+	}
+
+	// useEffect(() => {
+	// 	wiu.setSelectedOption(5);
+	// }, [sel]);
+
+	// useEffect(() => {
+	// 	wiu.setSelectedNode(sel)
+	// }, [trigger])
+
+	// console.log(sel);
 
 	function handleUiNodeDoubleClick(event: React.MouseEvent, node: UINode) {
+		// console.log(node);
 		wiu.setSelectedNode(node.data.node);
 	}
 

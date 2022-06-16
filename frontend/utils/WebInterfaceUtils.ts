@@ -14,6 +14,8 @@ export default class WebInterfaceUtils {
 	setSelectedNode: React.Dispatch<React.SetStateAction<AtlasNode | null>>;
 	druggedNode: AtlasNode | null;
 	setDruggedNode: React.Dispatch<React.SetStateAction<AtlasNode | null>>;
+	selectedOption: number | null;
+	setSelectedOption: React.Dispatch<React.SetStateAction<number | null>>;
 
 	constructor(
 		graph: AtlasGraph,
@@ -25,6 +27,8 @@ export default class WebInterfaceUtils {
 		setSelectedNode: React.Dispatch<React.SetStateAction<AtlasNode | null>>,
 		druggedNode: AtlasNode | null,
 		setDruggedNode: React.Dispatch<React.SetStateAction<AtlasNode | null>>,
+		selectedOption: number | null,
+		setSelectedOption: React.Dispatch<React.SetStateAction<number | null>>,
 	) {
 		this.graph = graph;
 		this.uiNodes = uiNodes;
@@ -35,6 +39,8 @@ export default class WebInterfaceUtils {
 		this.setSelectedNode = setSelectedNode;
 		this.druggedNode = druggedNode;
 		this.setDruggedNode = setDruggedNode;
+		this.selectedOption = selectedOption;
+		this.setSelectedOption = setSelectedOption;
 	}
 
 	public static toUiNode(node: AtlasNode): UINode {
@@ -57,6 +63,7 @@ export default class WebInterfaceUtils {
 	}
 
 	public static getUiNodes(graph: AtlasGraph): UINode[] {
+		// console.log(graph);
 		let ans: UINode[] = [];
 		for (const node of graph.nodes) {
 			ans.push(this.toUiNode(node));
@@ -86,9 +93,16 @@ export default class WebInterfaceUtils {
 	}
 
 	public async updateGraph() {
+		// if (this.selectedNode instanceof ContentNode) this.selectedNode.content = '1+2';
+		//
+		// console.log(this.graph);
+		// console.log(this.selectedNode);
 		const updatedGraph = await ServerUtils.getUpdatedGraph(this.graph);
+		// console.log(updatedGraph);
 		if (updatedGraph !== null) this.replaceGraphWithNew(updatedGraph);
-		this.refreshUiElements();
+		// console.log(this.selectedNode);
+		// this.refreshUiElements();
+		// console.log(updatedGraph);
 	}
 
 	public updateNodes(changes: UINodeChange[]) {
@@ -122,7 +136,7 @@ export default class WebInterfaceUtils {
 
 	public replaceGraphWithNew(newGraph: AtlasGraph): void {
 		this.graph.replaceWithNew(newGraph);
-		this.setSelectedNode(null);
+		// this.setSelectedNode(null);
 		this.refreshUiElements();
 	}
 }

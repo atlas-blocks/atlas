@@ -20,6 +20,7 @@ export default function PropsPanel({ wiu }: Props): JSX.Element {
 	const [newContentValue, setNewContentValue] = useState<string>('');
 	const [newNameValue, setNewNameValue] = useState<string>('');
 	const [sourceSelect, setSourceSelect] = useState<string>('');
+	const [selectedContent, setSelectedContent] = useState<string>('');
 
 	const updContVal = (evt: ChangeEvent<HTMLTextAreaElement>) => {
 		setNewContentValue(evt.target.value);
@@ -38,7 +39,11 @@ export default function PropsPanel({ wiu }: Props): JSX.Element {
 		}
 	};
 
+	// console.log(wiu.selectedNode);
+
 	function chooseProperties(): JSX.Element {
+		// console.log(wiu.selectedNode)
+
 		if (wiu.selectedNode instanceof MatrixFilterNode) {
 			return <MatrixFilterBuilder setNewContentValue={setNewContentValue} />;
 		} else if (wiu.selectedNode instanceof SelectNode) {
@@ -61,7 +66,9 @@ export default function PropsPanel({ wiu }: Props): JSX.Element {
 		}
 	}
 
-	const uploadSelectOptions = () => {
+	const uploadSelectOptions = async () => {
+		let selNodeName = wiu.selectedNode?.name;
+
 		const sourceNodeForSelect: AtlasNode = wiu.graph.nodes.filter(
 			(item) => item.name === sourceSelect,
 		)[0];
@@ -69,9 +76,40 @@ export default function PropsPanel({ wiu }: Props): JSX.Element {
 			wiu.selectedNode instanceof SelectNode &&
 			sourceNodeForSelect instanceof ExpressionNode
 		) {
-			wiu.selectedNode.options[0] = sourceNodeForSelect.result;
+			// setNewContentValue(`JSON3.write(repr.(${sourceSelect}))`);
+
+			wiu.selectedNode.content = `JSON3.write(repr.(${sourceSelect}))`;
+
+			// wiu.selectedNode.content = '1+2';
+			// console.log('before: ', wiu.selectedNode);
+			await wiu.updateGraph();
+
+			wiu.graph.nodes.map((node) => {
+				if (node instanceof SelectNode && node.name === wiu.selectedNode?.name) {
+					node.options = JSON.parse(node.result);
+					node.content = `${sourceSelect}[1]`;
+					console.log(node);
+				}
+			});
+
+			// console.log('after: ', wiu.selectedNode);
+			// console.log(wiu.selectedNode.content, 'res: ' + wiu.selectedNode.result);
+
+			// wiu.selectedNode.result
+			// 	? (wiu.selectedNode.options = JSON.parse(wiu.selectedNode.result))
+			// 	: '';
+
+			// wiu.setSelectedNode(null);
 		}
 	};
+
+	// if (
+	// 	wiu.selectedNode instanceof SelectNode
+	// 	// sourceNodeForSelect instanceof ExpressionNode
+	// ) {
+	// 	wiu.setSelectedNode(wiu.selectedNode);
+	// 	console.log(wiu.selectedNode.result, wiu.selectedNode.options);
+	// }
 
 	const typeDescriptions = {
 		[MatrixFilterNode.uitype]:
@@ -96,7 +134,11 @@ export default function PropsPanel({ wiu }: Props): JSX.Element {
 		return typeDescriptions[node.uitype];
 	};
 
+	const selNodeSelOption =
+		wiu.selectedNode instanceof SelectNode ? wiu.selectedNode.selectedOption : null;
+
 	useEffect(() => {
+		console.log('trig PP');
 		if (wiu.selectedNode === null) return;
 
 		setNewNameValue(wiu.selectedNode.name);
@@ -104,17 +146,36 @@ export default function PropsPanel({ wiu }: Props): JSX.Element {
 			setNewContentValue(wiu.selectedNode.content);
 		}
 	}, [
-		wiu.selectedNode instanceof ContentNode ? wiu.selectedNode.content : null,
+		// wiu.selectedNode instanceof SelectNode ? wiu.selectedNode.selectedOption : null,
 		wiu.selectedNode,
 	]);
 
+	// useEffect(() => {
+	// 	if (wiu.selectedNode instanceof SelectNode) {
+	// 		setNewContentValue(
+	// 			sourceSelect
+	// 				? sourceSelect + '[' + (wiu.selectedNode.selectedOption + 1).toString() + ']'
+	// 				: '',
+	// 		);
+	// 	}
+	// }, [wiu.selectedNode instanceof SelectNode ? wiu.selectedNode.selectedOption : null]);
+
+	// console.log('newcont', newContentValue);
+
 	useEffect(() => {
-		if (wiu.selectedNode instanceof SelectNode) {
-			setNewContentValue(
-				sourceSelect + '[' + (wiu.selectedNode.selectedOption + 1).toString() + ']',
-			);
-		}
-	}, [wiu.selectedNode instanceof SelectNode ? wiu.selectedNode.selectedOption : null]);
+		wiu.graph.nodes.map((node) => {
+			if (node instanceof SelectNode && node.name === wiu.selectedNode?.name) {
+				setNewContentValue(
+					sourceSelect
+						? sourceSelect + '[' + (node.selectedOption + 1).toString() + ']'
+						: '',
+				);
+				// console.log(node.selectedOption);
+			}
+		});
+	});
+
+	// console.log('render')
 
 	return (
 		<>

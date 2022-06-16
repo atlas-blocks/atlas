@@ -144,10 +144,6 @@ export class ContentNode extends AtlasNode {
 		this.content = content;
 	}
 
-	public static build() {
-		return new TextNode(AtlasNode.build(), '');
-	}
-
 	public setContent(content: string): ContentNode {
 		this.content = content;
 		return this;
@@ -162,6 +158,10 @@ export class TextNode extends ContentNode {
 		super(node, content);
 		this.type = TextNode.type;
 		this.uitype = TextNode.uitype;
+	}
+
+	public static build() {
+		return new TextNode(AtlasNode.build(), '');
 	}
 }
 
@@ -202,6 +202,8 @@ export class ExpressionNode extends ContentNode {
 		switch (uitype) {
 			case MatrixFilterNode.uitype:
 				return MatrixFilterNode.build();
+			case SelectNode.uitype:
+				return SelectNode.build();
 			default:
 				return ExpressionNode.build();
 		}
@@ -228,17 +230,17 @@ export class MatrixFilterNode extends ExpressionNode {
 
 export class SelectNode extends ExpressionNode {
 	static uitype: string = 'AtlasGraph.SelectNode';
-	public options: string[];
+	public options: any;
 	public selectedOption: number;
-	public setSelectedOption: React.Dispatch<React.SetStateAction<number>>;
+	public setSelectedOption?: React.Dispatch<React.SetStateAction<number>>;
 
 	constructor(
 		node: AtlasNode,
 		content: string,
 		result: string,
-		options: string[],
+		options: any,
 		selectedOption: number,
-		setSelectedOption: React.Dispatch<React.SetStateAction<number>>,
+		setSelectedOption?: React.Dispatch<React.SetStateAction<number>>,
 	) {
 		super(node, content, result);
 		this.uitype = SelectNode.uitype;
@@ -248,6 +250,6 @@ export class SelectNode extends ExpressionNode {
 	}
 
 	public static build(): SelectNode {
-		return new SelectNode(AtlasNode.build(), '', '', [''], 0, useState);
+		return new SelectNode(AtlasNode.build(), '', '', null, 0);
 	}
 }
