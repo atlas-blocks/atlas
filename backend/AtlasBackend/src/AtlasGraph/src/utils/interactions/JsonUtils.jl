@@ -42,11 +42,16 @@ function node(json_dict::JSON3.Object)::AbstractNode
     if json_dict["type"] == string(Node)
         return node
     elseif json_dict["type"] == string(ExpressionNode)
-        return ExpressionNode(node, json_dict["content"], nothing)
+        return ExpressionNode(
+            node,
+            json_dict["content"],
+            nothing,
+            nothing,
+            json_dict["helper_contents"],
+            [],
+        )
     elseif json_dict["type"] == string(TextNode)
         return TextNode(node, json_dict["content"])
-    elseif json_dict["type"] == string(FileNode)
-        return FileNode(node, json_dict["content"], json_dict["filename"])
     end
 end
 

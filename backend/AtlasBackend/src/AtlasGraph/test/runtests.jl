@@ -1,4 +1,5 @@
 include("./TestUtils.jl")
+include("./utils/kernels/execution/ExecuterTest.jl")
 include("./utils/parser/TokensTest.jl")
 include("./AtlasGraphTest.jl")
 include("./utils/interactions/JsonUtilsTest.jl")

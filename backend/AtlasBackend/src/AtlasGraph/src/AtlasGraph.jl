@@ -4,7 +4,6 @@ export AbstractEdge, ProviderEdge
 export AbstractNode, Node
 export AbstractContentNode
 export AbstractTextNode, TextNode
-export AbstractFileNode, FileNode
 export AbstractFunctionNode, FunctionNode
 export AbstractExpressionNode, ExpressionNode
 
@@ -26,18 +25,14 @@ mutable struct TextNode <: AbstractTextNode
     content::String
 end
 
-abstract type AbstractFileNode <: AbstractContentNode end
-mutable struct FileNode <: AbstractFileNode
-    node::Node
-    content::String
-    filename::String
-end
-
 abstract type AbstractExpressionNode <: AbstractContentNode end
 mutable struct ExpressionNode <: AbstractExpressionNode
     node::Node
     content::String
     result::Any
+    error::Any
+    helper_contents::Vector{String}
+    helper_results::Vector{Any}
 end
 
 abstract type AbstractFunctionNode <: AbstractContentNode end
@@ -92,7 +87,7 @@ function filternodes(
 end
 
 function updategraph!(graph::AbstractGraph)::AbstractGraph
-    data_nodes = filternodes(graph.nodes, Union{FileNode,TextNode})
+    data_nodes = filternodes(graph.nodes, Union{TextNode})
 
     expressions = filternodes(graph.nodes, AbstractExpressionNode)
     ordered_nodes = FormulaUtils.topological_order(
