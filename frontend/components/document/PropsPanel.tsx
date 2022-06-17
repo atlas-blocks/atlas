@@ -37,10 +37,10 @@ export default function PropsPanel({ wiu }: Props): JSX.Element {
 				if (content) node.content = content;
 				if (updateOptions) {
 					try {
-						node.options = JSON.parse(node.result);
+						node.options = JSON.parse(JSON.parse(node.result));
 						node.selectedOption = 0;
 					} catch (e) {
-						window.alert(`Something went wrong while parsing result into JSON: ${e}`);
+						window.alert(`This JSON is not an array of options: ${e}`);
 					}
 				}
 			}

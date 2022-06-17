@@ -79,7 +79,7 @@ export function ExpressionBlock({ data }: { data: { node: ExpressionNode } }) {
 }
 
 export function SelectBlock({ data }: { data: { node: SelectNode } }) {
-	const [options, setOptions] = useState<any>(null);
+	const [options, setOptions] = useState<string[] | null>(null);
 	const [selectedOption, setSelectedOption] = useState<number>(data.node.selectedOption);
 
 	const handleSelect = (event: React.ChangeEvent<HTMLSelectElement>) => {

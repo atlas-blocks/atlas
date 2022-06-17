@@ -224,23 +224,17 @@ export class MatrixFilterNode extends ExpressionNode {
 
 export class SelectNode extends ExpressionNode {
 	static uitype: string = 'AtlasGraph.SelectNode';
-	public options: any;
+	public options: string[] | null;
 	public selectedOption: number;
 
-	constructor(
-		node: AtlasNode,
-		content: string,
-		result: string,
-		options: any,
-		selectedOption: number,
-	) {
-		super(node, content, result);
+	constructor() {
+		super();
 		this.uitype = SelectNode.uitype;
-		this.options = options;
-		this.selectedOption = selectedOption;
+		this.options = null;
+		this.selectedOption = 0;
 	}
 
 	public static build(): SelectNode {
-		return new SelectNode(AtlasNode.build(), '', '', null, 0);
+		return new SelectNode();
 	}
 }

@@ -5,6 +5,7 @@ import AtlasGraph, {
 	TextNode,
 	FileNode,
 	MatrixFilterNode,
+	SelectNode,
 } from './AtlasGraph';
 
 export default class JsonUtils {
@@ -38,6 +39,7 @@ export default class JsonUtils {
 	private static readonly typeMap = {
 		[ExpressionNode.uitype]: ExpressionNode.build,
 		[MatrixFilterNode.uitype]: MatrixFilterNode.build,
+		[SelectNode.uitype]: SelectNode.build,
 		[TextNode.uitype]: TextNode.build,
 		[FileNode.uitype]: FileNode.build,
 		[AtlasNode.uitype]: AtlasNode.build,

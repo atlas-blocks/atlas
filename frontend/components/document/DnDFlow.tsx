@@ -62,6 +62,7 @@ export default function DnDFlow({ wiu }: Props): JSX.Element {
 
 	const updateGraph = async () => await wiu.updateGraph();
 	useEffect(() => {
+		console.log('Graph Updated from DND');
 		updateGraph();
 	}, [selectedOptionState]);
 
