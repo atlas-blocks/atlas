@@ -15,7 +15,7 @@ function dictionary(node::AbstractNode)::Dict{AbstractString,Any}
         elseif field == :result
             push!(dic, string(field) => sprint(show, "text/plain", value))
         elseif field == :helper_results
-            push!(dic, string(field) => map(val -> sprint(show, "text/plain", val), value))
+            push!(dic, string(field) => map(string, value))
         elseif field == :error
             push!(dic, string(field) => sprint(showerror, value))
         else
