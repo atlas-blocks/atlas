@@ -23,7 +23,7 @@ export default function ElementsPanel({ wiu }: Props) {
 		return (
 			<div key={node.getId()} className={selectedStyle} onClick={selectElement}>
 				<span className={styles.elementName}>{node.name}</span>
-				<span>: {getNodeTypeName(node.type)}</span>
+				<span>: {getNodeTypeName(node.uitype)}</span>
 			</div>
 		);
 	}

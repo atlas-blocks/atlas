@@ -72,54 +72,41 @@ export class AtlasEdge {
 }
 
 export class AtlasNode {
-	static type: string = 'AtlasGraph.Node';
-	public type: string;
-	static uitype: string = AtlasNode.type;
+	static uitype: string = 'AtlasGraph.Node';
 
-	public uitype: string;
 	public name: string;
+	public type: string;
+	public uitype: string;
 	public position: [number, number];
 	public visibility: boolean;
 
-	constructor(
-		type: string,
-		name: string,
-		uitype: string,
-		position: [number, number],
-		visibility: boolean,
-	) {
-		this.type = type;
-		this.uitype = uitype;
-		this.name = name;
-		this.uitype = uitype;
-		this.position = position;
-		this.visibility = visibility;
+	constructor() {
+		this.name = '';
+		this.type = AtlasNode.uitype;
+		this.uitype = AtlasNode.uitype;
+		this.position = [0, 0];
+		this.visibility = true;
 	}
 
-	public static build() {
-		return new AtlasNode('', '', '', [0, 0], true);
+	public static build(): AtlasNode {
+		return new AtlasNode();
 	}
 
-	public setDefaultName(graph: AtlasGraph) {
+	public setDefaultName(graph: AtlasGraph): AtlasNode {
 		this.name = graph.getDefaultName();
 		return this;
 	}
 
-	public getId() {
+	public getId(): string {
 		return this.name;
 	}
 
-	public getUiData() {
-		return JSON.stringify({
+	public getUiData(): object {
+		return {
 			uitype: this.uitype,
 			position: this.position,
 			visibility: this.visibility,
-		});
-	}
-
-	public setType(type: string): AtlasNode {
-		this.type = type;
-		return this;
+		};
 	}
 
 	public setName(name: string): AtlasNode {
@@ -127,8 +114,18 @@ export class AtlasNode {
 		return this;
 	}
 
+	public setUitype(visibility: boolean): AtlasNode {
+		this.visibility = visibility;
+		return this;
+	}
+
 	public setPosition(x: number, y: number): AtlasNode {
 		this.position = [x, y];
+		return this;
+	}
+
+	public setVisibility(visibility: boolean): AtlasNode {
+		this.visibility = visibility;
 		return this;
 	}
 }
@@ -136,9 +133,9 @@ export class AtlasNode {
 export class ContentNode extends AtlasNode {
 	public content: string;
 
-	constructor(node: AtlasNode, content: string) {
-		super(node.type, node.name, node.uitype, node.position, node.visibility);
-		this.content = content;
+	constructor() {
+		super();
+		this.content = '';
 	}
 
 	public setContent(content: string): ContentNode {
@@ -148,62 +145,62 @@ export class ContentNode extends AtlasNode {
 }
 
 export class TextNode extends ContentNode {
-	static type = 'AtlasGraph.TextNode';
-	static uitype = TextNode.type;
+	static uitype = 'AtlasGraph.TextNode';
 
-	constructor(node: AtlasNode, content: string) {
-		super(node, content);
-		this.type = TextNode.type;
+	constructor() {
+		super();
+		this.type = TextNode.uitype;
 		this.uitype = TextNode.uitype;
 	}
 
-	public static build() {
-		return new TextNode(AtlasNode.build(), '');
+	public static build(): TextNode {
+		return new TextNode();
 	}
 }
 
-export class FileNode extends AtlasNode {
-	static type = 'AtlasGraph.FileNode';
-	static uitype = FileNode.type;
-	public content: string;
+export class FileNode extends TextNode {
+	static uitype = 'AtlasGraph.FileNode';
 	public filename: string;
 
-	constructor(node: AtlasNode, content: string, filename: string) {
-		super(FileNode.type, node.name, FileNode.uitype, node.position, node.visibility);
-		this.content = content;
-		this.filename = filename;
+	constructor() {
+		super();
+		this.uitype = FileNode.uitype;
+		this.filename = '';
 	}
 
-	public static build() {
-		return new FileNode(AtlasNode.build(), '', '');
+	public static build(): FileNode {
+		return new FileNode();
+	}
+
+	public getUiData(): object {
+		return { ...super.getUiData(), filename: this.filename };
+	}
+
+	public setFilename(filename: string): FileNode {
+		this.filename = filename;
+		return this;
 	}
 }
 
 export class ExpressionNode extends ContentNode {
-	static type = 'AtlasGraph.ExpressionNode';
-	static uitype = ExpressionNode.type;
+	static uitype = 'AtlasGraph.ExpressionNode';
 	public result: string;
+	public error: string;
+	public helper_contents: string[];
+	public helper_results: string[];
 
-	constructor(node: AtlasNode, content: string, result: string) {
-		super(node, content);
-		this.type = ExpressionNode.type;
+	constructor() {
+		super();
+		this.type = ExpressionNode.uitype;
 		this.uitype = ExpressionNode.uitype;
-		this.result = result;
+		this.result = 'nothing';
+		this.error = 'nothing';
+		this.helper_contents = [];
+		this.helper_results = [];
 	}
 
-	public static build() {
-		return new ExpressionNode(AtlasNode.build(), '', '');
-	}
-
-	public static buildWithUitype(uitype: string) {
-		switch (uitype) {
-			case MatrixFilterNode.uitype:
-				return MatrixFilterNode.build();
-			case SelectNode.uitype:
-				return SelectNode.build();
-			default:
-				return ExpressionNode.build();
-		}
+	public static build(): ExpressionNode {
+		return new ExpressionNode();
 	}
 
 	public setResult(result: string): ExpressionNode {
@@ -215,13 +212,13 @@ export class ExpressionNode extends ContentNode {
 export class MatrixFilterNode extends ExpressionNode {
 	static uitype: string = 'MatrixFilterNode';
 
-	constructor(node: AtlasNode, content: string, result: string) {
-		super(node, content, result);
+	constructor() {
+		super();
 		this.uitype = MatrixFilterNode.uitype;
 	}
 
 	public static build(): MatrixFilterNode {
-		return new MatrixFilterNode(AtlasNode.build(), '', '');
+		return new MatrixFilterNode();
 	}
 }
 

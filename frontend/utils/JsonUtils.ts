@@ -1,4 +1,11 @@
-import AtlasGraph, { AtlasEdge, AtlasNode, ExpressionNode, TextNode, FileNode } from './AtlasGraph';
+import AtlasGraph, {
+	AtlasEdge,
+	AtlasNode,
+	ExpressionNode,
+	TextNode,
+	FileNode,
+	MatrixFilterNode,
+} from './AtlasGraph';
 
 export default class JsonUtils {
 	public static jsonToGraph(graphJson: {
@@ -14,6 +21,7 @@ export default class JsonUtils {
 				.setEdges(this.extractEdges(graphJson.edges));
 		} catch (e) {
 			window.alert(`This JSON is not an AtlasGraph: ${e}`);
+			console.log(graphJson);
 		}
 		return new AtlasGraph();
 	}
@@ -28,10 +36,11 @@ export default class JsonUtils {
 	}
 
 	private static readonly typeMap = {
-		[ExpressionNode.type]: (uitype: string) => ExpressionNode.buildWithUitype(uitype),
-		[TextNode.type]: (uitype: string) => TextNode.build(),
-		[FileNode.type]: (uitype: string) => FileNode.build(),
-		[AtlasNode.type]: (uitype: string) => AtlasNode.build(),
+		[ExpressionNode.uitype]: ExpressionNode.build,
+		[MatrixFilterNode.uitype]: MatrixFilterNode.build,
+		[TextNode.uitype]: TextNode.build,
+		[FileNode.uitype]: FileNode.build,
+		[AtlasNode.uitype]: AtlasNode.build,
 	};
 
 	public static extractNodes(nodes: {}[]): AtlasNode[] {
@@ -44,11 +53,12 @@ export default class JsonUtils {
 
 	public static extractNode(node: any): AtlasNode {
 		Object.assign(node);
-		if (this.typeMap[node.type] == undefined) {
-			throw new Error('no such node type: ' + node.type);
-		}
 		Object.assign(node, JSON.parse(node.uidata));
-		return Object.assign(this.typeMap[node.type](node.uitype), node);
+		if (this.typeMap[node.uitype] == undefined) {
+			console.log(node);
+			throw new Error('no such node uitype: ' + node.uitype);
+		}
+		return Object.assign(this.typeMap[node.uitype](), node);
 	}
 
 	public static extractEdges(edges: object[]): AtlasEdge[] {
@@ -58,7 +68,7 @@ export default class JsonUtils {
 	}
 
 	private static getNodeToJsonString(node: AtlasNode, space?: number): string {
-		return JSON.stringify({ ...node, uidata: node.getUiData() }, null, space);
+		return JSON.stringify({ ...node, uidata: JSON.stringify(node.getUiData()) }, null, space);
 	}
 
 	private static jsonStringifyReplacer(key: string, value: any) {
