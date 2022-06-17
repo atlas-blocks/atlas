@@ -44,16 +44,62 @@ export default function DnDFlow({ wiu }: Props): JSX.Element {
 	const [sel, setSel] = useState<any>();
 	const [trigger, setTrigger] = useState<boolean>(false);
 
+	// useEffect(() => {
+	// 	wiu.graph.nodes.map((node) => {
+	// 		if (node instanceof SelectNode && node.name === wiu.selectedNode?.name) {
+	// 			node.options = JSON.parse(node.result);
+	// 			node.content = `${sourceSelect}[1]`;
+	// 		}
+	// 	});
+	//
+	// }, [wiu.selectedOption])
+
+	const updateGraph = async () => await wiu.updateGraph();
+	const [changeSelectContent, setChangeSelectContent] = useState<string>('')
+
 	function handleUiNodeSelection(event: React.MouseEvent, node: UINode) {
+		event.preventDefault();
+
+		console.log('1click');
 		if (node.data.node instanceof SelectNode) {
 			// setSel(node.data.node.selectedOption);
-			wiu.setSelectedOption(node.data.node.selectedOption);
-			wiu.setSelectedNode(node.data.node);
+			// wiu.setSelectedOption(node.data.node.selectedOption);
+			// node.data.node.content =
+			// 	'ex4' + '[' + (node.data.node.selectedOption + 1).toString() + ']';
+
+			const extractVectorNameAndIndex = /(.*)(\[[^\]]+\]$)/;
+
+			if (node.data.node.content.match(extractVectorNameAndIndex)) {
+				setChangeSelectContent(node.data.node.content.match(extractVectorNameAndIndex)[1] +
+					'[' +
+					(node.data.node.selectedOption + 1).toString() +
+					']')
+			}
+
+
+			node.data.node.content =
+				node.data.node.content.match(extractVectorNameAndIndex)[1] +
+				'[' +
+				(node.data.node.selectedOption + 1).toString() +
+				']';
+
+
+			// updateGraph();
+
+			// wiu.updateGraph();
+			// wiu.graph.nodes.map((graphNode) => {
+			// 	if (graphNode instanceof SelectNode && graphNode.name === node.data.node.name) {
+			// 		graphNode.content =
+			// 			'ex4' + '[' + (node.data.node.selectedOption + 1).toString() + ']';
+			// 	}
+			// });
+
+			// wiu.setSelectedNode(node.data.node);
 
 			// if (node.data.node.selectedOption) wiu.setSelectedOption(node.data.node.selectedOption);
 			// node.data.node.content = 'AAA';
 			// wiu.setSelectedNode(node.data.node);
-			console.log();
+			console.log(node.data.node.content);
 		}
 		{
 			// wiu.setSelectedNode(node.data.node)
@@ -63,6 +109,10 @@ export default function DnDFlow({ wiu }: Props): JSX.Element {
 
 		// console.log(node.data.node.selectedOption);
 	}
+
+	useEffect(() => {
+		updateGraph()
+	}, [changeSelectContent])
 
 	// useEffect(() => {
 	// 	wiu.setSelectedOption(5);

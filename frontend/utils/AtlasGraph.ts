@@ -232,7 +232,8 @@ export class SelectNode extends ExpressionNode {
 	static uitype: string = 'AtlasGraph.SelectNode';
 	public options: any;
 	public selectedOption: number;
-	public setSelectedOption?: React.Dispatch<React.SetStateAction<number>>;
+
+	// public setSelectedOption?: React.Dispatch<React.SetStateAction<number>>;
 
 	constructor(
 		node: AtlasNode,
@@ -240,13 +241,13 @@ export class SelectNode extends ExpressionNode {
 		result: string,
 		options: any,
 		selectedOption: number,
-		setSelectedOption?: React.Dispatch<React.SetStateAction<number>>,
+		// setSelectedOption?: React.Dispatch<React.SetStateAction<number>>,
 	) {
 		super(node, content, result);
 		this.uitype = SelectNode.uitype;
 		this.options = options;
 		this.selectedOption = selectedOption;
-		this.setSelectedOption = setSelectedOption;
+		// this.setSelectedOption = setSelectedOption;
 	}
 
 	public static build(): SelectNode {

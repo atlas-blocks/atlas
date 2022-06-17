@@ -77,8 +77,8 @@ export function ExpressionBlock({ data }: { data: { node: ExpressionNode } }) {
 
 export function SelectBlock({ data }: { data: { node: SelectNode } }) {
 	const [opt, setOpt] = useState<any>(null);
-	const [selectedOption, setSelectedOption] = useState<number>(0);
-	const divRef = useRef<HTMLDivElement | null>(null);
+	const [selectedOption, setSelectedOption] = useState<number>(data.node.selectedOption);
+	// const divRef = useRef<HTMLDivElement | null>(null);
 
 	const handleSelect = (event: React.ChangeEvent<HTMLSelectElement>) => {
 		setSelectedOption(parseInt(event.target.value));
@@ -96,27 +96,33 @@ export function SelectBlock({ data }: { data: { node: SelectNode } }) {
 	}
 
 	useEffect(() => {
-		divRef.current?.click();
-		divRef.current?.click();
+		data.node.selectedOption = selectedOption;
+		// divRef.current?.click();
+		// divRef.current?.click();
 	}, [selectedOption]);
 
 	// console.log('ui-render')
-
-	data.node.selectedOption = selectedOption;
 
 	// console.log(data.node.options, opt)
 
 	useEffect(() => {
 		if (data.node.options !== null) {
 			setOpt(data.node.options);
+			// data.node.selectedOption = 0;
+			setSelectedOption(0);
 		}
+		console.log('new opt');
 	}, [data.node.options]);
 
 	return UiBlockWrapper(
 		data.node.name,
-		<div ref={divRef}>
+		<div>
 			<div>
-				<select className={styles.selectBlock} onChange={handleSelect}>
+				<select
+					className={styles.selectBlock}
+					value={selectedOption}
+					onChange={handleSelect}
+				>
 					{opt
 						? opt.map((option: string, index: number) => getOption(option, index))
 						: ''}

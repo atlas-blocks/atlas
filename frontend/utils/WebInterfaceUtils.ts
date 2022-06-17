@@ -14,8 +14,8 @@ export default class WebInterfaceUtils {
 	setSelectedNode: React.Dispatch<React.SetStateAction<AtlasNode | null>>;
 	druggedNode: AtlasNode | null;
 	setDruggedNode: React.Dispatch<React.SetStateAction<AtlasNode | null>>;
-	selectedOption: number | null;
-	setSelectedOption: React.Dispatch<React.SetStateAction<number | null>>;
+	selectedOption: [string, number] | null;
+	setSelectedOption: React.Dispatch<React.SetStateAction<[string, number] | null>>;
 
 	constructor(
 		graph: AtlasGraph,
@@ -27,8 +27,8 @@ export default class WebInterfaceUtils {
 		setSelectedNode: React.Dispatch<React.SetStateAction<AtlasNode | null>>,
 		druggedNode: AtlasNode | null,
 		setDruggedNode: React.Dispatch<React.SetStateAction<AtlasNode | null>>,
-		selectedOption: number | null,
-		setSelectedOption: React.Dispatch<React.SetStateAction<number | null>>,
+		selectedOption: [string, number] | null,
+		setSelectedOption: React.Dispatch<React.SetStateAction<[string, number] | null>>,
 	) {
 		this.graph = graph;
 		this.uiNodes = uiNodes;

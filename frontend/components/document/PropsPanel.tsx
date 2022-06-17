@@ -24,13 +24,47 @@ export default function PropsPanel({ wiu }: Props): JSX.Element {
 
 	const updContVal = (evt: ChangeEvent<HTMLTextAreaElement>) => {
 		setNewContentValue(evt.target.value);
+		// setSourceSelect(evt.target.value);
 	};
 	const updNameVal = (evt: ChangeEvent<HTMLInputElement>) => {
 		setNewNameValue(evt.target.value);
 	};
 
 	const submitChanges = async () => {
+		const sourceNodeForSelect: AtlasNode = wiu.graph.nodes.filter(
+			(item) => item.name === newContentValue,
+		)[0];
+
 		if (wiu.selectedNode instanceof ContentNode) {
+			if (
+				wiu.selectedNode instanceof SelectNode &&
+				sourceNodeForSelect instanceof ExpressionNode
+			) {
+				// wiu.selectedNode.content = `JSON3.write(repr.(${newContentValue}))`;
+
+				wiu.graph.nodes.map((node) => {
+					if (node instanceof SelectNode && node.name === wiu.selectedNode?.name) {
+						node.content = `JSON3.write(repr.(${newContentValue}))`;
+					}
+				});
+
+				await wiu.updateGraph();
+
+				wiu.graph.nodes.map((node) => {
+					if (node instanceof SelectNode && node.name === wiu.selectedNode?.name) {
+						console.log(node.result);
+						node.options = JSON.parse(node.result);
+						node.selectedOption = 0;
+						node.content = `${newContentValue}[1]`;
+					}
+				});
+
+				wiu.selectedNode.name = newNameValue;
+				await wiu.updateGraph();
+				wiu.setSelectedNode(null);
+				return;
+			}
+
 			wiu.selectedNode.content = newContentValue;
 			wiu.selectedNode.name = newNameValue;
 			await wiu.updateGraph();
@@ -49,16 +83,16 @@ export default function PropsPanel({ wiu }: Props): JSX.Element {
 		} else if (wiu.selectedNode instanceof SelectNode) {
 			return (
 				<div>
-					<label>Source: </label>
-					<input
-						className={styles.inputSourceSelect}
-						type={'text'}
-						value={sourceSelect}
-						onChange={(event) => setSourceSelect(event.target.value)}
-					/>
-					<button className={styles.btnUpload} onClick={uploadSelectOptions}>
-						upload options
-					</button>
+					{/*<label>Source: </label>*/}
+					{/*<input*/}
+					{/*	className={styles.inputSourceSelect}*/}
+					{/*	type={'text'}*/}
+					{/*	// value={sourceSelect}*/}
+					{/*	// onChange={(event) => setSourceSelect(event.target.value)}*/}
+					{/*/>*/}
+					{/*<button className={styles.btnUpload} onClick={uploadSelectOptions}>*/}
+					{/*	upload options*/}
+					{/*</button>*/}
 				</div>
 			);
 		} else {
@@ -76,30 +110,15 @@ export default function PropsPanel({ wiu }: Props): JSX.Element {
 			wiu.selectedNode instanceof SelectNode &&
 			sourceNodeForSelect instanceof ExpressionNode
 		) {
-			// setNewContentValue(`JSON3.write(repr.(${sourceSelect}))`);
-
 			wiu.selectedNode.content = `JSON3.write(repr.(${sourceSelect}))`;
-
-			// wiu.selectedNode.content = '1+2';
-			// console.log('before: ', wiu.selectedNode);
 			await wiu.updateGraph();
 
 			wiu.graph.nodes.map((node) => {
 				if (node instanceof SelectNode && node.name === wiu.selectedNode?.name) {
 					node.options = JSON.parse(node.result);
 					node.content = `${sourceSelect}[1]`;
-					console.log(node);
 				}
 			});
-
-			// console.log('after: ', wiu.selectedNode);
-			// console.log(wiu.selectedNode.content, 'res: ' + wiu.selectedNode.result);
-
-			// wiu.selectedNode.result
-			// 	? (wiu.selectedNode.options = JSON.parse(wiu.selectedNode.result))
-			// 	: '';
-
-			// wiu.setSelectedNode(null);
 		}
 	};
 
@@ -137,18 +156,24 @@ export default function PropsPanel({ wiu }: Props): JSX.Element {
 	const selNodeSelOption =
 		wiu.selectedNode instanceof SelectNode ? wiu.selectedNode.selectedOption : null;
 
+	const extractVectorNameAndIndex = /(.*)(\[[^\]]+\]$)/;
+
 	useEffect(() => {
 		console.log('trig PP');
 		if (wiu.selectedNode === null) return;
 
 		setNewNameValue(wiu.selectedNode.name);
+		if (wiu.selectedNode instanceof SelectNode) {
+			const newCnt = wiu.selectedNode.content.match(extractVectorNameAndIndex);
+			console.log('--', newCnt);
+			setNewContentValue(newCnt ? newCnt[1] : '');
+			return;
+		}
+
 		if (wiu.selectedNode instanceof ContentNode) {
 			setNewContentValue(wiu.selectedNode.content);
 		}
-	}, [
-		// wiu.selectedNode instanceof SelectNode ? wiu.selectedNode.selectedOption : null,
-		wiu.selectedNode,
-	]);
+	}, [wiu.selectedNode]);
 
 	// useEffect(() => {
 	// 	if (wiu.selectedNode instanceof SelectNode) {
@@ -162,18 +187,20 @@ export default function PropsPanel({ wiu }: Props): JSX.Element {
 
 	// console.log('newcont', newContentValue);
 
-	useEffect(() => {
-		wiu.graph.nodes.map((node) => {
-			if (node instanceof SelectNode && node.name === wiu.selectedNode?.name) {
-				setNewContentValue(
-					sourceSelect
-						? sourceSelect + '[' + (node.selectedOption + 1).toString() + ']'
-						: '',
-				);
-				// console.log(node.selectedOption);
-			}
-		});
-	});
+	// useEffect(() => {
+	// 	console.log('render');
+	// 	wiu.graph.nodes.map((node) => {
+	// 		if (
+	// 			node instanceof SelectNode &&
+	// 			node.name === wiu.selectedNode?.name &&
+	// 			sourceSelect
+	// 		) {
+	// 			setNewContentValue(sourceSelect + '[' + (node.selectedOption + 1).toString() + ']');
+	// 			node.content = sourceSelect + '[' + (node.selectedOption + 1).toString() + ']';
+	// 			// console.log(node.selectedOption)
+	// 		}
+	// 	});
+	// }, [sourceSelect]);
 
 	// console.log('render')
 
