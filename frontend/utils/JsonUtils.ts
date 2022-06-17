@@ -36,11 +36,11 @@ export default class JsonUtils {
 	}
 
 	private static readonly typeMap = {
-		[ExpressionNode.uitype]: () => ExpressionNode.build(),
-		[MatrixFilterNode.uitype]: () => MatrixFilterNode.build(),
-		[TextNode.uitype]: () => TextNode.build(),
-		[FileNode.uitype]: () => FileNode.build(),
-		[AtlasNode.uitype]: () => AtlasNode.build(),
+		[ExpressionNode.uitype]: ExpressionNode.build,
+		[MatrixFilterNode.uitype]: MatrixFilterNode.build,
+		[TextNode.uitype]: TextNode.build,
+		[FileNode.uitype]: FileNode.build,
+		[AtlasNode.uitype]: AtlasNode.build,
 	};
 
 	public static extractNodes(nodes: {}[]): AtlasNode[] {
