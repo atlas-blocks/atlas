@@ -31,13 +31,10 @@ function gentext(name::Symbol, content::AbstractString)::TextNode
     return TextNode(gennode(name), content)
 end
 
-function genfile(name::Symbol, content::AbstractString, filename::AbstractString)::FileNode
-    return FileNode(gennode(name), content, filename)
+function genexpression(name::Symbol, content::AbstractString, result::Any)::ExpressionNode
+    return ExpressionNode(gennode(name), content, result, nothing, [], [])
 end
 
-function genexpression(name::Symbol, content::AbstractString, result::Any)::ExpressionNode
-    return ExpressionNode(gennode(name), content, result)
-end
 function genexpression(name::Symbol, content::AbstractString)::ExpressionNode
     return genexpression(name, content, nothing)
 end

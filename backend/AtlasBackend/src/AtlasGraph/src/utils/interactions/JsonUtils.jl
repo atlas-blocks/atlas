@@ -13,14 +13,17 @@ function dictionary(node::AbstractNode)::Dict{AbstractString,Any}
         if (typeof(value) <: AbstractNode)
             merge!(dic, dictionary(value))
         elseif field == :result
-            push!(dic, string(field) => string(value))
+            push!(dic, string(field) => sprint(show, "text/plain", value))
+        elseif field == :helper_results
+            push!(dic, string(field) => map(val -> sprint(show, "text/plain", val), value))
+        elseif field == :error
+            push!(dic, string(field) => sprint(showerror, value))
         else
             push!(dic, string(field) => value)
         end
     end
     return dic
 end
-
 
 function json(node::AbstractNode)::JSON3.Object
     return jsonwriteread(push!(dictionary(node), "type" => typeof(node)))
@@ -42,11 +45,16 @@ function node(json_dict::JSON3.Object)::AbstractNode
     if json_dict["type"] == string(Node)
         return node
     elseif json_dict["type"] == string(ExpressionNode)
-        return ExpressionNode(node, json_dict["content"], nothing)
+        return ExpressionNode(
+            node,
+            json_dict["content"],
+            nothing,
+            nothing,
+            json_dict["helper_contents"],
+            [],
+        )
     elseif json_dict["type"] == string(TextNode)
         return TextNode(node, json_dict["content"])
-    elseif json_dict["type"] == string(FileNode)
-        return FileNode(node, json_dict["content"], json_dict["filename"])
     end
 end
 

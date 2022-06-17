@@ -40,7 +40,7 @@ export default class WebInterfaceUtils {
 	public static toUiNode(node: AtlasNode): UINode {
 		return {
 			id: node.getId(),
-			type: node.type,
+			type: node.uitype,
 			position: { x: node.position[0], y: node.position[1] },
 			data: { node: node },
 			hidden: !node.visibility,
