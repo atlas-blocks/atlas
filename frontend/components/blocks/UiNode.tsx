@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Handle, Position } from 'react-flow-renderer';
 import styles from '../../styles/Block.module.css';
 import {
@@ -9,8 +9,6 @@ import {
 	MatrixFilterNode,
 } from '../../utils/AtlasGraph';
 import FileUtils from '../../utils/FileUtils';
-import PropsPanel from '../document/PropsPanel';
-import Home from '../../pages/document';
 
 export const uiNodeTypes = {
 	[ExpressionNode.uitype]: ExpressionBlock,
@@ -76,16 +74,23 @@ export function ExpressionBlock({ data }: { data: { node: ExpressionNode } }) {
 }
 
 export function SelectBlock({ data }: { data: { node: SelectNode } }) {
-	const [opt, setOpt] = useState<any>(null);
+	const [options, setOptions] = useState<any>(null);
 	const [selectedOption, setSelectedOption] = useState<number>(data.node.selectedOption);
-	// const divRef = useRef<HTMLDivElement | null>(null);
 
 	const handleSelect = (event: React.ChangeEvent<HTMLSelectElement>) => {
 		setSelectedOption(parseInt(event.target.value));
-		// data.node.selectedOption = selectedOption;
 	};
 
-	// console.log('selected', data.node.selectedOption);
+	useEffect(() => {
+		data.node.selectedOption = selectedOption;
+	}, [selectedOption]);
+
+	useEffect(() => {
+		if (data.node.options !== null) {
+			setOptions(data.node.options);
+			setSelectedOption(0);
+		}
+	}, [data.node.options]);
 
 	function getOption(option: string, index: number): JSX.Element {
 		return (
@@ -94,25 +99,6 @@ export function SelectBlock({ data }: { data: { node: SelectNode } }) {
 			</option>
 		);
 	}
-
-	useEffect(() => {
-		data.node.selectedOption = selectedOption;
-		// divRef.current?.click();
-		// divRef.current?.click();
-	}, [selectedOption]);
-
-	// console.log('ui-render')
-
-	// console.log(data.node.options, opt)
-
-	useEffect(() => {
-		if (data.node.options !== null) {
-			setOpt(data.node.options);
-			// data.node.selectedOption = 0;
-			setSelectedOption(0);
-		}
-		console.log('new opt');
-	}, [data.node.options]);
 
 	return UiBlockWrapper(
 		data.node.name,
@@ -123,8 +109,8 @@ export function SelectBlock({ data }: { data: { node: SelectNode } }) {
 					value={selectedOption}
 					onChange={handleSelect}
 				>
-					{opt
-						? opt.map((option: string, index: number) => getOption(option, index))
+					{options
+						? options.map((option: string, index: number) => getOption(option, index))
 						: ''}
 				</select>
 			</div>

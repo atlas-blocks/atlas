@@ -1,6 +1,3 @@
-import React, { SetStateAction, useState } from 'react';
-import { Node as UINode } from 'react-flow-renderer/dist/esm/types/nodes';
-
 export default class AtlasGraph {
 	public name: string;
 	public readonly nodes: AtlasNode[];
@@ -233,21 +230,17 @@ export class SelectNode extends ExpressionNode {
 	public options: any;
 	public selectedOption: number;
 
-	// public setSelectedOption?: React.Dispatch<React.SetStateAction<number>>;
-
 	constructor(
 		node: AtlasNode,
 		content: string,
 		result: string,
 		options: any,
 		selectedOption: number,
-		// setSelectedOption?: React.Dispatch<React.SetStateAction<number>>,
 	) {
 		super(node, content, result);
 		this.uitype = SelectNode.uitype;
 		this.options = options;
 		this.selectedOption = selectedOption;
-		// this.setSelectedOption = setSelectedOption;
 	}
 
 	public static build(): SelectNode {

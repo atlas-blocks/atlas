@@ -19,116 +19,84 @@ type Props = {
 export default function PropsPanel({ wiu }: Props): JSX.Element {
 	const [newContentValue, setNewContentValue] = useState<string>('');
 	const [newNameValue, setNewNameValue] = useState<string>('');
-	const [sourceSelect, setSourceSelect] = useState<string>('');
-	const [selectedContent, setSelectedContent] = useState<string>('');
 
 	const updContVal = (evt: ChangeEvent<HTMLTextAreaElement>) => {
 		setNewContentValue(evt.target.value);
-		// setSourceSelect(evt.target.value);
 	};
 	const updNameVal = (evt: ChangeEvent<HTMLInputElement>) => {
 		setNewNameValue(evt.target.value);
 	};
 
-	const submitChanges = async () => {
-		const sourceNodeForSelect: AtlasNode = wiu.graph.nodes.filter(
-			(item) => item.name === newContentValue,
-		)[0];
-
-		if (wiu.selectedNode instanceof ContentNode) {
-			if (
-				wiu.selectedNode instanceof SelectNode &&
-				sourceNodeForSelect instanceof ExpressionNode
-			) {
-				// wiu.selectedNode.content = `JSON3.write(repr.(${newContentValue}))`;
-
-				wiu.graph.nodes.map((node) => {
-					if (node instanceof SelectNode && node.name === wiu.selectedNode?.name) {
-						node.content = `JSON3.write(repr.(${newContentValue}))`;
-					}
-				});
-
-				await wiu.updateGraph();
-
-				wiu.graph.nodes.map((node) => {
-					if (node instanceof SelectNode && node.name === wiu.selectedNode?.name) {
-						console.log(node.result);
+	const updateSelectionNodeData = (
+		nodeName: string,
+		content?: string,
+		updateOptions?: boolean,
+	) => {
+		wiu.graph.nodes.map((node: AtlasNode) => {
+			if (node instanceof SelectNode && node.name === nodeName) {
+				if (content) node.content = content;
+				if (updateOptions) {
+					try {
 						node.options = JSON.parse(node.result);
 						node.selectedOption = 0;
-						node.content = `${newContentValue}[1]`;
+					} catch (e) {
+						window.alert(`Something went wrong while parsing result into JSON: ${e}`);
 					}
-				});
+				}
+			}
+		});
+	};
 
-				wiu.selectedNode.name = newNameValue;
+	const submitChanges = async () => {
+		if (wiu.selectedNode instanceof ContentNode) {
+			if (wiu.selectedNode instanceof SelectNode) {
+				const sourceNodeForSelect: AtlasNode = wiu.graph.nodes.filter(
+					(node: AtlasNode) => node.name === newContentValue,
+				)[0];
+				if (!(sourceNodeForSelect instanceof ExpressionNode)) {
+					window.alert('This Node cannot be a source for SelectionNode');
+					return;
+				}
+
+				updateSelectionNodeData(
+					wiu.selectedNode?.name,
+					`JSON3.write(repr.(${newContentValue}))`,
+				);
 				await wiu.updateGraph();
-				wiu.setSelectedNode(null);
-				return;
+				updateSelectionNodeData(wiu.selectedNode?.name, `${newContentValue}[1]`, true);
+			} else {
+				wiu.selectedNode.content = newContentValue;
 			}
 
-			wiu.selectedNode.content = newContentValue;
 			wiu.selectedNode.name = newNameValue;
 			await wiu.updateGraph();
-
 			wiu.setSelectedNode(null);
 		}
 	};
 
-	// console.log(wiu.selectedNode);
+	useEffect(() => {
+		if (wiu.selectedNode === null) return;
+
+		if (wiu.selectedNode instanceof ContentNode) {
+			if (wiu.selectedNode instanceof SelectNode) {
+				const regexforVectorName = /(.*)(\[[^\]]+\]$)/;
+				const extractVectorName = wiu.selectedNode.content.match(regexforVectorName);
+				setNewContentValue(extractVectorName ? extractVectorName[1] : '');
+			} else {
+				setNewContentValue(wiu.selectedNode.content);
+			}
+		}
+
+		setNewNameValue(wiu.selectedNode.name);
+	}, [wiu.selectedNode]);
 
 	function chooseProperties(): JSX.Element {
-		// console.log(wiu.selectedNode)
-
 		if (wiu.selectedNode instanceof MatrixFilterNode) {
 			return <MatrixFilterBuilder setNewContentValue={setNewContentValue} />;
-		} else if (wiu.selectedNode instanceof SelectNode) {
-			return (
-				<div>
-					{/*<label>Source: </label>*/}
-					{/*<input*/}
-					{/*	className={styles.inputSourceSelect}*/}
-					{/*	type={'text'}*/}
-					{/*	// value={sourceSelect}*/}
-					{/*	// onChange={(event) => setSourceSelect(event.target.value)}*/}
-					{/*/>*/}
-					{/*<button className={styles.btnUpload} onClick={uploadSelectOptions}>*/}
-					{/*	upload options*/}
-					{/*</button>*/}
-				</div>
-			);
 		} else {
 			return <></>;
 		}
 	}
-
-	const uploadSelectOptions = async () => {
-		let selNodeName = wiu.selectedNode?.name;
-
-		const sourceNodeForSelect: AtlasNode = wiu.graph.nodes.filter(
-			(item) => item.name === sourceSelect,
-		)[0];
-		if (
-			wiu.selectedNode instanceof SelectNode &&
-			sourceNodeForSelect instanceof ExpressionNode
-		) {
-			wiu.selectedNode.content = `JSON3.write(repr.(${sourceSelect}))`;
-			await wiu.updateGraph();
-
-			wiu.graph.nodes.map((node) => {
-				if (node instanceof SelectNode && node.name === wiu.selectedNode?.name) {
-					node.options = JSON.parse(node.result);
-					node.content = `${sourceSelect}[1]`;
-				}
-			});
-		}
-	};
-
-	// if (
-	// 	wiu.selectedNode instanceof SelectNode
-	// 	// sourceNodeForSelect instanceof ExpressionNode
-	// ) {
-	// 	wiu.setSelectedNode(wiu.selectedNode);
-	// 	console.log(wiu.selectedNode.result, wiu.selectedNode.options);
-	// }
 
 	const typeDescriptions = {
 		[MatrixFilterNode.uitype]:
@@ -152,57 +120,6 @@ export default function PropsPanel({ wiu }: Props): JSX.Element {
 
 		return typeDescriptions[node.uitype];
 	};
-
-	const selNodeSelOption =
-		wiu.selectedNode instanceof SelectNode ? wiu.selectedNode.selectedOption : null;
-
-	const extractVectorNameAndIndex = /(.*)(\[[^\]]+\]$)/;
-
-	useEffect(() => {
-		console.log('trig PP');
-		if (wiu.selectedNode === null) return;
-
-		setNewNameValue(wiu.selectedNode.name);
-		if (wiu.selectedNode instanceof SelectNode) {
-			const newCnt = wiu.selectedNode.content.match(extractVectorNameAndIndex);
-			console.log('--', newCnt);
-			setNewContentValue(newCnt ? newCnt[1] : '');
-			return;
-		}
-
-		if (wiu.selectedNode instanceof ContentNode) {
-			setNewContentValue(wiu.selectedNode.content);
-		}
-	}, [wiu.selectedNode]);
-
-	// useEffect(() => {
-	// 	if (wiu.selectedNode instanceof SelectNode) {
-	// 		setNewContentValue(
-	// 			sourceSelect
-	// 				? sourceSelect + '[' + (wiu.selectedNode.selectedOption + 1).toString() + ']'
-	// 				: '',
-	// 		);
-	// 	}
-	// }, [wiu.selectedNode instanceof SelectNode ? wiu.selectedNode.selectedOption : null]);
-
-	// console.log('newcont', newContentValue);
-
-	// useEffect(() => {
-	// 	console.log('render');
-	// 	wiu.graph.nodes.map((node) => {
-	// 		if (
-	// 			node instanceof SelectNode &&
-	// 			node.name === wiu.selectedNode?.name &&
-	// 			sourceSelect
-	// 		) {
-	// 			setNewContentValue(sourceSelect + '[' + (node.selectedOption + 1).toString() + ']');
-	// 			node.content = sourceSelect + '[' + (node.selectedOption + 1).toString() + ']';
-	// 			// console.log(node.selectedOption)
-	// 		}
-	// 	});
-	// }, [sourceSelect]);
-
-	// console.log('render')
 
 	return (
 		<>
