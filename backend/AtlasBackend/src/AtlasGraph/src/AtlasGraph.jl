@@ -87,7 +87,7 @@ function filternodes(
 end
 
 function updategraph!(graph::AbstractGraph)::AbstractGraph
-    data_nodes = filternodes(graph.nodes, Union{TextNode})
+    data_nodes = filternodes(graph.nodes, TextNode)
 
     expressions = filternodes(graph.nodes, AbstractExpressionNode)
     ordered_nodes = FormulaUtils.topological_order(

@@ -25,10 +25,6 @@ function dictionary(node::AbstractNode)::Dict{AbstractString,Any}
     return dic
 end
 
-function get_human_readable_string(value::Any)::String
-    return sprint(show, "text/plain", value)
-end
-
 function json(node::AbstractNode)::JSON3.Object
     return jsonwriteread(push!(dictionary(node), "type" => typeof(node)))
 end
