@@ -17,15 +17,10 @@ import ReactFlow, {
 
 import { uiNodeTypes } from '../blocks/UiNode';
 import { uiEdgeTypes } from '../blocks/UiEdge';
-import WebInterfaceUtils from '../../utils/WebInterfaceUtils';
+import { wiu } from '../../utils/WebInterfaceUtils';
 import StorageUtils from '../../utils/StorageUtils';
-import { SelectionNode } from '../../utils/AtlasGraph';
 
-type Props = {
-	wiu: WebInterfaceUtils;
-};
-
-export default function DnDFlow({ wiu }: Props): JSX.Element {
+export default function DnDFlow(): JSX.Element {
 	const [reactFlowInstance, setReactFlowInstance] = useState<ReactFlowInstance | null>(null);
 	const reactFlowWrapper = useRef<HTMLDivElement | null>(null);
 

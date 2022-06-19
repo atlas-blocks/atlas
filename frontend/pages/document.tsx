@@ -26,9 +26,9 @@ export default function Home() {
 				<title>Atlas Next</title>
 			</Head>
 			<div className={styles.layout}>
-				<Navbar wiu={wiu} />
-				<DnDFlow wiu={wiu} />
-				<Panels wiu={wiu} />
+				<Navbar />
+				<DnDFlow />
+				<Panels />
 			</div>
 		</>
 	);
