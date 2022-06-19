@@ -2,10 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { Handle, Position } from 'react-flow-renderer';
 import styles from '../../styles/Block.module.css';
 import {
+	AtlasNode,
+	ContentNode,
 	ExpressionNode,
 	TextNode,
 	FileNode,
-	SelectNode,
+	SelectionNode,
 	MatrixFilterNode,
 } from '../../utils/AtlasGraph';
 import FileUtils from '../../utils/FileUtils';
@@ -14,54 +16,65 @@ export const uiNodeTypes = {
 	[ExpressionNode.uitype]: ExpressionBlock,
 	[TextNode.uitype]: TextBlock,
 	[FileNode.uitype]: FileBlock,
-	[SelectNode.uitype]: SelectBlock,
+	[SelectionNode.uitype]: SelectBlock,
 	[MatrixFilterNode.uitype]: ExpressionBlock,
 };
 
-export function UiBlockWrapper(
-	name: string,
-	content: JSX.Element | string,
-	result: string | null = null,
-	error: string | null = null,
-): JSX.Element {
+function UiBlockWrapper(node: AtlasNode, tail?: JSX.Element | string): JSX.Element {
 	return (
 		<div className={styles.block}>
 			<Handle type="target" position={Position.Left} />
 			<Handle type="source" position={Position.Right} id="a" />
-			<div className={styles.name}>{name}</div>
-			<div className={styles.contentWrapper}>{content}</div>
-			<div className={result !== null ? styles.result : ''}>{result}</div>
-			<div
-				className={error !== null && error !== 'nothing' ? styles.error : styles.invisible}
-			>
-				{error}
-			</div>
+			<div className={styles.name}>{node.name}</div>
+			{tail}
 		</div>
 	);
 }
 
-export function TextBlock({ data }: { data: { node: TextNode } }) {
-	return UiBlockWrapper(data.node.name, data.node.content);
+function ContentUiBlockWrapper(node: ContentNode, tail?: JSX.Element | string): JSX.Element {
+	return UiBlockWrapper(
+		node,
+		<>
+			<div className={styles.contentWrapper}>{node.content}</div>
+			{tail}
+		</>,
+	);
 }
 
-export function FileBlock({ data }: { data: { node: FileNode } }) {
-	const [contentToShow, setContentToShow] = useState<string | null>(null);
+function ExpressionUiBlockWrapper(node: ExpressionNode, tail?: JSX.Element | string): JSX.Element {
+	return ContentUiBlockWrapper(
+		node,
+		<>
+			<div className={styles.result}>{node.result}</div>
+			<div className={node.error !== 'nothing' ? styles.error : styles.invisible}>
+				{node.error}
+			</div>
+			{tail}
+		</>,
+	);
+}
+
+function TextBlock({ data }: { data: { node: TextNode } }) {
+	return ContentUiBlockWrapper(data.node);
+}
+
+function FileBlock({ data }: { data: { node: FileNode } }) {
+	const [showContent, setShowContent] = useState<boolean>(false);
 
 	const uploadFile = (event: React.ChangeEvent<HTMLInputElement>) => {
 		if (event.target.files === null) return;
-		FileUtils.getFileContentString(
-			event.target.files[0],
-			(content: string) => (data.node.content = content),
+		FileUtils.getFileContentString(event.target.files[0], (content: string) =>
+			data.node.setContent(content),
 		);
 		data.node.setFilename(event.target.files[0].name);
 	};
 
 	const showFileContent = (event: React.ChangeEvent<HTMLInputElement>) => {
-		event.target.checked ? setContentToShow(data.node.content) : setContentToShow(null);
+		event.target.checked ? setShowContent(true) : setShowContent(false);
 	};
 
-	return UiBlockWrapper(
-		data.node.name,
+	return ContentUiBlockWrapper(
+		data.node,
 		<>
 			<input className={styles.inputFile} type="file" onChange={uploadFile} />
 			<div className={styles.thickLine}>Imported file: {data.node.filename}</div>
@@ -69,33 +82,24 @@ export function FileBlock({ data }: { data: { node: FileNode } }) {
 				<input className={styles.inputFile} type="checkbox" onChange={showFileContent} />{' '}
 				Show content
 			</label>
+			<div className={showContent === true ? styles.contentWrapper : styles.invisible}>
+				{data.node.content}
+			</div>
 		</>,
-		contentToShow,
 	);
 }
 
-export function ExpressionBlock({ data }: { data: { node: ExpressionNode } }) {
-	return UiBlockWrapper(data.node.name, data.node.content, data.node.result, data.node.error);
+function ExpressionBlock({ data }: { data: { node: ExpressionNode } }) {
+	return ExpressionUiBlockWrapper(data.node);
 }
 
-export function SelectBlock({ data }: { data: { node: SelectNode } }) {
-	const [options, setOptions] = useState<string[] | null>(null);
+function SelectBlock({ data }: { data: { node: SelectionNode } }) {
 	const [selectedOption, setSelectedOption] = useState<number>(data.node.selectedOption);
 
 	const handleSelect = (event: React.ChangeEvent<HTMLSelectElement>) => {
 		setSelectedOption(parseInt(event.target.value));
+		data.node.setSelectedOption(parseInt(event.target.value));
 	};
-
-	useEffect(() => {
-		data.node.selectedOption = selectedOption;
-	}, [selectedOption]);
-
-	useEffect(() => {
-		if (data.node.options !== null) {
-			setOptions(data.node.options);
-			setSelectedOption(0);
-		}
-	}, [data.node.options]);
 
 	function getOption(option: string, index: number): JSX.Element {
 		return (
@@ -106,7 +110,7 @@ export function SelectBlock({ data }: { data: { node: SelectNode } }) {
 	}
 
 	return UiBlockWrapper(
-		data.node.name,
+		data.node,
 		<div>
 			<div>
 				<select
@@ -114,9 +118,9 @@ export function SelectBlock({ data }: { data: { node: SelectNode } }) {
 					value={selectedOption}
 					onChange={handleSelect}
 				>
-					{options
-						? options.map((option: string, index: number) => getOption(option, index))
-						: ''}
+					{data.node
+						.getOptions()
+						.map((option: string, index: number) => getOption(option, index + 1))}
 				</select>
 			</div>
 		</div>,

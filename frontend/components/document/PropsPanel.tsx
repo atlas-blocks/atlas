@@ -6,7 +6,7 @@ import {
 	ExpressionNode,
 	FileNode,
 	MatrixFilterNode,
-	SelectNode,
+	SelectionNode,
 	TextNode,
 } from '../../utils/AtlasGraph';
 import WebInterfaceUtils from '../../utils/WebInterfaceUtils';
@@ -19,83 +19,55 @@ type Props = {
 export default function PropsPanel({ wiu }: Props): JSX.Element {
 	const [newContentValue, setNewContentValue] = useState<string>('');
 	const [newNameValue, setNewNameValue] = useState<string>('');
+	const [nodeSource, setNodeSource] = useState<string>('');
 
-	const updContVal = (evt: ChangeEvent<HTMLTextAreaElement>) => {
+	const updateContVal = (evt: ChangeEvent<HTMLTextAreaElement>) => {
 		setNewContentValue(evt.target.value);
 	};
-	const updNameVal = (evt: ChangeEvent<HTMLInputElement>) => {
+	const updateNameVal = (evt: ChangeEvent<HTMLInputElement>) => {
 		setNewNameValue(evt.target.value);
 	};
-
-	const updateSelectionNodeData = (
-		nodeName: string,
-		content?: string,
-		updateOptions?: boolean,
-	) => {
-		wiu.graph.nodes.map((node: AtlasNode) => {
-			if (node instanceof SelectNode && node.name === nodeName) {
-				if (content) node.content = content;
-				if (updateOptions) {
-					try {
-						node.options = JSON.parse(JSON.parse(node.result));
-						node.selectedOption = 0;
-					} catch (e) {
-						window.alert(`This JSON is not an array of options: ${e}`);
-					}
-				}
-			}
-		});
+	const updateNodeSource = (evt: ChangeEvent<HTMLInputElement>) => {
+		setNodeSource(evt.target.value);
 	};
 
 	const submitChanges = async () => {
 		if (wiu.selectedNode instanceof ContentNode) {
-			if (wiu.selectedNode instanceof SelectNode) {
-				const sourceNodeForSelect: AtlasNode = wiu.graph.nodes.filter(
-					(node: AtlasNode) => node.name === newContentValue,
-				)[0];
-				if (!(sourceNodeForSelect instanceof ExpressionNode)) {
-					window.alert('This Node cannot be a source for SelectionNode');
-					return;
-				}
-
-				updateSelectionNodeData(
-					wiu.selectedNode?.name,
-					`JSON3.write(repr.(${newContentValue}))`,
-				);
-				await wiu.updateGraph();
-				updateSelectionNodeData(wiu.selectedNode?.name, `${newContentValue}[1]`, true);
-			} else {
-				wiu.selectedNode.content = newContentValue;
-			}
-
-			wiu.selectedNode.name = newNameValue;
-			await wiu.updateGraph();
-			wiu.setSelectedNode(null);
+			wiu.selectedNode.setName(newNameValue);
+			wiu.selectedNode.setContent(newContentValue);
 		}
+		if (wiu.selectedNode instanceof SelectionNode) {
+			wiu.selectedNode.setSource(nodeSource);
+		}
+		await wiu.updateGraph();
+		wiu.setSelectedNode(null);
 	};
 
 	useEffect(() => {
 		if (wiu.selectedNode === null) return;
 
-		if (wiu.selectedNode instanceof ContentNode) {
-			if (wiu.selectedNode instanceof SelectNode) {
-				const regexforVectorName = /(.*)(\[[^\]]+\]$)/;
-				const extractVectorName = wiu.selectedNode.content.match(regexforVectorName);
-				setNewContentValue(extractVectorName ? extractVectorName[1] : '');
-			} else {
-				setNewContentValue(wiu.selectedNode.content);
-			}
-		}
-
 		setNewNameValue(wiu.selectedNode.name);
+		if (wiu.selectedNode instanceof ContentNode) {
+			setNewContentValue(wiu.selectedNode.content);
+		}
+		if (wiu.selectedNode instanceof SelectionNode) {
+			setNodeSource(wiu.selectedNode.source);
+		}
 	}, [wiu.selectedNode]);
 
 	function chooseProperties(): JSX.Element {
 		if (wiu.selectedNode instanceof MatrixFilterNode) {
 			return <MatrixFilterBuilder setNewContentValue={setNewContentValue} />;
-		} else {
-			return <></>;
 		}
+		if (wiu.selectedNode instanceof SelectionNode) {
+			return (
+				<div className={styles.propsPanelWrapper}>
+					<label>Source</label>
+					<input value={nodeSource} onChange={updateNodeSource} />
+				</div>
+			);
+		}
+		return <></>;
 	}
 
 	const typeDescriptions = {
@@ -125,11 +97,11 @@ export default function PropsPanel({ wiu }: Props): JSX.Element {
 		<>
 			<div className={styles.propsPanelWrapper}>
 				<label>Name</label>
-				<input value={newNameValue} onChange={updNameVal} />
+				<input value={newNameValue} onChange={updateNameVal} />
 			</div>
 			<div className={styles.propsPanelWrapper}>
 				<label>Content</label>
-				<textarea value={newContentValue} onChange={updContVal} />
+				<textarea value={newContentValue} onChange={updateContVal} />
 			</div>
 			<div className={styles.propsPanelWrapper}>{chooseProperties()}</div>
 			<div className={styles.propsPanelWrapper}>

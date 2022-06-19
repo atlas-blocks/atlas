@@ -19,7 +19,7 @@ import { uiNodeTypes } from '../blocks/UiNode';
 import { uiEdgeTypes } from '../blocks/UiEdge';
 import WebInterfaceUtils from '../../utils/WebInterfaceUtils';
 import StorageUtils from '../../utils/StorageUtils';
-import { SelectNode } from '../../utils/AtlasGraph';
+import { SelectionNode } from '../../utils/AtlasGraph';
 
 type Props = {
 	wiu: WebInterfaceUtils;
@@ -28,7 +28,6 @@ type Props = {
 export default function DnDFlow({ wiu }: Props): JSX.Element {
 	const [reactFlowInstance, setReactFlowInstance] = useState<ReactFlowInstance | null>(null);
 	const reactFlowWrapper = useRef<HTMLDivElement | null>(null);
-	const [selectedOptionState, setSelectedOptionState] = useState<number>(0);
 
 	const onUiNodesChange = useCallback(
 		(changes: UINodeChange[]) => {
@@ -42,29 +41,7 @@ export default function DnDFlow({ wiu }: Props): JSX.Element {
 		[wiu.setUiEdges],
 	);
 
-	function handleUiNodeSelection(event: React.MouseEvent, node: UINode) {
-		event.preventDefault();
-
-		if (node.data.node instanceof SelectNode) {
-			const regexforVectorName = /(.*)(\[[^\]]+\]$)/;
-			const extractVectorName = node.data.node.content.match(regexforVectorName);
-
-			if (extractVectorName) {
-				node.data.node.content =
-					extractVectorName[1] +
-					'[' +
-					(node.data.node.selectedOption + 1).toString() +
-					']';
-				setSelectedOptionState(node.data.node.selectedOption);
-			}
-		}
-	}
-
-	const updateGraph = async () => await wiu.updateGraph();
-	useEffect(() => {
-		console.log('Graph Updated from DND');
-		updateGraph();
-	}, [selectedOptionState]);
+	function handleUiNodeSelection(event: React.MouseEvent, node: UINode) {}
 
 	function handleUiNodeDoubleClick(event: React.MouseEvent, node: UINode) {
 		wiu.setSelectedNode(node.data.node);
