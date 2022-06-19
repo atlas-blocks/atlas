@@ -17,27 +17,27 @@ type Props = {
 };
 
 export default function PropsPanel({ wiu }: Props): JSX.Element {
-	const [newContentValue, setNewContentValue] = useState<string>('');
-	const [newNameValue, setNewNameValue] = useState<string>('');
-	const [nodeSource, setNodeSource] = useState<string>('');
+	const [contentInput, setContentInput] = useState<string>('');
+	const [nameInput, setNameInput] = useState<string>('');
+	const [sourceInput, setSourceInput] = useState<string>('');
 
 	const updateContVal = (evt: ChangeEvent<HTMLTextAreaElement>) => {
-		setNewContentValue(evt.target.value);
+		setContentInput(evt.target.value);
 	};
 	const updateNameVal = (evt: ChangeEvent<HTMLInputElement>) => {
-		setNewNameValue(evt.target.value);
+		setNameInput(evt.target.value);
 	};
 	const updateNodeSource = (evt: ChangeEvent<HTMLInputElement>) => {
-		setNodeSource(evt.target.value);
+		setSourceInput(evt.target.value);
 	};
 
 	const submitChanges = async () => {
 		if (wiu.selectedNode instanceof ContentNode) {
-			wiu.selectedNode.setName(newNameValue);
-			wiu.selectedNode.setContent(newContentValue);
+			wiu.selectedNode.setName(nameInput);
+			wiu.selectedNode.setContent(contentInput);
 		}
 		if (wiu.selectedNode instanceof SelectionNode) {
-			wiu.selectedNode.setSource(nodeSource);
+			wiu.selectedNode.setSource(sourceInput);
 		}
 		await wiu.updateGraph();
 		wiu.setSelectedNode(null);
@@ -46,24 +46,24 @@ export default function PropsPanel({ wiu }: Props): JSX.Element {
 	useEffect(() => {
 		if (wiu.selectedNode === null) return;
 
-		setNewNameValue(wiu.selectedNode.name);
+		setNameInput(wiu.selectedNode.name);
 		if (wiu.selectedNode instanceof ContentNode) {
-			setNewContentValue(wiu.selectedNode.content);
+			setContentInput(wiu.selectedNode.content);
 		}
 		if (wiu.selectedNode instanceof SelectionNode) {
-			setNodeSource(wiu.selectedNode.source);
+			setSourceInput(wiu.selectedNode.source);
 		}
 	}, [wiu.selectedNode]);
 
 	function chooseProperties(): JSX.Element {
 		if (wiu.selectedNode instanceof MatrixFilterNode) {
-			return <MatrixFilterBuilder setNewContentValue={setNewContentValue} />;
+			return <MatrixFilterBuilder setNewContentValue={setContentInput} />;
 		}
 		if (wiu.selectedNode instanceof SelectionNode) {
 			return (
 				<div className={styles.propsPanelWrapper}>
 					<label>Source</label>
-					<input value={nodeSource} onChange={updateNodeSource} />
+					<input value={sourceInput} onChange={updateNodeSource} />
 				</div>
 			);
 		}
@@ -97,11 +97,11 @@ export default function PropsPanel({ wiu }: Props): JSX.Element {
 		<>
 			<div className={styles.propsPanelWrapper}>
 				<label>Name</label>
-				<input value={newNameValue} onChange={updateNameVal} />
+				<input value={nameInput} onChange={updateNameVal} />
 			</div>
 			<div className={styles.propsPanelWrapper}>
 				<label>Content</label>
-				<textarea value={newContentValue} onChange={updateContVal} />
+				<textarea value={contentInput} onChange={updateContVal} />
 			</div>
 			<div className={styles.propsPanelWrapper}>{chooseProperties()}</div>
 			<div className={styles.propsPanelWrapper}>
