@@ -1,9 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Handle, Position } from 'react-flow-renderer';
 import styles from '../../styles/Block.module.css';
 import {
 	AtlasNode,
-	ContentNode,
 	ExpressionNode,
 	TextNode,
 	FileNode,
@@ -21,7 +20,7 @@ export const uiNodeTypes = {
 	[MatrixFilterNode.uitype]: ExpressionBlock,
 };
 
-function UiBlockWrapper(node: AtlasNode, tail?: JSX.Element | string): JSX.Element {
+function blockWrapper(node: AtlasNode, tail?: JSX.Element | string): JSX.Element {
 	return (
 		<div className={styles.block}>
 			<Handle type="target" position={Position.Left} />
@@ -32,31 +31,20 @@ function UiBlockWrapper(node: AtlasNode, tail?: JSX.Element | string): JSX.Eleme
 	);
 }
 
-function ContentUiBlockWrapper(node: ContentNode, tail?: JSX.Element | string): JSX.Element {
-	return UiBlockWrapper(
-		node,
-		<>
-			<div className={styles.contentWrapper}>{node.content}</div>
-			{tail}
-		</>,
-	);
+function contentWrapper(content: JSX.Element | string): JSX.Element {
+	return <div className={styles.contentWrapper}>{content}</div>;
 }
 
-function ExpressionUiBlockWrapper(node: ExpressionNode, tail?: JSX.Element | string): JSX.Element {
-	return ContentUiBlockWrapper(
-		node,
-		<>
-			<div className={styles.result}>{node.result}</div>
-			<div className={node.error !== 'nothing' ? styles.error : styles.invisible}>
-				{node.error}
-			</div>
-			{tail}
-		</>,
-	);
+function resultWrapper(result: JSX.Element | string): JSX.Element {
+	return <div className={styles.result}>{result}</div>;
+}
+
+function errorWrapper(error: JSX.Element | string): JSX.Element {
+	return <div className={error !== 'nothing' ? styles.error : styles.invisible}>{error}</div>;
 }
 
 function TextBlock({ data }: { data: { node: TextNode } }) {
-	return ContentUiBlockWrapper(data.node);
+	return blockWrapper(data.node, contentWrapper(data.node.content));
 }
 
 function FileBlock({ data }: { data: { node: FileNode } }) {
@@ -74,45 +62,64 @@ function FileBlock({ data }: { data: { node: FileNode } }) {
 		event.target.checked ? setShowContent(true) : setShowContent(false);
 	};
 
-	return ContentUiBlockWrapper(
+	return blockWrapper(
 		data.node,
 		<>
-			<input className={styles.inputFile} type="file" onChange={uploadFile} />
-			<div className={styles.thickLine}>Imported file: {data.node.filename}</div>
-			<label>
-				<input className={styles.inputFile} type="checkbox" onChange={showFileContent} />{' '}
-				Show content
-			</label>
-			<div className={showContent === true ? styles.contentWrapper : styles.invisible}>
-				{data.node.content}
+			{contentWrapper(
+				<>
+					<input className={styles.inputFile} type="file" onChange={uploadFile} />
+					<div className={styles.thickLine}>Imported file: {data.node.filename}</div>
+					<label>
+						<input
+							className={styles.inputFile}
+							type="checkbox"
+							onChange={showFileContent}
+						/>
+						Show content
+					</label>
+				</>,
+			)}
+			<div className={showContent === false ? styles.invisible : ''}>
+				{resultWrapper(data.node.content)}
 			</div>
 		</>,
 	);
 }
 
 function ExpressionBlock({ data }: { data: { node: ExpressionNode } }) {
-	return ExpressionUiBlockWrapper(data.node);
+	return blockWrapper(
+		data.node,
+		<>
+			{contentWrapper(data.node.content)}
+			{resultWrapper(data.node.result)}
+			{errorWrapper(data.node.error)}
+		</>,
+	);
 }
 
-function SelectionBlock({ data }: { data: { node: SelectionNode } }) {
-	const [selectedOption, setSelectedOption] = useState<number>(data.node.selectedOption);
+function SelectionBlock({ data: { node } }: { data: { node: SelectionNode } }) {
+	const [selectedOption, setSelectedOption] = useState<number>(node.selectedOption);
 
 	const handleSelect = (event: React.ChangeEvent<HTMLSelectElement>) => {
 		setSelectedOption(parseInt(event.target.value));
-		data.node.setSelectedOption(parseInt(event.target.value));
+		node.setSelectedOption(parseInt(event.target.value));
 		wiu.updateGraph();
 	};
 
-	function getOption(option: string, index: number): JSX.Element {
+	const getOption = (option: string, index: number): JSX.Element => {
 		return (
 			<option key={index} value={index}>
 				{option}
 			</option>
 		);
-	}
+	};
 
-	return UiBlockWrapper(
-		data.node,
+	const getOptions = (options: string[]): JSX.Element[] => {
+		return options.map((option: string, index: number) => getOption(option, index + 1));
+	};
+
+	return blockWrapper(
+		node,
 		<div>
 			<div>
 				<select
@@ -120,9 +127,7 @@ function SelectionBlock({ data }: { data: { node: SelectionNode } }) {
 					value={selectedOption}
 					onChange={handleSelect}
 				>
-					{data.node
-						.getOptions()
-						.map((option: string, index: number) => getOption(option, index + 1))}
+					{getOptions(node.getOptions())}
 				</select>
 			</div>
 		</div>,
