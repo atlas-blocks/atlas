@@ -247,7 +247,7 @@ export class SelectionNode extends ExpressionNode {
 	}
 
 	private updateContent() {
-		this.content = this.source === '' ? '' : (this.source + '[' + this.selectedOption + ']');
+		this.content = this.source === '' ? '' : this.source + '[' + this.selectedOption + ']';
 		this.helper_contents = [
 			`JSON3.write(map(val -> sprint(show, "text/plain", val), ${
 				this.source === '' ? '[]' : this.source

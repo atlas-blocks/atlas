@@ -126,3 +126,6 @@ export default class WebInterfaceUtils {
 		this.refreshUiElements();
 	}
 }
+
+// @ts-ignore
+export const wiu: WebInterfaceUtils = new WebInterfaceUtils();

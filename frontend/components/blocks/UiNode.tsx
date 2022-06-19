@@ -11,12 +11,13 @@ import {
 	MatrixFilterNode,
 } from '../../utils/AtlasGraph';
 import FileUtils from '../../utils/FileUtils';
+import { wiu } from '../../utils/WebInterfaceUtils';
 
 export const uiNodeTypes = {
 	[ExpressionNode.uitype]: ExpressionBlock,
 	[TextNode.uitype]: TextBlock,
 	[FileNode.uitype]: FileBlock,
-	[SelectionNode.uitype]: SelectBlock,
+	[SelectionNode.uitype]: SelectionBlock,
 	[MatrixFilterNode.uitype]: ExpressionBlock,
 };
 
@@ -93,12 +94,13 @@ function ExpressionBlock({ data }: { data: { node: ExpressionNode } }) {
 	return ExpressionUiBlockWrapper(data.node);
 }
 
-function SelectBlock({ data }: { data: { node: SelectionNode } }) {
+function SelectionBlock({ data }: { data: { node: SelectionNode } }) {
 	const [selectedOption, setSelectedOption] = useState<number>(data.node.selectedOption);
 
 	const handleSelect = (event: React.ChangeEvent<HTMLSelectElement>) => {
 		setSelectedOption(parseInt(event.target.value));
 		data.node.setSelectedOption(parseInt(event.target.value));
+		wiu.updateGraph();
 	};
 
 	function getOption(option: string, index: number): JSX.Element {
