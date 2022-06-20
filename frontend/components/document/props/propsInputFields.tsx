@@ -1,4 +1,4 @@
-import styles from '../../styles/PropsPanel.module.css';
+import styles from '../../../styles/PropsPanel.module.css';
 
 export class InputState {
 	name: string;

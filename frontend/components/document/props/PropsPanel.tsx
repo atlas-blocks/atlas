@@ -1,6 +1,6 @@
-import styles from '../../styles/PropsPanel.module.css';
+import styles from '../../../styles/PropsPanel.module.css';
 import React, { useEffect, useState } from 'react';
-import { wiu } from '../../utils/WebInterfaceUtils';
+import { wiu } from '../../../utils/WebInterfaceUtils';
 import { typeDescriptions } from './descriptions';
 import { InputState, NodeInput, getInputField, getTextareaField } from './propsInputFields';
 import {
@@ -9,7 +9,8 @@ import {
 	FileNode,
 	SelectionNode,
 	TextNode,
-} from '../../utils/AtlasGraph';
+	MatrixFilterNode,
+} from '../../../utils/AtlasGraph';
 
 export default function PropsPanel(): JSX.Element {
 	const inputStates = {
@@ -28,6 +29,10 @@ export default function PropsPanel(): JSX.Element {
 			new NodeInput(inputStates.content, getTextareaField),
 		],
 		[TextNode.uitype]: [
+			new NodeInput(inputStates.name, getInputField),
+			new NodeInput(inputStates.content, getTextareaField),
+		],
+		[MatrixFilterNode.uitype]: [
 			new NodeInput(inputStates.name, getInputField),
 			new NodeInput(inputStates.content, getTextareaField),
 		],

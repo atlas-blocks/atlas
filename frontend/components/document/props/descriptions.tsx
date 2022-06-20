@@ -1,4 +1,4 @@
-import { MatrixFilterNode, ExpressionNode, TextNode, FileNode } from '../../utils/AtlasGraph';
+import { MatrixFilterNode, ExpressionNode, TextNode, FileNode } from '../../../utils/AtlasGraph';
 ('../../utils/AtlasGraph');
 
 export const typeDescriptions = {

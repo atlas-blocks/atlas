@@ -219,7 +219,7 @@ export class ExpressionNode extends ContentNode {
 }
 
 export class MatrixFilterNode extends ExpressionNode {
-	static uitype: string = 'MatrixFilterNode';
+	static uitype: string = 'AtlasGraph.MatrixFilterNode';
 
 	constructor() {
 		super();
