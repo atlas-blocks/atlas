@@ -58,26 +58,6 @@
 	border-style: inset;
 }
 
-.inputSourceSelect {
-	width: 50px;
-}
-
-.btnUpload {
-	font-size: 12px;
-	color: black;
-	border: 1px solid #eaeaea;
-	border-radius: 3px;
-	margin-left: 5px;
-}
-
-.btnUpload:hover {
-	border-color: #30a5be;
-}
-
-.btnUpload:active {
-	border-style: inset;
-}
-
 .disabledTextInput {
 	background-color: #00000011;
 	pointer-events: none;
