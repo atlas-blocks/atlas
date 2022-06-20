@@ -66,12 +66,5 @@
 	border: 1px solid #dddddd;
 	padding: 5px;
 	border-radius: 3px;
-}
-
-.inputSelectSource {
-	border-style: none;
-	border-bottom: 1px solid black;
-	margin: 5px;
-	outline: none;
-	width: 50px;
+	outline-color: #30a5be;
 }

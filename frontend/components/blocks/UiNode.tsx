@@ -108,17 +108,11 @@ export function SelectBlock({ data }: { data: { node: SelectNode } }) {
 	return UiBlockWrapper(
 		data.node.name,
 		<div>
-			<div>
-				<select
-					className={styles.selectBlock}
-					value={selectedOption}
-					onChange={handleSelect}
-				>
-					{options
-						? options.map((option: string, index: number) => getOption(option, index))
-						: ''}
-				</select>
-			</div>
+			<select className={styles.selectBlock} value={selectedOption} onChange={handleSelect}>
+				{options
+					? options.map((option: string, index: number) => getOption(option, index))
+					: ''}
+			</select>
 		</div>,
 	);
 }
