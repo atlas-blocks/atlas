@@ -120,16 +120,8 @@ function SelectionBlock({ data: { node } }: { data: { node: SelectionNode } }) {
 
 	return blockWrapper(
 		node,
-		<div>
-			<div>
-				<select
-					className={styles.selectBlock}
-					value={selectedOption}
-					onChange={handleSelect}
-				>
-					{getOptions(node.getOptions())}
-				</select>
-			</div>
-		</div>,
+		<select className={styles.selectBlock} value={selectedOption} onChange={handleSelect}>
+			{getOptions(node.getOptions())}
+		</select>,
 	);
 }
