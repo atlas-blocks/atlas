@@ -38,6 +38,7 @@ export default function PropsPanel({ wiu }: Props): JSX.Element {
 				if (updateOptions) {
 					try {
 						node.options = JSON.parse(JSON.parse(node.result));
+						if (!Array.isArray(node.options)) throw 'Not a vector!';
 						node.selectedOption = 0;
 					} catch (e) {
 						window.alert(`This JSON is not an array of options: ${e}`);
@@ -48,15 +49,17 @@ export default function PropsPanel({ wiu }: Props): JSX.Element {
 	};
 
 	const submitChanges = async () => {
+		wiu.selectedNode instanceof ExpressionNode ? console.log(wiu.selectedNode.result) : '';
+
 		if (wiu.selectedNode instanceof ContentNode) {
 			if (wiu.selectedNode instanceof SelectNode) {
-				const sourceNodeForSelect: AtlasNode = wiu.graph.nodes.filter(
-					(node: AtlasNode) => node.name === newContentValue,
-				)[0];
-				if (!(sourceNodeForSelect instanceof ExpressionNode)) {
-					window.alert('This Node cannot be a source for SelectionNode');
-					return;
-				}
+				// const sourceNodeForSelect: AtlasNode = wiu.graph.nodes.filter(
+				// 	(node: AtlasNode) => node.name === newContentValue,
+				// )[0];
+				// if (!(sourceNodeForSelect instanceof ExpressionNode)) {
+				// 	window.alert('This Node cannot be a source for SelectionNode');
+				// 	return;
+				// }
 
 				updateSelectionNodeData(
 					wiu.selectedNode?.name,

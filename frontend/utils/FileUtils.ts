@@ -6,22 +6,18 @@ export default class FileUtils {
 		return JsonUtils.stringify(graph, 2);
 	}
 
-	public static readonly filetypeMap = {
-		json: 'application/json',
-		ca: 'application/json',
-	};
+	// public static readonly filetypeMap = {
+	// 	json: 'application/json',
+	// 	ca: 'application/json',
+	// };
 
-	public static readonly converterMap = {
-		json: this.convertGraphToJson,
-		ca: this.convertGraphToJson,
-	};
+	// public static readonly converterMap = {
+	// 	json: this.convertGraphToJson,
+	// 	ca: this.convertGraphToJson,
+	// };
 
-	public static makeUserDownloadFile(
-		content: string,
-		filename: string,
-		extension: keyof typeof this.filetypeMap,
-	): void {
-		const blob = new Blob([content], { type: this.filetypeMap[extension] });
+	public static makeUserDownloadFile(content: string, filename: string, extension: string): void {
+		const blob = new Blob([content], { type: 'application/json' });
 		const href = URL.createObjectURL(blob);
 		const link = document.createElement('a');
 		link.href = href;
@@ -31,11 +27,8 @@ export default class FileUtils {
 		document.body.removeChild(link);
 	}
 
-	public static makeUserDownloadFileFromGraph(
-		graph: AtlasGraph,
-		extension: keyof typeof this.filetypeMap,
-	): void {
-		this.makeUserDownloadFile(this.converterMap[extension](graph), graph.name, extension);
+	public static makeUserDownloadFileFromGraph(graph: AtlasGraph, extension: string): void {
+		this.makeUserDownloadFile(JsonUtils.stringify(graph, 2), graph.name, extension);
 	}
 
 	public static getFileContentString(filepath: File, callback: (string: string) => any): void {

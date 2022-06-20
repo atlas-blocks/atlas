@@ -43,7 +43,7 @@ export default function DnDFlow({ wiu }: Props): JSX.Element {
 	);
 
 	function handleUiNodeSelection(event: React.MouseEvent, node: UINode) {
-		event.preventDefault();
+		// event.preventDefault();
 
 		if (node.data.node instanceof SelectNode) {
 			const regexforVectorName = /(.*)(\[[^\]]+\]$)/;

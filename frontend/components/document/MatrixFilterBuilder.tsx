@@ -25,14 +25,17 @@ export default function MatrixFilterBuilder({ setNewContentValue }: Props): JSX.
 	const refRow = useRef<HTMLInputElement[][]>([[], [], []]);
 	const refMatrixName = useRef<HTMLInputElement>(null!);
 
-	const getExprCols = (mxName: string, num: string, opr: string, val: string) =>
-		num !== '' && num !== '..'
-			? 'broadcast(' + opr + ', getindex(' + mxName + ', .., ' + num + '), ' + val + ')'
-			: '..';
-	const getExprRows = (mxName: string, num: string, opr: string, val: string) =>
-		num !== '' && num !== '..'
-			? 'broadcast(' + opr + ', getindex(' + mxName + ', ' + num + ', ..), ' + val + ')'
-			: '..';
+	const getExprCols = (mxName: string, colName: string, opr: string, val: string) => {
+		if (colName !== '' && colName !== ':')
+			return mxName + '[:,' + colName + '] .' + opr + ' ' + val;
+		else return ':';
+	};
+
+	const getExprRows = (mxName: string, rowName: string, opr: string, val: string) => {
+		if (rowName !== '' && rowName !== ':')
+			return mxName + '[' + rowName + ',:] .' + opr + ' ' + val;
+		else return ':';
+	};
 
 	const filterChange = () => {
 		setFilterCols(() =>
@@ -66,7 +69,7 @@ export default function MatrixFilterBuilder({ setNewContentValue }: Props): JSX.
 		);
 	};
 
-	const addFilter = (cols: boolean, cond: string) => {
+	const addNewConditionToFilter = (cols: boolean, cond: string) => {
 		cols
 			? setFilterCols(() => filterCols.concat({ cond: cond, exp: '' }))
 			: setFilterRows(() => filterRows.concat({ cond: cond, exp: '' }));
@@ -76,16 +79,14 @@ export default function MatrixFilterBuilder({ setNewContentValue }: Props): JSX.
 	let resRows = '';
 	let finalExp = '';
 	filterCols.forEach((item: { cond: string; exp: string }, index: number) => {
-		index
-			? (resCols = 'broadcast(' + item.cond + ',' + resCols + ',' + item.exp + ')')
-			: (resCols = item.exp);
+		if (index !== 0) resCols += ' .' + item.cond + ' (' + item.exp + ')';
+		else resCols = '(' + item.exp + ')';
 	});
 	filterRows.forEach((item: { cond: string; exp: string }, index: number) => {
-		index
-			? (resRows = 'broadcast(' + item.cond + ',' + resRows + ',' + item.exp + ')')
-			: (resRows = item.exp);
+		if (index !== 0) resRows += ' .' + item.cond + '(' + item.exp + ')';
+		else resRows = '(' + item.exp + ')';
 	});
-	finalExp = 'getindex(' + refMatrixName.current?.value + ', ' + resCols + ', ' + resRows + ')';
+	finalExp = refMatrixName.current?.value + '[' + resCols + ', ' + resRows + ']';
 
 	useEffect(() => {
 		if (refMatrixName.current?.value) setNewContentValue(finalExp);
@@ -138,10 +139,16 @@ export default function MatrixFilterBuilder({ setNewContentValue }: Props): JSX.
 				)}
 
 				<div>
-					<button className={styles.btnFilter} onClick={() => addFilter(true, '&')}>
+					<button
+						className={styles.btnFilter}
+						onClick={() => addNewConditionToFilter(true, '&')}
+					>
 						and
 					</button>
-					<button className={styles.btnFilter} onClick={() => addFilter(true, '||')}>
+					<button
+						className={styles.btnFilter}
+						onClick={() => addNewConditionToFilter(true, '||')}
+					>
 						or
 					</button>
 				</div>
@@ -150,10 +157,16 @@ export default function MatrixFilterBuilder({ setNewContentValue }: Props): JSX.
 					listFilters(index, false),
 				)}
 				<div>
-					<button className={styles.btnFilter} onClick={() => addFilter(false, '&')}>
+					<button
+						className={styles.btnFilter}
+						onClick={() => addNewConditionToFilter(false, '&')}
+					>
 						and
 					</button>
-					<button className={styles.btnFilter} onClick={() => addFilter(false, '||')}>
+					<button
+						className={styles.btnFilter}
+						onClick={() => addNewConditionToFilter(false, '||')}
+					>
 						or
 					</button>
 				</div>
