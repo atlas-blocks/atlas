@@ -75,7 +75,7 @@ export default function Panels() {
 				<ElementsPanel wiu={wiu} />
 			</section>
 			<section id={styles.propsPanel} className={getPanelClass(isPropertiesActive)}>
-				<PropsPanel wiu={wiu} />
+				<PropsPanel />
 			</section>
 			<section id={styles.libPanel} className={getPanelClass(isLibrariesActive)}>
 				<LibPanel wiu={wiu} />

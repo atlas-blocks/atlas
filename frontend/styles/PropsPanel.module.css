@@ -77,3 +77,8 @@
 .btnUpload:active {
 	border-style: inset;
 }
+
+.disabledTextInput {
+	background-color: #00000011;
+	pointer-events: none;
+}

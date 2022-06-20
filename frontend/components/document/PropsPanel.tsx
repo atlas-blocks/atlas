@@ -1,43 +1,55 @@
 import styles from '../../styles/PropsPanel.module.css';
-import React, { ChangeEvent, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { wiu } from '../../utils/WebInterfaceUtils';
+import { typeDescriptions } from './descriptions';
+import { InputState, NodeInput, getInputField, getTextareaField } from './propsInputFields';
 import {
 	AtlasNode,
-	ContentNode,
 	ExpressionNode,
 	FileNode,
-	MatrixFilterNode,
 	SelectionNode,
 	TextNode,
 } from '../../utils/AtlasGraph';
-import WebInterfaceUtils from '../../utils/WebInterfaceUtils';
-import MatrixFilterBuilder from './MatrixFilterBuilder';
 
-type Props = {
-	wiu: WebInterfaceUtils;
-};
-
-export default function PropsPanel({ wiu }: Props): JSX.Element {
-	const [contentInput, setContentInput] = useState<string>('');
-	const [nameInput, setNameInput] = useState<string>('');
-	const [sourceInput, setSourceInput] = useState<string>('');
-
-	const updateContVal = (evt: ChangeEvent<HTMLTextAreaElement>) => {
-		setContentInput(evt.target.value);
+export default function PropsPanel(): JSX.Element {
+	const inputStates = {
+		name: new InputState('name', useState<string>('')),
+		content: new InputState('content', useState<string>('')),
+		source: new InputState('source', useState<string>('')),
 	};
-	const updateNameVal = (evt: ChangeEvent<HTMLInputElement>) => {
-		setNameInput(evt.target.value);
+
+	const nodeInputs = {
+		[ExpressionNode.uitype]: [
+			new NodeInput(inputStates.name, getInputField),
+			new NodeInput(inputStates.content, getTextareaField),
+		],
+		[FileNode.uitype]: [
+			new NodeInput(inputStates.name, getInputField),
+			new NodeInput(inputStates.content, getTextareaField),
+		],
+		[TextNode.uitype]: [
+			new NodeInput(inputStates.name, getInputField),
+			new NodeInput(inputStates.content, getTextareaField),
+		],
+		[SelectionNode.uitype]: [
+			new NodeInput(inputStates.name, getInputField),
+			new NodeInput(inputStates.content, (inputState) => getInputField(inputState, true)),
+			new NodeInput(inputStates.source, getInputField),
+		],
 	};
-	const updateNodeSource = (evt: ChangeEvent<HTMLInputElement>) => {
-		setSourceInput(evt.target.value);
+
+	const getNodeInputFields = (uitype: string): JSX.Element[] => {
+		return nodeInputs[uitype].map((nodeInput) =>
+			nodeInput.jsxElementGetter(nodeInput.inputState),
+		);
 	};
 
 	const submitChanges = async () => {
-		if (wiu.selectedNode instanceof ContentNode) {
-			wiu.selectedNode.setName(nameInput);
-			wiu.selectedNode.setContent(contentInput);
-		}
-		if (wiu.selectedNode instanceof SelectionNode) {
-			wiu.selectedNode.setSource(sourceInput);
+		if (wiu.selectedNode === null) return;
+		for (const nodeInput of nodeInputs[wiu.selectedNode.uitype]) {
+			const inputState = nodeInput.inputState;
+			const setter = inputState.getNameSetter() as keyof AtlasNode;
+			(wiu.selectedNode[setter] as any)(inputState.state);
 		}
 		await wiu.updateGraph();
 		wiu.setSelectedNode(null);
@@ -45,65 +57,16 @@ export default function PropsPanel({ wiu }: Props): JSX.Element {
 
 	useEffect(() => {
 		if (wiu.selectedNode === null) return;
-
-		setNameInput(wiu.selectedNode.name);
-		if (wiu.selectedNode instanceof ContentNode) {
-			setContentInput(wiu.selectedNode.content);
-		}
-		if (wiu.selectedNode instanceof SelectionNode) {
-			setSourceInput(wiu.selectedNode.source);
+		for (const nodeInput of nodeInputs[wiu.selectedNode.uitype]) {
+			const inputState = nodeInput.inputState;
+			const field: any = wiu.selectedNode[inputState.name as keyof AtlasNode];
+			inputState.setState(field);
 		}
 	}, [wiu.selectedNode]);
 
-	function chooseProperties(): JSX.Element {
-		if (wiu.selectedNode instanceof MatrixFilterNode) {
-			return <MatrixFilterBuilder setNewContentValue={setContentInput} />;
-		}
-		if (wiu.selectedNode instanceof SelectionNode) {
-			return (
-				<div className={styles.propsPanelWrapper}>
-					<label>Source</label>
-					<input value={sourceInput} onChange={updateNodeSource} />
-				</div>
-			);
-		}
-		return <></>;
-	}
-
-	const typeDescriptions = {
-		[MatrixFilterNode.uitype]:
-			'Matrix Filter' +
-			'\n\nYou can choose Matrix and add a special filter to any Columns and/or Rows with the logic Operator and Value:' +
-			'\n\nmatrix: A\ncol: 1, opr: <, val: 4' +
-			'\n-- provides all rows of matrix A with values less than 4 in Column 1' +
-			'\nrow: 2, opr: >, val: 0' +
-			'\n-- provides all columns of matrix A with values more than 0 in Row 2',
-		[ExpressionNode.uitype]:
-			'Expression' +
-			'\n\nYou can use any expression or formula that Julia language supports.' +
-			'\n\nSee more information on expressions in Julia Docs: https://docs.julialang.org\n/en/v1/base/math/',
-		[TextNode.uitype]: 'Text' + '\n\nLoad any text, like CSV',
-		[FileNode.uitype]: 'File' + '\n\nUpload a file',
-	};
-
-	const propsDescription = (): string => {
-		const node = wiu.selectedNode;
-		if (node === null || typeof typeDescriptions[node.uitype] === undefined) return '';
-
-		return typeDescriptions[node.uitype];
-	};
-
 	return (
 		<>
-			<div className={styles.propsPanelWrapper}>
-				<label>Name</label>
-				<input value={nameInput} onChange={updateNameVal} />
-			</div>
-			<div className={styles.propsPanelWrapper}>
-				<label>Content</label>
-				<textarea value={contentInput} onChange={updateContVal} />
-			</div>
-			<div className={styles.propsPanelWrapper}>{chooseProperties()}</div>
+			{wiu.selectedNode !== null ? getNodeInputFields(wiu.selectedNode.uitype) : ''}
 			<div className={styles.propsPanelWrapper}>
 				<button className={styles.btnSubmit} onClick={submitChanges}>
 					Submit
@@ -111,8 +74,7 @@ export default function PropsPanel({ wiu }: Props): JSX.Element {
 			</div>
 			<div className={styles.propsPanelWrapper}>
 				<label>Description</label>
-				<p>{propsDescription()}</p>
-				<p></p>
+				<p>{wiu.selectedNode !== null ? typeDescriptions[wiu.selectedNode.uitype] : ''}</p>
 			</div>
 		</>
 	);
