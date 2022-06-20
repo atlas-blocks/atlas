@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { wiu } from '../../../utils/WebInterfaceUtils';
 import { typeDescriptions } from './descriptions';
 import { InputState, NodeInput, getInputField, getTextareaField } from './propsInputFields';
+import getMatrixBuilderField from './MatrixFilterBuilder';
 import {
 	AtlasNode,
 	ExpressionNode,
@@ -34,7 +35,8 @@ export default function PropsPanel(): JSX.Element {
 		],
 		[MatrixFilterNode.uitype]: [
 			new NodeInput(inputStates.name, getInputField),
-			new NodeInput(inputStates.content, getTextareaField),
+			new NodeInput(inputStates.content, (inputState) => getInputField(inputState, true)),
+			new NodeInput(inputStates.content, getMatrixBuilderField),
 		],
 		[SelectionNode.uitype]: [
 			new NodeInput(inputStates.name, getInputField),
