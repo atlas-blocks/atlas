@@ -37,8 +37,9 @@ export default function PropsPanel({ wiu }: Props): JSX.Element {
 				if (content) node.content = content;
 				if (updateOptions) {
 					try {
+						if (!Array.isArray(JSON.parse(JSON.parse(node.result))))
+							throw 'Not a vector!';
 						node.options = JSON.parse(JSON.parse(node.result));
-						if (!Array.isArray(node.options)) throw 'Not a vector!';
 						node.selectedOption = 0;
 					} catch (e) {
 						window.alert(`This JSON is not an array of options: ${e}`);

@@ -2,7 +2,6 @@
 	border: 1px solid #dddddd;
 	border-radius: 3px;
 	background: var(--elements-background);
-	max-width: 800px;
 	min-height: fit-content;
 	white-space: pre-wrap;
 	font-size: 14px;
@@ -16,7 +15,7 @@
 	padding: 10px;
 	border-bottom-left-radius: 3px;
 	border-bottom-right-radius: 3px;
-	overflow-x: scroll;
+	overflow-x: auto;
 	font-family: monospace;
 }
 

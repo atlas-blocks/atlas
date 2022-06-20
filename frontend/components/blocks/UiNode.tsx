@@ -26,8 +26,8 @@ export function UiBlockWrapper(
 ): JSX.Element {
 	return (
 		<div className={styles.block}>
-			<Handle type="target" position={Position.Left} />
-			<Handle type="source" position={Position.Right} id="a" />
+			<Handle type="target" position={Position.Top} />
+			<Handle type="source" position={Position.Bottom} id="a" />
 			<div className={styles.name}>{name}</div>
 			<div className={styles.contentWrapper}>{content}</div>
 			<div className={result !== null ? styles.result : ''}>{result}</div>
