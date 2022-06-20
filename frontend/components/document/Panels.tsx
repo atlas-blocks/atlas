@@ -72,13 +72,13 @@ export default function Panels() {
 
 			{/* ------- Panels ------- */}
 			<section id={styles.elementsPanel}>
-				<ElementsPanel wiu={wiu} />
+				<ElementsPanel />
 			</section>
 			<section id={styles.propsPanel} className={getPanelClass(isPropertiesActive)}>
 				<PropsPanel />
 			</section>
 			<section id={styles.libPanel} className={getPanelClass(isLibrariesActive)}>
-				<LibPanel wiu={wiu} />
+				<LibPanel />
 			</section>
 		</>
 	);

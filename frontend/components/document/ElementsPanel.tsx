@@ -1,12 +1,8 @@
 import styles from '../../styles/ElementsPanel.module.css';
-import WebInterfaceUtils from '../../utils/WebInterfaceUtils';
+import { wiu } from '../../utils/WebInterfaceUtils';
 import { AtlasNode } from '../../utils/AtlasGraph';
 
-type Props = {
-	wiu: WebInterfaceUtils;
-};
-
-export default function ElementsPanel({ wiu }: Props) {
+export default function ElementsPanel() {
 	function getNodeTypeName(type: string) {
 		return type.slice(11, type.length);
 	}
