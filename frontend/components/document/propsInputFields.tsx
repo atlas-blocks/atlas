@@ -5,6 +5,11 @@ export class InputState {
 	state: string;
 	setState: React.Dispatch<React.SetStateAction<string>>;
 
+	/**
+	 * Constructs InputState
+	 * @param name must be equal to the name of a AtlasNode field
+	 * @param newState
+	 */
 	constructor(name: string, newState: [string, React.Dispatch<React.SetStateAction<string>>]) {
 		this.name = name;
 		this.state = newState[0];

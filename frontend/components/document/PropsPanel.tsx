@@ -49,6 +49,7 @@ export default function PropsPanel(): JSX.Element {
 		for (const nodeInput of nodeInputs[wiu.selectedNode.uitype]) {
 			const inputState = nodeInput.inputState;
 			const setter = inputState.getNameSetter() as keyof AtlasNode;
+			// nodes classes must have setters for its fields in the format `setSomething`
 			(wiu.selectedNode[setter] as any)(inputState.state);
 		}
 		await wiu.updateGraph();

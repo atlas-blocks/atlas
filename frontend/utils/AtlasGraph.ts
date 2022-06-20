@@ -103,6 +103,13 @@ export class AtlasNode {
 		return this.name;
 	}
 
+	/**
+	 * Json representation of each node have so-called uidata field.
+	 * This field contains all the ui information, that backend don't need
+	 * to know of, like `visibility` or `position`.
+	 *
+	 * Children must override this method, if they have more ui-specific fields!
+	 */
 	public getUiData(): object {
 		return {
 			uitype: this.uitype,
