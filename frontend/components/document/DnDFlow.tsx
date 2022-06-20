@@ -17,14 +17,10 @@ import ReactFlow, {
 
 import { uiNodeTypes } from '../blocks/UiNode';
 import { uiEdgeTypes } from '../blocks/UiEdge';
-import WebInterfaceUtils from '../../utils/WebInterfaceUtils';
+import { wiu } from '../../utils/WebInterfaceUtils';
 import StorageUtils from '../../utils/StorageUtils';
 
-type Props = {
-	wiu: WebInterfaceUtils;
-};
-
-export default function DnDFlow({ wiu }: Props): JSX.Element {
+export default function DnDFlow(): JSX.Element {
 	const [reactFlowInstance, setReactFlowInstance] = useState<ReactFlowInstance | null>(null);
 	const reactFlowWrapper = useRef<HTMLDivElement | null>(null);
 
@@ -40,7 +36,7 @@ export default function DnDFlow({ wiu }: Props): JSX.Element {
 		[wiu.setUiEdges],
 	);
 
-	function handleUiNodeSelection(event: React.MouseEvent, element: UINode) {}
+	function handleUiNodeSelection(event: React.MouseEvent, node: UINode) {}
 
 	function handleUiNodeDoubleClick(event: React.MouseEvent, node: UINode) {
 		wiu.setSelectedNode(node.data.node);

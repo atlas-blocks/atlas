@@ -1,16 +1,12 @@
 import { useEffect, useState } from 'react';
 import styles from '../../styles/main.module.css';
 import buttonStyles from '../../styles/BtnStyle.module.css';
-import WebInterfaceUtils from '../../utils/WebInterfaceUtils';
+import { wiu } from '../../utils/WebInterfaceUtils';
 import ElementsPanel from './ElementsPanel';
-import PropsPanel from './PropsPanel';
+import PropsPanel from './props/PropsPanel';
 import LibPanel from './LibPanel';
 
-type Props = {
-	wiu: WebInterfaceUtils;
-};
-
-export default function Panels({ wiu }: Props) {
+export default function Panels() {
 	const [isLibrariesActive, setIsLibrariesActive] = useState<boolean>(true);
 	const [isPropertiesActive, setIsPropertiesActive] = useState<boolean>(true);
 
@@ -76,13 +72,13 @@ export default function Panels({ wiu }: Props) {
 
 			{/* ------- Panels ------- */}
 			<section id={styles.elementsPanel}>
-				<ElementsPanel wiu={wiu} />
+				<ElementsPanel />
 			</section>
 			<section id={styles.propsPanel} className={getPanelClass(isPropertiesActive)}>
-				<PropsPanel wiu={wiu} />
+				<PropsPanel />
 			</section>
 			<section id={styles.libPanel} className={getPanelClass(isLibrariesActive)}>
-				<LibPanel wiu={wiu} />
+				<LibPanel />
 			</section>
 		</>
 	);

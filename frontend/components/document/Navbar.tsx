@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import { ChangeEvent, useEffect, useRef, useState } from 'react';
-import WebInterfaceUtils from '../../utils/WebInterfaceUtils';
+import { wiu } from '../../utils/WebInterfaceUtils';
 import styles from '../../styles/Navbar.module.css';
 import menuImg from '../../public/icons/menu.png';
 import logoImg from '../../public/logo/atlas_long_white_cut.png';
@@ -12,11 +12,7 @@ import StorageUtils from '../../utils/StorageUtils';
 import JsonUtils from '../../utils/JsonUtils';
 import FileUtils from '../../utils/FileUtils';
 
-type Props = {
-	wiu: WebInterfaceUtils;
-};
-
-export default function Navbar({ wiu }: Props) {
+export default function Navbar() {
 	const refSchemaName = useRef<HTMLInputElement>(null);
 	const refOpenFile = useRef<HTMLInputElement>(null);
 	const [isFileMenuOpen, setIsFileMenuOpen] = useState<boolean>(false);

@@ -18,12 +18,16 @@
 	border-bottom-right-radius: 3px;
 }
 
+.error {
+	background-color: rgba(255, 220, 220, 0.8);
+}
+
 .invisible {
 	display: none;
 }
 
-.error {
-	background-color: rgba(255, 220, 220, 0.8);
+.hidden {
+	visibility: hidden;
 }
 
 .name {
@@ -56,6 +60,22 @@
 	background-color: black;
 }
 
-.importedFiletext {
+.thickLine {
 	line-height: 30px;
+}
+
+.selectBlock {
+	margin-top: 10px;
+	margin-bottom: 10px;
+	border: 1px solid #dddddd;
+	padding: 5px;
+	border-radius: 3px;
+}
+
+.inputSelectSource {
+	border-style: none;
+	border-bottom: 1px solid black;
+	margin: 5px;
+	outline: none;
+	width: 50px;
 }

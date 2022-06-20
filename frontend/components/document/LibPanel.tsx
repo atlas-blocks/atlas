@@ -1,5 +1,5 @@
 import styles from '../../styles/LibPanel.module.css';
-import WebInterfaceUtils from '../../utils/WebInterfaceUtils';
+import { wiu } from '../../utils/WebInterfaceUtils';
 import React, { useState } from 'react';
 import {
 	AtlasNode,
@@ -7,13 +7,10 @@ import {
 	TextNode,
 	FileNode,
 	MatrixFilterNode,
+	SelectionNode,
 } from '../../utils/AtlasGraph';
 
-type Props = {
-	wiu: WebInterfaceUtils;
-};
-
-export default function LibPanel({ wiu }: Props): JSX.Element {
+export default function LibPanel(): JSX.Element {
 	const onDragStart = (event: React.DragEvent<HTMLDivElement>, node: AtlasNode) => {
 		wiu.setDruggedNode(node);
 		event.dataTransfer.effectAllowed = 'move';
@@ -25,6 +22,7 @@ export default function LibPanel({ wiu }: Props): JSX.Element {
 		TextNode: () => TextNode.build().setContent('1, 2, 3').setDefaultName(wiu.graph),
 		FileNode: () => FileNode.build().setDefaultName(wiu.graph),
 		MatrixFilterNode: () => MatrixFilterNode.build().setDefaultName(wiu.graph),
+		SelectionNode: () => SelectionNode.build().setDefaultName(wiu.graph),
 	};
 
 	const libElements = {
