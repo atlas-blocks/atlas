@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import styles from '../../../styles/MatrixFilterBuilder.module.css';
+import stylesOfProps from '../../../styles/PropsPanel.module.css';
 import { InputState } from './propsInputFields';
 
 type Props = {
@@ -122,7 +123,7 @@ function MatrixFilterBuilder({ setNewContentValue }: Props): JSX.Element {
 	}
 
 	return (
-		<div>
+		<div className={stylesOfProps.propsPanelWrapper}>
 			<label>Filter Builder</label>
 			<div className={styles.filterWrapper}>
 				<div>
