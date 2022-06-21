@@ -1,11 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react';
-import styles from '../../styles/MatrixFilterBuilder.module.css';
+import styles from '../../../styles/MatrixFilterBuilder.module.css';
+import { InputState } from './propsInputFields';
 
 type Props = {
 	setNewContentValue: React.Dispatch<React.SetStateAction<string>>;
 };
 
-export default function MatrixFilterBuilder({ setNewContentValue }: Props): JSX.Element {
+function MatrixFilterBuilder({ setNewContentValue }: Props): JSX.Element {
 	const initFilterCols = [
 		{
 			cond: '',
@@ -174,3 +175,9 @@ export default function MatrixFilterBuilder({ setNewContentValue }: Props): JSX.
 		</div>
 	);
 }
+
+const getMatrixBuilderField = (inputState: InputState): JSX.Element => {
+	return <MatrixFilterBuilder key="matrixFilter" setNewContentValue={inputState.setState} />;
+};
+
+export default getMatrixBuilderField;

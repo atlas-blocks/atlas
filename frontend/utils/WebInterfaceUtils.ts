@@ -88,6 +88,7 @@ export default class WebInterfaceUtils {
 	public async updateGraph() {
 		const updatedGraph = await ServerUtils.getUpdatedGraph(this.graph);
 		if (updatedGraph !== null) this.replaceGraphWithNew(updatedGraph);
+		this.refreshUiElements();
 	}
 
 	public updateNodes(changes: UINodeChange[]) {
@@ -125,3 +126,6 @@ export default class WebInterfaceUtils {
 		this.refreshUiElements();
 	}
 }
+
+// @ts-ignore
+export const wiu: WebInterfaceUtils = new WebInterfaceUtils();

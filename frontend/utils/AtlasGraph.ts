@@ -1,3 +1,5 @@
+import { threadId } from 'worker_threads';
+
 export default class AtlasGraph {
 	public name: string;
 	public readonly nodes: AtlasNode[];
@@ -101,6 +103,13 @@ export class AtlasNode {
 		return this.name;
 	}
 
+	/**
+	 * Json representation of each node have so-called uidata field.
+	 * This field contains all the ui information, that backend don't need
+	 * to know of, like `visibility` or `position`.
+	 *
+	 * Children must override this method, if they have more ui-specific fields!
+	 */
 	public getUiData(): object {
 		return {
 			uitype: this.uitype,
@@ -222,19 +231,54 @@ export class MatrixFilterNode extends ExpressionNode {
 	}
 }
 
-export class SelectNode extends ExpressionNode {
-	static uitype: string = 'AtlasGraph.SelectNode';
-	public options: string[] | null;
+export class SelectionNode extends ExpressionNode {
+	static uitype: string = 'AtlasGraph.SelectionNode';
+	public source: string;
 	public selectedOption: number;
 
 	constructor() {
 		super();
-		this.uitype = SelectNode.uitype;
-		this.options = null;
-		this.selectedOption = 0;
+		this.uitype = SelectionNode.uitype;
+		this.selectedOption = 1;
+		this.source = '';
+		this.setContent('');
+		this.helper_results = ['[]'];
 	}
 
-	public static build(): SelectNode {
-		return new SelectNode();
+	public getOptions(): string[] {
+		try {
+			const options = JSON.parse(this.helper_results[0]);
+			if (Array.isArray(options)) return options;
+		} catch (ignored) {}
+		return [];
+	}
+
+	private updateContent() {
+		this.content = this.source === '' ? '' : this.source + '[' + this.selectedOption + ']';
+		this.helper_contents = [
+			`JSON3.write(map(val -> sprint(show, "text/plain", val), ${
+				this.source === '' ? '[]' : this.source
+			}))`,
+		];
+	}
+
+	public setSource(source: string): SelectionNode {
+		this.source = source;
+		this.updateContent();
+		return this;
+	}
+
+	public setSelectedOption(option: number): SelectionNode {
+		this.selectedOption = option;
+		this.updateContent();
+		return this;
+	}
+
+	public getUiData(): object {
+		return { ...super.getUiData(), source: this.source };
+	}
+
+	public static build(): SelectionNode {
+		return new SelectionNode();
 	}
 }
