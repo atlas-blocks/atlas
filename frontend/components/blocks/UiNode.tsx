@@ -8,6 +8,7 @@ import {
 	FileNode,
 	SelectionNode,
 	MatrixFilterNode,
+	ObjectNode,
 } from '../../utils/AtlasGraph';
 import FileUtils from '../../utils/FileUtils';
 import { wiu } from '../../utils/WebInterfaceUtils';
@@ -18,6 +19,7 @@ export const uiNodeTypes = {
 	[FileNode.uitype]: FileBlock,
 	[SelectionNode.uitype]: SelectionBlock,
 	[MatrixFilterNode.uitype]: ExpressionBlock,
+	[ObjectNode.uitype]: ObjectBlock,
 };
 
 function blockWrapper(node: AtlasNode, tail?: JSX.Element | string): JSX.Element {
@@ -128,6 +130,17 @@ function SelectionBlock({ data: { node } }: { data: { node: SelectionNode } }) {
 		<>
 			{contentWrapper(getSelectionContent(node.getOptions()))}
 			{errorWrapper(node.error)}
+		</>,
+	);
+}
+
+function ObjectBlock({ data }: { data: { node: ObjectNode } }) {
+	return blockWrapper(
+		data.node,
+		<>
+			{contentWrapper(data.node.content)}
+			{resultWrapper(data.node.result)}
+			{errorWrapper(data.node.error)}
 		</>,
 	);
 }

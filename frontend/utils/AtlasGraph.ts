@@ -281,3 +281,16 @@ export class SelectionNode extends ExpressionNode {
 		return new SelectionNode();
 	}
 }
+
+export class ObjectNode extends ExpressionNode {
+	static uitype: string = 'AtlasGraph.ObjectNode';
+
+	constructor() {
+		super();
+		this.uitype = ObjectNode.uitype;
+	}
+
+	public static build(): ObjectNode {
+		return new ObjectNode();
+	}
+}

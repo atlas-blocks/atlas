@@ -6,6 +6,7 @@ import AtlasGraph, {
 	FileNode,
 	MatrixFilterNode,
 	SelectionNode,
+	ObjectNode,
 } from './AtlasGraph';
 
 export default class JsonUtils {
@@ -42,6 +43,7 @@ export default class JsonUtils {
 		[SelectionNode.uitype]: SelectionNode.build,
 		[TextNode.uitype]: TextNode.build,
 		[FileNode.uitype]: FileNode.build,
+		[ObjectNode.uitype]: ObjectNode.build,
 		[AtlasNode.uitype]: AtlasNode.build,
 	};
 

@@ -8,6 +8,7 @@ import {
 	FileNode,
 	MatrixFilterNode,
 	SelectionNode,
+	ObjectNode,
 } from '../../utils/AtlasGraph';
 
 export default function LibPanel(): JSX.Element {
@@ -23,6 +24,7 @@ export default function LibPanel(): JSX.Element {
 		FileNode: () => FileNode.build().setDefaultName(wiu.graph),
 		MatrixFilterNode: () => MatrixFilterNode.build().setDefaultName(wiu.graph),
 		SelectionNode: () => SelectionNode.build().setDefaultName(wiu.graph),
+		ObjectNode: () => ObjectNode.build().setDefaultName(wiu.graph),
 	};
 
 	const libElements = {
