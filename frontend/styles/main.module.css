@@ -44,3 +44,28 @@
 	align-items: center;
 	overflow-y: auto;
 }
+
+.flowControlWrapper {
+	grid-column: 3/11;
+	grid-row: 2/2;
+	border: 1px solid #eaeaea;
+	display: flex;
+	align-items: flex-end;
+}
+
+.fieldTab {
+	width: 100px;
+	height: 2.5vh;
+	border: 1px solid #eaeaea;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.fieldTab label {
+	font-size: 12px;
+}
+
+.fieldTabActive {
+	border-bottom: 2px solid #30a5be;
+}

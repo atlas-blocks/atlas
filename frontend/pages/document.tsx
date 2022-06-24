@@ -2,8 +2,7 @@ import { useState } from 'react';
 import Head from 'next/head';
 
 import Navbar from '../components/document/Navbar';
-import FlowControl from '../components/document/FlowControl';
-import DnDFlow from '../components/document/DnDFlow';
+import FieldControl from '../components/document/FieldControl';
 import Panels from '../components/document/Panels';
 
 import WebInterfaceUtils, { wiu } from '../utils/WebInterfaceUtils';
@@ -28,8 +27,7 @@ export default function Home() {
 			</Head>
 			<div className={styles.layout}>
 				<Navbar />
-				<FlowControl />
-				<DnDFlow />
+				<FieldControl />
 				<Panels />
 			</div>
 		</>

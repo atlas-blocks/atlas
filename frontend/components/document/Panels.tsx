@@ -3,7 +3,7 @@ import styles from '../../styles/main.module.css';
 import buttonStyles from '../../styles/BtnStyle.module.css';
 import { wiu } from '../../utils/WebInterfaceUtils';
 import ElementsPanel from './ElementsPanel';
-import PropsPanel from './props/PropsPanel';
+import PropsPanel from './PropsPanel';
 import LibPanel from './LibPanel';
 
 export default function Panels(): JSX.Element {

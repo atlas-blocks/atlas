@@ -1,9 +1,9 @@
-import styles from '../../../styles/PropsPanel.module.css';
+import styles from '../../styles/PropsPanel.module.css';
 import React, { useEffect, useState } from 'react';
-import { wiu } from '../../../utils/WebInterfaceUtils';
-import { typeDescriptions } from './descriptions';
-import { InputState, NodeInput, getInputField, getTextareaField } from './propsInputFields';
-import getMatrixBuilderField from './MatrixFilterBuilder';
+import { wiu } from '../../utils/WebInterfaceUtils';
+import { typeDescriptions } from './props/descriptions';
+import { InputState, NodeInput, getInputField, getTextareaField } from './props/propsInputFields';
+import getMatrixBuilderField from './props/MatrixFilterBuilder';
 import {
 	AtlasNode,
 	ExpressionNode,
@@ -11,7 +11,7 @@ import {
 	SelectionNode,
 	TextNode,
 	MatrixFilterNode,
-} from '../../../utils/AtlasGraph';
+} from '../../utils/AtlasGraph';
 
 export default function PropsPanel(): JSX.Element {
 	const inputStates = {
