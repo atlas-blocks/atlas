@@ -36,7 +36,8 @@ export default function DnDFlow(): JSX.Element {
 		[wiu.setUiEdges],
 	);
 
-	function handleUiNodeSelection(event: React.MouseEvent, node: UINode) {}
+	function handleUiNodeSelection(event: React.MouseEvent, node: UINode) {
+	}
 
 	function handleUiNodeDoubleClick(event: React.MouseEvent, node: UINode) {
 		wiu.setSelectedNode(node.data.node);

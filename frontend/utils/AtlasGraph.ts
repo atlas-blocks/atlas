@@ -284,10 +284,28 @@ export class SelectionNode extends ExpressionNode {
 
 export class ObjectNode extends ExpressionNode {
 	static uitype: string = 'AtlasGraph.ObjectNode';
+	public objProperties: string[][];
 
 	constructor() {
 		super();
 		this.uitype = ObjectNode.uitype;
+		this.setContent('');
+		this.objProperties = [['', '']];
+	}
+
+	private updateContent() {
+		let newContent = 'Dict(';
+		this.objProperties.forEach(
+			(property: string[]) => (newContent += `"${property[0]}" => ${property[1]},`),
+		);
+		newContent += ')';
+		this.content = newContent;
+	}
+
+	public setObjProperties(properties: string[][]): ObjectNode {
+		this.objProperties = properties;
+		this.updateContent();
+		return this;
 	}
 
 	public static build(): ObjectNode {

@@ -3,11 +3,12 @@ import React, { ChangeEvent, useEffect, useRef, useState } from 'react';
 import { InputState } from './propsInputFields';
 
 type Props = {
-	setNewContentValue: React.Dispatch<React.SetStateAction<string>>;
+	newObjProperties: string[][];
+	setNewObjProperties: React.Dispatch<React.SetStateAction<string[][]>>;
 };
 
-function ObjectNodeBuilder({ setNewContentValue }: Props): JSX.Element {
-	const [objProperties, setObjProperties] = useState<string[][]>([['', '']]);
+function ObjectNodeBuilder({ newObjProperties, setNewObjProperties }: Props): JSX.Element {
+	const [objProperties, setObjProperties] = useState<string[][]>(newObjProperties);
 
 	const addNewProperty = () => {
 		setObjProperties((prev: string[][]) => [...prev, ['', '']]);
@@ -33,12 +34,14 @@ function ObjectNodeBuilder({ setNewContentValue }: Props): JSX.Element {
 				<div className={styles.objectPropertyContainer}>
 					<input
 						id={'0' + index.toString()}
+						value={objProperties[index][0]}
 						onChange={(event: ChangeEvent<HTMLInputElement>) =>
 							handleChangeOfProperty(event)
 						}
 					/>
 					<input
 						id={'1' + index.toString()}
+						value={objProperties[index][1]}
 						onChange={(event: ChangeEvent<HTMLInputElement>) =>
 							handleChangeOfProperty(event)
 						}
@@ -49,12 +52,7 @@ function ObjectNodeBuilder({ setNewContentValue }: Props): JSX.Element {
 	}
 
 	useEffect(() => {
-		let newContent = 'Dict(';
-		objProperties.forEach(
-			(property: string[]) => (newContent += `"${property[0]}" => ${property[1]},`),
-		);
-		newContent += ')';
-		setNewContentValue(newContent);
+		setNewObjProperties(objProperties);
 	}, [objProperties]);
 
 	return (
@@ -77,7 +75,14 @@ function ObjectNodeBuilder({ setNewContentValue }: Props): JSX.Element {
 }
 
 const getObjectBuilder = (inputState: InputState): JSX.Element => {
-	return <ObjectNodeBuilder key="objectBuilder" setNewContentValue={inputState.setState} />;
+	console.log(inputState.state);
+	return (
+		<ObjectNodeBuilder
+			key="objectBuilder"
+			newObjProperties={inputState.state}
+			setNewObjProperties={inputState.setState}
+		/>
+	);
 };
 
 export default getObjectBuilder;

@@ -20,6 +20,7 @@ export default function PropsPanel(): JSX.Element {
 		name: new InputState('name', useState<string>('')),
 		content: new InputState('content', useState<string>('')),
 		source: new InputState('source', useState<string>('')),
+		objProperties: new InputState('objProperties', useState<any>([['', '']])),
 	};
 
 	const nodeInputs = {
@@ -48,7 +49,7 @@ export default function PropsPanel(): JSX.Element {
 		[ObjectNode.uitype]: [
 			new NodeInput(inputStates.name, getInputField),
 			new NodeInput(inputStates.content, (inputState) => getTextareaField(inputState, true)),
-			new NodeInput(inputStates.content, getObjectBuilder),
+			new NodeInput(inputStates.objProperties, getObjectBuilder),
 		],
 	};
 
