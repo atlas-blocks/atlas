@@ -49,7 +49,6 @@ function ObjectBuilder({ contentInputState }: { contentInputState: InputState })
 	};
 
 	useEffect(() => {
-		console.log(objProperties);
 		setObjProperties(objProperties);
 
 		if (!(wiu.selectedNode instanceof ObjectNode)) return;
