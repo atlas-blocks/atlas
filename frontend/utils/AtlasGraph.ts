@@ -284,7 +284,7 @@ export class SelectionNode extends ExpressionNode {
 
 export class ObjectNode extends ExpressionNode {
 	static uitype: string = 'AtlasGraph.ObjectNode';
-	public objProperties: string[][];
+	public objProperties: [string, string][];
 
 	constructor() {
 		super();
@@ -295,17 +295,19 @@ export class ObjectNode extends ExpressionNode {
 
 	private updateContent() {
 		let newContent = 'Dict(';
-		this.objProperties.forEach(
-			(property: string[]) => (newContent += `"${property[0]}" => ${property[1]},`),
-		);
-		newContent += ')';
+		this.objProperties.forEach((prop) => (newContent += prop[0] + '=>' + prop[1] + ','));
+		newContent = newContent.slice(0, newContent.length - 1) + ')';
 		this.content = newContent;
 	}
 
-	public setObjProperties(properties: string[][]): ObjectNode {
+	public setObjProperties(properties: [string, string][]): ObjectNode {
 		this.objProperties = properties;
 		this.updateContent();
 		return this;
+	}
+
+	public getUiData(): object {
+		return { ...super.getUiData(), objProperties: this.objProperties };
 	}
 
 	public static build(): ObjectNode {
