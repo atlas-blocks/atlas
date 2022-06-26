@@ -17,7 +17,7 @@ function ObjectBuilder({ contentInputState }: { contentInputState: InputState })
 
 	const getObjProperty = (index: number): JSX.Element => {
 		const handleChangeOfProperty = (event: ChangeEvent<HTMLInputElement>) => {
-			const isPropertyPart = event.target.id.slice(13, 14) === '1' ? true : false;
+			const isPropertyPart = event.target.id.slice(13, 14) === '0' ? true : false;
 			const propIndex = parseInt(event.target.id.slice(14, event.target.id.length));
 			const updatedPart = event.target.value;
 
@@ -34,12 +34,12 @@ function ObjectBuilder({ contentInputState }: { contentInputState: InputState })
 			<div key={index}>
 				<div className={styles.objectPropertyContainer}>
 					<input
-						id={'objectBuilder1' + index.toString()}
+						id={'objectBuilder0' + index.toString()}
 						value={objProperties[index][0]}
 						onChange={handleChangeOfProperty}
 					/>
 					<input
-						id={'objectBuilder2' + index.toString()}
+						id={'objectBuilder1' + index.toString()}
 						value={objProperties[index][1]}
 						onChange={handleChangeOfProperty}
 					/>
