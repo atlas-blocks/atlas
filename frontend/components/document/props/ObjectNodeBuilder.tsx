@@ -5,10 +5,8 @@ import { wiu } from '../../../utils/WebInterfaceUtils';
 import { ObjectNode } from '../../../utils/AtlasGraph';
 
 function ObjectBuilder({ contentInputState }: { contentInputState: InputState }): JSX.Element {
-	if (!(wiu.selectedNode instanceof ObjectNode)) return <div key="objectBuilder"></div>;
-
 	const [objProperties, setObjProperties] = useState<[string, string][]>(
-		wiu.selectedNode.objProperties,
+		wiu.selectedNode instanceof ObjectNode ? wiu.selectedNode.objProperties : [],
 	);
 
 	const addNewProperty = () => {
