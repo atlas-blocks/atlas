@@ -103,6 +103,14 @@
 	justify-content: space-between;
 }
 
+.elementFileMenu:nth-child(3) {
+	border-bottom: 1px solid #dddddd;
+}
+
+.elementFileMenu:last-child {
+	border-bottom: none;
+}
+
 .elementFileMenu:hover {
 	background-color: #eaeaea;
 }
