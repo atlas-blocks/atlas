@@ -281,3 +281,36 @@ export class SelectionNode extends ExpressionNode {
 		return new SelectionNode();
 	}
 }
+
+export class ObjectNode extends ExpressionNode {
+	static uitype: string = 'AtlasGraph.ObjectNode';
+	public objProperties: [string, string][];
+
+	constructor() {
+		super();
+		this.uitype = ObjectNode.uitype;
+		this.setContent('');
+		this.objProperties = [['', '']];
+	}
+
+	private updateContent() {
+		let newContent = 'Dict(';
+		this.objProperties.forEach((prop) => (newContent += `"${prop[0]}" => ${prop[1]},`));
+		newContent = newContent.slice(0, newContent.length - 1) + ')';
+		this.content = newContent;
+	}
+
+	public setObjProperties(properties: [string, string][]): ObjectNode {
+		this.objProperties = properties;
+		this.updateContent();
+		return this;
+	}
+
+	public getUiData(): object {
+		return { ...super.getUiData(), objProperties: this.objProperties };
+	}
+
+	public static build(): ObjectNode {
+		return new ObjectNode();
+	}
+}

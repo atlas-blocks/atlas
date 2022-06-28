@@ -11,7 +11,9 @@ import {
 	SelectionNode,
 	TextNode,
 	MatrixFilterNode,
+	ObjectNode,
 } from '../../../utils/AtlasGraph';
+import getObjectBuilder from './ObjectNodeBuilder';
 
 export default function PropsPanel(): JSX.Element {
 	const inputStates = {
@@ -42,6 +44,11 @@ export default function PropsPanel(): JSX.Element {
 			new NodeInput(inputStates.name, getInputField),
 			new NodeInput(inputStates.content, (inputState) => getTextareaField(inputState, true)),
 			new NodeInput(inputStates.source, getInputField),
+		],
+		[ObjectNode.uitype]: [
+			new NodeInput(inputStates.name, getInputField),
+			new NodeInput(inputStates.content, (inputState) => getTextareaField(inputState, true)),
+			new NodeInput(inputStates.content, getObjectBuilder),
 		],
 	};
 
