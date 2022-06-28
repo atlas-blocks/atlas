@@ -56,6 +56,11 @@ function ObjectBuilder({ contentInputState }: { contentInputState: InputState })
 		contentInputState.setState(wiu.selectedNode.content);
 	}, [objProperties]);
 
+	useEffect(() => {
+		if (!(wiu.selectedNode instanceof ObjectNode)) return;
+		setObjProperties(wiu.selectedNode.objProperties);
+	}, [wiu.selectedNode]);
+
 	return (
 		<div className={styles.objectPropsWrapper}>
 			<label className={styles.objectPropsName}>object builder</label>
