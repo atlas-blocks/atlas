@@ -1,5 +1,5 @@
 using AtlasGraph
-using Test, .TestUtils, ResultTypes
+using Test, .TestUtils
 import .TestUtils as tu
 
 
@@ -7,7 +7,7 @@ import .TestUtils as tu
     begin
         graph = Graph(:name, AbstractNode[])
         expected = Graph(:name, AbstractNode[])
-        @test tu.equals(unwrap(AtlasGraph.updategraph!(graph)), expected)
+        @test tu.equals(AtlasGraph.updategraph!(graph), expected)
     end
     begin
         graph = Graph([

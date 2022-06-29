@@ -7,7 +7,7 @@ export AbstractTextNode, TextNode
 export AbstractFunctionNode, FunctionNode
 export AbstractExpressionNode, ExpressionNode
 
-using JSON3, StructTypes, ResultTypes
+using JSON3, StructTypes
 
 abstract type AbstractNode end
 mutable struct Node <: AbstractNode

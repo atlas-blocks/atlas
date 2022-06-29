@@ -1,6 +1,6 @@
 module JsonUtils
 using ..AtlasGraph
-using JSON3, ResultTypes
+using JSON3
 
 function jsonwriteread(x)
     return JSON3.read(JSON3.write(x))

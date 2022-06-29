@@ -2,7 +2,7 @@ using AtlasGraph, AtlasGraph.FormulaUtils
 using Test
 import .TestUtils as tu
 import AtlasGraph.FormulaUtils as fu
-using DataStructures, ResultTypes
+using DataStructures
 
 
 @testset "topological_order" begin

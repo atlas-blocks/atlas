@@ -1,6 +1,6 @@
 module FormulaUtils
 using ..AtlasGraph, ..Functions
-using DataStructures, ResultTypes
+using DataStructures
 export topological_order
 
 function topological_order(

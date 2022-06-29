@@ -1,7 +1,7 @@
 using AtlasGraph, AtlasGraph.JsonUtils, AtlasGraph.Interactions.Endpoints
 import AtlasGraph.Interactions.Endpoints as ep
 import AtlasGraph.JsonUtils as ju
-using Test, .TestUtils, ResultTypes
+using Test, .TestUtils
 import .TestUtils as tu
 
 
@@ -12,5 +12,5 @@ import .TestUtils as tu
         tu.genexpression(:ex3, ""),
     ])
     @test unwrap(ep.updategraph(ju.json(graph))) ==
-          ju.json(unwrap(AtlasGraph.updategraph!(graph)))
+          ju.json(AtlasGraph.updategraph!(graph))
 end

@@ -1,6 +1,5 @@
 module Executer
 using ..AtlasGraph, ..Functions
-using ResultTypes
 
 function execute_node(node::ExpressionNode)
     node.result = nothing
