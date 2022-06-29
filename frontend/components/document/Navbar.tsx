@@ -135,7 +135,9 @@ export default function Navbar() {
 					/>
 				</div>
 				<div className={styles.icon}>
-					<Image src={questionImg} objectFit={'contain'} />
+					<a target={'_blank'} href={'https://docs.ca.engineering'}>
+						<Image src={questionImg} objectFit={'contain'} />
+					</a>
 				</div>
 				<div className={styles.icon}>
 					<Image src={settingsImg} objectFit={'contain'} />
