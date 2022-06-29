@@ -75,9 +75,23 @@ export default function DnDFlow(): JSX.Element {
 				// @ts-ignore
 				const reactFlowBounds = reactFlowWrapper.current.getBoundingClientRect();
 				// @ts-ignore
+
+				const getPosition = (isParent: boolean): { x: number; y: number } => {
+					if (isParent) {
+						return {
+							x: event.clientX - reactFlowBounds.left - width / 2,
+							y: event.clientY - reactFlowBounds.top - height / 2,
+						};
+					}
+				};
+
 				const pos = reactFlowInstance.project({
-					x: event.clientX - reactFlowBounds.left - width / 2,
-					y: event.clientY - reactFlowBounds.top - height / 2,
+					x: wiu.druggedNode.parentGroup
+						? 50
+						: event.clientX - reactFlowBounds.left - width / 2,
+					y: wiu.druggedNode.parentGroup
+						? 10
+						: event.clientY - reactFlowBounds.top - height / 2,
 				});
 				wiu.graph.nodes.push(wiu.druggedNode.setPosition(pos.x, pos.y));
 			}

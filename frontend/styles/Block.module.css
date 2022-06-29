@@ -73,3 +73,8 @@
 	border-radius: 3px;
 	outline-color: #30a5be;
 }
+
+.groupBlock {
+	min-width: 300px;
+	min-height: 300px;
+}

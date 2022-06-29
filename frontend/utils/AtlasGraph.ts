@@ -81,6 +81,7 @@ export class AtlasNode {
 	public uitype: string;
 	public position: [number, number];
 	public visibility: boolean;
+	public parentGroup: string;
 
 	constructor() {
 		this.name = '';
@@ -88,6 +89,7 @@ export class AtlasNode {
 		this.uitype = AtlasNode.uitype;
 		this.position = [0, 0];
 		this.visibility = true;
+		this.parentGroup = '';
 	}
 
 	public static build(): AtlasNode {
@@ -115,6 +117,7 @@ export class AtlasNode {
 			uitype: this.uitype,
 			position: this.position,
 			visibility: this.visibility,
+			parentGroup: this.parentGroup,
 		};
 	}
 
@@ -123,10 +126,10 @@ export class AtlasNode {
 		return this;
 	}
 
-	public setUitype(visibility: boolean): AtlasNode {
-		this.visibility = visibility;
-		return this;
-	}
+	// public setUitype(visibility: boolean): AtlasNode {
+	// 	this.visibility = visibility;
+	// 	return this;
+	// }
 
 	public setPosition(x: number, y: number): AtlasNode {
 		this.position = [x, y];
@@ -312,5 +315,26 @@ export class ObjectNode extends ExpressionNode {
 
 	public static build(): ObjectNode {
 		return new ObjectNode();
+	}
+}
+
+export class GroupNode extends ExpressionNode {
+	static uitype: string = 'AtlasGraph.GroupNode';
+
+	constructor() {
+		super();
+		this.uitype = GroupNode.uitype;
+		this.setContent('');
+		// this.parentGroup = 'ex1';
+	}
+
+	private updateContent() {}
+
+	// public getUiData(): object {
+	// 	return { ...super.getUiData(), parentGroup: 'ex1' };
+	// }
+
+	public static build(): GroupNode {
+		return new GroupNode();
 	}
 }

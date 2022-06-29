@@ -9,6 +9,7 @@ import {
 	SelectionNode,
 	MatrixFilterNode,
 	ObjectNode,
+	GroupNode,
 } from '../../utils/AtlasGraph';
 import FileUtils from '../../utils/FileUtils';
 import { wiu } from '../../utils/WebInterfaceUtils';
@@ -20,6 +21,7 @@ export const uiNodeTypes = {
 	[SelectionNode.uitype]: SelectionBlock,
 	[MatrixFilterNode.uitype]: ExpressionBlock,
 	[ObjectNode.uitype]: ObjectBlock,
+	[GroupNode.uitype]: GroupBlock,
 };
 
 function blockWrapper(node: AtlasNode, tail?: JSX.Element | string): JSX.Element {
@@ -45,11 +47,12 @@ function errorWrapper(error: JSX.Element | string): JSX.Element {
 	return <div className={error !== 'nothing' ? styles.error : styles.invisible}>{error}</div>;
 }
 
+// UI Blocks
+
 function TextBlock({ data }: { data: { node: TextNode } }) {
 	return blockWrapper(data.node, contentWrapper(data.node.content));
 }
 
-// UI Blocks
 function FileBlock({ data }: { data: { node: FileNode } }) {
 	const [showContent, setShowContent] = useState<boolean>(false);
 
@@ -142,5 +145,30 @@ function ObjectBlock({ data }: { data: { node: ObjectNode } }) {
 			{resultWrapper(data.node.result)}
 			{errorWrapper(data.node.error)}
 		</>,
+	);
+}
+
+function GroupBlock({ data }: { data: { node: GroupNode } }) {
+	// console.log(wiu.graph.nodes)
+
+	return blockWrapper(
+		data.node,
+		<div
+			className={styles.groupBlock}
+			onDragEnter={() => {
+				console.log(wiu.druggedNode);
+
+				let newDruggedNode = wiu.druggedNode;
+				newDruggedNode!.parentGroup = data.node.name;
+				wiu.setDruggedNode(newDruggedNode);
+
+				// 	wiu.setDruggedNode((prev: AtlasNode | null) =>
+				// 		prev ? { ...prev, parentGroup: 'sad' } : null,
+				// 	);
+				// 	wiu!.druggedNode!.parentGroup = data.node.name;
+			}}
+		>
+			{errorWrapper(data.node.error)}
+		</div>,
 	);
 }
