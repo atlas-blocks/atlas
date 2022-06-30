@@ -149,24 +149,20 @@ function ObjectBlock({ data }: { data: { node: ObjectNode } }) {
 }
 
 function GroupBlock({ data }: { data: { node: GroupNode } }) {
-	// console.log(wiu.graph.nodes)
+	const setParentGroup = () => {
+		Object.assign(wiu.druggedNode, { ...wiu.druggedNode, parentGroup: data.node.name });
+	};
+
+	const resetParentGroup = () => {
+		Object.assign(wiu.druggedNode, { ...wiu.druggedNode, parentGroup: '' });
+	};
 
 	return blockWrapper(
 		data.node,
 		<div
 			className={styles.groupBlock}
-			onDragEnter={() => {
-				console.log(wiu.druggedNode);
-
-				let newDruggedNode = wiu.druggedNode;
-				newDruggedNode!.parentGroup = data.node.name;
-				wiu.setDruggedNode(newDruggedNode);
-
-				// 	wiu.setDruggedNode((prev: AtlasNode | null) =>
-				// 		prev ? { ...prev, parentGroup: 'sad' } : null,
-				// 	);
-				// 	wiu!.druggedNode!.parentGroup = data.node.name;
-			}}
+			onDragEnter={setParentGroup}
+			onDragLeave={resetParentGroup}
 		>
 			{errorWrapper(data.node.error)}
 		</div>,

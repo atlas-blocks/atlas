@@ -116,11 +116,11 @@ export default class WebInterfaceUtils {
 	}
 
 	public getUiNodeWidth(node: AtlasNode): number {
-		return 100;
+		return 50;
 	}
 
 	public getUiNodeHeight(node: AtlasNode): number {
-		return 100;
+		return 50;
 	}
 
 	public replaceGraphWithNew(newGraph: AtlasGraph): void {

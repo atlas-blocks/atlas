@@ -76,23 +76,19 @@ export default function DnDFlow(): JSX.Element {
 				const reactFlowBounds = reactFlowWrapper.current.getBoundingClientRect();
 				// @ts-ignore
 
-				const getPosition = (isParent: boolean): { x: number; y: number } => {
-					if (isParent) {
-						return {
-							x: event.clientX - reactFlowBounds.left - width / 2,
-							y: event.clientY - reactFlowBounds.top - height / 2,
-						};
-					}
-				};
-
 				const pos = reactFlowInstance.project({
-					x: wiu.druggedNode.parentGroup
-						? 50
-						: event.clientX - reactFlowBounds.left - width / 2,
-					y: wiu.druggedNode.parentGroup
-						? 10
-						: event.clientY - reactFlowBounds.top - height / 2,
+					x: event.clientX - reactFlowBounds.left - width / 2,
+					y: event.clientY - reactFlowBounds.top - height / 2,
 				});
+
+				if (wiu.druggedNode.parentGroup) {
+					const posParent = wiu.uiNodes.filter(
+						(node) => node.id === wiu.druggedNode?.parentGroup,
+					)[0].position;
+					pos.x -= posParent.x;
+					pos.y -= posParent.y;
+					console.log(posParent.x, event.clientX, pos.x, reactFlowBounds.left);
+				}
 				wiu.graph.nodes.push(wiu.druggedNode.setPosition(pos.x, pos.y));
 			}
 			wiu.refreshUiElements();
@@ -100,7 +96,6 @@ export default function DnDFlow(): JSX.Element {
 		},
 		[reactFlowInstance, wiu.druggedNode],
 	);
-
 	return (
 		<ReactFlowProvider>
 			<div className={styles.flowCanvas} ref={reactFlowWrapper}>
