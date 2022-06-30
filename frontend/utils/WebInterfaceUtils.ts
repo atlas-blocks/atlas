@@ -44,9 +44,9 @@ export default class WebInterfaceUtils {
 			position: { x: node.position[0], y: node.position[1] },
 			data: { node: node },
 			hidden: !node.visibility,
-			parentNode: node.parentGroup,
-			extent: 'parent',
-			expandParent: true,
+			...(node.parentGroup && { parentNode: node.parentGroup }),
+			...(node.extentGroup && { extent: node.extentGroup }),
+			...(node.expandGroup && { parentExpand: node.expandGroup }),
 		};
 	}
 

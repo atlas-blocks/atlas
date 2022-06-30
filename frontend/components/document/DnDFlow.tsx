@@ -87,7 +87,6 @@ export default function DnDFlow(): JSX.Element {
 					)[0].position;
 					pos.x -= posParent.x;
 					pos.y -= posParent.y;
-					console.log(posParent.x, event.clientX, pos.x, reactFlowBounds.left);
 				}
 				wiu.graph.nodes.push(wiu.druggedNode.setPosition(pos.x, pos.y));
 			}

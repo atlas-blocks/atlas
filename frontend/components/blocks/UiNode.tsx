@@ -150,11 +150,23 @@ function ObjectBlock({ data }: { data: { node: ObjectNode } }) {
 
 function GroupBlock({ data }: { data: { node: GroupNode } }) {
 	const setParentGroup = () => {
-		Object.assign(wiu.druggedNode, { ...wiu.druggedNode, parentGroup: data.node.name });
+		if (wiu.druggedNode !== null) {
+			Object.assign(wiu.druggedNode, {
+				...wiu.druggedNode,
+				parentGroup: data.node.name,
+				extentGroup: 'parent',
+				expandGroup: true,
+			});
+		}
 	};
 
 	const resetParentGroup = () => {
-		Object.assign(wiu.druggedNode, { ...wiu.druggedNode, parentGroup: '' });
+		if (wiu.druggedNode !== null) {
+			delete wiu.druggedNode.parentGroup;
+			delete wiu.druggedNode.extentGroup;
+			delete wiu.druggedNode.expandGroup;
+			wiu.setDruggedNode(wiu.druggedNode);
+		}
 	};
 
 	return blockWrapper(

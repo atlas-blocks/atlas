@@ -1,4 +1,4 @@
-import { threadId } from 'worker_threads';
+import { CoordinateExtent } from 'react-flow-renderer';
 
 export default class AtlasGraph {
 	public name: string;
@@ -81,7 +81,9 @@ export class AtlasNode {
 	public uitype: string;
 	public position: [number, number];
 	public visibility: boolean;
-	public parentGroup: string;
+	public parentGroup?: string;
+	public extentGroup?: 'parent' | CoordinateExtent;
+	public expandGroup?: boolean;
 
 	constructor() {
 		this.name = '';
@@ -89,7 +91,6 @@ export class AtlasNode {
 		this.uitype = AtlasNode.uitype;
 		this.position = [0, 0];
 		this.visibility = true;
-		this.parentGroup = '';
 	}
 
 	public static build(): AtlasNode {
@@ -117,7 +118,9 @@ export class AtlasNode {
 			uitype: this.uitype,
 			position: this.position,
 			visibility: this.visibility,
-			parentGroup: this.parentGroup,
+			...(this.parentGroup && { parentGroup: this.parentGroup }),
+			...(this.extentGroup && { extentGroup: this.extentGroup }),
+			...(this.expandGroup && { expandGroup: this.expandGroup }),
 		};
 	}
 
@@ -325,7 +328,6 @@ export class GroupNode extends ExpressionNode {
 		super();
 		this.uitype = GroupNode.uitype;
 		this.setContent('');
-		// this.parentGroup = 'ex1';
 	}
 
 	private updateContent() {}
