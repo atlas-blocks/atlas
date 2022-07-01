@@ -1,4 +1,5 @@
 import { CoordinateExtent } from 'react-flow-renderer';
+import { CSSProperties } from 'react';
 
 export default class AtlasGraph {
 	public name: string;
@@ -84,6 +85,9 @@ export class AtlasNode {
 	public parentGroup?: string;
 	public extentGroup?: 'parent' | CoordinateExtent;
 	public expandGroup?: boolean;
+	public rfStyle?: CSSProperties;
+	public rfWidth?: number;
+	public rfHeight?: number;
 
 	constructor() {
 		this.name = '';
@@ -121,6 +125,9 @@ export class AtlasNode {
 			...(this.parentGroup && { parentGroup: this.parentGroup }),
 			...(this.extentGroup && { extentGroup: this.extentGroup }),
 			...(this.expandGroup && { expandGroup: this.expandGroup }),
+			...(this.rfWidth && { rfWidth: this.rfWidth }),
+			...(this.rfHeight && { rfHeight: this.rfHeight }),
+			...(this.rfStyle && { rfStyle: this.rfStyle }),
 		};
 	}
 
@@ -329,12 +336,6 @@ export class GroupNode extends ExpressionNode {
 		this.uitype = GroupNode.uitype;
 		this.setContent('');
 	}
-
-	private updateContent() {}
-
-	// public getUiData(): object {
-	// 	return { ...super.getUiData(), parentGroup: 'ex1' };
-	// }
 
 	public static build(): GroupNode {
 		return new GroupNode();

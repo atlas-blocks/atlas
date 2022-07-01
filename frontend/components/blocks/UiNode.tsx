@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { CSSProperties, useState } from 'react';
 import { Handle, Position } from 'react-flow-renderer';
 import styles from '../../styles/Block.module.css';
 import {
@@ -24,9 +24,13 @@ export const uiNodeTypes = {
 	[GroupNode.uitype]: GroupBlock,
 };
 
-function blockWrapper(node: AtlasNode, tail?: JSX.Element | string): JSX.Element {
+function blockWrapper(
+	node: AtlasNode,
+	tail?: JSX.Element | string,
+	specialStyle?: CSSProperties,
+): JSX.Element {
 	return (
-		<div className={styles.block}>
+		<div style={specialStyle} className={styles.block}>
 			<Handle type="target" position={Position.Top} />
 			<Handle type="source" position={Position.Bottom} id="a" />
 			<div className={styles.name}>{node.name}</div>
@@ -154,7 +158,6 @@ function GroupBlock({ data }: { data: { node: GroupNode } }) {
 			Object.assign(wiu.druggedNode, {
 				...wiu.druggedNode,
 				parentGroup: data.node.name,
-				extentGroup: 'parent',
 				expandGroup: true,
 			});
 		}
@@ -178,5 +181,6 @@ function GroupBlock({ data }: { data: { node: GroupNode } }) {
 		>
 			{errorWrapper(data.node.error)}
 		</div>,
+		data.node.rfStyle,
 	);
 }

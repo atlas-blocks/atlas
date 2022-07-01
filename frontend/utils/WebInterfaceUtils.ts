@@ -46,7 +46,10 @@ export default class WebInterfaceUtils {
 			hidden: !node.visibility,
 			...(node.parentGroup && { parentNode: node.parentGroup }),
 			...(node.extentGroup && { extent: node.extentGroup }),
-			...(node.expandGroup && { parentExpand: node.expandGroup }),
+			...(node.expandGroup && { expandParent: node.expandGroup }),
+			...(node.rfStyle && { style: node.rfStyle }),
+			...(node.rfWidth && { width: node.rfWidth }),
+			...(node.rfHeight && { height: node.rfHeight }),
 		};
 	}
 
@@ -111,6 +114,25 @@ export default class WebInterfaceUtils {
 			if (change.type === 'remove') {
 				this.graph.removeById(change.id);
 				this.setSelectedNode(null);
+			}
+			if (change.type === 'dimensions') {
+				if (change.dimensions === undefined) return;
+				const node = this.graph.getById(change.id);
+				console.assert(
+					node !== undefined,
+					`Node with id ${change.id} not found in graph ${JsonUtils.stringify(
+						this.graph,
+						2,
+					)}`,
+				);
+				if (node.uitype === 'AtlasGraph.GroupNode') {
+					node.rfStyle = {
+						width: change.dimensions.width,
+						height: change.dimensions.height,
+					};
+				}
+				node.rfWidth = change.dimensions.width;
+				node.rfHeight = change.dimensions.height;
 			}
 		}
 	}
