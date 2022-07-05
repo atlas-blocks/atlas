@@ -24,17 +24,13 @@ export default function DnDFlow(): JSX.Element {
 	const [reactFlowInstance, setReactFlowInstance] = useState<ReactFlowInstance | null>(null);
 	const reactFlowWrapper = useRef<HTMLDivElement | null>(null);
 
-	const onUiNodesChange = useCallback(
-		(changes: UINodeChange[]) => {
-			wiu.updateNodes(changes);
-			wiu.setUiNodes((nds) => applyNodeChanges(changes, nds));
-		},
-		[wiu.setUiNodes],
-	);
-	const onUiEdgesChange = useCallback(
-		(changes: UIEdgeChange[]) => wiu.setUiEdges((eds) => applyEdgeChanges(changes, eds)),
-		[wiu.setUiEdges],
-	);
+	const onUiNodesChange = (changes: UINodeChange[]) => {
+		wiu.updateNodes(changes);
+		wiu.setUiNodes((nds) => applyNodeChanges(changes, nds));
+		StorageUtils.saveGraphToLocalStorage(wiu.graph);
+	};
+	const onUiEdgesChange = (changes: UIEdgeChange[]) =>
+		wiu.setUiEdges((eds) => applyEdgeChanges(changes, eds));
 
 	function handleUiNodeSelection(event: React.MouseEvent, node: UINode) {}
 
@@ -56,10 +52,6 @@ export default function DnDFlow(): JSX.Element {
 		event.preventDefault();
 		event.dataTransfer.dropEffect = 'move';
 	}, []);
-
-	useEffect(() => {
-		StorageUtils.saveGraphToLocalStorage(wiu.graph);
-	}, [wiu.uiNodes, wiu.uiEdges]);
 
 	const onDrop = useCallback(
 		(event: React.DragEvent) => {
@@ -93,7 +85,7 @@ export default function DnDFlow(): JSX.Element {
 			wiu.refreshUiElements();
 			wiu.setSelectedNode(wiu.druggedNode);
 		},
-		[reactFlowInstance, wiu.druggedNode],
+		[reactFlowInstance],
 	);
 	return (
 		<ReactFlowProvider>

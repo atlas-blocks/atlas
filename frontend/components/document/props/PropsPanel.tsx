@@ -82,7 +82,7 @@ export default function PropsPanel(): JSX.Element {
 			const field: any = wiu.selectedNode[inputState.name as keyof AtlasNode];
 			inputState.setState(field);
 		}
-	}, [wiu.selectedNode]);
+	}, [wiu.selectedNode, nodeInputs]);
 
 	return (
 		<>

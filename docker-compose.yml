@@ -24,6 +24,6 @@ services:
     image: julia-backend
     container_name: julia_backend
     build:
-      context: ./backend/AtlasBackend
+      context: ./backend/JuliaBackend
       target: dev
     restart: on-failure
