@@ -53,7 +53,8 @@ export default function PropsPanel(): JSX.Element {
 		],
 		[GroupNode.uitype]: [
 			new NodeInput(inputStates.name, getInputField),
-			new NodeInput(inputStates.content, getTextareaField),
+			new NodeInput(inputStates.content, (inputState) => getTextareaField(inputState, true)),
+			new NodeInput(inputStates.content, getObjectBuilder),
 		],
 	};
 

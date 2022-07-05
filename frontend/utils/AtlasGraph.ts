@@ -328,7 +328,7 @@ export class ObjectNode extends ExpressionNode {
 	}
 }
 
-export class GroupNode extends ExpressionNode {
+export class GroupNode extends ObjectNode {
 	static uitype: string = 'AtlasGraph.GroupNode';
 
 	constructor() {
