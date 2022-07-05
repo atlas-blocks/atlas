@@ -1,4 +1,5 @@
 import { MatrixFilterNode, ExpressionNode, TextNode, FileNode } from '../../../utils/AtlasGraph';
+
 ('../../utils/AtlasGraph');
 
 export const typeDescriptions = {
@@ -16,9 +17,11 @@ export const typeDescriptions = {
 	[ExpressionNode.uitype]: (
 		<>
 			Expression{'\n\n'}
-			You can use any expression or formula that Julia language supports.{'\n'}
-			See more information on expressions in Julia Docs:{'\n'}
-			https://docs.julialang.org\n/en/v1/base/math/
+			You can use an expression, formula, operator which Julia language supports.{'\n\n'}
+			See more information about expressions in ATLAS documentation:{'\n'}
+			<a target={'_blank'} href={'https://docs.ca.engineering'}>
+				docs.ca.engineering
+			</a>
 		</>
 	),
 	[TextNode.uitype]: <>Text{'\n\n'}Load any text, like CSV</>,

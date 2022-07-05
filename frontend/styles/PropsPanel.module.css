@@ -14,11 +14,12 @@
 }
 
 .propsPanelWrapper p {
-	margin: 5px;
 	margin-top: 10px;
 	padding-left: 5px;
 	font-size: 12px;
+	word-break: break-word;
 	white-space: pre-wrap;
+	line-height: 18px;
 }
 
 .propsPanelWrapper input {

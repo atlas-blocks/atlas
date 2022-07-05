@@ -23,8 +23,10 @@ export const uiNodeTypes = {
 };
 
 function blockWrapper(node: AtlasNode, tail?: JSX.Element | string): JSX.Element {
+	const selectedBlockStyle = wiu.selectedNode === node ? styles.selectedBlock : '';
+
 	return (
-		<div className={styles.block}>
+		<div className={styles.block + ' ' + selectedBlockStyle}>
 			<Handle type="target" position={Position.Top} />
 			<Handle type="source" position={Position.Bottom} id="a" />
 			<div className={styles.name}>{node.name}</div>
@@ -119,7 +121,11 @@ function SelectionBlock({ data: { node } }: { data: { node: SelectionNode } }) {
 
 	const getSelectionContent = (options: string[]): JSX.Element => {
 		return (
-			<select className={styles.selectBlock} value={selectedOption} onChange={handleSelect}>
+			<select
+				className={styles.selectionBlock}
+				value={selectedOption}
+				onChange={handleSelect}
+			>
 				{options.map((option: string, index: number) => getOption(option, index + 1))}
 			</select>
 		);

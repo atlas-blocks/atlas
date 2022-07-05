@@ -7,6 +7,7 @@ import logoImg from '../../public/logo/atlas_long_white_cut.png';
 import exportImg from '../../public/icons/export.png';
 import questionImg from '../../public/icons/question-mark.png';
 import settingsImg from '../../public/icons/settings.png';
+import personImg from '../../public/icons/person.png';
 import AtlasGraph from '../../utils/AtlasGraph';
 import StorageUtils from '../../utils/StorageUtils';
 import JsonUtils from '../../utils/JsonUtils';
@@ -142,7 +143,7 @@ export default function Navbar() {
 					</a>
 				</div>
 				<div className={styles.icon}>
-					<Image src={settingsImg} objectFit={'contain'} alt={'settingsImg'} />
+					<Image src={personImg} objectFit={'contain'} alt={'settingsImg'} />
 				</div>
 				<input
 					type={'file'}

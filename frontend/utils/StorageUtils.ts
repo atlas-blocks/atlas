@@ -5,6 +5,7 @@ export default class StorageUtils {
 	private static readonly recentGraphStorageName = 'AtlasStorage';
 
 	public static saveGraphToLocalStorage(saveGraph: AtlasGraph) {
+		if (!saveGraph || saveGraph.name === '' || saveGraph.nodes === []) return;
 		const recentGraphs: AtlasGraph[] = this.getRecentGraphsFromLocalStorageExceptWithName(
 			saveGraph.name,
 		);

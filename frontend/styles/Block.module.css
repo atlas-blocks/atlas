@@ -7,6 +7,11 @@
 	font-size: 14px;
 }
 
+.selectedBlock {
+	border: 1px solid #30a5be;
+	box-shadow: 3px 3px 3px rgba(176, 176, 176, 0.2);
+}
+
 .result,
 .error {
 	background-color: rgba(236, 236, 236, 0.8);
@@ -65,7 +70,7 @@
 	line-height: 30px;
 }
 
-.selectBlock {
+.selectionBlock {
 	margin-top: 10px;
 	margin-bottom: 10px;
 	border: 1px solid #dddddd;

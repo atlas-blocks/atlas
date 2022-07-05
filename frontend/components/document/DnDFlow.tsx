@@ -97,6 +97,7 @@ export default function DnDFlow(): JSX.Element {
 					onDrop={onDrop}
 					onDragOver={onDragOver}
 					defaultZoom={0.8}
+					deleteKeyCode={['Backspace', 'Delete']}
 				>
 					{/*<MiniMap />*/}
 					<Controls />
