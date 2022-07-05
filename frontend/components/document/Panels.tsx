@@ -6,7 +6,7 @@ import ElementsPanel from './ElementsPanel';
 import PropsPanel from './PropsPanel';
 import LibPanel from './LibPanel';
 
-export default function Panels() {
+export default function Panels(): JSX.Element {
 	const [isLibrariesActive, setIsLibrariesActive] = useState<boolean>(true);
 	const [isPropertiesActive, setIsPropertiesActive] = useState<boolean>(true);
 

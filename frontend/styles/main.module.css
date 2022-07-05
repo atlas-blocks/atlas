@@ -5,7 +5,7 @@
 }
 
 .panelHidden {
-	visibility: hidden;
+	display: none !important;
 }
 
 #elementsPanel {
@@ -13,25 +13,23 @@
 	grid-row: 4;
 	display: flex;
 	flex-direction: column;
-	overflow: auto;
-	margin-top: 10px;
+	overflow-y: auto;
+	border: 1px solid #eaeaea;
+	padding-top: 10px;
 }
 
-.flowCanvas {
+.centralField {
 	grid-column: 3 / 11;
 	justify-content: center;
-	text-align: center;
-	grid-row: 2/5;
-	border: 1px solid #eaeaea;
+	grid-row: 3/5;
 	width: 100%;
 	height: 100%;
-	font-size: 5px;
-	display: flex;
 }
 
 #propsPanel {
 	grid-column: 11/13;
 	grid-row: 4;
+	border: 1px solid #eaeaea;
 	display: flex;
 	flex-direction: column;
 	overflow-y: auto;
@@ -40,8 +38,34 @@
 #libPanel {
 	grid-column: 11/13;
 	grid-row: 4;
+	border: 1px solid #eaeaea;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
 	overflow-y: auto;
+}
+
+.flowControlWrapper {
+	grid-column: 3/11;
+	grid-row: 2/2;
+	border: 1px solid #eaeaea;
+	display: flex;
+	align-items: flex-end;
+}
+
+.fieldTab {
+	width: 100px;
+	height: 2.5vh;
+	border: 1px solid #eaeaea;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.fieldTab label {
+	font-size: 12px;
+}
+
+.fieldTabActive {
+	border-bottom: 2px solid #30a5be;
 }

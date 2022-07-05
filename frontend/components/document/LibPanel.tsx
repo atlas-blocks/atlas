@@ -75,7 +75,7 @@ export default function LibPanel(): JSX.Element {
 
 	function getLibSections(libName: keyof typeof libElements): JSX.Element {
 		return (
-			<div key={libName} className={styles.libWrapper}>
+			<div key={libName} className={styles.libSection}>
 				<div
 					id={libName}
 					className={styles.libSectionLabel}
