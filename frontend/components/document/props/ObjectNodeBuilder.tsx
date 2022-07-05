@@ -13,6 +13,12 @@ function ObjectBuilder({ contentInputState }: { contentInputState: InputState })
 		setObjProperties((prev: [string, string][]) => [...prev, ['', '']]);
 	};
 
+	const removeProperty = () => {
+		setObjProperties((prev: [string, string][]) =>
+			prev.length > 1 ? prev.slice(0, prev.length - 1) : prev,
+		);
+	};
+
 	const getObjProperty = (index: number): JSX.Element => {
 		const handleChangeOfProperty = (event: ChangeEvent<HTMLInputElement>) => {
 			const isPropertyPart = event.target.id.slice(13, 14) === '0' ? true : false;
@@ -30,18 +36,20 @@ function ObjectBuilder({ contentInputState }: { contentInputState: InputState })
 
 		return (
 			<div key={index}>
-				<div className={styles.objectPropertyContainer}>
+				<div className={styles.objPropertyWrapper}>
+					<label>property</label>
 					<input
 						id={'objectBuilder0' + index.toString()}
 						value={objProperties[index][0]}
 						onChange={handleChangeOfProperty}
 					/>
-					<input
-						id={'objectBuilder1' + index.toString()}
-						value={objProperties[index][1]}
-						onChange={handleChangeOfProperty}
-					/>
 				</div>
+				<input
+					className={styles.objValueWrapper}
+					id={'objectBuilder1' + index.toString()}
+					value={objProperties[index][1]}
+					onChange={handleChangeOfProperty}
+				/>
 			</div>
 		);
 	};
@@ -63,14 +71,11 @@ function ObjectBuilder({ contentInputState }: { contentInputState: InputState })
 		<div className={styles.objectPropsWrapper}>
 			<label className={styles.objectPropsName}>object builder</label>
 			<div className={styles.allPropertiesWrapper}>
-				<div className={styles.objectPropertyContainer}>
-					<label>property</label>
-					<label>value</label>
-				</div>
 				{objProperties.map((property, index) => getObjProperty(index))}
-				<button className={styles.btnAddProperty} onClick={addNewProperty}>
-					add
-				</button>
+				<div className={styles.btnAddRemoveWrapper}>
+					<button onClick={addNewProperty}>add</button>
+					<button onClick={removeProperty}>remove</button>
+				</div>
 			</div>
 		</div>
 	);
