@@ -18,7 +18,7 @@ export const uiNodeTypes = {
 	[TextNode.uitype]: TextBlock,
 	[FileNode.uitype]: FileBlock,
 	[SelectionNode.uitype]: SelectionBlock,
-	[MatrixFilterNode.uitype]: ExpressionBlock,
+	[MatrixFilterNode.uitype]: MatrixFilterBlock,
 	[ObjectNode.uitype]: ObjectBlock,
 };
 
@@ -102,6 +102,16 @@ function ExpressionBlock({ data }: { data: { node: ExpressionNode } }) {
 	);
 }
 
+function MatrixFilterBlock({ data }: { data: { node: MatrixFilterNode } }) {
+	return blockWrapper(
+		data.node,
+		<>
+			{resultWrapper(data.node.result)}
+			{errorWrapper(data.node.error)}
+		</>,
+	);
+}
+
 function SelectionBlock({ data: { node } }: { data: { node: SelectionNode } }) {
 	const [selectedOption, setSelectedOption] = useState<number>(node.selectedOption);
 
@@ -144,7 +154,6 @@ function ObjectBlock({ data }: { data: { node: ObjectNode } }) {
 	return blockWrapper(
 		data.node,
 		<>
-			{contentWrapper(data.node.content)}
 			{resultWrapper(data.node.result)}
 			{errorWrapper(data.node.error)}
 		</>,
