@@ -17,13 +17,18 @@ export const typeDescriptions = {
 	[ExpressionNode.uitype]: (
 		<>
 			Expression{'\n\n'}
-			You can use an expression, formula, operator which Julia language supports.{'\n\n'}
+			You can use any expression, formula, operator which Julia language supports.{'\n\n'}
 			See more information about expressions in ATLAS documentation:{'\n'}
 			<a target={'_blank'} href={'https://docs.ca.engineering'}>
 				docs.ca.engineering
 			</a>
 		</>
 	),
-	[TextNode.uitype]: <>Text{'\n\n'}Load any text, like CSV</>,
+	[TextNode.uitype]: (
+		<>
+			Text{'\n\n'}You can add any text like string, CSV, JSON. Output of TextNode is a String
+			type.
+		</>
+	),
 	[FileNode.uitype]: <>File{'\n\n'}Upload a file</>,
 };
