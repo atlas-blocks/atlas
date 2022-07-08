@@ -1,4 +1,5 @@
-import styles from '../../styles/main.module.css';
+import stylesMain from '../../styles/main.module.css';
+import styles from '../../styles/DnDFlow.module.css';
 import React, { useState, useCallback, useRef, useEffect } from 'react';
 import ReactFlow, {
 	Controls,
@@ -79,9 +80,43 @@ export default function DnDFlow(): JSX.Element {
 		[reactFlowInstance],
 	);
 
+	const [contextPosition, setContextPosition] = useState({ x: 0, y: 0 });
+	const [showContext, setShowContext] = useState<boolean>(false);
+
+	const getContextMenu = (event: React.MouseEvent, node: UINode) => {
+		event.preventDefault();
+		setContextPosition({ x: event.clientX, y: event.clientY });
+		setShowContext(true);
+	};
+
+	const nodeContextMenu = (): JSX.Element => {
+		return (
+			<div
+				style={{ left: contextPosition.x, top: contextPosition.y }}
+				className={styles.contextMenu}
+			>
+				<div className={styles.elementContextMenu}>
+					<label>New</label>
+				</div>
+			</div>
+		);
+	};
+
+	const handleClick = useCallback(
+		() => (showContext ? setShowContext(false) : null),
+		[showContext],
+	);
+
+	useEffect(() => {
+		window.addEventListener('click', handleClick);
+		return () => {
+			window.removeEventListener('click', handleClick);
+		};
+	}, [handleClick]);
+
 	return (
 		<ReactFlowProvider>
-			<div className={styles.flowCanvas} ref={reactFlowWrapper}>
+			<div className={stylesMain.flowCanvas} ref={reactFlowWrapper}>
 				<ReactFlow
 					nodes={wiu.uiNodes}
 					edges={wiu.uiEdges}
@@ -97,10 +132,13 @@ export default function DnDFlow(): JSX.Element {
 					onDrop={onDrop}
 					onDragOver={onDragOver}
 					defaultZoom={0.8}
+					onNodeContextMenu={getContextMenu}
 				>
 					{/*<MiniMap />*/}
+					{/*{nodeContextMenu()}*/}
 					<Controls />
 					<Background />
+					{showContext ? nodeContextMenu() : ''}
 				</ReactFlow>
 			</div>
 		</ReactFlowProvider>
