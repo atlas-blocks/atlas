@@ -1,6 +1,5 @@
-// import styles from '../../styles/FlowControl.module.css';
 import styles from '../../styles/main.module.css';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import GraphicsField from './GraphicsField';
 import DnDFlow from './DnDFlow';
 
@@ -27,10 +26,6 @@ export default function FieldControl(): JSX.Element {
 	const getFieldVisibility = (isActive: boolean): string => {
 		return isActive ? styles.centralField : styles.panelHidden;
 	};
-
-	// useEffect(() => {
-	// 	wiu.selectedNode ? showProperties() : showLibraries();
-	// }, [wiu.selectedNode]);
 
 	return (
 		<>
