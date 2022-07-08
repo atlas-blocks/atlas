@@ -44,6 +44,12 @@ export default class WebInterfaceUtils {
 			position: { x: node.position[0], y: node.position[1] },
 			data: { node: node },
 			hidden: !node.visibility,
+			...(node.parentGroup && { parentNode: node.parentGroup }),
+			...(node.extentGroup && { extent: node.extentGroup }),
+			...(node.expandGroup && { expandParent: node.expandGroup }),
+			...(node.rfStyle && { style: node.rfStyle }),
+			...(node.rfWidth && { width: node.rfWidth }),
+			...(node.rfHeight && { height: node.rfHeight }),
 		};
 	}
 
@@ -109,15 +115,34 @@ export default class WebInterfaceUtils {
 				this.graph.removeById(change.id);
 				this.setSelectedNode(null);
 			}
+			if (change.type === 'dimensions') {
+				if (change.dimensions === undefined) return;
+				const node = this.graph.getById(change.id);
+				console.assert(
+					node !== undefined,
+					`Node with id ${change.id} not found in graph ${JsonUtils.stringify(
+						this.graph,
+						2,
+					)}`,
+				);
+				if (node.uitype === 'AtlasGraph.GroupNode') {
+					node.rfStyle = {
+						width: change.dimensions.width,
+						height: change.dimensions.height,
+					};
+				}
+				node.rfWidth = change.dimensions.width;
+				node.rfHeight = change.dimensions.height;
+			}
 		}
 	}
 
 	public getUiNodeWidth(node: AtlasNode): number {
-		return 100;
+		return 50;
 	}
 
 	public getUiNodeHeight(node: AtlasNode): number {
-		return 100;
+		return 50;
 	}
 
 	public replaceGraphWithNew(newGraph: AtlasGraph): void {

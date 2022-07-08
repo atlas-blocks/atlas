@@ -67,10 +67,19 @@ export default function DnDFlow(): JSX.Element {
 				// @ts-ignore
 				const reactFlowBounds = reactFlowWrapper.current.getBoundingClientRect();
 				// @ts-ignore
+
 				const pos = reactFlowInstance.project({
 					x: event.clientX - reactFlowBounds.left - width / 2,
 					y: event.clientY - reactFlowBounds.top - height / 2,
 				});
+
+				if (wiu.druggedNode.parentGroup) {
+					const posParent = wiu.uiNodes.filter(
+						(node) => node.id === wiu.druggedNode?.parentGroup,
+					)[0].position;
+					pos.x -= posParent.x;
+					pos.y -= posParent.y;
+				}
 				wiu.graph.nodes.push(wiu.druggedNode.setPosition(pos.x, pos.y));
 			}
 			wiu.refreshUiElements();
@@ -78,7 +87,6 @@ export default function DnDFlow(): JSX.Element {
 		},
 		[reactFlowInstance],
 	);
-
 	return (
 		<ReactFlowProvider>
 			<div className={styles.flowCanvas} ref={reactFlowWrapper}>

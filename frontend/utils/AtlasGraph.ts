@@ -1,4 +1,5 @@
-import { threadId } from 'worker_threads';
+import { CoordinateExtent } from 'react-flow-renderer';
+import { CSSProperties } from 'react';
 
 export default class AtlasGraph {
 	public name: string;
@@ -81,6 +82,12 @@ export class AtlasNode {
 	public uitype: string;
 	public position: [number, number];
 	public visibility: boolean;
+	public parentGroup?: string;
+	public extentGroup?: 'parent' | CoordinateExtent;
+	public expandGroup?: boolean;
+	public rfStyle?: CSSProperties;
+	public rfWidth?: number;
+	public rfHeight?: number;
 
 	constructor() {
 		this.name = '';
@@ -115,6 +122,12 @@ export class AtlasNode {
 			uitype: this.uitype,
 			position: this.position,
 			visibility: this.visibility,
+			...(this.parentGroup && { parentGroup: this.parentGroup }),
+			...(this.extentGroup && { extentGroup: this.extentGroup }),
+			...(this.expandGroup && { expandGroup: this.expandGroup }),
+			...(this.rfWidth && { rfWidth: this.rfWidth }),
+			...(this.rfHeight && { rfHeight: this.rfHeight }),
+			...(this.rfStyle && { rfStyle: this.rfStyle }),
 		};
 	}
 
@@ -123,10 +136,10 @@ export class AtlasNode {
 		return this;
 	}
 
-	public setUitype(visibility: boolean): AtlasNode {
-		this.visibility = visibility;
-		return this;
-	}
+	// public setUitype(visibility: boolean): AtlasNode {
+	// 	this.visibility = visibility;
+	// 	return this;
+	// }
 
 	public setPosition(x: number, y: number): AtlasNode {
 		this.position = [x, y];
@@ -312,5 +325,19 @@ export class ObjectNode extends ExpressionNode {
 
 	public static build(): ObjectNode {
 		return new ObjectNode();
+	}
+}
+
+export class GroupNode extends ObjectNode {
+	static uitype: string = 'AtlasGraph.GroupNode';
+
+	constructor() {
+		super();
+		this.uitype = GroupNode.uitype;
+		this.setContent('');
+	}
+
+	public static build(): GroupNode {
+		return new GroupNode();
 	}
 }

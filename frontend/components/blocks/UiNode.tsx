@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { CSSProperties, useState } from 'react';
 import { Handle, Position } from 'react-flow-renderer';
 import styles from '../../styles/Block.module.css';
 import {
@@ -9,6 +9,7 @@ import {
 	SelectionNode,
 	MatrixFilterNode,
 	ObjectNode,
+	GroupNode,
 } from '../../utils/AtlasGraph';
 import FileUtils from '../../utils/FileUtils';
 import { wiu } from '../../utils/WebInterfaceUtils';
@@ -20,11 +21,16 @@ export const uiNodeTypes = {
 	[SelectionNode.uitype]: SelectionBlock,
 	[MatrixFilterNode.uitype]: ExpressionBlock,
 	[ObjectNode.uitype]: ObjectBlock,
+	[GroupNode.uitype]: GroupBlock,
 };
 
-function blockWrapper(node: AtlasNode, tail?: JSX.Element | string): JSX.Element {
+function blockWrapper(
+	node: AtlasNode,
+	tail?: JSX.Element | string,
+	specialStyle?: CSSProperties,
+): JSX.Element {
 	return (
-		<div className={styles.block}>
+		<div style={specialStyle} className={styles.block}>
 			<Handle type="target" position={Position.Top} />
 			<Handle type="source" position={Position.Bottom} id="a" />
 			<div className={styles.name}>{node.name}</div>
@@ -45,11 +51,12 @@ function errorWrapper(error: JSX.Element | string): JSX.Element {
 	return <div className={error !== 'nothing' ? styles.error : styles.invisible}>{error}</div>;
 }
 
+// UI Blocks
+
 function TextBlock({ data }: { data: { node: TextNode } }) {
 	return blockWrapper(data.node, contentWrapper(data.node.content));
 }
 
-// UI Blocks
 function FileBlock({ data }: { data: { node: FileNode } }) {
 	const [showContent, setShowContent] = useState<boolean>(false);
 
@@ -142,5 +149,38 @@ function ObjectBlock({ data }: { data: { node: ObjectNode } }) {
 			{resultWrapper(data.node.result)}
 			{errorWrapper(data.node.error)}
 		</>,
+	);
+}
+
+function GroupBlock({ data }: { data: { node: GroupNode } }) {
+	const setParentGroup = () => {
+		if (wiu.druggedNode !== null) {
+			Object.assign(wiu.druggedNode, {
+				...wiu.druggedNode,
+				parentGroup: data.node.name,
+				expandGroup: true,
+			});
+		}
+	};
+
+	const resetParentGroup = () => {
+		if (wiu.druggedNode !== null) {
+			delete wiu.druggedNode.parentGroup;
+			delete wiu.druggedNode.extentGroup;
+			delete wiu.druggedNode.expandGroup;
+			wiu.setDruggedNode(wiu.druggedNode);
+		}
+	};
+
+	return blockWrapper(
+		data.node,
+		<div
+			className={styles.groupBlock}
+			onDragEnter={setParentGroup}
+			onDragLeave={resetParentGroup}
+		>
+			{errorWrapper(data.node.error)}
+		</div>,
+		data.node.rfStyle,
 	);
 }

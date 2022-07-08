@@ -17,49 +17,56 @@
 	border: 1px solid #eaeaea;
 	border-radius: 3px;
 	max-height: fit-content;
-	padding: 5px;
+	padding: 10px;
 	margin: 5px;
 	margin-top: 10px;
 	display: flex;
 	flex-direction: column;
-	line-height: 25px;
-}
-
-.objectPropertyContainer {
-	display: flex;
-}
-
-.objectPropertyContainer label {
-	width: 50%;
-	margin-left: 10px;
-	margin-right: 10px;
 	font-size: 12px;
 }
 
-.objectPropertyContainer input {
-	width: 50%;
-	margin-left: 10px;
-	margin-right: 10px;
+.objPropertyWrapper {
+	display: flex;
+	margin-bottom: 10px;
+}
+
+.objPropertyWrapper label {
+	width: 25%;
+}
+
+.objPropertyWrapper input {
+	width: 75%;
 	border-style: none;
 	border-bottom: 1px solid black;
 	outline: none;
-	font-family: monospace;
-	font-size: 12px;
 }
 
-.btnAddProperty {
+.objValueWrapper {
+	width: 100%;
+	border: 1px solid #eaeaea;
+	margin-bottom: 10px;
+	outline: none;
+	font-family: monospace;
+	border-radius: 3px;
+	padding: 5px;
+}
+
+.btnAddRemoveWrapper {
+	display: flex;
+}
+
+.btnAddRemoveWrapper button {
 	width: fit-content;
-	margin-left: 10px;
-	margin-top: 10px;
+	margin-right: 10px;
 	border: 1px solid transparent;
 	border-radius: 2px;
 	font-size: 10px;
 }
 
-.btnAddProperty:hover {
+.btnAddRemoveWrapper button:hover {
 	border-color: #30a5be;
 }
 
-.btnAddProperty:active {
+.btnAddRemoveWrapper button:active {
 	border-style: inset;
 }
