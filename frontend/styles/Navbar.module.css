@@ -85,6 +85,7 @@
 	background-color: white;
 	border-radius: 3px;
 	border: 1px solid #30a5be;
+	box-shadow: 0 0 3px 3px rgba(176, 176, 176, 0.2);
 	overflow-y: clip;
 	transition: max-height 0.5s ease-in-out;
 	z-index: 5;
@@ -93,6 +94,7 @@
 .fileMenuHidden {
 	max-height: 0;
 	border-style: none;
+	box-shadow: none;
 }
 
 .elementFileMenu {
