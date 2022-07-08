@@ -20,11 +20,10 @@ export default function Navbar() {
 	const [recentFromLocalStorage, setRecentFromLocalStorage] = useState<AtlasGraph[]>();
 	const [removeTrigger, setRemoveTrigger] = useState<boolean>(false);
 	const fileMenuStyle = styles.fileMenu + (isFileMenuOpen ? '' : ' ' + styles.fileMenuHidden);
+	const [clickOnMenu, setClickOnMenu] = useState<boolean>(false);
 
-	const makeUserDownloadFile = (extension: keyof typeof FileUtils.filetypeMap): void => {
-		setIsFileMenuOpen(false);
-		FileUtils.makeUserDownloadFileFromGraph(wiu.graph, extension);
-	};
+	const downloadFile = () => FileUtils.makeUserDownloadFileFromGraph(wiu.graph, 'ca');
+	const exportFile = () => FileUtils.makeUserDownloadFileFromGraph(wiu.graph, 'json');
 
 	const handleNewSchema = (): void => {
 		const newGraph = new AtlasGraph();
@@ -32,9 +31,9 @@ export default function Navbar() {
 		wiu.replaceGraphWithNew(newGraph);
 	};
 
-	const handleOpenFile = (filepath: File): void => {
-		setIsFileMenuOpen(false);
-		FileUtils.getFileContentString(filepath, (content: string) =>
+	const handleOpenFile = (event: ChangeEvent<HTMLInputElement>) => {
+		if (!event.target.files) return;
+		FileUtils.getFileContentString(event.target.files[0], (content: string) =>
 			wiu.replaceGraphWithNew(JsonUtils.jsonStringToGraph(content)),
 		);
 	};
@@ -47,10 +46,21 @@ export default function Navbar() {
 
 	const updateRecentElementsUi = () => {
 		setRecentFromLocalStorage(StorageUtils.getRecentGraphsFromLocalStorage().reverse());
-		setIsFileMenuOpen(false);
 		refSchemaName.current!.value = wiu.graph.name;
 	};
 	useEffect(updateRecentElementsUi, [wiu.graph.name, removeTrigger]);
+
+	const handleClick = () => {
+		if (clickOnMenu) {
+			setIsFileMenuOpen(!isFileMenuOpen);
+			setClickOnMenu(false);
+		} else setIsFileMenuOpen(false);
+	};
+
+	useEffect(() => {
+		document.addEventListener('click', handleClick);
+		return () => document.removeEventListener('click', handleClick);
+	});
 
 	function getRecentGraphElement(graphFromRecentList: AtlasGraph): JSX.Element {
 		if (graphFromRecentList.name === wiu.graph.name) {
@@ -95,12 +105,11 @@ export default function Navbar() {
 					defaultValue={wiu.graph.name}
 					onChange={() => wiu.graph.setName(refSchemaName.current!.value)}
 				/>
-				<div className={styles.iconSmall}>
+				<div className={styles.iconSmall} onClick={() => setClickOnMenu(true)}>
 					<Image
 						src={menuImg}
 						layout={'responsive'}
 						objectFit={'contain'}
-						onClick={() => setIsFileMenuOpen(!isFileMenuOpen)}
 						alt={'menuImg'}
 					/>
 				</div>
@@ -114,10 +123,7 @@ export default function Navbar() {
 					>
 						<label>Open...</label>
 					</div>
-					<div
-						className={styles.elementFileMenu}
-						onClick={() => makeUserDownloadFile('ca')}
-					>
+					<div className={styles.elementFileMenu} onClick={downloadFile}>
 						<label>Download</label>
 					</div>
 					<div className={styles.elementFileMenu}>
@@ -129,16 +135,11 @@ export default function Navbar() {
 				</div>
 			</div>
 			<div className={styles.rightTop}>
-				<div className={styles.icon}>
-					<Image
-						src={exportImg}
-						objectFit={'contain'}
-						onClick={() => makeUserDownloadFile('json')}
-						alt="exportImg"
-					/>
+				<div className={styles.icon} onClick={exportFile}>
+					<Image src={exportImg} objectFit={'contain'} alt="exportImg" />
 				</div>
 				<div className={styles.icon}>
-					<a href={'https://docs.ca.engineering'}>
+					<a target={'_blank'} rel={'noreferrer'} href={'https://docs.ca.engineering'}>
 						<Image src={questionImg} objectFit={'contain'} alt={'questionImg'} />
 					</a>
 				</div>
@@ -149,9 +150,7 @@ export default function Navbar() {
 					type={'file'}
 					ref={refOpenFile}
 					style={{ display: 'none' }}
-					onChange={(evt: ChangeEvent<HTMLInputElement>) => {
-						if (evt.target.files !== null) handleOpenFile(evt.target.files[0]);
-					}}
+					onChange={handleOpenFile}
 				/>
 			</div>
 		</>
