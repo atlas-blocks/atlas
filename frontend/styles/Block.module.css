@@ -9,7 +9,7 @@
 
 .selectedBlock {
 	border: 1px solid #30a5be;
-	box-shadow: 3px 3px 3px rgba(176, 176, 176, 0.2);
+	box-shadow: 0 0 3px 3px rgba(176, 176, 176, 0.2);
 }
 
 .result,
