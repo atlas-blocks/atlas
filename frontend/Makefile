@@ -9,5 +9,8 @@ dev:
 pretty:
 	npx prettier --write .
 
+next-lint:
+	npx next lint
+
 lint:
-	lint-staged
+	npx lint-staged

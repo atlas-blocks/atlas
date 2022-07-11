@@ -1,5 +1,5 @@
 import styles from '../../../styles/ObjectNodeProps.module.css';
-import React, { ChangeEvent, useEffect, useRef, useState } from 'react';
+import React, { ChangeEvent, useEffect, useState } from 'react';
 import { InputState } from './propsInputFields';
 import { wiu } from '../../../utils/WebInterfaceUtils';
 import { ObjectNode } from '../../../utils/AtlasGraph';

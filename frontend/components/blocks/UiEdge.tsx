@@ -1,5 +1,5 @@
 import React from 'react';
-import { getBezierPath, getMarkerEnd, MarkerType, EdgeProps } from 'react-flow-renderer';
+import { getBezierPath, EdgeProps } from 'react-flow-renderer';
 
 export const uiEdgeTypes = {
 	DefaultEdge: DefaultEdge,
