@@ -14,6 +14,8 @@ export default function ElementsPanel() {
 			selectedStyle += ' ' + styles.elementSelected;
 		}
 
+		// adding key
+
 		const selectElement = () => wiu.setSelectedNode(node);
 
 		return (
