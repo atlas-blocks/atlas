@@ -77,7 +77,7 @@ export default function Navbar() {
 		<>
 			<div className={styles.leftTop}>
 				<div className={styles.icon}>
-					<Image src={menuImg} objectFit={'contain'} />
+					<Image src={menuImg} objectFit={'contain'} alt={'menuImg'} />
 				</div>
 				<Image
 					src={logoImg}
@@ -100,6 +100,7 @@ export default function Navbar() {
 						layout={'responsive'}
 						objectFit={'contain'}
 						onClick={() => setIsFileMenuOpen(!isFileMenuOpen)}
+						alt={'menuImg'}
 					/>
 				</div>
 				<div className={fileMenuStyle}>
@@ -132,13 +133,16 @@ export default function Navbar() {
 						src={exportImg}
 						objectFit={'contain'}
 						onClick={() => makeUserDownloadFile('json')}
+						alt="exportImg"
 					/>
 				</div>
 				<div className={styles.icon}>
-					<Image src={questionImg} objectFit={'contain'} />
+					<a href={'https://docs.ca.engineering'}>
+						<Image src={questionImg} objectFit={'contain'} alt={'questionImg'} />
+					</a>
 				</div>
 				<div className={styles.icon}>
-					<Image src={settingsImg} objectFit={'contain'} />
+					<Image src={settingsImg} objectFit={'contain'} alt={'settingsImg'} />
 				</div>
 				<input
 					type={'file'}

@@ -8,6 +8,7 @@ import {
 	FileNode,
 	SelectionNode,
 	MatrixFilterNode,
+	ObjectNode,
 } from '../../utils/AtlasGraph';
 import FileUtils from '../../utils/FileUtils';
 import { wiu } from '../../utils/WebInterfaceUtils';
@@ -18,13 +19,14 @@ export const uiNodeTypes = {
 	[FileNode.uitype]: FileBlock,
 	[SelectionNode.uitype]: SelectionBlock,
 	[MatrixFilterNode.uitype]: ExpressionBlock,
+	[ObjectNode.uitype]: ObjectBlock,
 };
 
 function blockWrapper(node: AtlasNode, tail?: JSX.Element | string): JSX.Element {
 	return (
 		<div className={styles.block}>
-			<Handle type="target" position={Position.Left} />
-			<Handle type="source" position={Position.Right} id="a" />
+			<Handle type="target" position={Position.Top} />
+			<Handle type="source" position={Position.Bottom} id="a" />
 			<div className={styles.name}>{node.name}</div>
 			{tail}
 		</div>
@@ -47,6 +49,7 @@ function TextBlock({ data }: { data: { node: TextNode } }) {
 	return blockWrapper(data.node, contentWrapper(data.node.content));
 }
 
+// UI Blocks
 function FileBlock({ data }: { data: { node: FileNode } }) {
 	const [showContent, setShowContent] = useState<boolean>(false);
 
@@ -114,14 +117,30 @@ function SelectionBlock({ data: { node } }: { data: { node: SelectionNode } }) {
 		);
 	};
 
-	const getOptions = (options: string[]): JSX.Element[] => {
-		return options.map((option: string, index: number) => getOption(option, index + 1));
+	const getSelectionContent = (options: string[]): JSX.Element => {
+		return (
+			<select className={styles.selectBlock} value={selectedOption} onChange={handleSelect}>
+				{options.map((option: string, index: number) => getOption(option, index + 1))}
+			</select>
+		);
 	};
 
 	return blockWrapper(
 		node,
-		<select className={styles.selectBlock} value={selectedOption} onChange={handleSelect}>
-			{getOptions(node.getOptions())}
-		</select>,
+		<>
+			{contentWrapper(getSelectionContent(node.getOptions()))}
+			{errorWrapper(node.error)}
+		</>,
+	);
+}
+
+function ObjectBlock({ data }: { data: { node: ObjectNode } }) {
+	return blockWrapper(
+		data.node,
+		<>
+			{contentWrapper(data.node.content)}
+			{resultWrapper(data.node.result)}
+			{errorWrapper(data.node.error)}
+		</>,
 	);
 }

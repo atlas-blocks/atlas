@@ -1,0 +1,15 @@
+name = "JuliaBackend"
+uuid = "dc34cc78-da06-4c03-8c9d-7190e37c43c4"
+authors = ["AlexFreik <freik.aa@phystech.edu>"]
+version = "0.1.0"
+
+[deps]
+AtlasGraph = "822a0318-6c7a-4146-81c4-dd95c5407653"
+Dates = "ade2ca70-3891-5945-98fb-dc099432e06a"
+Genie = "c43c736e-a2d1-11e8-161f-af95117fbd1e"
+Inflector = "6d011eab-0732-4556-8808-e463c76bf3b6"
+JSON3 = "0f8b85d8-7281-11e9-16c2-39a750bddbf1"
+JuliaFormatter = "98e50ef6-434e-11e9-1051-2b60c6c9e899"
+Logging = "56ddb016-857b-54e1-b83d-db4d58db5568"
+LoggingExtras = "e6f89c97-d47a-5376-807f-9c37f3926c36"
+MbedTLS = "739be429-bea8-5141-9913-cc70e7f3736d"

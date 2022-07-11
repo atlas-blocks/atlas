@@ -4,6 +4,7 @@ import { wiu } from '../../utils/WebInterfaceUtils';
 import { typeDescriptions } from './props/descriptions';
 import { InputState, NodeInput, getInputField, getTextareaField } from './props/propsInputFields';
 import getMatrixBuilderField from './props/MatrixFilterBuilder';
+import getObjectBuilder from './props/ObjectNodeBuilder';
 import {
 	AtlasNode,
 	ExpressionNode,
@@ -11,6 +12,7 @@ import {
 	SelectionNode,
 	TextNode,
 	MatrixFilterNode,
+	ObjectNode,
 } from '../../utils/AtlasGraph';
 
 export default function PropsPanel(): JSX.Element {
@@ -35,13 +37,18 @@ export default function PropsPanel(): JSX.Element {
 		],
 		[MatrixFilterNode.uitype]: [
 			new NodeInput(inputStates.name, getInputField),
-			new NodeInput(inputStates.content, (inputState) => getInputField(inputState, true)),
+			new NodeInput(inputStates.content, (inputState) => getTextareaField(inputState, true)),
 			new NodeInput(inputStates.content, getMatrixBuilderField),
 		],
 		[SelectionNode.uitype]: [
 			new NodeInput(inputStates.name, getInputField),
-			new NodeInput(inputStates.content, (inputState) => getInputField(inputState, true)),
+			new NodeInput(inputStates.content, (inputState) => getTextareaField(inputState, true)),
 			new NodeInput(inputStates.source, getInputField),
+		],
+		[ObjectNode.uitype]: [
+			new NodeInput(inputStates.name, getInputField),
+			new NodeInput(inputStates.content, (inputState) => getTextareaField(inputState, true)),
+			new NodeInput(inputStates.content, getObjectBuilder),
 		],
 	};
 

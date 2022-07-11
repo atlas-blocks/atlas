@@ -14,6 +14,6 @@ services:
 
   julia-backend:
     volumes: 
-      - ./backend/AtlasBackend:/home/genie/app
+      - ./backend/JuliaBackend:/home/genie/app
     ports:
       - 8001:8000

@@ -256,9 +256,8 @@ export class SelectionNode extends ExpressionNode {
 	private updateContent() {
 		this.content = this.source === '' ? '' : this.source + '[' + this.selectedOption + ']';
 		this.helper_contents = [
-			`JSON3.write(map(val -> sprint(show, "text/plain", val), ${
-				this.source === '' ? '[]' : this.source
-			}))`,
+			// `JSON3.write(map(val -> sprint(show, "text/plain", val), ${
+			`JSON3.write(repr.(${this.source === '' ? '[]' : this.source}))`,
 		];
 	}
 
@@ -280,5 +279,38 @@ export class SelectionNode extends ExpressionNode {
 
 	public static build(): SelectionNode {
 		return new SelectionNode();
+	}
+}
+
+export class ObjectNode extends ExpressionNode {
+	static uitype: string = 'AtlasGraph.ObjectNode';
+	public objProperties: [string, string][];
+
+	constructor() {
+		super();
+		this.uitype = ObjectNode.uitype;
+		this.setContent('');
+		this.objProperties = [['', '']];
+	}
+
+	private updateContent() {
+		let newContent = 'Dict(';
+		this.objProperties.forEach((prop) => (newContent += `"${prop[0]}" => ${prop[1]},`));
+		newContent = newContent.slice(0, newContent.length - 1) + ')';
+		this.content = newContent;
+	}
+
+	public setObjProperties(properties: [string, string][]): ObjectNode {
+		this.objProperties = properties;
+		this.updateContent();
+		return this;
+	}
+
+	public getUiData(): object {
+		return { ...super.getUiData(), objProperties: this.objProperties };
+	}
+
+	public static build(): ObjectNode {
+		return new ObjectNode();
 	}
 }
