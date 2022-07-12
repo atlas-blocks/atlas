@@ -53,7 +53,7 @@ export default abstract class ServerUtils {
 		return await this.get(this.getHostHref() + '/api/el_simplify', { latex: latex });
 	}
 
-	public static async getFetch(url: string, data: Record<string, unknown>): Promise<any> {
+	public static async getFetch(url: string, data: Record<string, string>): Promise<any> {
 		if (url != this.toAbsoluteUrl(url))
 			return await ServerUtils.get(ServerUtils.toAbsoluteUrl(url), data);
 		return await ServerUtils.get(ServerUtils.toAbsoluteUrl('/api/fetch'), {
