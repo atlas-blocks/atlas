@@ -1,7 +1,7 @@
 import React from 'react';
 import styles from '../../styles/ElementsPanel.module.css';
 import { wiu } from '../../src/utils/WebInterfaceUtils';
-import { AtlasNode } from '../../src/utils/AtlasGraph';
+import AtlasNode from '../../src/graph/nodes/AtlasNode';
 
 export default function ElementsPanel() {
 	function getNodeTypeName(type: string) {
@@ -20,7 +20,7 @@ export default function ElementsPanel() {
 		return (
 			<div key={node.getId()} className={selectedStyle} onClick={selectElement}>
 				<span className={styles.elementName}>{node.name}</span>
-				<span>: {getNodeTypeName(node.uitype)}</span>
+				<span>: {getNodeTypeName(node.ui_type)}</span>
 			</div>
 		);
 	}

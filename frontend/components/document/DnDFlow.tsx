@@ -75,7 +75,7 @@ export default function DnDFlow(): JSX.Element {
 					x: event.clientX - reactFlowBounds.left - width / 2,
 					y: event.clientY - reactFlowBounds.top - height / 2,
 				});
-				wiu.graph.nodes.push(wiu.druggedNode.setPosition(pos.x, pos.y));
+				wiu.graph.nodes.push(wiu.druggedNode.setUiPosition(pos.x, pos.y));
 			}
 			wiu.refreshUiElements();
 			wiu.setSelectedNode(wiu.druggedNode);

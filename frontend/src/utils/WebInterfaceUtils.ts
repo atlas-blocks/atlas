@@ -1,6 +1,7 @@
 import React from 'react';
 import { Node as UINode, Edge as UIEdge, NodeChange as UINodeChange } from 'react-flow-renderer';
-import AtlasGraph, { AtlasNode } from '../graph/AtlasGraph';
+import AtlasNode from '../graph/nodes/AtlasNode';
+import AtlasGraph from '../graph/AtlasGraph';
 import ServerUtils from './ServerUtils';
 import JsonUtils from './JsonUtils';
 
@@ -40,10 +41,10 @@ export default class WebInterfaceUtils {
 	public static toUiNode(node: AtlasNode): UINode {
 		return {
 			id: node.getId(),
-			type: node.uitype,
-			position: { x: node.position[0], y: node.position[1] },
+			type: node.ui_type,
+			position: { x: node.ui_position[0], y: node.ui_position[1] },
 			data: { node: node },
-			hidden: !node.visibility,
+			hidden: !node.ui_visibility,
 		};
 	}
 
@@ -103,7 +104,7 @@ export default class WebInterfaceUtils {
 						2,
 					)}`,
 				);
-				node.setPosition(change.position.x, change.position.y);
+				node.setUiPosition(change.position.x, change.position.y);
 			}
 			if (change.type === 'remove') {
 				this.graph.removeById(change.id);

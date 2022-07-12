@@ -1,25 +1,23 @@
 import React, { useState } from 'react';
 import { Handle, Position } from 'react-flow-renderer';
 import styles from '../../styles/Block.module.css';
-import {
-	AtlasNode,
-	ExpressionNode,
-	TextNode,
-	FileNode,
-	SelectionNode,
-	MatrixFilterNode,
-	ObjectNode,
-} from '../../src/utils/AtlasGraph';
+import AtlasNode from '../../src/graph/nodes/AtlasNode';
+import ExpressionNode from '../../src/graph/nodes/ExpressionNode';
+import TextNode from '../../src/graph/nodes/TextNode';
+import FileNode from '../../src/graph/nodes/FileNode';
+import SelectionNode from '../../src/graph/nodes/SelectionNode';
+import MatrixFilterNode from '../../src/graph/nodes/MatrixFilterNode';
+import ObjectNode from '../../src/graph/nodes/ObjectNode';
 import FileUtils from '../../src/utils/FileUtils';
 import { wiu } from '../../src/utils/WebInterfaceUtils';
 
 export const uiNodeTypes = {
-	[ExpressionNode.uitype]: ExpressionBlock,
-	[TextNode.uitype]: TextBlock,
-	[FileNode.uitype]: FileBlock,
-	[SelectionNode.uitype]: SelectionBlock,
-	[MatrixFilterNode.uitype]: ExpressionBlock,
-	[ObjectNode.uitype]: ObjectBlock,
+	[ExpressionNode.ui_type]: ExpressionBlock,
+	[TextNode.ui_type]: TextBlock,
+	[FileNode.ui_type]: FileBlock,
+	[SelectionNode.ui_type]: SelectionBlock,
+	[MatrixFilterNode.ui_type]: ExpressionBlock,
+	[ObjectNode.ui_type]: ObjectBlock,
 };
 
 function blockWrapper(node: AtlasNode, tail?: JSX.Element | string): JSX.Element {
@@ -58,7 +56,7 @@ function FileBlock({ data }: { data: { node: FileNode } }) {
 		FileUtils.getFileContentString(event.target.files[0], (content: string) =>
 			data.node.setContent(content),
 		);
-		data.node.setFilename(event.target.files[0].name);
+		data.node.setUiFilename(event.target.files[0].name);
 	};
 
 	const showFileContent = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -71,7 +69,7 @@ function FileBlock({ data }: { data: { node: FileNode } }) {
 			{contentWrapper(
 				<>
 					<input className={styles.inputFile} type="file" onChange={uploadFile} />
-					<div className={styles.thickLine}>Imported file: {data.node.filename}</div>
+					<div className={styles.thickLine}>Imported file: {data.node.ui_filename}</div>
 					<label>
 						<input
 							className={styles.inputFile}

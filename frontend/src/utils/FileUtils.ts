@@ -1,4 +1,4 @@
-import AtlasGraph from './AtlasGraph';
+import AtlasGraph from '../graph/AtlasGraph';
 import JsonUtils from './JsonUtils';
 
 export default class FileUtils {

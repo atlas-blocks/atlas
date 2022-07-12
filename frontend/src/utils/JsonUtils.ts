@@ -1,18 +1,17 @@
-import AtlasGraph, {
-	AtlasEdge,
-	AtlasNode,
-	ExpressionNode,
-	TextNode,
-	FileNode,
-	MatrixFilterNode,
-	SelectionNode,
-	ObjectNode,
-} from './AtlasGraph';
+import AtlasNode from '../graph/nodes/AtlasNode';
+import ExpressionNode from '../graph/nodes/ExpressionNode';
+import FileNode from '../graph/nodes/FileNode';
+import TextNode from '../graph/nodes/TextNode';
+import SelectionNode from '../graph/nodes/SelectionNode';
+import MatrixFilterNode from '../graph/nodes/MatrixFilterNode';
+import ObjectNode from '../graph/nodes/ObjectNode';
+import AtlasEdge from '../graph/edges/AtlasEdge';
+import AtlasGraph from '../graph/AtlasGraph';
 
 export default class JsonUtils {
 	public static jsonToGraph(graphJson: {
 		name: string;
-		nodes: { type: string; uitype: string }[];
+		nodes: { type: string; ui_type: string }[];
 		edges: object[];
 	}): AtlasGraph {
 		const graph: AtlasGraph = new AtlasGraph();
@@ -38,13 +37,13 @@ export default class JsonUtils {
 	}
 
 	private static readonly typeMap = {
-		[ExpressionNode.uitype]: ExpressionNode.build,
-		[MatrixFilterNode.uitype]: MatrixFilterNode.build,
-		[SelectionNode.uitype]: SelectionNode.build,
-		[TextNode.uitype]: TextNode.build,
-		[FileNode.uitype]: FileNode.build,
-		[ObjectNode.uitype]: ObjectNode.build,
-		[AtlasNode.uitype]: AtlasNode.build,
+		[ExpressionNode.ui_type]: ExpressionNode.build,
+		[MatrixFilterNode.ui_type]: MatrixFilterNode.build,
+		[SelectionNode.ui_type]: SelectionNode.build,
+		[TextNode.ui_type]: TextNode.build,
+		[FileNode.ui_type]: FileNode.build,
+		[ObjectNode.ui_type]: ObjectNode.build,
+		[AtlasNode.ui_type]: AtlasNode.build,
 	};
 
 	public static extractNodes(nodes: Record<string, unknown>[]): AtlasNode[] {
@@ -56,13 +55,11 @@ export default class JsonUtils {
 	}
 
 	public static extractNode(node: any): AtlasNode {
-		Object.assign(node);
-		Object.assign(node, JSON.parse(node.uidata));
-		if (this.typeMap[node.uitype] == undefined) {
+		if (this.typeMap[node.ui_type] == undefined) {
 			console.log(node);
-			throw new Error('no such node uitype: ' + node.uitype);
+			throw new Error('no such node ui_type: ' + node.ui_type);
 		}
-		return Object.assign(this.typeMap[node.uitype](), node);
+		return Object.assign(this.typeMap[node.ui_type](), node);
 	}
 
 	public static extractEdges(edges: object[]): AtlasEdge[] {
@@ -71,19 +68,8 @@ export default class JsonUtils {
 		return updatedEdges;
 	}
 
-	private static getNodeToJsonString(node: AtlasNode, space?: number): string {
-		return JSON.stringify({ ...node, uidata: JSON.stringify(node.getUiData()) }, null, space);
-	}
-
-	private static jsonStringifyReplacer(key: string, value: any) {
-		if (value instanceof AtlasNode) {
-			return JSON.parse(JsonUtils.getNodeToJsonString(value));
-		}
-		return value;
-	}
-
 	public static stringify(object: any, space?: number): string {
-		return JSON.stringify(object, this.jsonStringifyReplacer, space);
+		return JSON.stringify(object, undefined, space);
 	}
 
 	public static getJson(object: any): any {

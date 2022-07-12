@@ -2,7 +2,7 @@ import styles from '../../../styles/ObjectNodeProps.module.css';
 import React, { ChangeEvent, useEffect, useState } from 'react';
 import { InputState } from './propsInputFields';
 import { wiu } from '../../../src/utils/WebInterfaceUtils';
-import { ObjectNode } from '../../../src/utils/AtlasGraph';
+import { ObjectNode } from '../../../src/graph/AtlasGraph';
 
 function ObjectBuilder({ contentInputState }: { contentInputState: InputState }): JSX.Element {
 	const [objProperties, setObjProperties] = useState<[string, string][]>(

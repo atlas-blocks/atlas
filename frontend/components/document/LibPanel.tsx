@@ -1,15 +1,13 @@
 import styles from '../../styles/LibPanel.module.css';
 import { wiu } from '../../src/utils/WebInterfaceUtils';
 import React, { useState } from 'react';
-import {
-	AtlasNode,
-	ExpressionNode,
-	TextNode,
-	FileNode,
-	MatrixFilterNode,
-	SelectionNode,
-	ObjectNode,
-} from '../../src/utils/AtlasGraph';
+import AtlasNode from '../../src/graph/nodes/AtlasNode';
+import ExpressionNode from '../../src/graph/nodes/ExpressionNode';
+import FileNode from '../../src/graph/nodes/FileNode';
+import TextNode from '../../src/graph/nodes/TextNode';
+import SelectionNode from '../../src/graph/nodes/SelectionNode';
+import MatrixFilterNode from '../../src/graph/nodes/MatrixFilterNode';
+import ObjectNode from '../../src/graph/nodes/ObjectNode';
 
 export default function LibPanel(): JSX.Element {
 	const onDragStart = (event: React.DragEvent<HTMLDivElement>, node: AtlasNode) => {
@@ -28,11 +26,6 @@ export default function LibPanel(): JSX.Element {
 	};
 
 	const libElements = {
-		// Symbolic: ['Simplify', 'Equal'],
-		// Graphics: ['2D-plot', '3D-plot'],
-		// Engineering: ['PID Controller'],
-		// Import: ['JSON', 'CSV', 'XML', 'Form'],
-		// Physical: ['Custom Object'],
 		Basic: nodesOptions,
 		Symbolic: nodesOptions,
 		Graphics: nodesOptions,

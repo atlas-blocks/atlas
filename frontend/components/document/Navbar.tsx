@@ -7,7 +7,7 @@ import logoImg from '../../public/logo/atlas_long_white_cut.png';
 import exportImg from '../../public/icons/export.png';
 import questionImg from '../../public/icons/question-mark.png';
 import settingsImg from '../../public/icons/settings.png';
-import AtlasGraph from '../../src/utils/AtlasGraph';
+import AtlasGraph from '../../src/graph/AtlasGraph';
 import StorageUtils from '../../src/utils/StorageUtils';
 import JsonUtils from '../../src/utils/JsonUtils';
 import FileUtils from '../../src/utils/FileUtils';

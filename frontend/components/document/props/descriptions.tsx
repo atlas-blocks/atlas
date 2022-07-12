@@ -1,13 +1,11 @@
 import React from 'react';
-import {
-	MatrixFilterNode,
-	ExpressionNode,
-	TextNode,
-	FileNode,
-} from '../../../src/utils/AtlasGraph';
+import FileNode from '../../../src/graph/nodes/FileNode';
+import MatrixFilterNode from '../../../src/graph/nodes/MatrixFilterNode';
+import TextNode from '../../../src/graph/nodes/TextNode';
+import ExpressionNode from '../../../src/graph/nodes/ExpressionNode';
 
 export const typeDescriptions = {
-	[MatrixFilterNode.uitype]: (
+	[MatrixFilterNode.ui_type]: (
 		<>
 			Matrix Filter{'\n\n'}
 			You can choose Matrix and add a special filter to any Columns and/or Rows with the logic
@@ -18,7 +16,7 @@ export const typeDescriptions = {
 			-- provides all columns of matrix A with values more than 0 in Row
 		</>
 	),
-	[ExpressionNode.uitype]: (
+	[ExpressionNode.ui_type]: (
 		<>
 			Expression{'\n\n'}
 			You can use any expression or formula that Julia language supports.{'\n'}
@@ -26,6 +24,6 @@ export const typeDescriptions = {
 			https://docs.julialang.org\n/en/v1/base/math/
 		</>
 	),
-	[TextNode.uitype]: <>Text{'\n\n'}Load any text, like CSV</>,
-	[FileNode.uitype]: <>File{'\n\n'}Upload a file</>,
+	[TextNode.ui_type]: <>Text{'\n\n'}Load any text, like CSV</>,
+	[FileNode.ui_type]: <>File{'\n\n'}Upload a file</>,
 };
