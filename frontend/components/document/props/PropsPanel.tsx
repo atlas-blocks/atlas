@@ -1,6 +1,6 @@
 import styles from '../../../styles/PropsPanel.module.css';
 import React, { useEffect, useState } from 'react';
-import { wiu } from '../../../utils/WebInterfaceUtils';
+import { wiu } from '../../../src/utils/WebInterfaceUtils';
 import { typeDescriptions } from './descriptions';
 import { InputState, NodeInput, getInputField, getTextareaField } from './propsInputFields';
 import getMatrixBuilderField from './MatrixFilterBuilder';
@@ -12,7 +12,7 @@ import {
 	TextNode,
 	MatrixFilterNode,
 	ObjectNode,
-} from '../../../utils/AtlasGraph';
+} from '../../../src/utils/AtlasGraph';
 import getObjectBuilder from './ObjectNodeBuilder';
 
 export default function PropsPanel(): JSX.Element {

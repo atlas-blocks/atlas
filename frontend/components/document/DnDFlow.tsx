@@ -17,8 +17,8 @@ import ReactFlow, {
 
 import { uiNodeTypes } from '../blocks/UiNode';
 import { uiEdgeTypes } from '../blocks/UiEdge';
-import { wiu } from '../../utils/WebInterfaceUtils';
-import StorageUtils from '../../utils/StorageUtils';
+import { wiu } from '../../src/utils/WebInterfaceUtils';
+import StorageUtils from '../../src/utils/StorageUtils';
 
 export default function DnDFlow(): JSX.Element {
 	const [reactFlowInstance, setReactFlowInstance] = useState<ReactFlowInstance | null>(null);

@@ -8,17 +8,25 @@ type Response = {
 };
 
 export default abstract class ServerUtils {
-	public static async fetchAsync(urlString: string, params: any, settings = {}): Promise<any> {
+	public static async fetchAsync(
+		urlString: string,
+		params: Record<string, string>,
+		settings = {},
+	): Promise<any> {
 		const url = new URL(urlString);
 		Object.keys(params).forEach((key) => url.searchParams.append(key, params[key]));
 		return await (await fetch(url.toString(), settings)).json();
 	}
 
-	public static async get(url: string, params: Object) {
+	public static async get(url: string, params: Record<string, string>) {
 		return this.fetchAsync(url, params, { method: 'GET' });
 	}
 
-	public static async post(url: string, params: Object, body: Object) {
+	public static async post(
+		url: string,
+		params: Record<string, string>,
+		body: Record<string, unknown>,
+	) {
 		return this.fetchAsync(url, params, {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
@@ -45,7 +53,7 @@ export default abstract class ServerUtils {
 		return await this.get(this.getHostHref() + '/api/el_simplify', { latex: latex });
 	}
 
-	public static async getFetch(url: string, data: object): Promise<any> {
+	public static async getFetch(url: string, data: Record<string, unknown>): Promise<any> {
 		if (url != this.toAbsoluteUrl(url))
 			return await ServerUtils.get(ServerUtils.toAbsoluteUrl(url), data);
 		return await ServerUtils.get(ServerUtils.toAbsoluteUrl('/api/fetch'), {

@@ -1,5 +1,10 @@
 import React from 'react';
-import { MatrixFilterNode, ExpressionNode, TextNode, FileNode } from '../../../utils/AtlasGraph';
+import {
+	MatrixFilterNode,
+	ExpressionNode,
+	TextNode,
+	FileNode,
+} from '../../../src/utils/AtlasGraph';
 
 export const typeDescriptions = {
 	[MatrixFilterNode.uitype]: (

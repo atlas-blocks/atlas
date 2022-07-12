@@ -1,5 +1,5 @@
 import styles from '../../styles/LibPanel.module.css';
-import { wiu } from '../../utils/WebInterfaceUtils';
+import { wiu } from '../../src/utils/WebInterfaceUtils';
 import React, { useState } from 'react';
 import {
 	AtlasNode,
@@ -9,7 +9,7 @@ import {
 	MatrixFilterNode,
 	SelectionNode,
 	ObjectNode,
-} from '../../utils/AtlasGraph';
+} from '../../src/utils/AtlasGraph';
 
 export default function LibPanel(): JSX.Element {
 	const onDragStart = (event: React.DragEvent<HTMLDivElement>, node: AtlasNode) => {

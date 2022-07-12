@@ -1,6 +1,6 @@
 import React from 'react';
 import { Node as UINode, Edge as UIEdge, NodeChange as UINodeChange } from 'react-flow-renderer';
-import AtlasGraph, { AtlasNode } from '../utils/AtlasGraph';
+import AtlasGraph, { AtlasNode } from './AtlasGraph';
 import ServerUtils from './ServerUtils';
 import JsonUtils from './JsonUtils';
 
@@ -57,7 +57,7 @@ export default class WebInterfaceUtils {
 	}
 
 	public static getUiNodes(graph: AtlasGraph): UINode[] {
-		let ans: UINode[] = [];
+		const ans: UINode[] = [];
 		for (const node of graph.nodes) {
 			ans.push(this.toUiNode(node));
 		}
@@ -65,13 +65,13 @@ export default class WebInterfaceUtils {
 	}
 
 	public static getUiEdges(graph: AtlasGraph): UIEdge[] {
-		let ans: UIEdge[] = [];
+		const ans: UIEdge[] = [];
 
 		for (const edge of graph.edges) {
-			const froms = graph.getByName(edge.from);
+			const fromEdges = graph.getByName(edge.from);
 			const tos = graph.getByName(edge.to);
 
-			for (const from of froms) {
+			for (const from of fromEdges) {
 				for (const to of tos) {
 					ans.push(this.toUiEdge(from, to));
 				}
@@ -127,5 +127,4 @@ export default class WebInterfaceUtils {
 	}
 }
 
-// @ts-ignore
-export const wiu: WebInterfaceUtils = new WebInterfaceUtils();
+export const wiu: WebInterfaceUtils = {} as WebInterfaceUtils;

@@ -1,16 +1,16 @@
 import Image from 'next/image';
 import React, { ChangeEvent, useEffect, useRef, useState } from 'react';
-import { wiu } from '../../utils/WebInterfaceUtils';
+import { wiu } from '../../src/utils/WebInterfaceUtils';
 import styles from '../../styles/Navbar.module.css';
 import menuImg from '../../public/icons/menu.png';
 import logoImg from '../../public/logo/atlas_long_white_cut.png';
 import exportImg from '../../public/icons/export.png';
 import questionImg from '../../public/icons/question-mark.png';
 import settingsImg from '../../public/icons/settings.png';
-import AtlasGraph from '../../utils/AtlasGraph';
-import StorageUtils from '../../utils/StorageUtils';
-import JsonUtils from '../../utils/JsonUtils';
-import FileUtils from '../../utils/FileUtils';
+import AtlasGraph from '../../src/utils/AtlasGraph';
+import StorageUtils from '../../src/utils/StorageUtils';
+import JsonUtils from '../../src/utils/JsonUtils';
+import FileUtils from '../../src/utils/FileUtils';
 
 export default function Navbar() {
 	const refSchemaName = useRef<HTMLInputElement>(null);

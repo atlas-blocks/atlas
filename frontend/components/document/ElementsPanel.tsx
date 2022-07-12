@@ -1,7 +1,7 @@
 import React from 'react';
 import styles from '../../styles/ElementsPanel.module.css';
-import { wiu } from '../../utils/WebInterfaceUtils';
-import { AtlasNode } from '../../utils/AtlasGraph';
+import { wiu } from '../../src/utils/WebInterfaceUtils';
+import { AtlasNode } from '../../src/utils/AtlasGraph';
 
 export default function ElementsPanel() {
 	function getNodeTypeName(type: string) {

@@ -9,9 +9,9 @@ import {
 	SelectionNode,
 	MatrixFilterNode,
 	ObjectNode,
-} from '../../utils/AtlasGraph';
-import FileUtils from '../../utils/FileUtils';
-import { wiu } from '../../utils/WebInterfaceUtils';
+} from '../../src/utils/AtlasGraph';
+import FileUtils from '../../src/utils/FileUtils';
+import { wiu } from '../../src/utils/WebInterfaceUtils';
 
 export const uiNodeTypes = {
 	[ExpressionNode.uitype]: ExpressionBlock,

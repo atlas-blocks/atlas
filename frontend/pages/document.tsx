@@ -5,8 +5,8 @@ import Navbar from '../components/document/Navbar';
 import DnDFlow from '../components/document/DnDFlow';
 import Panels from '../components/document/Panels';
 
-import WebInterfaceUtils, { wiu } from '../utils/WebInterfaceUtils';
-import AtlasGraph, { AtlasNode } from '../utils/AtlasGraph';
+import WebInterfaceUtils, { wiu } from '../src/utils/WebInterfaceUtils';
+import AtlasGraph, { AtlasNode } from '../src/utils/AtlasGraph';
 import styles from '../styles/main.module.css';
 import { exampleNodes } from '../components/blocks/ExampleNodes';
 

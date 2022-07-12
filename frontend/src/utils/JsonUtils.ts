@@ -47,7 +47,7 @@ export default class JsonUtils {
 		[AtlasNode.uitype]: AtlasNode.build,
 	};
 
-	public static extractNodes(nodes: {}[]): AtlasNode[] {
+	public static extractNodes(nodes: Record<string, unknown>[]): AtlasNode[] {
 		const updatedNodes: AtlasNode[] = [];
 		for (const node of nodes) {
 			updatedNodes.push(this.extractNode(node));

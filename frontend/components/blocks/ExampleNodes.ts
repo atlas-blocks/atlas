@@ -1,4 +1,4 @@
-import { AtlasNode, ExpressionNode, TextNode } from '../../utils/AtlasGraph';
+import { AtlasNode, ExpressionNode, TextNode } from '../../src/utils/AtlasGraph';
 
 export const exampleNodes: AtlasNode[] = [
 	ExpressionNode.build()
