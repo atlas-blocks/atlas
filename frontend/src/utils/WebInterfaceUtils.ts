@@ -1,6 +1,6 @@
 import React from 'react';
 import { Node as UINode, Edge as UIEdge, NodeChange as UINodeChange } from 'react-flow-renderer';
-import AtlasGraph, { AtlasNode } from './AtlasGraph';
+import AtlasGraph, { AtlasNode } from '../graph/AtlasGraph';
 import ServerUtils from './ServerUtils';
 import JsonUtils from './JsonUtils';
 
