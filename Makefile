@@ -13,4 +13,3 @@ kill:
 
 kill-prod:
 	docker kill reverse_proxy_prod julia_backend_prod frontend_prod
-

@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import { ChangeEvent, useEffect, useRef, useState } from 'react';
+import React, { ChangeEvent, useEffect, useRef, useState } from 'react';
 import { wiu } from '../../utils/WebInterfaceUtils';
 import styles from '../../styles/Navbar.module.css';
 import menuImg from '../../public/icons/menu.png';
