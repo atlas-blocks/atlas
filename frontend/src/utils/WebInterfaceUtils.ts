@@ -128,4 +128,6 @@ export default class WebInterfaceUtils {
 	}
 }
 
-export const wiu: WebInterfaceUtils = {} as WebInterfaceUtils;
+// eslint-disable-next-line
+// @ts-ignore
+export const wiu: WebInterfaceUtils = new WebInterfaceUtils();

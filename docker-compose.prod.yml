@@ -14,9 +14,9 @@ services:
     ports:
       - 3000:3000
 
-  julia-backend:
-    container_name: julia_backend_prod
+  jupyter-backend:
+    container_name: jupyter_backend_prod
     build:
       target: prod
     ports:
-      - 8000:8000
+      - 8000:8888

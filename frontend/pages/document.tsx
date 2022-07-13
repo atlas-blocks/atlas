@@ -4,6 +4,7 @@ import Head from 'next/head';
 import Navbar from '../components/document/Navbar';
 import DnDFlow from '../components/document/DnDFlow';
 import Panels from '../components/document/Panels';
+import JupyterNotebook from '../components/document/JupyterNotebook';
 
 import WebInterfaceUtils, { wiu } from '../src/utils/WebInterfaceUtils';
 import AtlasNode from '../src/graph/nodes/AtlasNode';
@@ -30,6 +31,7 @@ export default function Home() {
 				<Navbar />
 				<DnDFlow />
 				<Panels />
+				<JupyterNotebook />
 			</div>
 		</>
 	);
