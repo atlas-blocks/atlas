@@ -1,24 +1,31 @@
-// import styles from '../../styles/FlowControl.module.css';
+import React from 'react';
 import styles from '../../styles/main.module.css';
 import { useEffect, useState } from 'react';
-import GraphicsField from './GraphicsField';
+import DesmosGraphic from './DesmosGraphic';
 import DnDFlow from './DnDFlow';
+import { wiu } from '../../utils/WebInterfaceUtils';
+import { DesmosNode } from '../../utils/AtlasGraph';
 
 export default function FieldControl(): JSX.Element {
 	const [isDNDFieldActive, setDNDFieldActive] = useState<boolean>(true);
-	const [isGraphicsFieldActive, setGraphicsFieldActive] = useState<boolean>(false);
+	const [whichDesmosActive, setDesmosActive] = useState<boolean[]>([]);
 
 	const hideAll = () => {
 		setDNDFieldActive(false);
-		setGraphicsFieldActive(false);
+		whichDesmosActive.fill(false);
+		setDesmosActive(whichDesmosActive);
 	};
 	const showDNDField = () => {
 		hideAll();
 		setDNDFieldActive(true);
 	};
-	const showGraphicsField = () => {
+	const showGraphicsField = (event: React.MouseEvent<HTMLDivElement>) => {
 		hideAll();
-		setGraphicsFieldActive(true);
+		setDesmosActive(
+			whichDesmosActive.map((dState, index) => {
+				return index === parseInt(event.currentTarget.id) ? !dState : dState;
+			}),
+		);
 	};
 
 	const getTabStyle = (isActive: boolean): string => {
@@ -28,9 +35,55 @@ export default function FieldControl(): JSX.Element {
 		return isActive ? styles.centralField : styles.panelHidden;
 	};
 
-	// useEffect(() => {
-	// 	wiu.selectedNode ? showProperties() : showLibraries();
-	// }, [wiu.selectedNode]);
+	const [desmosArray, setDesmosArray] = useState<string[]>([]);
+
+	useEffect(() => {
+		wiu.graph.nodes.forEach((node) => {
+			if (node instanceof DesmosNode && !desmosArray.includes(node.name)) {
+				desmosArray.push(node.name);
+				whichDesmosActive.push(false);
+				setDesmosArray(desmosArray);
+				setDesmosActive(whichDesmosActive);
+			}
+		});
+
+		setDesmosArray(
+			desmosArray.filter((desmos: string, index: number) => {
+				let desmosInGraph = false;
+				wiu.graph.nodes.forEach((node) => {
+					if (node.name === desmos) {
+						desmosInGraph = true;
+						return;
+					}
+				});
+				if (!desmosInGraph) {
+					whichDesmosActive.splice(index, 1);
+					setDesmosActive(whichDesmosActive);
+				}
+				return desmosInGraph;
+			}),
+		);
+	}, [wiu.graph.nodes.length]);
+
+	function desmosTabs(desmos: string, index: number): JSX.Element {
+		return (
+			<div
+				id={index.toString()}
+				className={getTabStyle(whichDesmosActive[index])}
+				onClick={showGraphicsField}
+			>
+				<label>{desmos}</label>
+			</div>
+		);
+	}
+
+	function desmosGraphics(desmos: string, index: number): JSX.Element {
+		return (
+			<div id={index.toString()} className={getFieldVisibility(whichDesmosActive[index])}>
+				<DesmosGraphic desmosName={desmos} />
+			</div>
+		);
+	}
 
 	return (
 		<>
@@ -38,16 +91,15 @@ export default function FieldControl(): JSX.Element {
 				<div className={getTabStyle(isDNDFieldActive)} onClick={showDNDField}>
 					<label>AtlasFlow</label>
 				</div>
-				<div className={getTabStyle(isGraphicsFieldActive)} onClick={showGraphicsField}>
-					<label>Graphics</label>
-				</div>
+				{desmosArray.map((desmos: string, index: number) => desmosTabs(desmos, index))}
 			</div>
 			<div className={getFieldVisibility(isDNDFieldActive)}>
 				<DnDFlow />
 			</div>
-			<div className={getFieldVisibility(isGraphicsFieldActive)}>
-				<GraphicsField />
-			</div>
+			{desmosArray.map((desmos: string, index: number) => desmosGraphics(desmos, index))}
+			{/*<div className={getFieldVisibility(isGraphicsFieldActive)}>*/}
+			{/*	<DesmosGraphic />*/}
+			{/*</div>*/}
 		</>
 	);
 }

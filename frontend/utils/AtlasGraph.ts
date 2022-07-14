@@ -93,7 +93,13 @@ export class AtlasNode {
 	}
 
 	public setDefaultName(graph: AtlasGraph): AtlasNode {
-		this.name = graph.getDefaultName();
+		if (this instanceof DesmosNode) {
+			let desmosNodesCount = 1;
+			graph.nodes.forEach((node) => {
+				if (node instanceof DesmosNode) desmosNodesCount += 1;
+			});
+			this.name = 'desmos' + desmosNodesCount;
+		} else this.name = graph.getDefaultName();
 		return this;
 	}
 

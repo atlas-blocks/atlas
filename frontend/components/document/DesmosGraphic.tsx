@@ -5,17 +5,25 @@ import { DesmosNode } from '../../utils/AtlasGraph';
 
 let calculator: any = null;
 
-export default function GraphicsField(): JSX.Element {
+type Props = {
+	desmosName: string;
+};
+
+export default function DesmosGraphic({ desmosName }: Props): JSX.Element {
 	const loadDesmos = (desmosObject: any) => {
 		const elt = document.getElementById('calculator');
 		calculator = desmosObject.GraphingCalculator(elt);
-		calculator.setExpression({ id: 'graph1', latex: 'y=x^2' });
+		// calculator.setExpression({ id: 'graph1', latex: 'y=x^2' });
 	};
 
 	wiu.graph.nodes.forEach((node) => {
-		if (node instanceof DesmosNode) {
-			calculator.setExpression({ id: 'graph1', latex: 'y = ' + node.content });
-			console.log(node.content);
+		if (node instanceof DesmosNode && node.name === desmosName) {
+			console.log(desmosName);
+			// calculator.setExpression({
+			// 	id: desmosName,
+			// 	latex: 'y = ' + node.content ? node.content : '',
+			// });
+			// console.log(node.content);
 		}
 	});
 
