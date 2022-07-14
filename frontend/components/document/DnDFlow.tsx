@@ -1,5 +1,5 @@
 import styles from '../../styles/main.module.css';
-import React, { useState, useCallback, useRef, useEffect } from 'react';
+import React, { useState, useCallback, useRef } from 'react';
 import ReactFlow, {
 	Controls,
 	Background,
@@ -32,7 +32,9 @@ export default function DnDFlow(): JSX.Element {
 	const onUiEdgesChange = (changes: UIEdgeChange[]) =>
 		wiu.setUiEdges((eds) => applyEdgeChanges(changes, eds));
 
-	function handleUiNodeSelection(event: React.MouseEvent, node: UINode) {}
+	function handleUiNodeSelection(event: React.MouseEvent, node: UINode) {
+		// any user change of edges is ignored
+	}
 
 	function handleUiNodeDoubleClick(event: React.MouseEvent, node: UINode) {
 		wiu.setSelectedNode(node.data.node);
@@ -64,9 +66,11 @@ export default function DnDFlow(): JSX.Element {
 			if (wiu.druggedNode !== null) {
 				const width = wiu.getUiNodeWidth(wiu.druggedNode);
 				const height = wiu.getUiNodeHeight(wiu.druggedNode);
-				// @ts-ignore
+
+				if (reactFlowWrapper.current == null) throw new Error();
 				const reactFlowBounds = reactFlowWrapper.current.getBoundingClientRect();
-				// @ts-ignore
+
+				if (reactFlowInstance == null) throw new Error();
 				const pos = reactFlowInstance.project({
 					x: event.clientX - reactFlowBounds.left - width / 2,
 					y: event.clientY - reactFlowBounds.top - height / 2,

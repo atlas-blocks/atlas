@@ -1,3 +1,4 @@
+import React from 'react';
 import styles from '../../styles/ElementsPanel.module.css';
 import { wiu } from '../../utils/WebInterfaceUtils';
 import { AtlasNode } from '../../utils/AtlasGraph';

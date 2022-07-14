@@ -1,3 +1,4 @@
+import React from 'react';
 import styles from '../../../styles/PropsPanel.module.css';
 
 export class InputState {
@@ -44,10 +45,7 @@ const inputFieldWrapper = (inputState: InputState, inside: JSX.Element | string)
 	);
 };
 
-export const getTextareaField = (
-	inputState: InputState,
-	disabled: boolean = false,
-): JSX.Element => {
+export const getTextareaField = (inputState: InputState, disabled = false): JSX.Element => {
 	return inputFieldWrapper(
 		inputState,
 		<textarea
@@ -58,7 +56,7 @@ export const getTextareaField = (
 	);
 };
 
-export const getInputField = (inputState: InputState, disabled: boolean = false): JSX.Element => {
+export const getInputField = (inputState: InputState, disabled = false): JSX.Element => {
 	return inputFieldWrapper(
 		inputState,
 		<input
