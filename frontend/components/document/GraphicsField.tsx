@@ -1,11 +1,23 @@
+import React from 'react';
 import Script from 'next/script';
+import { wiu } from '../../utils/WebInterfaceUtils';
+import { DesmosNode } from '../../utils/AtlasGraph';
+
+let calculator: any = null;
 
 export default function GraphicsField(): JSX.Element {
 	const loadDesmos = (desmosObject: any) => {
-		let elt = document.getElementById('calculator');
-		let calculator = desmosObject.GraphingCalculator(elt);
+		const elt = document.getElementById('calculator');
+		calculator = desmosObject.GraphingCalculator(elt);
 		calculator.setExpression({ id: 'graph1', latex: 'y=x^2' });
 	};
+
+	wiu.graph.nodes.forEach((node) => {
+		if (node instanceof DesmosNode) {
+			calculator.setExpression({ id: 'graph1', latex: 'y = ' + node.content });
+			console.log(node.content);
+		}
+	});
 
 	return (
 		<>

@@ -13,6 +13,7 @@ import {
 	TextNode,
 	MatrixFilterNode,
 	ObjectNode,
+	DesmosNode,
 } from '../../utils/AtlasGraph';
 
 export default function PropsPanel(): JSX.Element {
@@ -49,6 +50,10 @@ export default function PropsPanel(): JSX.Element {
 			new NodeInput(inputStates.name, getInputField),
 			new NodeInput(inputStates.content, (inputState) => getTextareaField(inputState, true)),
 			new NodeInput(inputStates.content, getObjectBuilder),
+		],
+		[DesmosNode.uitype]: [
+			new NodeInput(inputStates.name, getInputField),
+			new NodeInput(inputStates.content, getTextareaField),
 		],
 	};
 

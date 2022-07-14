@@ -9,6 +9,7 @@ import {
 	SelectionNode,
 	MatrixFilterNode,
 	ObjectNode,
+	DesmosNode,
 } from '../../utils/AtlasGraph';
 import FileUtils from '../../utils/FileUtils';
 import { wiu } from '../../utils/WebInterfaceUtils';
@@ -20,6 +21,7 @@ export const uiNodeTypes = {
 	[SelectionNode.uitype]: SelectionBlock,
 	[MatrixFilterNode.uitype]: ExpressionBlock,
 	[ObjectNode.uitype]: ObjectBlock,
+	[DesmosNode.uitype]: TextBlock,
 };
 
 function blockWrapper(node: AtlasNode, tail?: JSX.Element | string): JSX.Element {
