@@ -2,8 +2,8 @@ import React from 'react';
 import { Node as UINode, Edge as UIEdge, NodeChange as UINodeChange } from 'react-flow-renderer';
 import AtlasNode from '../graph/nodes/AtlasNode';
 import AtlasGraph from '../graph/AtlasGraph';
-import ServerUtils from './ServerUtils';
 import JsonUtils from './JsonUtils';
+import JuliaExecuter from '../kernels/JuliaExecuter';
 
 export default class WebInterfaceUtils {
 	graph: AtlasGraph;
@@ -86,12 +86,6 @@ export default class WebInterfaceUtils {
 		this.setUiEdges((els) => WebInterfaceUtils.getUiEdges(this.graph));
 	}
 
-	public async updateGraph() {
-		const updatedGraph = await ServerUtils.getUpdatedGraph(this.graph);
-		if (updatedGraph !== null) this.replaceGraphWithNew(updatedGraph);
-		this.refreshUiElements();
-	}
-
 	public updateNodes(changes: UINodeChange[]) {
 		for (const change of changes) {
 			if (change.type === 'position') {
@@ -119,12 +113,6 @@ export default class WebInterfaceUtils {
 
 	public getUiNodeHeight(node: AtlasNode): number {
 		return 100;
-	}
-
-	public replaceGraphWithNew(newGraph: AtlasGraph): void {
-		this.graph.replaceWithNew(newGraph);
-		this.setSelectedNode(null);
-		this.refreshUiElements();
 	}
 }
 

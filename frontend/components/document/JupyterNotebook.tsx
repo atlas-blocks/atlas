@@ -1,16 +1,12 @@
 import React from 'react';
+import JupyterUtils from '../../src/utils/JupyterUtils';
 
 export default function ElementsPanel() {
 	const jupyterNotebookRef = React.useRef<HTMLIFrameElement>(null);
 	React.useEffect(() => {
 		if (jupyterNotebookRef.current === null)
 			return console.assert('jupyterNotebookRef should not be null');
-		jupyterNotebookRef.current.src =
-			window.location.protocol +
-			'//' +
-			window.location.hostname +
-			':8888' +
-			'/notebooks/work/empty.ipynb';
+		jupyterNotebookRef.current.src = JupyterUtils.getBaseHref() + '/notebooks/work/empty.ipynb';
 	}, []);
 
 	return (

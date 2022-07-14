@@ -9,7 +9,7 @@ import SelectionNode from '../../src/graph/nodes/SelectionNode';
 import MatrixFilterNode from '../../src/graph/nodes/MatrixFilterNode';
 import ObjectNode from '../../src/graph/nodes/ObjectNode';
 import FileUtils from '../../src/utils/FileUtils';
-import { wiu } from '../../src/utils/WebInterfaceUtils';
+import { atlasModule } from '../../src/utils/AtlasModule';
 
 export const uiNodeTypes = {
 	[ExpressionNode.ui_type]: ExpressionBlock,
@@ -104,7 +104,7 @@ function SelectionBlock({ data: { node } }: { data: { node: SelectionNode } }) {
 	const handleSelect = (event: React.ChangeEvent<HTMLSelectElement>) => {
 		setSelectedOption(parseInt(event.target.value));
 		node.setSelectedOption(parseInt(event.target.value));
-		wiu.updateGraph();
+		atlasModule.updateGraph();
 	};
 
 	const getOption = (option: string, index: number): JSX.Element => {

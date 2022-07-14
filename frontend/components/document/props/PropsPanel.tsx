@@ -1,6 +1,7 @@
 import styles from '../../../styles/PropsPanel.module.css';
 import React, { useEffect, useState } from 'react';
 import { wiu } from '../../../src/utils/WebInterfaceUtils';
+import { atlasModule } from '../../../src/utils/AtlasModule';
 import { typeDescriptions } from './descriptions';
 import { InputState, NodeInput, getInputField, getTextareaField } from './propsInputFields';
 import getMatrixBuilderField from './MatrixFilterBuilder';
@@ -64,7 +65,7 @@ export default function PropsPanel(): JSX.Element {
 			// nodes classes must have setters for its fields in the format `setSomething`
 			(wiu.selectedNode[setter] as any)(inputState.state);
 		}
-		await wiu.updateGraph();
+		await atlasModule.updateGraph();
 		wiu.setSelectedNode(null);
 	};
 

@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import React, { ChangeEvent, useEffect, useRef, useState } from 'react';
 import { wiu } from '../../src/utils/WebInterfaceUtils';
+import { atlasModule } from '../../src/utils/AtlasModule';
 import styles from '../../styles/Navbar.module.css';
 import menuImg from '../../public/icons/menu.png';
 import logoImg from '../../public/logo/atlas_long_white_cut.png';
@@ -28,13 +29,13 @@ export default function Navbar() {
 	const handleNewSchema = (): void => {
 		const newGraph = new AtlasGraph();
 		newGraph.name = wiu.graph.name + '_new';
-		wiu.replaceGraphWithNew(newGraph);
+		atlasModule.replaceGraphWithNew(newGraph);
 	};
 
 	const handleOpenFile = (filepath: File): void => {
 		setIsFileMenuOpen(false);
 		FileUtils.getFileContentString(filepath, (content: string) =>
-			wiu.replaceGraphWithNew(JsonUtils.jsonStringToGraph(content)),
+			atlasModule.replaceGraphWithNew(JsonUtils.jsonStringToGraph(content)),
 		);
 	};
 
@@ -59,7 +60,7 @@ export default function Navbar() {
 			<div
 				key={graphFromRecentList.name}
 				className={styles.elementFileMenu}
-				onClick={() => wiu.replaceGraphWithNew(graphFromRecentList)}
+				onClick={() => atlasModule.replaceGraphWithNew(graphFromRecentList)}
 			>
 				<label className={styles.recentGraphName}>{'> ' + graphFromRecentList.name}</label>
 				<div

@@ -2,11 +2,6 @@ import ErrorUtils from './errors/ErrorUtils';
 import AtlasGraph from '../graph/AtlasGraph';
 import JsonUtils from './JsonUtils';
 
-type Response = {
-	success: boolean;
-	latex: string;
-};
-
 export default abstract class ServerUtils {
 	public static async fetchAsync(
 		urlString: string,
@@ -35,22 +30,12 @@ export default abstract class ServerUtils {
 	}
 
 	public static getHostHref(): string {
-		if (typeof window !== 'undefined')
-			return window.location.href.replace(window.location.pathname, '');
-		throw new Error('this should be executed on client');
+		return window.location.href.replace(window.location.pathname, '');
 	}
 
 	public static toAbsoluteUrl(url: string): string {
 		if (url.startsWith('http')) return url;
 		return this.getHostHref() + url;
-	}
-
-	public static async getSimplify(latex: string): Promise<Response> {
-		return await this.get(this.getHostHref() + '/api/simplify', { latex: latex });
-	}
-
-	public static async getElSimplify(latex: string): Promise<Response> {
-		return await this.get(this.getHostHref() + '/api/el_simplify', { latex: latex });
 	}
 
 	public static async getFetch(url: string, data: Record<string, string>): Promise<any> {
