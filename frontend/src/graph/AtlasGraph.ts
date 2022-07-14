@@ -2,15 +2,9 @@ import AtlasNode from './nodes/AtlasNode';
 import AtlasEdge from './edges/AtlasEdge';
 
 export default class AtlasGraph {
-	public name: string;
-	public readonly nodes: AtlasNode[];
-	public readonly edges: AtlasEdge[];
-
-	constructor() {
-		this.name = '';
-		this.nodes = [];
-		this.edges = [];
-	}
+	public name = 'atlas_graph';
+	public readonly nodes: AtlasNode[] = [];
+	public readonly edges: AtlasEdge[] = [];
 
 	public replaceWithNew(newGraph: AtlasGraph): void {
 		this.setName(newGraph.name).setNodes(newGraph.nodes).setEdges(newGraph.edges);

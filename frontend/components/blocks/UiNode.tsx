@@ -137,7 +137,7 @@ function ObjectBlock({ data }: { data: { node: ObjectNode } }) {
 		data.node,
 		<>
 			{contentWrapper(data.node.content)}
-			{resultWrapper(data.node.result)}
+			{resultWrapper(data.node.ui_result)}
 			{errorWrapper(data.node.error)}
 		</>,
 	);

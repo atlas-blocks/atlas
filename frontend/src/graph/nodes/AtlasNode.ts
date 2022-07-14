@@ -3,19 +3,12 @@ import AtlasGraph from '../AtlasGraph';
 export default class AtlasNode {
 	static ui_type = 'AtlasGraph.Node';
 
-	public name: string;
-	public type: string;
-	public ui_type: string;
-	public ui_position: [number, number];
-	public ui_visibility: boolean;
-
-	constructor() {
-		this.name = '';
-		this.type = AtlasNode.ui_type;
-		this.ui_type = AtlasNode.ui_type;
-		this.ui_position = [0, 0];
-		this.ui_visibility = true;
-	}
+	public name = '';
+	public type: string = AtlasNode.ui_type;
+	public ui_type: string = AtlasNode.ui_type;
+	public ui_position: [number, number] = [0, 0];
+	public ui_visibility = true;
+	public executionCount = 0;
 
 	public static build(): AtlasNode {
 		return new AtlasNode();

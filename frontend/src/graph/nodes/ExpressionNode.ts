@@ -2,27 +2,23 @@ import ContentNode from './ContentNode';
 
 export default class ExpressionNode extends ContentNode {
 	static ui_type = 'AtlasGraph.ExpressionNode';
-	public result: string;
-	public error: string;
-	public helper_contents: string[];
-	public helper_results: string[];
+	public error = 'nothing';
+	public helper_contents: string[] = [];
+	public ui_result = 'nothing';
+	public helper_ui_results: string[] = [];
 
 	constructor() {
 		super();
 		this.type = ExpressionNode.ui_type;
 		this.ui_type = ExpressionNode.ui_type;
-		this.result = 'nothing';
-		this.error = 'nothing';
-		this.helper_contents = [];
-		this.helper_results = [];
 	}
 
 	public static build(): ExpressionNode {
 		return new ExpressionNode();
 	}
 
-	public setResult(result: string): ExpressionNode {
-		this.result = result;
+	public setUiResult(result: string): ExpressionNode {
+		this.ui_result = result;
 		return this;
 	}
 }

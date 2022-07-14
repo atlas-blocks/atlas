@@ -2,13 +2,12 @@ import ExpressionNode from './ExpressionNode';
 
 export default class ObjectNode extends ExpressionNode {
 	static ui_type = 'AtlasGraph.ObjectNode';
-	public ui_objProperties: [string, string][];
+	public ui_objProperties: [string, string][] = [['', '']];
 
 	constructor() {
 		super();
 		this.ui_type = ObjectNode.ui_type;
 		this.setContent('');
-		this.ui_objProperties = [['', '']];
 	}
 
 	private updateContent() {
