@@ -29,25 +29,11 @@ export default function FieldControl(): JSX.Element {
 	};
 
 	useEffect(() => {
+		const allDesmosNodeNames: string[] = [];
 		wiu.graph.nodes.forEach((node) => {
-			if (node instanceof DesmosNode && !desmosNodeNames.includes(node.name)) {
-				desmosNodeNames.push(node.name);
-				setDesmosNodeNames(desmosNodeNames);
-			}
+			if (node instanceof DesmosNode) allDesmosNodeNames.push(node.name);
 		});
-
-		setDesmosNodeNames(
-			desmosNodeNames.filter((desmos: string, index: number) => {
-				let desmosInGraph = false;
-				wiu.graph.nodes.forEach((node) => {
-					if (node.name === desmos) {
-						desmosInGraph = true;
-						return;
-					}
-				});
-				return desmosInGraph;
-			}),
-		);
+		setDesmosNodeNames(allDesmosNodeNames);
 	}, [wiu.graph.nodes.length]);
 
 	function desmosTabs(desmosName: string, index: number): JSX.Element {
