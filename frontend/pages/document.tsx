@@ -1,32 +1,24 @@
-import { useState } from 'react';
-
-import WebInterfaceUtils from '../utils/WebInterfaceUtils';
-import DnDFlow, { atlasGraph } from '../components/document/DnDFlow';
-import Panels from '../components/document/Panels';
-import { AtlasNode } from '../utils/AtlasGraph';
-import styles from '../styles/main.module.css';
+import React, { useState } from 'react';
 import Head from 'next/head';
-import Image from 'next/image';
-import menuImg from '../public/icons/menu.png';
-import questionImg from '../public/icons/question.png';
-import settingsImg from '../public/icons/settings.png';
-import exportImg from '../public/icons/export.png';
-import logoImg from '../public/logo/atlas_long_white_cut.png';
+
+import Navbar from '../components/document/Navbar';
+import DnDFlow from '../components/document/DnDFlow';
+import Panels from '../components/document/Panels';
+
+import WebInterfaceUtils, { wiu } from '../utils/WebInterfaceUtils';
+import AtlasGraph, { AtlasNode } from '../utils/AtlasGraph';
+import styles from '../styles/main.module.css';
+import { exampleNodes } from '../components/blocks/ExampleNodes';
+
+wiu.graph = new AtlasGraph();
+exampleNodes.forEach((node) => wiu.graph.nodes.push(node));
+wiu.graph.name = 'atlas_schema';
 
 export default function Home() {
-	const [druggedNode, setDruggedNode] = useState<AtlasNode | null>(null);
-	const [selectedNode, setSelectedNode] = useState<AtlasNode | null>(null);
-	const [uiNodes, setUiNodes] = useState(WebInterfaceUtils.getUiNodes(atlasGraph));
-	const [uiEdges, setUiEdges] = useState(WebInterfaceUtils.getUiEdges(atlasGraph));
-	const wiu = new WebInterfaceUtils(
-		atlasGraph,
-		setUiNodes,
-		setUiEdges,
-		selectedNode,
-		setSelectedNode,
-		druggedNode,
-		setDruggedNode,
-	);
+	[wiu.druggedNode, wiu.setDruggedNode] = useState<AtlasNode | null>(null);
+	[wiu.selectedNode, wiu.setSelectedNode] = useState<AtlasNode | null>(null);
+	[wiu.uiNodes, wiu.setUiNodes] = useState(WebInterfaceUtils.getUiNodes(wiu.graph));
+	[wiu.uiEdges, wiu.setUiEdges] = useState(WebInterfaceUtils.getUiEdges(wiu.graph));
 
 	return (
 		<>
@@ -34,52 +26,9 @@ export default function Home() {
 				<title>Atlas Next</title>
 			</Head>
 			<div className={styles.layout}>
-				<div className={styles.leftTop}>
-					<Image
-						src={menuImg}
-						width={'20px'}
-						height={'20px'}
-						layout={'intrinsic'}
-						objectFit={'contain'}
-					/>
-					<Image
-						src={logoImg}
-						alt="Atlas Logo"
-						width={'100%'}
-						height={'100%'}
-						layout={'intrinsic'}
-						objectFit={'contain'}
-					/>
-				</div>
-				<div className={styles.centerTop}>
-					<a>\mockup_name1</a>
-				</div>
-				<div className={styles.rightTop}>
-					<Image
-						src={exportImg}
-						width={'20px'}
-						height={'20px'}
-						layout={'intrinsic'}
-						objectFit={'contain'}
-					/>
-					<Image
-						src={questionImg}
-						width={'10px'}
-						height={'100%'}
-						layout={'intrinsic'}
-						objectFit={'contain'}
-					/>
-					<Image
-						src={settingsImg}
-						width={'20px'}
-						height={'20px'}
-						layout={'intrinsic'}
-						objectFit={'contain'}
-					/>
-				</div>
-
-				<DnDFlow wiu={wiu} />
-				<Panels wiu={wiu} />
+				<Navbar />
+				<DnDFlow />
+				<Panels />
 			</div>
 		</>
 	);

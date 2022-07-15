@@ -1,11 +1,5 @@
 import styles from '../../styles/main.module.css';
-import React, {
-	useState,
-	useCallback,
-	useRef,
-	useEffect,
-	MouseEvent as ReactMouseEvent,
-} from 'react';
+import React, { useState, useCallback, useRef } from 'react';
 import ReactFlow, {
 	Controls,
 	Background,
@@ -23,48 +17,36 @@ import ReactFlow, {
 
 import { uiNodeTypes } from '../blocks/UiNode';
 import { uiEdgeTypes } from '../blocks/UiEdge';
-import AtlasGraph, { AtlasNode } from '../../utils/AtlasGraph';
-import WebInterfaceUtils from '../../utils/WebInterfaceUtils';
-import { exampleNodes } from '../blocks/ExampleNodes';
+import { wiu } from '../../utils/WebInterfaceUtils';
+import StorageUtils from '../../utils/StorageUtils';
 
-export const atlasGraph = new AtlasGraph();
-exampleNodes.forEach((node) => atlasGraph.nodes.push(node));
-
-type Props = {
-	wiu: WebInterfaceUtils;
-};
-
-export default function DnDFlow({ wiu }: Props): JSX.Element {
+export default function DnDFlow(): JSX.Element {
 	const [reactFlowInstance, setReactFlowInstance] = useState<ReactFlowInstance | null>(null);
 	const reactFlowWrapper = useRef<HTMLDivElement | null>(null);
-	const [uiNodes, setUiNodes] = useState(WebInterfaceUtils.getUiNodes(atlasGraph));
-	const [uiEdges, setUiEdges] = useState(WebInterfaceUtils.getUiEdges(atlasGraph));
 
-	const onUiNodesChange = useCallback(
-		(changes: UINodeChange[]) => {
-			wiu.updateNodes(changes);
-			setUiNodes((nds) => applyNodeChanges(changes, nds));
-		},
-		[setUiNodes],
-	);
-	const onUiEdgesChange = useCallback(
-		(changes: UIEdgeChange[]) => setUiEdges((eds) => applyEdgeChanges(changes, eds)),
-		[setUiEdges],
-	);
+	const onUiNodesChange = (changes: UINodeChange[]) => {
+		wiu.updateNodes(changes);
+		wiu.setUiNodes((nds) => applyNodeChanges(changes, nds));
+		StorageUtils.saveGraphToLocalStorage(wiu.graph);
+	};
+	const onUiEdgesChange = (changes: UIEdgeChange[]) =>
+		wiu.setUiEdges((eds) => applyEdgeChanges(changes, eds));
 
-	function handleUiNodeSelection(event: React.MouseEvent, element: UINode) {}
+	function handleUiNodeSelection(event: React.MouseEvent, node: UINode) {
+		// any user change of edges is ignored
+	}
 
-	function handleUiNodeDoubleClick(event: ReactMouseEvent, node: UINode) {
+	function handleUiNodeDoubleClick(event: React.MouseEvent, node: UINode) {
 		wiu.setSelectedNode(node.data.node);
 	}
 
-	function onPanelClick(event: ReactMouseEvent) {
+	function onPanelClick(event: React.MouseEvent) {
 		wiu.setSelectedNode(null);
 	}
 
 	const onConnect = useCallback(
 		(connection: Connection) =>
-			setUiEdges((eds) => addUiEdge({ ...connection, type: 'defaultEdge' }, eds)),
+			wiu.setUiEdges((eds) => addUiEdge({ ...connection, type: 'defaultEdge' }, eds)),
 		[],
 	);
 
@@ -84,32 +66,29 @@ export default function DnDFlow({ wiu }: Props): JSX.Element {
 			if (wiu.druggedNode !== null) {
 				const width = wiu.getUiNodeWidth(wiu.druggedNode);
 				const height = wiu.getUiNodeHeight(wiu.druggedNode);
-				// @ts-ignore
+
+				if (reactFlowWrapper.current == null) throw new Error();
 				const reactFlowBounds = reactFlowWrapper.current.getBoundingClientRect();
-				// @ts-ignore
+
+				if (reactFlowInstance == null) throw new Error();
 				const pos = reactFlowInstance.project({
 					x: event.clientX - reactFlowBounds.left - width / 2,
 					y: event.clientY - reactFlowBounds.top - height / 2,
 				});
-				atlasGraph.nodes.push(wiu.druggedNode.setPosition(pos.x, pos.y));
+				wiu.graph.nodes.push(wiu.druggedNode.setPosition(pos.x, pos.y));
 			}
-			setUiNodes(WebInterfaceUtils.getUiNodes(atlasGraph));
+			wiu.refreshUiElements();
 			wiu.setSelectedNode(wiu.druggedNode);
 		},
-		[reactFlowInstance, wiu.druggedNode],
+		[reactFlowInstance],
 	);
-
-	useEffect(() => {
-		setUiNodes(WebInterfaceUtils.getUiNodes(wiu.graph));
-		setUiEdges(WebInterfaceUtils.getUiEdges(wiu.graph));
-	}, [wiu.graph.nodes]);
 
 	return (
 		<ReactFlowProvider>
-			<div className={styles.flowcanvas} ref={reactFlowWrapper}>
+			<div className={styles.flowCanvas} ref={reactFlowWrapper}>
 				<ReactFlow
-					nodes={uiNodes}
-					edges={uiEdges}
+					nodes={wiu.uiNodes}
+					edges={wiu.uiEdges}
 					nodeTypes={uiNodeTypes}
 					edgeTypes={uiEdgeTypes}
 					onConnect={onConnect}

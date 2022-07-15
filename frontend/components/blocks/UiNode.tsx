@@ -1,103 +1,146 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Handle, Position } from 'react-flow-renderer';
 import styles from '../../styles/Block.module.css';
-import { ExpressionNode, TextNode, FileNode } from '../../utils/AtlasGraph';
+import {
+	AtlasNode,
+	ExpressionNode,
+	TextNode,
+	FileNode,
+	SelectionNode,
+	MatrixFilterNode,
+	ObjectNode,
+} from '../../utils/AtlasGraph';
+import FileUtils from '../../utils/FileUtils';
+import { wiu } from '../../utils/WebInterfaceUtils';
 
 export const uiNodeTypes = {
-	[ExpressionNode.type]: ExpressionBlock,
-	[TextNode.type]: TextBlock,
-	[FileNode.type]: FileBlock,
+	[ExpressionNode.uitype]: ExpressionBlock,
+	[TextNode.uitype]: TextBlock,
+	[FileNode.uitype]: FileBlock,
+	[SelectionNode.uitype]: SelectionBlock,
+	[MatrixFilterNode.uitype]: ExpressionBlock,
+	[ObjectNode.uitype]: ObjectBlock,
 };
 
-export function FormulaBlockWrapper(content: JSX.Element, blockClass: string) {
+function blockWrapper(node: AtlasNode, tail?: JSX.Element | string): JSX.Element {
 	return (
-		<div className={`${styles.block} ${blockClass}`}>
-			<Handle type="target" position={Position.Left} />
-			<Handle type="source" position={Position.Right} id="a" />
-			<div className={styles.display_linebreak}>{content}</div>
+		<div className={styles.block}>
+			<Handle type="target" position={Position.Top} />
+			<Handle type="source" position={Position.Bottom} id="a" />
+			<div className={styles.name}>{node.name}</div>
+			{tail}
 		</div>
 	);
 }
 
-export function TextBlock({ data }: { data: { node: TextNode } }) {
-	return FormulaBlockWrapper(
-		<div className={`${styles.text_block}`}>
-			<div>
-				<span className={styles.attribute_name}>name:</span> {data.node.name}
-			</div>
-			<div>
-				<span className={styles.attribute_name}>content:</span>
-				<br /> {data.node.content}
-			</div>
-		</div>,
-		styles.text_block,
-	);
+function contentWrapper(content: JSX.Element | string): JSX.Element {
+	return <div className={styles.contentWrapper}>{content}</div>;
 }
 
-export function FileBlock({ data }: { data: { node: FileNode } }) {
-	const uploadFile = (node: FileNode, filepath: File) => {
-		if (filepath == undefined) return;
-		node.filename = filepath.name;
-		const reader = new FileReader();
-		reader.onload = (event) => {
-			node.content = reader.result === null ? '' : reader.result.toString();
-		};
-		reader.onerror = () => {
-			console.log('Error loading');
-		};
-		reader.readAsText(filepath);
+function resultWrapper(result: JSX.Element | string): JSX.Element {
+	return <div className={styles.result}>{result}</div>;
+}
+
+function errorWrapper(error: JSX.Element | string): JSX.Element {
+	return <div className={error !== 'nothing' ? styles.error : styles.invisible}>{error}</div>;
+}
+
+function TextBlock({ data }: { data: { node: TextNode } }) {
+	return blockWrapper(data.node, contentWrapper(data.node.content));
+}
+
+// UI Blocks
+function FileBlock({ data }: { data: { node: FileNode } }) {
+	const [showContent, setShowContent] = useState<boolean>(false);
+
+	const uploadFile = (event: React.ChangeEvent<HTMLInputElement>) => {
+		if (event.target.files === null) return;
+		FileUtils.getFileContentString(event.target.files[0], (content: string) =>
+			data.node.setContent(content),
+		);
+		data.node.setFilename(event.target.files[0].name);
 	};
-	return FormulaBlockWrapper(
-		<div className={`${styles.text_block}`}>
-			<div>
-				<span className={styles.attribute_name}>name:</span> {data.node.name}
+
+	const showFileContent = (event: React.ChangeEvent<HTMLInputElement>) => {
+		event.target.checked ? setShowContent(true) : setShowContent(false);
+	};
+
+	return blockWrapper(
+		data.node,
+		<>
+			{contentWrapper(
+				<>
+					<input className={styles.inputFile} type="file" onChange={uploadFile} />
+					<div className={styles.thickLine}>Imported file: {data.node.filename}</div>
+					<label>
+						<input
+							className={styles.inputFile}
+							type="checkbox"
+							onChange={showFileContent}
+						/>
+						Show content
+					</label>
+				</>,
+			)}
+			<div className={showContent === false ? styles.invisible : ''}>
+				{resultWrapper(data.node.content)}
 			</div>
-			<div>
-				<span className={styles.attribute_name}>filename:</span> {data.node.filename}
-			</div>
-			<div>
-				<input
-					id="file_input"
-					type="file"
-					onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-						if (event.target.files === null) return;
-						uploadFile(data.node, event.target.files[0]);
-					}}
-				/>
-			</div>
-		</div>,
-		styles.text_block,
+		</>,
 	);
 }
 
-export function ExpressionBlock({ data }: { data: { node: ExpressionNode } }) {
-	return FormulaBlockWrapper(
-		<div>
-			<div>
-				<span className={styles.attribute_name}>name:</span> {data.node.name}
-			</div>
-			<div>
-				<span className={styles.attribute_name}>content:</span> {data.node.content}
-			</div>
-			<div>
-				<span className={styles.attribute_name}>result:</span> {data.node.result}
-			</div>
-		</div>,
-		styles.expression_block,
+function ExpressionBlock({ data }: { data: { node: ExpressionNode } }) {
+	return blockWrapper(
+		data.node,
+		<>
+			{contentWrapper(data.node.content)}
+			{resultWrapper(data.node.result)}
+			{errorWrapper(data.node.error)}
+		</>,
 	);
 }
 
-// export function FunctionBlock({ data }: { data: { node: FunctionNode } }) {
-// 	return FormulaBlockWrapper(
-// 		<div>
-// 			<div>
-// 				name: {data.node.getName()}(
-// 				{data.node
-// 					.getArgs()
-// 					.map((arg) => arg.name + ': ' + arg.type)
-// 					.join(', ')}
-// 				)
-// 			</div>
-// 		</div>,
-// 	);
-// }
+function SelectionBlock({ data: { node } }: { data: { node: SelectionNode } }) {
+	const [selectedOption, setSelectedOption] = useState<number>(node.selectedOption);
+
+	const handleSelect = (event: React.ChangeEvent<HTMLSelectElement>) => {
+		setSelectedOption(parseInt(event.target.value));
+		node.setSelectedOption(parseInt(event.target.value));
+		wiu.updateGraph();
+	};
+
+	const getOption = (option: string, index: number): JSX.Element => {
+		return (
+			<option key={index} value={index}>
+				{option}
+			</option>
+		);
+	};
+
+	const getSelectionContent = (options: string[]): JSX.Element => {
+		return (
+			<select className={styles.selectBlock} value={selectedOption} onChange={handleSelect}>
+				{options.map((option: string, index: number) => getOption(option, index + 1))}
+			</select>
+		);
+	};
+
+	return blockWrapper(
+		node,
+		<>
+			{contentWrapper(getSelectionContent(node.getOptions()))}
+			{errorWrapper(node.error)}
+		</>,
+	);
+}
+
+function ObjectBlock({ data }: { data: { node: ObjectNode } }) {
+	return blockWrapper(
+		data.node,
+		<>
+			{contentWrapper(data.node.content)}
+			{resultWrapper(data.node.result)}
+			{errorWrapper(data.node.error)}
+		</>,
+	);
+}

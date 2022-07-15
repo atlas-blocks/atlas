@@ -4,31 +4,6 @@
 	grid-template-rows: 8vh 5vh 5vh 82vh;
 }
 
-.leftTop {
-	grid-column: 1 / 3;
-	grid-row: 1;
-	display: flex;
-	justify-content: space-between;
-	margin-left: 10px;
-	margin-right: 5px;
-}
-
-.centerTop {
-	grid-column: 3 / 11;
-	grid-row: 1;
-	text-align: center;
-	margin-top: 15px;
-}
-
-.rightTop {
-	grid-column: 11 / 13;
-	grid-row: 1;
-	display: flex;
-	justify-content: space-between;
-	margin-left: 10px;
-	margin-right: 10px;
-}
-
 .panelHidden {
 	visibility: hidden;
 }
@@ -42,7 +17,7 @@
 	margin-top: 10px;
 }
 
-.flowcanvas {
+.flowCanvas {
 	grid-column: 3 / 11;
 	justify-content: center;
 	text-align: center;
