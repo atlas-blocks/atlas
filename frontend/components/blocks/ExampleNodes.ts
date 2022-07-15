@@ -16,12 +16,12 @@ export const exampleNodes: AtlasNode[] = [
 	TextNode.build().setContent('1,2,3\n4,5,6').setUiPosition(300, 300).setName('ex3'),
 	ExpressionNode.build()
 		.setPlainTextResult('[[1, 4], [2, 5], [3, 6]]')
-		.setContent('Math.csv2vector(ex3)')
+		.setContent('AtlasMath.csv2vector(ex3)')
 		.setUiPosition(500, 300)
 		.setName('ex4'),
 	ExpressionNode.build()
 		.setPlainTextResult('-1.9178')
-		.setContent('Math.ifthenelse(2 == 3, asin(ex1), ex1 * 2)')
+		.setContent('AtlasMath.ifthenelse(2 == 3, asin(ex1), ex1 * 2)')
 		.setUiPosition(350, 150)
 		.setName('ex5'),
 ];

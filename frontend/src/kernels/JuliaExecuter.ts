@@ -13,6 +13,7 @@ export default class JuliaExecuter {
 			const kernelModels = await KernelAPI.listRunning();
 			this.kernelId = kernelModels[0].id;
 			this.kernel = kernelManager.connectTo({ model: kernelModels[0] });
+			this.executeCode('import AtlasUtils.AtlasMath');
 		})();
 	}
 
