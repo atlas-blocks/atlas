@@ -29,7 +29,8 @@ function renderResultPart(part: ResultPart): JSX.Element {
 	return <></>;
 }
 
-function renderResult(result: ResultPart[]): JSX.Element {
+function renderResult(result: ResultPart[] | null): JSX.Element {
+	if (result === null) return <></>;
 	return (
 		<>
 			{result.map((part, index) => (
@@ -115,8 +116,8 @@ function ExpressionBlock({ data: { node } }: { data: { node: ExpressionNode } })
 		node,
 		<>
 			{contentWrapper(node.content)}
-			{resultWrapper(renderResult(node.result))}
-			{errorWrapper(renderExecutionError(node.error))}
+			{resultWrapper(renderResult(node.getResult()))}
+			{errorWrapper(renderExecutionError(node.getError()))}
 		</>,
 	);
 }
@@ -150,7 +151,7 @@ function SelectionBlock({ data: { node } }: { data: { node: SelectionNode } }) {
 		node,
 		<>
 			{contentWrapper(getSelectionContent(node.getOptions()))}
-			{errorWrapper(renderExecutionError(node.error))}
+			{errorWrapper(renderExecutionError(node.getError()))}
 		</>,
 	);
 }
@@ -160,8 +161,8 @@ function ObjectBlock({ data: { node } }: { data: { node: ObjectNode } }) {
 		node,
 		<>
 			{contentWrapper(node.content)}
-			{resultWrapper(renderResult(node.result))}
-			{errorWrapper(renderExecutionError(node.error))}
+			{resultWrapper(renderResult(node.getResult()))}
+			{errorWrapper(renderExecutionError(node.getError()))}
 		</>,
 	);
 }

@@ -1,6 +1,6 @@
 import AtlasNode from '../graph/nodes/AtlasNode';
 import TextNode from '../graph/nodes/TextNode';
-import ExpressionNode, { ResultPart, ExecutionError } from '../graph/nodes/ExpressionNode';
+import ExpressionNode, { ExecutionResponse } from '../graph/nodes/ExpressionNode';
 import { Kernel, KernelAPI, KernelManager } from '@jupyterlab/services';
 
 export default class JuliaExecuter {
@@ -32,42 +32,38 @@ export default class JuliaExecuter {
 		return typeMap[node.type](node as any);
 	}
 
-	public async executeCode(
-		code: string,
-	): Promise<{ result: ResultPart[]; error: ExecutionError | null }> {
-		const result: ResultPart[] = [];
-		let error = null;
+	public async executeCode(code: string): Promise<ExecutionResponse> {
+		const response = new ExecutionResponse();
 
 		const future = this.kernel!.requestExecute({ code: code });
 		future.onIOPub = (msg) => {
 			if (msg.header.msg_type == 'execute_result') {
-				result.push((msg.content as any).data);
+				response.result.push((msg.content as any).data);
 			} else if (msg.header.msg_type == 'stream') {
-				result.push({ 'text/plain': (msg.content as any).text });
+				response.result.push({ 'text/plain': (msg.content as any).text });
 			} else if (msg.header.msg_type == 'error') {
-				error = {
+				response.error = {
 					value: (msg.content as any).evalue,
 					traceback: (msg.content as any).traceback,
 				};
 			}
 		};
 		await future.done;
-		return { result, error };
+		return response;
 	}
 
 	public async executeAtlasNode(node: AtlasNode): Promise<void> {
 		if (this.kernel === null) return;
 
-		if (node instanceof ExpressionNode) {
-			node.result = [];
-			node.error = null;
-		}
-
 		const response = await this.executeCode(this.getAtlasNodeCode(node));
 
 		if (node instanceof ExpressionNode) {
-			node.result = response.result;
-			node.error = response.error;
+			node.response = response;
+
+			for (const content of node.helper_contents) {
+				node.helper_responses = [];
+				node.helper_responses.push(await this.executeCode(content));
+			}
 		}
 	}
 }

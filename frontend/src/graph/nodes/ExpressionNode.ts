@@ -8,14 +8,34 @@ export type ExecutionError = {
 	value: string;
 	traceback: string[];
 };
+export class ExecutionResponse {
+	result: ResultPart[] = [];
+	error: ExecutionError | null = null;
+
+	public getPlainTextResultString(): string {
+		return this.result.map((result) => result['text/plain']).join('');
+	}
+
+	public setResult(result: ResultPart[]): ExecutionResponse {
+		this.result = result;
+		return this;
+	}
+
+	public setPlainTextResult(result: string): ExecutionResponse {
+		return this.setResult([{ 'text/plain': result }]);
+	}
+
+	public setError(error: ExecutionError): ExecutionResponse {
+		this.error = error;
+		return this;
+	}
+}
 
 export default class ExpressionNode extends ContentNode {
 	static ui_type = 'AtlasGraph.ExpressionNode';
-	public error: ExecutionError | null = null;
 	public helper_contents: string[] = [];
-	public result: ResultPart[] = [];
-	public helper_results: string[] = [];
-	public execution_count = -1;
+	public response: ExecutionResponse | null = null;
+	public helper_responses: ExecutionResponse[] = [];
 
 	constructor() {
 		super();
@@ -27,13 +47,26 @@ export default class ExpressionNode extends ContentNode {
 		return new ExpressionNode();
 	}
 
+	public getResult(): ResultPart[] | null {
+		return this.response === null ? null : this.response.result;
+	}
+
+	public getError(): ExecutionError | null {
+		return this.response === null ? null : this.response.error;
+	}
+
+	public getPlainTextResultString(): string {
+		if (this.response === null) return '';
+		return this.response.getPlainTextResultString();
+	}
+
 	public setResult(result: ResultPart[]): ExpressionNode {
-		this.result = result;
+		this.response = new ExecutionResponse();
+		this.response.setResult(result);
 		return this;
 	}
 
 	public setPlainTextResult(result: string): ExpressionNode {
-		this.result = [{ 'text/plain': result }];
-		return this;
+		return this.setResult([{ 'text/plain': result }]);
 	}
 }
