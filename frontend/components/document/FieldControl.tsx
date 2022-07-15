@@ -8,37 +8,32 @@ import { DesmosNode } from '../../utils/AtlasGraph';
 
 export default function FieldControl(): JSX.Element {
 	const [tabsNames, setTabsNames] = useState<string[]>(['AtlasFlow']);
-	const [selectedTab, setSelectedTab] = useState<number>(0);
+	const [selectedTab, setSelectedTab] = useState<string>('AtlasFlow');
+	const [desmosExists, setDesmosExists] = useState<boolean>(false);
 
 	const showField = (event: React.MouseEvent<HTMLDivElement>) => {
-		setSelectedTab(parseInt(event.currentTarget.id));
-	};
-
-	const getTabStyle = (currentTab: number | null): string => {
-		return currentTab === selectedTab
-			? styles.fieldTab + ' ' + styles.fieldTabActive
-			: styles.fieldTab;
-	};
-
-	const isDNDVisible = (isActive: boolean): string => {
-		return isActive ? styles.centralField : styles.panelHidden;
+		setSelectedTab(event.currentTarget.id);
 	};
 
 	useEffect(() => {
-		const allDesmosNodeNames: string[] = ['AtlasFlow'];
+		const allDesmosNames: string[] = [];
 		wiu.graph.nodes.forEach((node) => {
-			if (node instanceof DesmosNode) allDesmosNodeNames.push(node.name);
+			if (node instanceof DesmosNode) allDesmosNames.push(node.name);
 		});
-
-		setTabsNames(allDesmosNodeNames);
+		setTabsNames(['AtlasFlow'].concat(allDesmosNames));
+		setDesmosExists(!!allDesmosNames.length);
 	}, [wiu.graph.nodes.length]);
 
-	function getTab(tabName: string, index: number): JSX.Element {
+	function getTab(tabName: string): JSX.Element {
 		return (
 			<div
 				key={tabName}
-				id={index.toString()}
-				className={getTabStyle(index)}
+				id={tabName}
+				className={
+					tabName === selectedTab
+						? styles.fieldTab + ' ' + styles.fieldTabActive
+						: styles.fieldTab
+				}
 				onClick={showField}
 			>
 				<label>{tabName}</label>
@@ -46,22 +41,24 @@ export default function FieldControl(): JSX.Element {
 		);
 	}
 
+	function getDesmos(): JSX.Element {
+		if (!desmosExists) return <></>;
+		return (
+			<div className={selectedTab !== 'AtlasFlow' ? styles.centralField : styles.panelHidden}>
+				<DesmosGraphic desmosNodeName={selectedTab} />
+			</div>
+		);
+	}
+
 	return (
 		<>
 			<div className={styles.tabsWrapper}>
-				{tabsNames.map((tabName: string, index: number) => getTab(tabName, index))}
+				{tabsNames.map((tabName: string) => getTab(tabName))}
 			</div>
-
-			<div className={isDNDVisible(selectedTab === 0)}>
+			<div className={selectedTab === 'AtlasFlow' ? styles.centralField : styles.panelHidden}>
 				<DnDFlow />
 			</div>
-			{tabsNames.length > 1 ? (
-				<div className={isDNDVisible(selectedTab !== 0)}>
-					<DesmosGraphic desmosNodeName={tabsNames[selectedTab]} />
-				</div>
-			) : (
-				''
-			)}
+			{getDesmos()}
 		</>
 	);
 }
