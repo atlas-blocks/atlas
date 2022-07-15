@@ -1,8 +1,0 @@
-name = "AtlasMath"
-uuid = "ff8a31f6-70b4-40f8-9fcd-0e36091c7bdc"
-authors = ["Aleksandr Freik <alexfreik5@gmail.com>"]
-version = "0.1.0"
-
-[deps]
-CSV = "336ed68f-0bac-5ca0-87d4-7b16caf5d00b"
-JSON3 = "0f8b85d8-7281-11e9-16c2-39a750bddbf1"

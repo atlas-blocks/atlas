@@ -1,7 +1,0 @@
-name = "AtlasUtils"
-uuid = "822a0318-6c7a-4146-81c4-dd95c5407653"
-authors = ["Aleksandr Freik <alexfreik5@gmail.com>"]
-version = "0.1.0"
-
-[deps]
-MacroTools = "1914dd2f-81c6-5fcd-8719-6d5c9610ff09"

@@ -1,3 +1,4 @@
 [deps]
+AtlasUtils = "b8b26cbe-a030-4249-8598-a0ba7c65b1f3"
 Gadfly = "c91e804a-d5a3-530f-b6f0-dfbca275c004"
 JSON3 = "0f8b85d8-7281-11e9-16c2-39a750bddbf1"
