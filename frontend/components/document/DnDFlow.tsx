@@ -85,7 +85,7 @@ export default function DnDFlow(): JSX.Element {
 
 	return (
 		<ReactFlowProvider>
-			<div className={styles.flowCanvas} ref={reactFlowWrapper}>
+			<div className={styles.centralField} ref={reactFlowWrapper}>
 				<ReactFlow
 					nodes={wiu.uiNodes}
 					edges={wiu.uiEdges}

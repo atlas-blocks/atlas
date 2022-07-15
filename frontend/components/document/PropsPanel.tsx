@@ -1,9 +1,10 @@
-import styles from '../../../styles/PropsPanel.module.css';
+import styles from '../../styles/PropsPanel.module.css';
 import React, { useEffect, useState } from 'react';
-import { wiu } from '../../../utils/WebInterfaceUtils';
-import { typeDescriptions } from './descriptions';
-import { InputState, NodeInput, getInputField, getTextareaField } from './propsInputFields';
-import getMatrixBuilderField from './MatrixFilterBuilder';
+import { wiu } from '../../utils/WebInterfaceUtils';
+import { typeDescriptions } from './props/descriptions';
+import { InputState, NodeInput, getInputField, getTextareaField } from './props/propsInputFields';
+import getMatrixBuilderField from './props/MatrixFilterBuilder';
+import getObjectBuilder from './props/ObjectNodeBuilder';
 import {
 	AtlasNode,
 	ExpressionNode,
@@ -12,8 +13,8 @@ import {
 	TextNode,
 	MatrixFilterNode,
 	ObjectNode,
-} from '../../../utils/AtlasGraph';
-import getObjectBuilder from './ObjectNodeBuilder';
+	DesmosNode,
+} from '../../utils/AtlasGraph';
 
 export default function PropsPanel(): JSX.Element {
 	const inputStates = {
@@ -49,6 +50,10 @@ export default function PropsPanel(): JSX.Element {
 			new NodeInput(inputStates.name, getInputField),
 			new NodeInput(inputStates.content, (inputState) => getTextareaField(inputState, true)),
 			new NodeInput(inputStates.content, getObjectBuilder),
+		],
+		[DesmosNode.uitype]: [
+			new NodeInput(inputStates.name, getInputField),
+			new NodeInput(inputStates.content, getTextareaField),
 		],
 	};
 

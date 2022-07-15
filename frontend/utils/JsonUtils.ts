@@ -7,6 +7,7 @@ import AtlasGraph, {
 	MatrixFilterNode,
 	SelectionNode,
 	ObjectNode,
+	DesmosNode,
 } from './AtlasGraph';
 
 export default class JsonUtils {
@@ -44,10 +45,11 @@ export default class JsonUtils {
 		[TextNode.uitype]: TextNode.build,
 		[FileNode.uitype]: FileNode.build,
 		[ObjectNode.uitype]: ObjectNode.build,
+		[DesmosNode.uitype]: DesmosNode.build,
 		[AtlasNode.uitype]: AtlasNode.build,
 	};
 
-	public static extractNodes(nodes: {}[]): AtlasNode[] {
+	public static extractNodes(nodes: Record<string, never>[]): AtlasNode[] {
 		const updatedNodes: AtlasNode[] = [];
 		for (const node of nodes) {
 			updatedNodes.push(this.extractNode(node));

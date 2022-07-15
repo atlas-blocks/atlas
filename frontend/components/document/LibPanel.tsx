@@ -9,6 +9,7 @@ import {
 	MatrixFilterNode,
 	SelectionNode,
 	ObjectNode,
+	DesmosNode,
 } from '../../utils/AtlasGraph';
 
 export default function LibPanel(): JSX.Element {
@@ -25,6 +26,7 @@ export default function LibPanel(): JSX.Element {
 		MatrixFilterNode: () => MatrixFilterNode.build().setDefaultName(wiu.graph),
 		SelectionNode: () => SelectionNode.build().setDefaultName(wiu.graph),
 		ObjectNode: () => ObjectNode.build().setDefaultName(wiu.graph),
+		DesmosNode: () => DesmosNode.build().setContent('x^2-2').setDefaultName(wiu.graph),
 	};
 
 	const libElements = {
@@ -75,7 +77,7 @@ export default function LibPanel(): JSX.Element {
 
 	function getLibSections(libName: keyof typeof libElements): JSX.Element {
 		return (
-			<div key={libName} className={styles.libWrapper}>
+			<div key={libName} className={styles.libSection}>
 				<div
 					id={libName}
 					className={styles.libSectionLabel}

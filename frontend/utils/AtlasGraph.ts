@@ -1,5 +1,3 @@
-import { threadId } from 'worker_threads';
-
 export default class AtlasGraph {
 	public name: string;
 	public readonly nodes: AtlasNode[];
@@ -74,7 +72,7 @@ export class AtlasEdge {
 }
 
 export class AtlasNode {
-	static uitype: string = 'AtlasGraph.Node';
+	static uitype = 'AtlasGraph.Node';
 
 	public name: string;
 	public type: string;
@@ -219,7 +217,7 @@ export class ExpressionNode extends ContentNode {
 }
 
 export class MatrixFilterNode extends ExpressionNode {
-	static uitype: string = 'AtlasGraph.MatrixFilterNode';
+	static uitype = 'AtlasGraph.MatrixFilterNode';
 
 	constructor() {
 		super();
@@ -232,7 +230,7 @@ export class MatrixFilterNode extends ExpressionNode {
 }
 
 export class SelectionNode extends ExpressionNode {
-	static uitype: string = 'AtlasGraph.SelectionNode';
+	static uitype = 'AtlasGraph.SelectionNode';
 	public source: string;
 	public selectedOption: number;
 
@@ -249,7 +247,9 @@ export class SelectionNode extends ExpressionNode {
 		try {
 			const options = JSON.parse(this.helper_results[0]);
 			if (Array.isArray(options)) return options;
-		} catch (ignored) {}
+		} catch (ignored) {
+			// empty
+		}
 		return [];
 	}
 
@@ -283,7 +283,7 @@ export class SelectionNode extends ExpressionNode {
 }
 
 export class ObjectNode extends ExpressionNode {
-	static uitype: string = 'AtlasGraph.ObjectNode';
+	static uitype = 'AtlasGraph.ObjectNode';
 	public objProperties: [string, string][];
 
 	constructor() {
@@ -312,5 +312,18 @@ export class ObjectNode extends ExpressionNode {
 
 	public static build(): ObjectNode {
 		return new ObjectNode();
+	}
+}
+
+export class DesmosNode extends TextNode {
+	static uitype = 'AtlasGraph.DesmosNode';
+
+	constructor() {
+		super();
+		this.uitype = DesmosNode.uitype;
+	}
+
+	public static build(): DesmosNode {
+		return new DesmosNode();
 	}
 }
