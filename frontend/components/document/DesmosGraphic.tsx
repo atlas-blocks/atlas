@@ -1,39 +1,44 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Script from 'next/script';
 import { wiu } from '../../utils/WebInterfaceUtils';
-import { DesmosNode } from '../../utils/AtlasGraph';
-
-let calculator: any = null;
+import { AtlasNode, DesmosNode } from '../../utils/AtlasGraph';
 
 type Props = {
-	desmosName: string;
+	desmosNodeName: string;
 };
 
-export default function DesmosGraphic({ desmosName }: Props): JSX.Element {
-	const loadDesmos = (desmosObject: any) => {
+export default function DesmosGraphic({ desmosNodeName }: Props): JSX.Element {
+	const [desmosGraphic, setDesmosGraphic] = useState<Desmos.GraphingCalculator>(null);
+
+	const loadDesmos = (desmosObject) => {
 		const elt = document.getElementById('calculator');
-		calculator = desmosObject.GraphingCalculator(elt);
-		// calculator.setExpression({ id: 'graph1', latex: 'y=x^2' });
+		setDesmosGraphic(desmosObject.GraphingCalculator(elt));
 	};
 
-	wiu.graph.nodes.forEach((node) => {
-		if (node instanceof DesmosNode && node.name === desmosName) {
-			console.log(desmosName);
-			// calculator.setExpression({
-			// 	id: desmosName,
-			// 	latex: 'y = ' + node.content ? node.content : '',
-			// });
-			// console.log(node.content);
+	useEffect(() => {
+		const getNodeByDesmosName: AtlasNode = wiu.graph.nodes.filter(
+			(node) => node.name === desmosNodeName,
+		)[0];
+		if (getNodeByDesmosName instanceof DesmosNode) {
+			desmosGraphic.setExpression({
+				id: 'graph1',
+				latex: 'y = ' + getNodeByDesmosName.content,
+			});
+			setDesmosGraphic(desmosGraphic);
 		}
-	});
+	}, [desmosNodeName]);
 
 	return (
 		<>
 			<Script
 				src="https://www.desmos.com/api/v1.7/calculator.js?apiKey=dcb31709b452b1cf9dc26972add0fda6"
 				onLoad={() => loadDesmos(window.Desmos)}
+				onError={(e) => {
+					console.error('Desmos script failed to load', e);
+				}}
 			/>
-			<div id="calculator" style={{ height: '100%', width: '100%' }}></div>
+
+			<div id={'calculator'} style={{ height: '100%', width: '100%' }}></div>
 		</>
 	);
 }
