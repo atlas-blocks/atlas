@@ -15,6 +15,6 @@ services:
 
   jupyter-backend:
     volumes: 
-      - ./backend/JupyterBackend:/home/jovyan/work
+      - ./jupyter_backend:/home/jovyan/work
     ports:
       - 8001:8888

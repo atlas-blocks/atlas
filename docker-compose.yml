@@ -21,6 +21,6 @@ services:
     image: jupyter-backend
     container_name: jupyter_backend
     build:
-      context: ./backend/JupyterBackend
+      context: ./jupyter_backend
       target: dev
     restart: on-failure
