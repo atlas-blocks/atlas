@@ -1,6 +1,7 @@
 import React from 'react';
 import { Node as UINode, Edge as UIEdge, NodeChange as UINodeChange } from 'react-flow-renderer';
 import AtlasNode from '../graph/nodes/AtlasNode';
+import AtlasEdge from '../graph/edges/AtlasEdge';
 import AtlasGraph from '../graph/AtlasGraph';
 import JsonUtils from './JsonUtils';
 
@@ -47,11 +48,11 @@ export default class WebInterfaceUtils {
 		};
 	}
 
-	public static toUiEdge(from: AtlasNode, to: AtlasNode): UIEdge {
+	public static toUiEdge(edge: AtlasEdge): UIEdge {
 		return {
-			id: 'edge' + from.getId() + to.getId(),
-			source: from.getId(),
-			target: to.getId(),
+			id: 'edge' + edge.provider.getId() + edge.user.getId(),
+			source: edge.user.getId(),
+			target: edge.provider.getId(),
 			type: 'DefaultEdge',
 		};
 	}
@@ -65,19 +66,7 @@ export default class WebInterfaceUtils {
 	}
 
 	public static getUiEdges(graph: AtlasGraph): UIEdge[] {
-		const ans: UIEdge[] = [];
-
-		for (const edge of graph.edges) {
-			const fromEdges = graph.getByName(edge.from);
-			const tos = graph.getByName(edge.to);
-
-			for (const from of fromEdges) {
-				for (const to of tos) {
-					ans.push(this.toUiEdge(from, to));
-				}
-			}
-		}
-		return ans;
+		return graph.getEdges().map((edge) => this.toUiEdge(edge));
 	}
 
 	public refreshUiElements() {

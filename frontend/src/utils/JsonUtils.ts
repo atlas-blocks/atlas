@@ -16,10 +16,7 @@ export default class JsonUtils {
 	}): AtlasGraph {
 		const graph: AtlasGraph = new AtlasGraph();
 		try {
-			return graph
-				.setName(graphJson.name)
-				.setNodes(this.extractNodes(graphJson.nodes))
-				.setEdges(this.extractEdges(graphJson.edges));
+			return graph.setName(graphJson.name).setNodes(this.extractNodes(graphJson.nodes));
 		} catch (e) {
 			window.alert(`This JSON is not an AtlasGraph: ${e}`);
 			console.log(graphJson);
@@ -60,12 +57,6 @@ export default class JsonUtils {
 			throw new Error('no such node ui_type: ' + node.ui_type);
 		}
 		return Object.assign(this.typeMap[node.ui_type](), node);
-	}
-
-	public static extractEdges(edges: object[]): AtlasEdge[] {
-		const updatedEdges: AtlasEdge[] = [];
-		edges.forEach((edge: object) => updatedEdges.push(Object.assign(AtlasEdge.build(), edge)));
-		return updatedEdges;
 	}
 
 	public static stringify(object: any, space?: number): string {

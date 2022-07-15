@@ -33,9 +33,11 @@ export class ExecutionResponse {
 
 export default class ExpressionNode extends ContentNode {
 	static ui_type = 'AtlasGraph.ExpressionNode';
-	public helper_contents: string[] = [];
+
 	public response: ExecutionResponse | null = null;
+	public helper_contents: string[] = [];
 	public helper_responses: ExecutionResponse[] = [];
+	public providerNames: string[] = [];
 
 	constructor() {
 		super();

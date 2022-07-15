@@ -1,13 +1,11 @@
+import AtlasNode from '../nodes/AtlasNode';
+
 export default class AtlasEdge {
-	public to: string;
-	public from: string;
+	public user: AtlasNode;
+	public provider: AtlasNode;
 
-	constructor(to: string, from: string) {
-		this.to = to;
-		this.from = from;
-	}
-
-	public static build() {
-		return new AtlasEdge('', '');
+	constructor(user: AtlasNode, provider: AtlasNode) {
+		this.user = user;
+		this.provider = provider;
 	}
 }

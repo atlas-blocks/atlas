@@ -1,13 +1,13 @@
+import ExpressionNode from './nodes/ExpressionNode';
 import AtlasNode from './nodes/AtlasNode';
 import AtlasEdge from './edges/AtlasEdge';
 
 export default class AtlasGraph {
 	public name = 'atlas_schema';
 	public readonly nodes: AtlasNode[] = [];
-	public readonly edges: AtlasEdge[] = [];
 
 	public replaceWithNew(newGraph: AtlasGraph): void {
-		this.setName(newGraph.name).setNodes(newGraph.nodes).setEdges(newGraph.edges);
+		this.setName(newGraph.name).setNodes(newGraph.nodes);
 	}
 
 	public setName(name: string): AtlasGraph {
@@ -21,10 +21,19 @@ export default class AtlasGraph {
 		return this;
 	}
 
-	public setEdges(edges: AtlasEdge[]): AtlasGraph {
-		this.edges.splice(0, this.edges.length);
-		this.edges.push(...edges);
-		return this;
+	public getEdges(): AtlasEdge[] {
+		const edges: AtlasEdge[] = [];
+		this.nodes
+			.filter((node) => node instanceof ExpressionNode)
+			.map((node) => node as ExpressionNode)
+			.forEach((user) => {
+				user.providerNames
+					.map((name) => this.getByName(name))
+					.forEach((providers) =>
+						providers.forEach((provider) => edges.push(new AtlasEdge(user, provider))),
+					);
+			});
+		return edges;
 	}
 
 	private isInDefaultNameFormat(name: string) {

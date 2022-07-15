@@ -1,6 +1,8 @@
 import AtlasNode from '../graph/nodes/AtlasNode';
 import TextNode from '../graph/nodes/TextNode';
 import ExpressionNode, { ExecutionResponse } from '../graph/nodes/ExpressionNode';
+import AtlasEdge from '../graph/edges/AtlasEdge';
+import AtlasGraph from '../graph/AtlasGraph';
 import { Kernel, KernelAPI, KernelManager } from '@jupyterlab/services';
 
 export default class JuliaExecuter {
@@ -32,6 +34,9 @@ export default class JuliaExecuter {
 		return typeMap[node.type](node as any);
 	}
 
+	public async executeCodeLines(codeLines: string[]): Promise<ExecutionResponse> {
+		return await this.executeCode(codeLines.join('\n'));
+	}
 	public async executeCode(code: string): Promise<ExecutionResponse> {
 		const response = new ExecutionResponse();
 
@@ -64,6 +69,23 @@ export default class JuliaExecuter {
 				node.helper_responses = [];
 				node.helper_responses.push(await this.executeCode(content));
 			}
+
+			node.providerNames = await this.getProviderNames(node.content);
 		}
+	}
+
+	public async getProviderNames(content: string): Promise<string[]> {
+		const response = await this.executeCodeLines([
+			'import AtlasUtils.TokenUtils, JSON3',
+			'print(JSON3.write(TokenUtils.getnames("""' + content + '""")))',
+		]);
+
+		try {
+			const names = JSON.parse(response.getPlainTextResultString());
+			if (Array.isArray(names)) return names;
+		} catch (ignored) {
+			console.error(response, ' should be an array of string names');
+		}
+		return [];
 	}
 }
