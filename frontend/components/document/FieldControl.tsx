@@ -7,19 +7,15 @@ import { wiu } from '../../utils/WebInterfaceUtils';
 import { DesmosNode } from '../../utils/AtlasGraph';
 
 export default function FieldControl(): JSX.Element {
-	const [desmosNodeNames, setDesmosNodeNames] = useState<string[]>([]);
-	const [selectedDesmosTab, setSelectedDesmosTab] = useState<number | null>(null);
+	const [tabsNames, setTabsNames] = useState<string[]>(['AtlasFlow']);
+	const [selectedTab, setSelectedTab] = useState<number>(0);
 
-	const showDNDField = () => {
-		setSelectedDesmosTab(null);
-	};
-
-	const showGraphicsField = (event: React.MouseEvent<HTMLDivElement>) => {
-		setSelectedDesmosTab(parseInt(event.currentTarget.id));
+	const showField = (event: React.MouseEvent<HTMLDivElement>) => {
+		setSelectedTab(parseInt(event.currentTarget.id));
 	};
 
 	const getTabStyle = (currentTab: number | null): string => {
-		return currentTab === selectedDesmosTab
+		return currentTab === selectedTab
 			? styles.fieldTab + ' ' + styles.fieldTabActive
 			: styles.fieldTab;
 	};
@@ -29,41 +25,39 @@ export default function FieldControl(): JSX.Element {
 	};
 
 	useEffect(() => {
-		const allDesmosNodeNames: string[] = [];
+		const allDesmosNodeNames: string[] = ['AtlasFlow'];
 		wiu.graph.nodes.forEach((node) => {
 			if (node instanceof DesmosNode) allDesmosNodeNames.push(node.name);
 		});
-		setDesmosNodeNames(allDesmosNodeNames);
+
+		setTabsNames(allDesmosNodeNames);
 	}, [wiu.graph.nodes.length]);
 
-	function desmosTabs(desmosName: string, index: number): JSX.Element {
+	function getTab(tabName: string, index: number): JSX.Element {
 		return (
 			<div
-				key={desmosName}
+				key={tabName}
 				id={index.toString()}
 				className={getTabStyle(index)}
-				onClick={showGraphicsField}
+				onClick={showField}
 			>
-				<label>{desmosName}</label>
+				<label>{tabName}</label>
 			</div>
 		);
 	}
 
 	return (
 		<>
-			<div className={styles.flowControlWrapper}>
-				<div className={getTabStyle(null)} onClick={showDNDField}>
-					<label>AtlasFlow</label>
-				</div>
-				{desmosNodeNames.map((desmos: string, index: number) => desmosTabs(desmos, index))}
+			<div className={styles.tabsWrapper}>
+				{tabsNames.map((tabName: string, index: number) => getTab(tabName, index))}
 			</div>
 
-			<div className={isDNDVisible(selectedDesmosTab === null)}>
+			<div className={isDNDVisible(selectedTab === 0)}>
 				<DnDFlow />
 			</div>
-			{desmosNodeNames.length ? (
-				<div className={isDNDVisible(selectedDesmosTab !== null)}>
-					<DesmosGraphic desmosNodeName={desmosNodeNames[selectedDesmosTab]} />
+			{tabsNames.length > 1 ? (
+				<div className={isDNDVisible(selectedTab !== 0)}>
+					<DesmosGraphic desmosNodeName={tabsNames[selectedTab]} />
 				</div>
 			) : (
 				''

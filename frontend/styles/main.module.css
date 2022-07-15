@@ -45,7 +45,7 @@
 	overflow-y: auto;
 }
 
-.flowControlWrapper {
+.tabsWrapper {
 	grid-column: 3/11;
 	grid-row: 2/2;
 	border: 1px solid #eaeaea;
