@@ -1,8 +1,6 @@
 import AtlasNode from '../graph/nodes/AtlasNode';
 import TextNode from '../graph/nodes/TextNode';
 import ExpressionNode, { ExecutionResponse } from '../graph/nodes/ExpressionNode';
-import AtlasEdge from '../graph/edges/AtlasEdge';
-import AtlasGraph from '../graph/AtlasGraph';
 import { Kernel, KernelAPI, KernelManager } from '@jupyterlab/services';
 
 export default class JuliaExecuter {

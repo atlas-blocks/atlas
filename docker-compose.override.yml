@@ -5,13 +5,15 @@ services:
   reverse-proxy:
     ports:
       - 8081:80
-      - 8888:8888
+      - 8881:8888
 
   frontend:
     volumes:
       - ./frontend:/app
     ports:
       - 3001:3000
+    environment:
+      - NEXT_PUBLIC_JUPYTER_PORT=8881
 
   jupyter-backend:
     volumes: 
