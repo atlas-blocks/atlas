@@ -3,7 +3,6 @@ import { Node as UINode, Edge as UIEdge, NodeChange as UINodeChange } from 'reac
 import AtlasNode from '../graph/nodes/AtlasNode';
 import AtlasGraph from '../graph/AtlasGraph';
 import JsonUtils from './JsonUtils';
-import JuliaExecuter from '../kernels/JuliaExecuter';
 
 export default class WebInterfaceUtils {
 	graph: AtlasGraph;

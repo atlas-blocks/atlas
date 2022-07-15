@@ -1,7 +1,3 @@
-import ErrorUtils from './errors/ErrorUtils';
-import AtlasGraph from '../graph/AtlasGraph';
-import JsonUtils from './JsonUtils';
-
 export default abstract class ServerUtils {
 	public static async fetchAsync(
 		urlString: string,
@@ -36,28 +32,5 @@ export default abstract class ServerUtils {
 	public static toAbsoluteUrl(url: string): string {
 		if (url.startsWith('http')) return url;
 		return this.getHostHref() + url;
-	}
-
-	public static async getFetch(url: string, data: Record<string, string>): Promise<any> {
-		if (url != this.toAbsoluteUrl(url))
-			return await ServerUtils.get(ServerUtils.toAbsoluteUrl(url), data);
-		return await ServerUtils.get(ServerUtils.toAbsoluteUrl('/api/fetch'), {
-			url: url,
-			request: JSON.stringify(data),
-		});
-	}
-
-	public static async getUpdatedGraph(graph: AtlasGraph): Promise<AtlasGraph | null> {
-		const responseJson = await this.post(
-			this.getHostHref() + '/api/graph',
-			{},
-			{ graph: JsonUtils.getJson(graph) },
-		);
-		if (!responseJson.success) {
-			ErrorUtils.showAlert('error while updating graph: ' + responseJson.message);
-			return null;
-		}
-
-		return JsonUtils.jsonToGraph(responseJson.graph);
 	}
 }
