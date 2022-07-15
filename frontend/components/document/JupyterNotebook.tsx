@@ -6,7 +6,8 @@ export default function ElementsPanel() {
 	React.useEffect(() => {
 		if (jupyterNotebookRef.current === null)
 			return console.assert('jupyterNotebookRef should not be null');
-		jupyterNotebookRef.current.src = JupyterUtils.getBaseHref() + '/notebooks/work/empty.ipynb';
+		jupyterNotebookRef.current.src =
+			JupyterUtils.getBaseHref() + '/notebooks/work/notebooks/empty.ipynb';
 	}, []);
 
 	return (

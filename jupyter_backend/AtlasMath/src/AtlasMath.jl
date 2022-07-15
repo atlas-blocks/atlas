@@ -1,4 +1,4 @@
-module Math
+module AtlasMath
 using CSV, JSON3
 
 function pow(base::Float64, exp::Float64)

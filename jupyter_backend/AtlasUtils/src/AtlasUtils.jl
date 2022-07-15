@@ -1,4 +1,5 @@
-module Tokens
+module AtlasGraph
+
 import MacroTools: postwalk
 export getnames
 
@@ -10,6 +11,5 @@ function getnames(content::String)::Set{Symbol}
     end
     return Set{Symbol}(list)
 end
-
 
 end
