@@ -1,15 +1,19 @@
 import ContentNode from './ContentNode';
 
-export type Result = {
+export type ResultPart = {
 	'text/plain'?: string;
 	'text/html'?: string;
+};
+export type ExecutionError = {
+	value: string;
+	traceback: string[];
 };
 
 export default class ExpressionNode extends ContentNode {
 	static ui_type = 'AtlasGraph.ExpressionNode';
-	public error = 'nothing';
+	public error: ExecutionError | null = null;
 	public helper_contents: string[] = [];
-	public result: Result = {};
+	public result: ResultPart[] = [];
 	public helper_results: string[] = [];
 	public execution_count = -1;
 
@@ -23,13 +27,13 @@ export default class ExpressionNode extends ContentNode {
 		return new ExpressionNode();
 	}
 
-	public setResult(result: Result): ExpressionNode {
+	public setResult(result: ResultPart[]): ExpressionNode {
 		this.result = result;
 		return this;
 	}
 
 	public setPlainTextResult(result: string): ExpressionNode {
-		this.result = { 'text/plain': result };
+		this.result = [{ 'text/plain': result }];
 		return this;
 	}
 }

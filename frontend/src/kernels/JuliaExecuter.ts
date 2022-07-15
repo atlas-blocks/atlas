@@ -1,14 +1,11 @@
 import AtlasNode from '../graph/nodes/AtlasNode';
 import TextNode from '../graph/nodes/TextNode';
 import ExpressionNode from '../graph/nodes/ExpressionNode';
-import JupyterUtils from '../utils/JupyterUtils';
 import { Kernel, KernelAPI, KernelManager } from '@jupyterlab/services';
 
 export default class JuliaExecuter {
 	kernelId: string | null = null;
 	kernel: Kernel.IKernelConnection | null = null;
-	sessionId: string = JupyterUtils.generateRandomHex(32);
-	supportedProtocols = ['ws'];
 
 	constructor() {
 		(async () => {
@@ -39,15 +36,23 @@ export default class JuliaExecuter {
 		if (this.kernel === null) return;
 
 		if (node instanceof ExpressionNode) {
-			node.result = {};
+			node.result = [];
+			node.error = null;
 		}
 		const code = this.getAtlasNodeCode(node);
 		const future = this.kernel!.requestExecute({ code: code });
 
 		future.onIOPub = (msg) => {
-			if (msg.header.msg_type == 'execute_result') {
-				if (node instanceof ExpressionNode) {
-					node.result = (msg.content as any).data;
+			if (node instanceof ExpressionNode) {
+				if (msg.header.msg_type == 'execute_result') {
+					node.result.push((msg.content as any).data);
+				} else if (msg.header.msg_type == 'stream') {
+					node.result.push({ 'text/plain': (msg.content as any).text });
+				} else if (msg.header.msg_type == 'error') {
+					node.error = {
+						value: (msg.content as any).evalue,
+						traceback: (msg.content as any).traceback,
+					};
 				}
 			}
 		};

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Handle, Position } from 'react-flow-renderer';
 import styles from '../../styles/Block.module.css';
 import AtlasNode from '../../src/graph/nodes/AtlasNode';
-import ExpressionNode, { Result } from '../../src/graph/nodes/ExpressionNode';
+import ExpressionNode, { ResultPart, ExecutionError } from '../../src/graph/nodes/ExpressionNode';
 import TextNode from '../../src/graph/nodes/TextNode';
 import FileNode from '../../src/graph/nodes/FileNode';
 import SelectionNode from '../../src/graph/nodes/SelectionNode';
@@ -20,13 +20,27 @@ export const uiNodeTypes = {
 	[ObjectNode.ui_type]: ObjectBlock,
 };
 
-function renderResult(result: Result): JSX.Element | string {
-	if (result['text/html'] !== undefined) {
-		return <div dangerouslySetInnerHTML={{ __html: result['text/html'] }}></div>;
-	} else if (result['text/plain'] !== undefined) {
-		return <div>{result['text/plain']}</div>;
+function renderResultPart(part: ResultPart): JSX.Element {
+	if (part['text/html'] !== undefined) {
+		return <div dangerouslySetInnerHTML={{ __html: part['text/html'] }}></div>;
+	} else if (part['text/plain'] !== undefined) {
+		return <div>{part['text/plain']}</div>;
 	}
 	return <></>;
+}
+
+function renderResult(result: ResultPart[]): JSX.Element {
+	return (
+		<>
+			{result.map((part, index) => (
+				<div key={index}>{renderResultPart(part)}</div>
+			))}
+		</>
+	);
+}
+
+function renderExecutionError(error: ExecutionError | null): JSX.Element | null {
+	return error === null ? null : <>{error.traceback.join('\n')}</>;
 }
 
 function blockWrapper(node: AtlasNode, tail?: JSX.Element | string): JSX.Element {
@@ -48,24 +62,24 @@ function resultWrapper(result: JSX.Element | string): JSX.Element {
 	return <div className={styles.result}>{result}</div>;
 }
 
-function errorWrapper(error: JSX.Element | string): JSX.Element {
-	return <div className={error !== 'nothing' ? styles.error : styles.invisible}>{error}</div>;
+function errorWrapper(error: JSX.Element | null): JSX.Element {
+	return <div className={error !== null ? styles.error : styles.invisible}>{error}</div>;
 }
 
-function TextBlock({ data }: { data: { node: TextNode } }) {
-	return blockWrapper(data.node, contentWrapper(data.node.content));
+function TextBlock({ data: { node } }: { data: { node: TextNode } }) {
+	return blockWrapper(node, contentWrapper(node.content));
 }
 
 // UI Blocks
-function FileBlock({ data }: { data: { node: FileNode } }) {
+function FileBlock({ data: { node } }: { data: { node: FileNode } }) {
 	const [showContent, setShowContent] = useState<boolean>(false);
 
 	const uploadFile = (event: React.ChangeEvent<HTMLInputElement>) => {
 		if (event.target.files === null) return;
 		FileUtils.getFileContentString(event.target.files[0], (content: string) =>
-			data.node.setContent(content),
+			node.setContent(content),
 		);
-		data.node.setUiFilename(event.target.files[0].name);
+		node.setUiFilename(event.target.files[0].name);
 	};
 
 	const showFileContent = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -73,12 +87,12 @@ function FileBlock({ data }: { data: { node: FileNode } }) {
 	};
 
 	return blockWrapper(
-		data.node,
+		node,
 		<>
 			{contentWrapper(
 				<>
 					<input className={styles.inputFile} type="file" onChange={uploadFile} />
-					<div className={styles.thickLine}>Imported file: {data.node.ui_filename}</div>
+					<div className={styles.thickLine}>Imported file: {node.ui_filename}</div>
 					<label>
 						<input
 							className={styles.inputFile}
@@ -90,19 +104,19 @@ function FileBlock({ data }: { data: { node: FileNode } }) {
 				</>,
 			)}
 			<div className={showContent === false ? styles.invisible : ''}>
-				{resultWrapper(data.node.content)}
+				{resultWrapper(node.content)}
 			</div>
 		</>,
 	);
 }
 
-function ExpressionBlock({ data }: { data: { node: ExpressionNode } }) {
+function ExpressionBlock({ data: { node } }: { data: { node: ExpressionNode } }) {
 	return blockWrapper(
-		data.node,
+		node,
 		<>
-			{contentWrapper(data.node.content)}
-			{resultWrapper(renderResult(data.node.result))}
-			{errorWrapper(data.node.error)}
+			{contentWrapper(node.content)}
+			{resultWrapper(renderResult(node.result))}
+			{errorWrapper(renderExecutionError(node.error))}
 		</>,
 	);
 }
@@ -136,18 +150,18 @@ function SelectionBlock({ data: { node } }: { data: { node: SelectionNode } }) {
 		node,
 		<>
 			{contentWrapper(getSelectionContent(node.getOptions()))}
-			{errorWrapper(node.error)}
+			{errorWrapper(renderExecutionError(node.error))}
 		</>,
 	);
 }
 
-function ObjectBlock({ data }: { data: { node: ObjectNode } }) {
+function ObjectBlock({ data: { node } }: { data: { node: ObjectNode } }) {
 	return blockWrapper(
-		data.node,
+		node,
 		<>
-			{contentWrapper(data.node.content)}
-			{resultWrapper(renderResult(data.node.result))}
-			{errorWrapper(data.node.error)}
+			{contentWrapper(node.content)}
+			{resultWrapper(renderResult(node.result))}
+			{errorWrapper(renderExecutionError(node.error))}
 		</>,
 	);
 }
