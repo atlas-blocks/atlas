@@ -3,30 +3,25 @@ import Script from 'next/script';
 import { wiu } from '../../utils/WebInterfaceUtils';
 import { AtlasNode, DesmosNode } from '../../utils/AtlasGraph';
 
-type Props = {
-	desmosNodeName: string;
-};
-
-export default function DesmosGraphic({ desmosNodeName }: Props): JSX.Element {
+export default function DesmosGraphic({ desmosNode }: { desmosNode: AtlasNode }): JSX.Element {
 	const [desmosGraphic, setDesmosGraphic] = useState<Desmos.GraphingCalculator>(null);
 
 	const loadDesmos = (desmosObject) => {
 		const elt = document.getElementById('calculator');
-		setDesmosGraphic(desmosObject.GraphingCalculator(elt));
+		setDesmosGraphic(
+			desmosObject.GraphingCalculator(elt, { fontSize: 12, expressionsCollapsed: true }),
+		);
 	};
 
 	useEffect(() => {
-		const getNodeByDesmosName: AtlasNode = wiu.graph.nodes.filter(
-			(node) => node.name === desmosNodeName,
-		)[0];
-		if (getNodeByDesmosName instanceof DesmosNode) {
-			desmosGraphic.setExpression({
-				id: 'graph1',
-				latex: 'y = ' + getNodeByDesmosName.content,
-			});
-			setDesmosGraphic(desmosGraphic);
-		}
-	}, [desmosNodeName]);
+		if (!(desmosNode instanceof DesmosNode)) return;
+		desmosGraphic.setExpression({
+			id: 'graph1',
+			latex: 'y = ' + desmosNode.content,
+		});
+		setDesmosGraphic(desmosGraphic);
+		wiu.setSelectedNode(desmosNode);
+	}, [desmosNode]);
 
 	return (
 		<>

@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import DesmosGraphic from './DesmosGraphic';
 import DnDFlow from './DnDFlow';
 import { wiu } from '../../utils/WebInterfaceUtils';
-import { DesmosNode } from '../../utils/AtlasGraph';
+import { AtlasNode, DesmosNode } from '../../utils/AtlasGraph';
 
 export default function FieldControl(): JSX.Element {
 	const [tabsNames, setTabsNames] = useState<string[]>(['AtlasFlow']);
@@ -43,9 +43,13 @@ export default function FieldControl(): JSX.Element {
 
 	function getDesmos(): JSX.Element {
 		if (!desmosExists) return <></>;
+		const getNodeByName: AtlasNode = wiu.graph.nodes.filter(
+			(node) => node.name === selectedTab,
+		)[0];
+
 		return (
 			<div className={selectedTab !== 'AtlasFlow' ? styles.centralField : styles.panelHidden}>
-				<DesmosGraphic desmosNodeName={selectedTab} />
+				<DesmosGraphic desmosNode={getNodeByName} />
 			</div>
 		);
 	}
