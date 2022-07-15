@@ -9,12 +9,12 @@ export default class SelectionNode extends ExpressionNode {
 		super();
 		this.ui_type = SelectionNode.ui_type;
 		this.setContent('');
-		this.helper_ui_results = ['[]'];
+		this.helper_results = ['[]'];
 	}
 
 	public getOptions(): string[] {
 		try {
-			const options = JSON.parse(this.helper_ui_results[0]);
+			const options = JSON.parse(this.helper_results[0]);
 			if (Array.isArray(options)) return options;
 		} catch (ignored) {
 			// if options is not json array, then it's user's fault and we can ignore it

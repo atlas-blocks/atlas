@@ -17,8 +17,8 @@ import JuliaExecuter from '../src/kernels/JuliaExecuter';
 wiu.graph = new AtlasGraph();
 atlasModule.graph = wiu.graph;
 atlasModule.executer = new JuliaExecuter();
+atlasModule.wiu = wiu;
 exampleNodes.forEach((node) => wiu.graph.nodes.push(node));
-wiu.graph.name = 'atlas_schema';
 
 export default function Home() {
 	[wiu.druggedNode, wiu.setDruggedNode] = useState<AtlasNode | null>(null);

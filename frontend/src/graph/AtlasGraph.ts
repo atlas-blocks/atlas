@@ -2,7 +2,7 @@ import AtlasNode from './nodes/AtlasNode';
 import AtlasEdge from './edges/AtlasEdge';
 
 export default class AtlasGraph {
-	public name = 'atlas_graph';
+	public name = 'atlas_schema';
 	public readonly nodes: AtlasNode[] = [];
 	public readonly edges: AtlasEdge[] = [];
 

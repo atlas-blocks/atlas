@@ -1,7 +1,6 @@
 import WebInterfaceUtils from './WebInterfaceUtils';
 import JuliaExecuter from '../kernels/JuliaExecuter';
 import AtlasGraph from '../graph/AtlasGraph';
-import ServerUtils from './ServerUtils';
 
 export default class AtlasModule {
 	graph: AtlasGraph;
@@ -15,9 +14,10 @@ export default class AtlasModule {
 	}
 
 	public async updateGraph() {
-		const updatedGraph = await ServerUtils.getUpdatedGraph(this.graph);
-		if (updatedGraph !== null) this.replaceGraphWithNew(updatedGraph);
-		this.wiu.refreshUiElements();
+		this.graph.nodes.forEach(async (node) => {
+			await this.executer.executeAtlasNode(node);
+			this.wiu.refreshUiElements();
+		});
 	}
 
 	public replaceGraphWithNew(newGraph: AtlasGraph): void {

@@ -17,7 +17,10 @@ export default function LibPanel(): JSX.Element {
 
 	const nodesOptions = {
 		ExpressionNode: () =>
-			ExpressionNode.build().setResult('5').setContent('2 + 3').setDefaultName(wiu.graph),
+			ExpressionNode.build()
+				.setPlainTextResult('5')
+				.setContent('2 + 3')
+				.setDefaultName(wiu.graph),
 		TextNode: () => TextNode.build().setContent('1, 2, 3').setDefaultName(wiu.graph),
 		FileNode: () => FileNode.build().setDefaultName(wiu.graph),
 		MatrixFilterNode: () => MatrixFilterNode.build().setDefaultName(wiu.graph),

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Handle, Position } from 'react-flow-renderer';
 import styles from '../../styles/Block.module.css';
 import AtlasNode from '../../src/graph/nodes/AtlasNode';
-import ExpressionNode from '../../src/graph/nodes/ExpressionNode';
+import ExpressionNode, { Result } from '../../src/graph/nodes/ExpressionNode';
 import TextNode from '../../src/graph/nodes/TextNode';
 import FileNode from '../../src/graph/nodes/FileNode';
 import SelectionNode from '../../src/graph/nodes/SelectionNode';
@@ -19,6 +19,15 @@ export const uiNodeTypes = {
 	[MatrixFilterNode.ui_type]: ExpressionBlock,
 	[ObjectNode.ui_type]: ObjectBlock,
 };
+
+function renderResult(result: Result): JSX.Element | string {
+	if (result['text/html'] !== undefined) {
+		return <div dangerouslySetInnerHTML={{ __html: result['text/html'] }}></div>;
+	} else if (result['text/plain'] !== undefined) {
+		return <div>{result['text/plain']}</div>;
+	}
+	return <></>;
+}
 
 function blockWrapper(node: AtlasNode, tail?: JSX.Element | string): JSX.Element {
 	return (
@@ -92,7 +101,7 @@ function ExpressionBlock({ data }: { data: { node: ExpressionNode } }) {
 		data.node,
 		<>
 			{contentWrapper(data.node.content)}
-			{resultWrapper(data.node.result)}
+			{resultWrapper(renderResult(data.node.result))}
 			{errorWrapper(data.node.error)}
 		</>,
 	);
@@ -137,7 +146,7 @@ function ObjectBlock({ data }: { data: { node: ObjectNode } }) {
 		data.node,
 		<>
 			{contentWrapper(data.node.content)}
-			{resultWrapper(data.node.ui_result)}
+			{resultWrapper(renderResult(data.node.result))}
 			{errorWrapper(data.node.error)}
 		</>,
 	);

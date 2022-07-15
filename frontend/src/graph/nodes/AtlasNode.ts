@@ -8,7 +8,6 @@ export default class AtlasNode {
 	public ui_type: string = AtlasNode.ui_type;
 	public ui_position: [number, number] = [0, 0];
 	public ui_visibility = true;
-	public executionCount = 0;
 
 	public static build(): AtlasNode {
 		return new AtlasNode();
