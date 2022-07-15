@@ -14,9 +14,7 @@ export default class SelectionNode extends ExpressionNode {
 
 	public getOptions(): string[] {
 		try {
-			console.log(this);
 			const options = JSON.parse(this.helper_responses[0].getPlainTextResultString());
-			console.log(options);
 			if (Array.isArray(options)) return options;
 		} catch (ignored) {
 			// if options is not json array, then it's user's fault and we can ignore it
