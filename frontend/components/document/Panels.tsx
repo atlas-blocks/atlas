@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import styles from '../../styles/main.module.css';
 import buttonStyles from '../../styles/BtnStyle.module.css';
-import { wiu } from '../../utils/WebInterfaceUtils';
+import { wiu } from '../../src/utils/WebInterfaceUtils';
 import ElementsPanel from './ElementsPanel';
 import PropsPanel from './props/PropsPanel';
 import LibPanel from './LibPanel';

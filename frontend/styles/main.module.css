@@ -1,7 +1,7 @@
 .layout {
 	display: grid;
 	grid-template-columns: repeat(12, 1fr);
-	grid-template-rows: 8vh 5vh 5vh 82vh;
+	grid-template-rows: 8vh 5vh 5vh 60vh 22vh;
 }
 
 .panelHidden {
@@ -18,7 +18,7 @@
 }
 
 .flowCanvas {
-	grid-column: 3 / 11;
+	grid-column: 3/11;
 	justify-content: center;
 	text-align: center;
 	grid-row: 2/5;

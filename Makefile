@@ -9,7 +9,7 @@ prod:
 	docker-compose -f docker-compose.yml -f docker-compose.prod.yml up
 
 kill:
-	docker kill reverse_proxy julia_backend frontend
+	docker kill reverse_proxy jupyter_backend frontend
 
 kill-prod:
-	docker kill reverse_proxy_prod julia_backend_prod frontend_prod
+	docker kill reverse_proxy_prod jupyter_backend_prod frontend_prod

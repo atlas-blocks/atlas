@@ -5,15 +5,18 @@ services:
   reverse-proxy:
     ports:
       - 8081:80
+      - 8881:8888
 
   frontend:
     volumes:
       - ./frontend:/app
     ports:
       - 3001:3000
+    environment:
+      - NEXT_PUBLIC_JUPYTER_PORT=8881
 
-  julia-backend:
+  jupyter-backend:
     volumes: 
-      - ./backend/JuliaBackend:/home/genie/app
+      - ./jupyter_backend:/home/jovyan/work
     ports:
-      - 8001:8000
+      - 8001:8888

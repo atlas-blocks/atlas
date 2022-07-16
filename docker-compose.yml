@@ -6,9 +6,6 @@ services:
   reverse-proxy:
     image: nginx:1.17.10
     container_name: reverse_proxy
-    depends_on:
-        - frontend
-        - julia-backend
     volumes:
       - ./reverse_proxy/nginx.conf:/etc/nginx/nginx.conf
 
@@ -20,10 +17,10 @@ services:
       target: dev
     restart: on-failure
 
-  julia-backend:
-    image: julia-backend
-    container_name: julia_backend
+  jupyter-backend:
+    image: jupyter-backend
+    container_name: jupyter_backend
     build:
-      context: ./backend/JuliaBackend
+      context: ./jupyter_backend
       target: dev
     restart: on-failure
