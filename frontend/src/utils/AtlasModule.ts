@@ -14,6 +14,10 @@ export default class AtlasModule {
 	}
 
 	public async updateGraph() {
+		if (this.executer.kernel === null) {
+			window.alert('not connected to the kernel...');
+			return;
+		}
 		this.graph.nodes.forEach(async (node) => {
 			await this.executer.executeAtlasNode(node);
 			this.wiu.refreshUiElements();

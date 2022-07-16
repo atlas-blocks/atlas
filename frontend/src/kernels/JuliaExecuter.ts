@@ -11,9 +11,18 @@ export default class JuliaExecuter {
 		(async () => {
 			const kernelManager = new KernelManager();
 			const kernelModels = await KernelAPI.listRunning();
+			if (kernelModels.length == 0) {
+				window.alert(
+					"kernel hasn't been started yet. please reload website in a few seconds",
+				);
+				return;
+			}
 			this.kernelId = kernelModels[0].id;
 			this.kernel = kernelManager.connectTo({ model: kernelModels[0] });
-			this.executeCode('import AtlasUtils.AtlasMath');
+			this.executeCode(
+				'import Pkg; Pkg.activate(".."); Pkg.instantiate(); Pkg.precompile();',
+			);
+			this.executeCode('import AtlasUtils.AtlasMath, AtlasUtils.TokenUtils, JSON3');
 		})();
 	}
 
@@ -74,10 +83,9 @@ export default class JuliaExecuter {
 	}
 
 	public async getProviderNames(content: string): Promise<string[]> {
-		const response = await this.executeCodeLines([
-			'import AtlasUtils.TokenUtils, JSON3',
+		const response = await this.executeCode(
 			'print(JSON3.write(TokenUtils.getnames("""' + content + '""")))',
-		]);
+		);
 
 		try {
 			const names = JSON.parse(response.getPlainTextResultString());
