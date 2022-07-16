@@ -15,13 +15,21 @@ export default function FieldControl(): JSX.Element {
 		setSelectedTab(event.currentTarget.id);
 	};
 
+	const removeDesmos = () => {
+		setDesmosExists(false);
+		delete window.Desmos;
+		const dsm = document.getElementById('desmosScript');
+		dsm?.parentNode?.removeChild(dsm);
+	};
+
 	useEffect(() => {
 		const allDesmosNames: string[] = [];
 		wiu.graph.nodes.forEach((node) => {
 			if (node instanceof DesmosNode) allDesmosNames.push(node.name);
 		});
 		setTabsNames(['AtlasFlow'].concat(allDesmosNames));
-		setDesmosExists(!!allDesmosNames.length);
+
+		allDesmosNames.length ? setDesmosExists(true) : removeDesmos();
 	}, [wiu.graph.nodes.length]);
 
 	function getTab(tabName: string): JSX.Element {

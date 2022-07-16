@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import Script from 'next/script';
 import { wiu } from '../../utils/WebInterfaceUtils';
 import { AtlasNode, DesmosNode } from '../../utils/AtlasGraph';
 
@@ -14,7 +13,21 @@ export default function DesmosGraphic({ desmosNode }: { desmosNode: AtlasNode })
 	};
 
 	useEffect(() => {
+		const dsmScript = document.getElementById('desmosScript');
+		if (!dsmScript) {
+			const dsmScript = document.createElement('script');
+			dsmScript.src =
+				'https://www.desmos.com/api/v1.7/calculator.js?apiKey=dcb31709b452b1cf9dc26972add0fda6';
+			dsmScript.id = 'desmosScript';
+			document.body.appendChild(dsmScript);
+			dsmScript.onload = () => loadDesmos(window.Desmos);
+			dsmScript.onerror = (event) => console.error('Desmos script failed to load', event);
+		}
+	}, []);
+
+	useEffect(() => {
 		if (!(desmosNode instanceof DesmosNode)) return;
+		if (!desmosGraphic) return;
 		desmosGraphic.setExpression({
 			id: 'graph1',
 			latex: 'y = ' + desmosNode.content,
@@ -25,14 +38,6 @@ export default function DesmosGraphic({ desmosNode }: { desmosNode: AtlasNode })
 
 	return (
 		<>
-			<Script
-				src="https://www.desmos.com/api/v1.7/calculator.js?apiKey=dcb31709b452b1cf9dc26972add0fda6"
-				onLoad={() => loadDesmos(window.Desmos)}
-				onError={(e) => {
-					console.error('Desmos script failed to load', e);
-				}}
-			/>
-
 			<div id={'calculator'} style={{ height: '100%', width: '100%' }}></div>
 		</>
 	);
