@@ -10,7 +10,8 @@ declare global {
 export default function DesmosTab(): JSX.Element {
 	const loadDesmos = (desmosObject: any) => {
 		const calculatorElement = document.getElementById('calculator');
-		const calculator = desmosObject.GraphingCalculator(calculatorElement);
+		const calculator = desmosObject.GraphingCalculator(calculatorElement, { fontSize: 12 });
+
 		calculator.setExpression({ id: 'graph1', latex: 'y=x^2' });
 	};
 

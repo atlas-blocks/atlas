@@ -7,8 +7,11 @@ import JupyterNotebook from './JupyterNotebook';
 export default function TabsSection(): JSX.Element {
 	const [activeTab, setActiveTab] = useState<number>(0);
 
-	// eslint-disable-next-line react/jsx-key
-	const tabs: React.Component[] = [<AtlasGraphTab />, <DesmosTab />, <JupyterNotebook />];
+	const tabs: React.Component[] = [
+		<AtlasGraphTab data-name="atlas_graph" />, // eslint-disable-line react/jsx-key
+		<DesmosTab data-name="desmos" />, // eslint-disable-line react/jsx-key
+		<JupyterNotebook data-name="jupter_notebook" />, // eslint-disable-line react/jsx-key
+	];
 
 	const getTabNavigationStyle = (isActive: boolean): string => {
 		return styles.fieldTab + ' ' + (isActive ? styles.fieldTabActive : '');
@@ -27,7 +30,7 @@ export default function TabsSection(): JSX.Element {
 							onClick={(event) => setActiveTab(index)}
 							key={index}
 						>
-							<label>tab{index}</label>
+							<label>{tab.props['data-name']}</label>
 						</div>
 					))}
 				</div>
