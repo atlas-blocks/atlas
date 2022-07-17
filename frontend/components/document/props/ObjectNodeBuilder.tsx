@@ -2,11 +2,11 @@ import styles from '../../../styles/ObjectNodeProps.module.css';
 import React, { ChangeEvent, useEffect, useState } from 'react';
 import { InputState } from './propsInputFields';
 import { wiu } from '../../../src/utils/WebInterfaceUtils';
-import { ObjectNode } from '../../../src/graph/AtlasGraph';
+import ObjectNode from '../../../src/graph/nodes/ObjectNode';
 
 function ObjectBuilder({ contentInputState }: { contentInputState: InputState }): JSX.Element {
 	const [objProperties, setObjProperties] = useState<[string, string][]>(
-		wiu.selectedNode instanceof ObjectNode ? wiu.selectedNode.objProperties : [],
+		wiu.selectedNode instanceof ObjectNode ? wiu.selectedNode.ui_objProperties : [],
 	);
 
 	const addNewProperty = () => {
@@ -56,7 +56,7 @@ function ObjectBuilder({ contentInputState }: { contentInputState: InputState })
 
 	useEffect(() => {
 		if (!(wiu.selectedNode instanceof ObjectNode)) return;
-		setObjProperties(wiu.selectedNode.objProperties);
+		setObjProperties(wiu.selectedNode.ui_objProperties);
 	}, [wiu.selectedNode]);
 
 	return (

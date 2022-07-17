@@ -7,7 +7,7 @@ import JupyterNotebook from './JupyterNotebook';
 export default function TabsSection(): JSX.Element {
 	const [activeTab, setActiveTab] = useState<number>(0);
 
-	const tabs: React.Component[] = [
+	const tabs = [
 		<AtlasGraphTab data-name="atlas_graph" />, // eslint-disable-line react/jsx-key
 		<DesmosTab data-name="desmos" />, // eslint-disable-line react/jsx-key
 		<JupyterNotebook data-name="jupter_notebook" />, // eslint-disable-line react/jsx-key
