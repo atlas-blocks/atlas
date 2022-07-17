@@ -1,9 +1,9 @@
 import Script from 'next/script';
 
 declare global {
-  interface Window {
-    Desmos?: any;
-  }
+	interface Window {
+		Desmos?: any;
+	}
 }
 
 export default function DesmosTab(): JSX.Element {

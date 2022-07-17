@@ -14,7 +14,7 @@ import FileUtils from '../../utils/FileUtils';
 
 function hasAncestorWithClass(element: HTMLElement | null, className: string): boolean {
 	while (element && !element.classList.contains(className)) {
-		element = element.parentElement
+		element = element.parentElement;
 	}
 	return element !== null;
 }
@@ -56,7 +56,7 @@ export default function Navbar() {
 	useEffect(updateRecentElementsUi, [wiu.graph.name, removeTrigger]);
 
 	const handleClick = (event: MouseEvent) => {
-	    console.log(5)
+		console.log(5);
 		if (!isFileMenuOpen) return;
 		setIsFileMenuOpen(hasAncestorWithClass(event.target as HTMLElement, fileMenuPartClass));
 	};
@@ -108,7 +108,10 @@ export default function Navbar() {
 					defaultValue={wiu.graph.name}
 					onChange={() => wiu.graph.setName(refSchemaName.current!.value)}
 				/>
-				<div className={styles.iconSmall + ' ' + fileMenuPartClass} onClick={()=>setIsFileMenuOpen(!isFileMenuOpen)}>
+				<div
+					className={styles.iconSmall + ' ' + fileMenuPartClass}
+					onClick={() => setIsFileMenuOpen(!isFileMenuOpen)}
+				>
 					<Image
 						src={menuImg}
 						layout={'responsive'}
@@ -116,7 +119,7 @@ export default function Navbar() {
 						alt={'menuImg'}
 					/>
 				</div>
-				<div className={fileMenuStyle + ' ' +fileMenuPartClass}>
+				<div className={fileMenuStyle + ' ' + fileMenuPartClass}>
 					<div className={styles.elementFileMenu} onClick={handleNewSchema}>
 						<label>New</label>
 					</div>
@@ -159,4 +162,3 @@ export default function Navbar() {
 		</>
 	);
 }
-
