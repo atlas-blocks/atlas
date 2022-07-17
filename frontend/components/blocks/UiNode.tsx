@@ -1,26 +1,53 @@
 import React, { useState } from 'react';
 import { Handle, Position } from 'react-flow-renderer';
+
 import styles from '../../styles/Block.module.css';
-import {
-	AtlasNode,
-	ExpressionNode,
-	TextNode,
-	FileNode,
-	SelectionNode,
-	MatrixFilterNode,
-	ObjectNode,
-} from '../../utils/AtlasGraph';
-import FileUtils from '../../utils/FileUtils';
-import { wiu } from '../../utils/WebInterfaceUtils';
+
+import AtlasNode from '../../src/graph/nodes/AtlasNode';
+import ExpressionNode, { ResultPart, ExecutionError } from '../../src/graph/nodes/ExpressionNode';
+import TextNode from '../../src/graph/nodes/TextNode';
+import FileNode from '../../src/graph/nodes/FileNode';
+import SelectionNode from '../../src/graph/nodes/SelectionNode';
+import MatrixFilterNode from '../../src/graph/nodes/MatrixFilterNode';
+import ObjectNode from '../../src/graph/nodes/ObjectNode';
+
+import { atlasModule } from '../../src/utils/AtlasModule';
+import { wiu } from '../../src/utils/WebInterfaceUtils';
+
+import FileUtils from '../../src/utils/FileUtils';
 
 export const uiNodeTypes = {
-	[ExpressionNode.uitype]: ExpressionBlock,
-	[TextNode.uitype]: TextBlock,
-	[FileNode.uitype]: FileBlock,
-	[SelectionNode.uitype]: SelectionBlock,
-	[MatrixFilterNode.uitype]: MatrixFilterBlock,
-	[ObjectNode.uitype]: ObjectBlock,
+	[ExpressionNode.ui_type]: ExpressionBlock,
+	[TextNode.ui_type]: TextBlock,
+	[FileNode.ui_type]: FileBlock,
+	[SelectionNode.ui_type]: SelectionBlock,
+	[MatrixFilterNode.ui_type]: MatrixFilterBlock,
+	[ObjectNode.ui_type]: ObjectBlock,
 };
+
+function renderResultPart(part: ResultPart): JSX.Element {
+	if (part['text/html'] !== undefined) {
+		return <div dangerouslySetInnerHTML={{ __html: part['text/html'] }}></div>;
+	} else if (part['text/plain'] !== undefined) {
+		return <div>{part['text/plain']}</div>;
+	}
+	return <></>;
+}
+
+function renderResult(result: ResultPart[] | null): JSX.Element {
+	if (result === null) return <></>;
+	return (
+		<>
+			{result.map((part, index) => (
+				<div key={index}>{renderResultPart(part)}</div>
+			))}
+		</>
+	);
+}
+
+function renderExecutionError(error: ExecutionError | null): JSX.Element | null {
+	return error === null ? null : <>{error.traceback.join('\n')}</>;
+}
 
 function blockWrapper(node: AtlasNode, tail?: JSX.Element | string): JSX.Element {
 	const selectedBlockStyle = wiu.selectedNode === node ? styles.selectedBlock : '';
@@ -43,37 +70,36 @@ function resultWrapper(result: JSX.Element | string): JSX.Element {
 	return <div className={styles.result}>{result}</div>;
 }
 
-function errorWrapper(error: JSX.Element | string): JSX.Element {
-	return <div className={error !== 'nothing' ? styles.error : styles.invisible}>{error}</div>;
+function errorWrapper(error: JSX.Element | null): JSX.Element {
+	return <div className={error !== null ? styles.error : styles.invisible}>{error}</div>;
 }
 
-function TextBlock({ data }: { data: { node: TextNode } }) {
-	return blockWrapper(data.node, contentWrapper(data.node.content));
+function TextBlock({ data: { node } }: { data: { node: TextNode } }) {
+	return blockWrapper(node, contentWrapper(node.content));
 }
 
 // UI Blocks
-function FileBlock({ data }: { data: { node: FileNode } }) {
+function FileBlock({ data: { node } }: { data: { node: FileNode } }) {
 	const [showContent, setShowContent] = useState<boolean>(false);
 
 	const uploadFile = (event: React.ChangeEvent<HTMLInputElement>) => {
 		if (event.target.files === null) return;
 		FileUtils.getFileContentString(event.target.files[0], (content: string) =>
-			data.node.setContent(content),
+			node.setContent(content),
 		);
-		data.node.setFilename(event.target.files[0].name);
+		node.setUiFilename(event.target.files[0].name);
 	};
-
 	const showFileContent = (event: React.ChangeEvent<HTMLInputElement>) => {
 		event.target.checked ? setShowContent(true) : setShowContent(false);
 	};
 
 	return blockWrapper(
-		data.node,
+		node,
 		<>
 			{contentWrapper(
 				<>
 					<input className={styles.inputFile} type="file" onChange={uploadFile} />
-					<div className={styles.thickLine}>Imported file: {data.node.filename}</div>
+					<div className={styles.thickLine}>Imported file: {node.ui_filename}</div>
 					<label>
 						<input
 							className={styles.inputFile}
@@ -85,19 +111,19 @@ function FileBlock({ data }: { data: { node: FileNode } }) {
 				</>,
 			)}
 			<div className={showContent === false ? styles.invisible : ''}>
-				{resultWrapper(data.node.content)}
+				{resultWrapper(node.content)}
 			</div>
 		</>,
 	);
 }
 
-function ExpressionBlock({ data }: { data: { node: ExpressionNode } }) {
+function ExpressionBlock({ data: { node } }: { data: { node: ExpressionNode } }) {
 	return blockWrapper(
-		data.node,
+		node,
 		<>
-			{contentWrapper(data.node.content)}
-			{resultWrapper(data.node.result)}
-			{errorWrapper(data.node.error)}
+			{contentWrapper(node.content)}
+			{resultWrapper(renderResult(node.getResult()))}
+			{errorWrapper(renderExecutionError(node.getError()))}
 		</>,
 	);
 }
@@ -118,7 +144,7 @@ function SelectionBlock({ data: { node } }: { data: { node: SelectionNode } }) {
 	const handleSelect = (event: React.ChangeEvent<HTMLSelectElement>) => {
 		setSelectedOption(parseInt(event.target.value));
 		node.setSelectedOption(parseInt(event.target.value));
-		wiu.updateGraph();
+		atlasModule.updateGraph();
 	};
 
 	const getOption = (option: string, index: number): JSX.Element => {
@@ -145,17 +171,17 @@ function SelectionBlock({ data: { node } }: { data: { node: SelectionNode } }) {
 		node,
 		<>
 			{contentWrapper(getSelectionContent(node.getOptions()))}
-			{errorWrapper(node.error)}
+			{errorWrapper(renderExecutionError(node.getError()))}
 		</>,
 	);
 }
 
-function ObjectBlock({ data }: { data: { node: ObjectNode } }) {
+function ObjectBlock({ data: { node } }: { data: { node: ObjectNode } }) {
 	return blockWrapper(
-		data.node,
+		node,
 		<>
-			{resultWrapper(data.node.result)}
-			{errorWrapper(data.node.error)}
+			{resultWrapper(renderResult(node.getResult()))}
+			{errorWrapper(renderExecutionError(node.getError()))}
 		</>,
 	);
 }

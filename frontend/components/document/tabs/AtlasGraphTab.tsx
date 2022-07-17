@@ -17,8 +17,8 @@ import ReactFlow, {
 
 import { uiNodeTypes } from '../../blocks/UiNode';
 import { uiEdgeTypes } from '../../blocks/UiEdge';
-import { wiu } from '../../../utils/WebInterfaceUtils';
-import StorageUtils from '../../../utils/StorageUtils';
+import { wiu } from '../../../src/utils/WebInterfaceUtils';
+import StorageUtils from '../../../src/utils/StorageUtils';
 
 export default function AtlasGraphTab(): JSX.Element {
 	const [reactFlowInstance, setReactFlowInstance] = useState<ReactFlowInstance | null>(null);
@@ -32,7 +32,9 @@ export default function AtlasGraphTab(): JSX.Element {
 	const onUiEdgesChange = (changes: UIEdgeChange[]) =>
 		wiu.setUiEdges((eds) => applyEdgeChanges(changes, eds));
 
-	function handleUiNodeSelection(event: React.MouseEvent, node: UINode) {}
+	function handleUiNodeSelection(event: React.MouseEvent, node: UINode) {
+		// any user change of edges is ignored
+	}
 
 	function handleUiNodeDoubleClick(event: React.MouseEvent, node: UINode) {
 		wiu.setSelectedNode(node.data.node);
@@ -64,14 +66,16 @@ export default function AtlasGraphTab(): JSX.Element {
 			if (wiu.druggedNode !== null) {
 				const width = wiu.getUiNodeWidth(wiu.druggedNode);
 				const height = wiu.getUiNodeHeight(wiu.druggedNode);
-				// @ts-ignore
+
+				if (reactFlowWrapper.current == null) throw new Error();
 				const reactFlowBounds = reactFlowWrapper.current.getBoundingClientRect();
-				// @ts-ignore
+
+				if (reactFlowInstance == null) throw new Error();
 				const pos = reactFlowInstance.project({
 					x: event.clientX - reactFlowBounds.left - width / 2,
 					y: event.clientY - reactFlowBounds.top - height / 2,
 				});
-				wiu.graph.nodes.push(wiu.druggedNode.setPosition(pos.x, pos.y));
+				wiu.graph.nodes.push(wiu.druggedNode.setUiPosition(pos.x, pos.y));
 			}
 			wiu.refreshUiElements();
 			wiu.setSelectedNode(wiu.druggedNode);

@@ -1,16 +1,17 @@
 import Image from 'next/image';
-import { ChangeEvent, useEffect, useRef, useState } from 'react';
-import { wiu } from '../../utils/WebInterfaceUtils';
+import React, { ChangeEvent, useEffect, useRef, useState } from 'react';
+import { wiu } from '../../src/utils/WebInterfaceUtils';
+import { atlasModule } from '../../src/utils/AtlasModule';
 import styles from '../../styles/Navbar.module.css';
 import menuImg from '../../public/icons/menu.png';
 import logoImg from '../../public/logo/atlas_long_white_cut.png';
 import exportImg from '../../public/icons/export.png';
 import questionImg from '../../public/icons/question-mark.png';
 import personImg from '../../public/icons/person.png';
-import AtlasGraph from '../../utils/AtlasGraph';
-import StorageUtils from '../../utils/StorageUtils';
-import JsonUtils from '../../utils/JsonUtils';
-import FileUtils from '../../utils/FileUtils';
+import AtlasGraph from '../../src/graph/AtlasGraph';
+import StorageUtils from '../../src/utils/StorageUtils';
+import JsonUtils from '../../src/utils/JsonUtils';
+import FileUtils from '../../src/utils/FileUtils';
 
 function hasAncestorWithClass(element: HTMLElement | null, className: string): boolean {
 	while (element && !element.classList.contains(className)) {
@@ -34,21 +35,20 @@ export default function Navbar() {
 	const handleNewSchema = (): void => {
 		const newGraph = new AtlasGraph();
 		newGraph.name = wiu.graph.name + '_new';
-		wiu.replaceGraphWithNew(newGraph);
+		atlasModule.replaceGraphWithNew(newGraph);
 	};
 	const handleOpenFile = (event: ChangeEvent<HTMLInputElement>) => {
-		if (!event.target.files) return;
-		FileUtils.getFileContentString(event.target.files[0], (content: string) =>
-			wiu.replaceGraphWithNew(JsonUtils.jsonStringToGraph(content)),
+		if (event.target.files === null) return;
+		const filepath = event.target.files[0];
+		FileUtils.getFileContentString(filepath, (content: string) =>
+			atlasModule.replaceGraphWithNew(JsonUtils.jsonStringToGraph(content)),
 		);
 	};
-
 	const removeGraphFromRecent = (evt: React.MouseEvent<HTMLDivElement>): void => {
 		evt.stopPropagation();
 		StorageUtils.removeGraphFromStorage(evt.currentTarget.id);
 		setRemoveTrigger(!removeTrigger);
 	};
-
 	const updateRecentElementsUi = () => {
 		setRecentFromLocalStorage(StorageUtils.getRecentGraphsFromLocalStorage().reverse());
 		refSchemaName.current!.value = wiu.graph.name;
@@ -56,7 +56,6 @@ export default function Navbar() {
 	useEffect(updateRecentElementsUi, [wiu.graph.name, removeTrigger]);
 
 	const handleClick = (event: MouseEvent) => {
-		console.log(5);
 		if (!isFileMenuOpen) return;
 		setIsFileMenuOpen(hasAncestorWithClass(event.target as HTMLElement, fileMenuPartClass));
 	};
@@ -73,7 +72,7 @@ export default function Navbar() {
 			<div
 				key={graphFromRecentList.name}
 				className={styles.elementFileMenu}
-				onClick={() => wiu.replaceGraphWithNew(graphFromRecentList)}
+				onClick={() => atlasModule.replaceGraphWithNew(graphFromRecentList)}
 			>
 				<label className={styles.recentGraphName}>{'> ' + graphFromRecentList.name}</label>
 				<div
@@ -150,7 +149,7 @@ export default function Navbar() {
 					</a>
 				</div>
 				<div className={styles.icon}>
-					<Image src={personImg} objectFit={'contain'} alt={'settingsImg'} />
+					<Image src={personImg} objectFit={'contain'} alt={'personImg'} />
 				</div>
 				<input
 					type={'file'}

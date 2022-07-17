@@ -1,9 +1,11 @@
-import { MatrixFilterNode, ExpressionNode, TextNode, FileNode } from '../../../utils/AtlasGraph';
-
-('../../utils/AtlasGraph');
+import React from 'react';
+import FileNode from '../../../src/graph/nodes/FileNode';
+import MatrixFilterNode from '../../../src/graph/nodes/MatrixFilterNode';
+import TextNode from '../../../src/graph/nodes/TextNode';
+import ExpressionNode from '../../../src/graph/nodes/ExpressionNode';
 
 export const typeDescriptions = {
-	[MatrixFilterNode.uitype]: (
+	[MatrixFilterNode.ui_type]: (
 		<>
 			Matrix Filter{'\n\n'}
 			You can choose Matrix and add a special filter to any Columns and/or Rows with the logic
@@ -14,21 +16,21 @@ export const typeDescriptions = {
 			-- provides all columns of matrix A with values more than 0 in Row
 		</>
 	),
-	[ExpressionNode.uitype]: (
+	[ExpressionNode.ui_type]: (
 		<>
 			Expression{'\n\n'}
 			You can use any expression, formula, operator which Julia language supports.{'\n\n'}
 			See more information about expressions in ATLAS documentation:{'\n'}
-			<a target={'_blank'} href={'https://docs.ca.engineering'}>
+			<a target={'_blank'} href={'https://docs.ca.engineering'} rel="noreferrer">
 				docs.ca.engineering
 			</a>
 		</>
 	),
-	[TextNode.uitype]: (
+	[TextNode.ui_type]: (
 		<>
 			Text{'\n\n'}You can add any text like string, CSV, JSON. Output of TextNode is a String
 			type.
 		</>
 	),
-	[FileNode.uitype]: <>File{'\n\n'}Upload a file</>,
+	[FileNode.ui_type]: <>File{'\n\n'}Upload a file</>,
 };

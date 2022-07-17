@@ -1,18 +1,24 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import Head from 'next/head';
 
 import Navbar from '../components/document/Navbar';
 import TabsSection from '../components/document/TabsSection';
 import Panels from '../components/document/Panels';
+import JupyterNotebook from '../components/document/JupyterNotebook';
 
-import WebInterfaceUtils, { wiu } from '../utils/WebInterfaceUtils';
-import AtlasGraph, { AtlasNode } from '../utils/AtlasGraph';
+import WebInterfaceUtils, { wiu } from '../src/utils/WebInterfaceUtils';
+import { atlasModule } from '../src/utils/AtlasModule';
+import AtlasNode from '../src/graph/nodes/AtlasNode';
+import AtlasGraph from '../src/graph/AtlasGraph';
 import styles from '../styles/main.module.css';
 import { exampleNodes } from '../components/blocks/ExampleNodes';
+import JuliaExecuter from '../src/kernels/JuliaExecuter';
 
 wiu.graph = new AtlasGraph();
+atlasModule.graph = wiu.graph;
+atlasModule.executer = new JuliaExecuter();
+atlasModule.wiu = wiu;
 exampleNodes.forEach((node) => wiu.graph.nodes.push(node));
-wiu.graph.name = 'atlas_schema';
 
 export default function Home() {
 	[wiu.druggedNode, wiu.setDruggedNode] = useState<AtlasNode | null>(null);
@@ -29,6 +35,7 @@ export default function Home() {
 				<Navbar />
 				<TabsSection />
 				<Panels />
+				<JupyterNotebook />
 			</div>
 		</>
 	);
