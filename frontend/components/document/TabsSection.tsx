@@ -1,5 +1,5 @@
+import React, { useState } from 'react';
 import styles from '../../styles/main.module.css';
-import { useState } from 'react';
 import DesmosTab from './tabs/DesmosTab';
 import AtlasGraphTab from './tabs/AtlasGraphTab';
 
