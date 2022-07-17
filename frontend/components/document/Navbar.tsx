@@ -6,12 +6,18 @@ import menuImg from '../../public/icons/menu.png';
 import logoImg from '../../public/logo/atlas_long_white_cut.png';
 import exportImg from '../../public/icons/export.png';
 import questionImg from '../../public/icons/question-mark.png';
-import settingsImg from '../../public/icons/settings.png';
 import personImg from '../../public/icons/person.png';
 import AtlasGraph from '../../utils/AtlasGraph';
 import StorageUtils from '../../utils/StorageUtils';
 import JsonUtils from '../../utils/JsonUtils';
 import FileUtils from '../../utils/FileUtils';
+
+function hasAncestorWithClass(element: HTMLElement | null, className: string): boolean {
+	while (element && !element.classList.contains(className)) {
+		element = element.parentElement
+	}
+	return element !== null;
+}
 
 export default function Navbar() {
 	const refSchemaName = useRef<HTMLInputElement>(null);
@@ -19,18 +25,17 @@ export default function Navbar() {
 	const [isFileMenuOpen, setIsFileMenuOpen] = useState<boolean>(false);
 	const [recentFromLocalStorage, setRecentFromLocalStorage] = useState<AtlasGraph[]>();
 	const [removeTrigger, setRemoveTrigger] = useState<boolean>(false);
+
 	const fileMenuStyle = styles.fileMenu + (isFileMenuOpen ? '' : ' ' + styles.fileMenuHidden);
-	const [clickOnMenu, setClickOnMenu] = useState<boolean>(false);
+	const fileMenuPartClass = 'fileMenuPartClass';
 
 	const downloadFile = () => FileUtils.makeUserDownloadFileFromGraph(wiu.graph, 'ca');
 	const exportFile = () => FileUtils.makeUserDownloadFileFromGraph(wiu.graph, 'json');
-
 	const handleNewSchema = (): void => {
 		const newGraph = new AtlasGraph();
 		newGraph.name = wiu.graph.name + '_new';
 		wiu.replaceGraphWithNew(newGraph);
 	};
-
 	const handleOpenFile = (event: ChangeEvent<HTMLInputElement>) => {
 		if (!event.target.files) return;
 		FileUtils.getFileContentString(event.target.files[0], (content: string) =>
@@ -50,17 +55,15 @@ export default function Navbar() {
 	};
 	useEffect(updateRecentElementsUi, [wiu.graph.name, removeTrigger]);
 
-	const handleClick = () => {
-		if (clickOnMenu) {
-			setIsFileMenuOpen(!isFileMenuOpen);
-			setClickOnMenu(false);
-		} else setIsFileMenuOpen(false);
+	const handleClick = (event: MouseEvent) => {
+	    console.log(5)
+		if (!isFileMenuOpen) return;
+		setIsFileMenuOpen(hasAncestorWithClass(event.target as HTMLElement, fileMenuPartClass));
 	};
 
 	useEffect(() => {
 		document.addEventListener('click', handleClick);
-		return () => document.removeEventListener('click', handleClick);
-	});
+	}, []);
 
 	function getRecentGraphElement(graphFromRecentList: AtlasGraph): JSX.Element {
 		if (graphFromRecentList.name === wiu.graph.name) {
@@ -105,7 +108,7 @@ export default function Navbar() {
 					defaultValue={wiu.graph.name}
 					onChange={() => wiu.graph.setName(refSchemaName.current!.value)}
 				/>
-				<div className={styles.iconSmall} onClick={() => setClickOnMenu(true)}>
+				<div className={styles.iconSmall + ' ' + fileMenuPartClass} onClick={()=>setIsFileMenuOpen(!isFileMenuOpen)}>
 					<Image
 						src={menuImg}
 						layout={'responsive'}
@@ -113,7 +116,7 @@ export default function Navbar() {
 						alt={'menuImg'}
 					/>
 				</div>
-				<div className={fileMenuStyle}>
+				<div className={fileMenuStyle + ' ' +fileMenuPartClass}>
 					<div className={styles.elementFileMenu} onClick={handleNewSchema}>
 						<label>New</label>
 					</div>
@@ -156,3 +159,4 @@ export default function Navbar() {
 		</>
 	);
 }
+
