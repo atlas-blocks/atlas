@@ -128,12 +128,12 @@ function ExpressionBlock({ data: { node } }: { data: { node: ExpressionNode } })
 	);
 }
 
-function MatrixFilterBlock({ data }: { data: { node: MatrixFilterNode } }) {
+function MatrixFilterBlock({ data: { node } }: { data: { node: MatrixFilterNode } }) {
 	return blockWrapper(
-		data.node,
+		node,
 		<>
-			{resultWrapper(data.node.result)}
-			{errorWrapper(data.node.error)}
+			{resultWrapper(renderResult(node.getResult()))}
+			{errorWrapper(renderExecutionError(node.getError()))}
 		</>,
 	);
 }
