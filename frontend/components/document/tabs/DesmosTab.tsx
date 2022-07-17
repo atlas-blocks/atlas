@@ -14,6 +14,10 @@ export default function DesmosTab(): JSX.Element {
 		calculator.setExpression({ id: 'graph1', latex: 'y=x^2' });
 	};
 
+	React.useEffect(() => {
+		if (window.Desmos) loadDesmos(window.Desmos);
+	}, []);
+
 	return (
 		<>
 			<Script

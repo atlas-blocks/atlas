@@ -35,7 +35,6 @@ export default function Home() {
 				<Navbar />
 				<TabsSection />
 				<Panels />
-				<JupyterNotebook />
 			</div>
 		</>
 	);

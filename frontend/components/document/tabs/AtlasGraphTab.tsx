@@ -85,7 +85,7 @@ export default function AtlasGraphTab(): JSX.Element {
 
 	return (
 		<ReactFlowProvider>
-			<div className={styles.tabsSection} ref={reactFlowWrapper}>
+			<div ref={reactFlowWrapper} style={{ width: '100%', height: '100%' }}>
 				<ReactFlow
 					nodes={wiu.uiNodes}
 					edges={wiu.uiEdges}

@@ -62,7 +62,8 @@ export default function Navbar() {
 
 	useEffect(() => {
 		document.addEventListener('click', handleClick);
-	}, []);
+		return () => document.removeEventListener('click', handleClick);
+	});
 
 	function getRecentGraphElement(graphFromRecentList: AtlasGraph): JSX.Element {
 		if (graphFromRecentList.name === wiu.graph.name) {

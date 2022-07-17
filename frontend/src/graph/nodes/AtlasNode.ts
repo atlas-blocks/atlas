@@ -4,6 +4,7 @@ export default class AtlasNode {
 	static ui_type = 'AtlasGraph.Node';
 
 	public name = '';
+	public newField = '';
 	public type: string = AtlasNode.ui_type;
 	public ui_type: string = AtlasNode.ui_type;
 	public ui_position: [number, number] = [0, 0];

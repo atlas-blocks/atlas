@@ -2,47 +2,59 @@ import React, { useState } from 'react';
 import styles from '../../styles/main.module.css';
 import DesmosTab from './tabs/DesmosTab';
 import AtlasGraphTab from './tabs/AtlasGraphTab';
+import JupyterNotebook from './JupyterNotebook';
 
 export default function TabsSection(): JSX.Element {
-	const [isDNDFieldActive, setDNDFieldActive] = useState<boolean>(true);
-	const [isGraphicsFieldActive, setGraphicsFieldActive] = useState<boolean>(false);
+	const [activeTab, setActiveTab] = useState<number>(0);
 
-	const hideAll = () => {
-		setDNDFieldActive(false);
-		setGraphicsFieldActive(false);
-	};
-	const showDNDField = () => {
-		hideAll();
-		setDNDFieldActive(true);
-	};
-	const showGraphicsField = () => {
-		hideAll();
-		setGraphicsFieldActive(true);
-	};
+	// eslint-disable-next-line react/jsx-key
+	const tabs: React.Component[] = [<AtlasGraphTab />, <DesmosTab />, <JupyterNotebook />];
 
-	const getTabStyle = (isActive: boolean): string => {
+	const getTabNavigationStyle = (isActive: boolean): string => {
 		return styles.fieldTab + ' ' + (isActive ? styles.fieldTabActive : '');
 	};
-	const getFieldVisibility = (isActive: boolean): string => {
-		return isActive ? styles.tabsSection : styles.panelHidden;
+	const getTabFlowStyle = (isActive: boolean): string => {
+		return isActive ? '' : styles.panelHidden;
+	};
+
+	const getTabsNavigationJSX = (): JSX.Element => {
+		return (
+			<div>
+				<div className={styles.flowControlWrapper}>
+					{tabs.map((tab, index) => (
+						<div
+							className={getTabNavigationStyle(index === activeTab)}
+							onClick={(event) => setActiveTab(index)}
+							key={index}
+						>
+							<label>tab{index}</label>
+						</div>
+					))}
+				</div>
+			</div>
+		);
+	};
+
+	const getTabsFlowJSX = (): JSX.Element => {
+		return (
+			<div className={styles.flow}>
+				{tabs.map((tab, index) => (
+					<div
+						className={getTabFlowStyle(index === activeTab)}
+						style={{ width: '100%', height: '100%' }}
+						key={index}
+					>
+						{tab}
+					</div>
+				))}
+			</div>
+		);
 	};
 
 	return (
 		<>
-			<div className={styles.flowControlWrapper}>
-				<div className={getTabStyle(isDNDFieldActive)} onClick={showDNDField}>
-					<label>AtlasFlow</label>
-				</div>
-				<div className={getTabStyle(isGraphicsFieldActive)} onClick={showGraphicsField}>
-					<label>Graphics</label>
-				</div>
-			</div>
-			<div className={getFieldVisibility(isDNDFieldActive)}>
-				<AtlasGraphTab />
-			</div>
-			<div className={getFieldVisibility(isGraphicsFieldActive)}>
-				<DesmosTab />
-			</div>
+			{getTabsNavigationJSX()}
+			{getTabsFlowJSX()}
 		</>
 	);
 }
