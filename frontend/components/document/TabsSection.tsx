@@ -1,9 +1,9 @@
 import styles from '../../styles/main.module.css';
 import { useState } from 'react';
-import GraphicsField from './GraphicsField';
-import DnDFlow from './DnDFlow';
+import DesmosTab from './tabs/DesmosTab';
+import AtlasGraphTab from './tabs/AtlasGraphTab';
 
-export default function FieldControl(): JSX.Element {
+export default function TabsSection(): JSX.Element {
 	const [isDNDFieldActive, setDNDFieldActive] = useState<boolean>(true);
 	const [isGraphicsFieldActive, setGraphicsFieldActive] = useState<boolean>(false);
 
@@ -24,7 +24,7 @@ export default function FieldControl(): JSX.Element {
 		return styles.fieldTab + ' ' + (isActive ? styles.fieldTabActive : '');
 	};
 	const getFieldVisibility = (isActive: boolean): string => {
-		return isActive ? styles.centralField : styles.panelHidden;
+		return isActive ? styles.tabsSection : styles.panelHidden;
 	};
 
 	return (
@@ -38,10 +38,10 @@ export default function FieldControl(): JSX.Element {
 				</div>
 			</div>
 			<div className={getFieldVisibility(isDNDFieldActive)}>
-				<DnDFlow />
+				<AtlasGraphTab />
 			</div>
 			<div className={getFieldVisibility(isGraphicsFieldActive)}>
-				<GraphicsField />
+				<DesmosTab />
 			</div>
 		</>
 	);

@@ -1,5 +1,5 @@
-import styles from '../../styles/main.module.css';
-import React, { useState, useCallback, useRef, useEffect } from 'react';
+import styles from '../../../styles/main.module.css';
+import React, { useState, useCallback, useRef } from 'react';
 import ReactFlow, {
 	Controls,
 	Background,
@@ -15,12 +15,12 @@ import ReactFlow, {
 	ReactFlowInstance,
 } from 'react-flow-renderer';
 
-import { uiNodeTypes } from '../blocks/UiNode';
-import { uiEdgeTypes } from '../blocks/UiEdge';
-import { wiu } from '../../utils/WebInterfaceUtils';
-import StorageUtils from '../../utils/StorageUtils';
+import { uiNodeTypes } from '../../blocks/UiNode';
+import { uiEdgeTypes } from '../../blocks/UiEdge';
+import { wiu } from '../../../utils/WebInterfaceUtils';
+import StorageUtils from '../../../utils/StorageUtils';
 
-export default function DnDFlow(): JSX.Element {
+export default function AtlasGraphTab(): JSX.Element {
 	const [reactFlowInstance, setReactFlowInstance] = useState<ReactFlowInstance | null>(null);
 	const reactFlowWrapper = useRef<HTMLDivElement | null>(null);
 
@@ -81,7 +81,7 @@ export default function DnDFlow(): JSX.Element {
 
 	return (
 		<ReactFlowProvider>
-			<div className={styles.centralField} ref={reactFlowWrapper}>
+			<div className={styles.tabsSection} ref={reactFlowWrapper}>
 				<ReactFlow
 					nodes={wiu.uiNodes}
 					edges={wiu.uiEdges}

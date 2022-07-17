@@ -1,9 +1,15 @@
 import Script from 'next/script';
 
-export default function GraphicsField(): JSX.Element {
+declare global {
+  interface Window {
+    Desmos?: any;
+  }
+}
+
+export default function DesmosTab(): JSX.Element {
 	const loadDesmos = (desmosObject: any) => {
-		let elt = document.getElementById('calculator');
-		let calculator = desmosObject.GraphingCalculator(elt);
+		const calculatorElement = document.getElementById('calculator');
+		const calculator = desmosObject.GraphingCalculator(calculatorElement);
 		calculator.setExpression({ id: 'graph1', latex: 'y=x^2' });
 	};
 

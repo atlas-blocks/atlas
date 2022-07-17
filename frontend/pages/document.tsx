@@ -2,7 +2,7 @@ import { useState } from 'react';
 import Head from 'next/head';
 
 import Navbar from '../components/document/Navbar';
-import FieldControl from '../components/document/FieldControl';
+import TabsSection from '../components/document/TabsSection';
 import Panels from '../components/document/Panels';
 
 import WebInterfaceUtils, { wiu } from '../utils/WebInterfaceUtils';
@@ -27,7 +27,7 @@ export default function Home() {
 			</Head>
 			<div className={styles.layout}>
 				<Navbar />
-				<FieldControl />
+				<TabsSection />
 				<Panels />
 			</div>
 		</>
