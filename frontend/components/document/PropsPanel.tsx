@@ -1,18 +1,18 @@
-import styles from '../../../styles/PropsPanel.module.css';
+import styles from '../../styles/PropsPanel.module.css';
 import React, { useEffect, useState } from 'react';
-import { wiu } from '../../../src/utils/WebInterfaceUtils';
-import { atlasModule } from '../../../src/utils/AtlasModule';
-import { typeDescriptions } from './descriptions';
-import { InputState, NodeInput, getInputField, getTextareaField } from './propsInputFields';
-import getMatrixBuilderField from './MatrixFilterBuilder';
-import AtlasNode from '../../../src/graph/nodes/AtlasNode';
-import ExpressionNode from '../../../src/graph/nodes/ExpressionNode';
-import FileNode from '../../../src/graph/nodes/FileNode';
-import TextNode from '../../../src/graph/nodes/TextNode';
-import SelectionNode from '../../../src/graph/nodes/SelectionNode';
-import MatrixFilterNode from '../../../src/graph/nodes/MatrixFilterNode';
-import ObjectNode from '../../../src/graph/nodes/ObjectNode';
-import getObjectBuilder from './ObjectNodeBuilder';
+import { typeDescriptions } from './props/descriptions';
+import { wiu } from '../../src/utils/WebInterfaceUtils';
+import { atlasModule } from '../../src/utils/AtlasModule';
+import { InputState, NodeInput, getInputField, getTextareaField } from './props/propsInputFields';
+import getMatrixBuilderField from './props/MatrixFilterBuilder';
+import AtlasNode from '../../src/graph/nodes/AtlasNode';
+import ExpressionNode from '../../src/graph/nodes/ExpressionNode';
+import FileNode from '../../src/graph/nodes/FileNode';
+import TextNode from '../../src/graph/nodes/TextNode';
+import SelectionNode from '../../src/graph/nodes/SelectionNode';
+import MatrixFilterNode from '../../src/graph/nodes/MatrixFilterNode';
+import ObjectNode from '../../src/graph/nodes/ObjectNode';
+import getObjectBuilder from './props/ObjectNodeBuilder';
 
 export default function PropsPanel(): JSX.Element {
 	const inputStates = {

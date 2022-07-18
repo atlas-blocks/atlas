@@ -29,12 +29,12 @@ export default function LibPanel(): JSX.Element {
 	};
 
 	const libElements = {
-		Basic: nodesOptions,
-		Symbolic: nodesOptions,
-		Graphics: nodesOptions,
-		Engineering: nodesOptions,
-		Import: nodesOptions,
-		Physical: nodesOptions,
+		Basic: ['ExpressionNode', 'TextNode', 'MatrixFilterNode', 'SelectionNode', 'ObjectNode'],
+		Symbolic: [],
+		Graphics: [],
+		Engineering: [],
+		Import: ['FileNode'],
+		Physical: [],
 	};
 
 	const libCollapseStates = {
@@ -71,7 +71,7 @@ export default function LibPanel(): JSX.Element {
 
 	function getLibSections(libName: keyof typeof libElements): JSX.Element {
 		return (
-			<div key={libName} className={styles.libWrapper}>
+			<div key={libName} className={styles.libSection}>
 				<div
 					id={libName}
 					className={styles.libSectionLabel}
@@ -84,7 +84,7 @@ export default function LibPanel(): JSX.Element {
 					</label>
 				</div>
 				<div className={`${styles.elementsContainer} ${libCollapseStates[libName][0]}`}>
-					{Object.keys(libElements[libName]).map((elem) =>
+					{libElements[libName].map((elem) =>
 						getLibElements(elem as keyof typeof nodesOptions),
 					)}
 				</div>
@@ -95,7 +95,7 @@ export default function LibPanel(): JSX.Element {
 	return (
 		<>
 			{Object.keys(libElements).map((name) =>
-				getLibSections(name as keyof typeof libCollapseStates),
+				getLibSections(name as keyof typeof libElements),
 			)}
 		</>
 	);

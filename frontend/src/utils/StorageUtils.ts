@@ -25,14 +25,17 @@ export default class StorageUtils {
 		if (jsonStringWithGraphs === null) return [];
 
 		const recentGraphs: AtlasGraph[] = [];
-		JSON.parse(jsonStringWithGraphs).map((item: { name: string; nodes: any[]; edges: any[] }) =>
-			recentGraphs.push(JsonUtils.jsonToGraph(item)),
+		JSON.parse(jsonStringWithGraphs).map(
+			(item: { name: string; nodes: any[]; edges: any[] }) => {
+				const graph = JsonUtils.jsonToGraph(item);
+				if (graph !== null) recentGraphs.push(graph);
+			},
 		);
 
 		return recentGraphs;
 	}
 
-	public static getRecentGraphsFromLocalStorageExceptWithName(name: string) {
+	public static getRecentGraphsFromLocalStorageExceptWithName(name: string): AtlasGraph[] {
 		return this.getRecentGraphsFromLocalStorage().filter(
 			(graph: AtlasGraph) => graph.name !== name,
 		);

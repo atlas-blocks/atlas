@@ -3,10 +3,10 @@ import styles from '../../styles/main.module.css';
 import buttonStyles from '../../styles/BtnStyle.module.css';
 import { wiu } from '../../src/utils/WebInterfaceUtils';
 import ElementsPanel from './ElementsPanel';
-import PropsPanel from './props/PropsPanel';
+import PropsPanel from './PropsPanel';
 import LibPanel from './LibPanel';
 
-export default function Panels() {
+export default function Panels(): JSX.Element {
 	const [isLibrariesActive, setIsLibrariesActive] = useState<boolean>(true);
 	const [isPropertiesActive, setIsPropertiesActive] = useState<boolean>(true);
 

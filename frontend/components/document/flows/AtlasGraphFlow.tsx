@@ -1,4 +1,3 @@
-import styles from '../../styles/main.module.css';
 import React, { useState, useCallback, useRef } from 'react';
 import ReactFlow, {
 	Controls,
@@ -6,7 +5,6 @@ import ReactFlow, {
 	addEdge as addUiEdge,
 	applyNodeChanges,
 	applyEdgeChanges,
-	Edge as UIEdge,
 	Node as UINode,
 	EdgeChange as UIEdgeChange,
 	NodeChange as UINodeChange,
@@ -15,12 +13,12 @@ import ReactFlow, {
 	ReactFlowInstance,
 } from 'react-flow-renderer';
 
-import { uiNodeTypes } from '../blocks/UiNode';
-import { uiEdgeTypes } from '../blocks/UiEdge';
-import { wiu } from '../../src/utils/WebInterfaceUtils';
-import StorageUtils from '../../src/utils/StorageUtils';
+import { uiNodeTypes } from '../../blocks/UiNode';
+import { uiEdgeTypes } from '../../blocks/UiEdge';
+import { wiu } from '../../../src/utils/WebInterfaceUtils';
+import StorageUtils from '../../../src/utils/StorageUtils';
 
-export default function DnDFlow(): JSX.Element {
+export default function AtlasGraphTab(): JSX.Element {
 	const [reactFlowInstance, setReactFlowInstance] = useState<ReactFlowInstance | null>(null);
 	const reactFlowWrapper = useRef<HTMLDivElement | null>(null);
 
@@ -85,7 +83,7 @@ export default function DnDFlow(): JSX.Element {
 
 	return (
 		<ReactFlowProvider>
-			<div className={styles.flowCanvas} ref={reactFlowWrapper}>
+			<div ref={reactFlowWrapper} style={{ width: '100%', height: '100%' }}>
 				<ReactFlow
 					nodes={wiu.uiNodes}
 					edges={wiu.uiEdges}
@@ -101,6 +99,7 @@ export default function DnDFlow(): JSX.Element {
 					onDrop={onDrop}
 					onDragOver={onDragOver}
 					defaultZoom={0.8}
+					deleteKeyCode={['Backspace', 'Delete']}
 				>
 					{/*<MiniMap />*/}
 					<Controls />

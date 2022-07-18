@@ -19,9 +19,13 @@ export default class JuliaExecuter {
 			}
 			this.kernelId = kernelModels[0].id;
 			this.kernel = kernelManager.connectTo({ model: kernelModels[0] });
-			this.executeCode(
-				'import Pkg; Pkg.activate(".."); Pkg.instantiate(); Pkg.precompile();',
-			);
+			this.executeCodeLines([
+				'import Pkg',
+				'Pkg.add(url="https://github.com/atlas-blocks/AtlasUtils.jl")',
+				'Pkg.activate("..")',
+				'Pkg.instantiate()',
+				'Pkg.precompile()',
+			]);
 			this.executeCode('import AtlasUtils.AtlasMath, AtlasUtils.TokenUtils, JSON3');
 		})();
 	}

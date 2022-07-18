@@ -13,24 +13,23 @@ export default class JsonUtils {
 		name: string;
 		nodes: { type: string; ui_type: string }[];
 		edges: object[];
-	}): AtlasGraph {
+	}): AtlasGraph | null {
 		const graph: AtlasGraph = new AtlasGraph();
 		try {
 			return graph.setName(graphJson.name).setNodes(this.extractNodes(graphJson.nodes));
 		} catch (e) {
-			window.alert(`This JSON is not an AtlasGraph: ${e}`);
-			console.log(graphJson);
+			console.error(`This JSON is not an AtlasGraph: ${e}`, graphJson);
 		}
-		return new AtlasGraph();
+		return null;
 	}
 
-	public static jsonStringToGraph(graphData: string): AtlasGraph {
+	public static jsonStringToGraph(graphData: string): AtlasGraph | null {
 		try {
 			return this.jsonToGraph(JSON.parse(graphData));
 		} catch (e) {
-			window.alert(`Something went wrong while loading your JSON: ${e}`);
+			console.error(`Something went wrong while loading your JSON: ${e}`);
 		}
-		return new AtlasGraph();
+		return null;
 	}
 
 	private static readonly typeMap = {

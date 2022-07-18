@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { Handle, Position } from 'react-flow-renderer';
+
 import styles from '../../styles/Block.module.css';
+
 import AtlasNode from '../../src/graph/nodes/AtlasNode';
 import ExpressionNode, { ResultPart, ExecutionError } from '../../src/graph/nodes/ExpressionNode';
 import TextNode from '../../src/graph/nodes/TextNode';
@@ -8,15 +10,18 @@ import FileNode from '../../src/graph/nodes/FileNode';
 import SelectionNode from '../../src/graph/nodes/SelectionNode';
 import MatrixFilterNode from '../../src/graph/nodes/MatrixFilterNode';
 import ObjectNode from '../../src/graph/nodes/ObjectNode';
-import FileUtils from '../../src/utils/FileUtils';
+
 import { atlasModule } from '../../src/utils/AtlasModule';
+import { wiu } from '../../src/utils/WebInterfaceUtils';
+
+import FileUtils from '../../src/utils/FileUtils';
 
 export const uiNodeTypes = {
 	[ExpressionNode.ui_type]: ExpressionBlock,
 	[TextNode.ui_type]: TextBlock,
 	[FileNode.ui_type]: FileBlock,
 	[SelectionNode.ui_type]: SelectionBlock,
-	[MatrixFilterNode.ui_type]: ExpressionBlock,
+	[MatrixFilterNode.ui_type]: MatrixFilterBlock,
 	[ObjectNode.ui_type]: ObjectBlock,
 };
 
@@ -45,8 +50,10 @@ function renderExecutionError(error: ExecutionError | null): JSX.Element | null 
 }
 
 function blockWrapper(node: AtlasNode, tail?: JSX.Element | string): JSX.Element {
+	const selectedBlockStyle = wiu.selectedNode === node ? styles.selectedBlock : '';
+
 	return (
-		<div className={styles.block}>
+		<div className={styles.block + ' ' + selectedBlockStyle}>
 			<Handle type="target" position={Position.Top} />
 			<Handle type="source" position={Position.Bottom} id="a" />
 			<div className={styles.name}>{node.name}</div>
@@ -82,7 +89,6 @@ function FileBlock({ data: { node } }: { data: { node: FileNode } }) {
 		);
 		node.setUiFilename(event.target.files[0].name);
 	};
-
 	const showFileContent = (event: React.ChangeEvent<HTMLInputElement>) => {
 		event.target.checked ? setShowContent(true) : setShowContent(false);
 	};
@@ -122,6 +128,16 @@ function ExpressionBlock({ data: { node } }: { data: { node: ExpressionNode } })
 	);
 }
 
+function MatrixFilterBlock({ data: { node } }: { data: { node: MatrixFilterNode } }) {
+	return blockWrapper(
+		node,
+		<>
+			{resultWrapper(renderResult(node.getResult()))}
+			{errorWrapper(renderExecutionError(node.getError()))}
+		</>,
+	);
+}
+
 function SelectionBlock({ data: { node } }: { data: { node: SelectionNode } }) {
 	const [selectedOption, setSelectedOption] = useState<number>(node.selectedOption);
 
@@ -141,7 +157,11 @@ function SelectionBlock({ data: { node } }: { data: { node: SelectionNode } }) {
 
 	const getSelectionContent = (options: string[]): JSX.Element => {
 		return (
-			<select className={styles.selectBlock} value={selectedOption} onChange={handleSelect}>
+			<select
+				className={styles.selectionBlock}
+				value={selectedOption}
+				onChange={handleSelect}
+			>
 				{options.map((option: string, index: number) => getOption(option, index + 1))}
 			</select>
 		);
@@ -160,7 +180,6 @@ function ObjectBlock({ data: { node } }: { data: { node: ObjectNode } }) {
 	return blockWrapper(
 		node,
 		<>
-			{contentWrapper(node.content)}
 			{resultWrapper(renderResult(node.getResult()))}
 			{errorWrapper(renderExecutionError(node.getError()))}
 		</>,
