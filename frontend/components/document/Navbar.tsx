@@ -13,6 +13,11 @@ import StorageUtils from '../../src/utils/StorageUtils';
 import JsonUtils from '../../src/utils/JsonUtils';
 import FileUtils from '../../src/utils/FileUtils';
 
+/*
+ * Checks wether an `element` has an ancestor in the DOM with a class `className`.
+ *
+ * @return `true` if there is one, and `false` if there is not.
+ */
 function hasAncestorWithClass(element: HTMLElement | null, className: string): boolean {
 	while (element && !element.classList.contains(className)) {
 		element = element.parentElement;
@@ -28,6 +33,10 @@ export default function Navbar() {
 	const [removeTrigger, setRemoveTrigger] = useState<boolean>(false);
 
 	const fileMenuStyle = styles.fileMenu + (isFileMenuOpen ? '' : ' ' + styles.fileMenuHidden);
+
+	// class that indicates that element is a part of a file menu section
+	// i.e. file menu button and dropdown with options
+	// it is used to be able to close file menu dropdown when user clicks on some other place
 	const fileMenuPartClass = 'fileMenuPartClass';
 
 	const downloadFile = () => FileUtils.makeUserDownloadFileFromGraph(wiu.graph, 'ca');

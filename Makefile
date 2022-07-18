@@ -13,3 +13,4 @@ kill:
 
 kill-prod:
 	docker kill reverse_proxy_prod jupyter_backend_prod frontend_prod
+

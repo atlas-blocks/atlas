@@ -5,7 +5,6 @@ export default class StorageUtils {
 	private static readonly recentGraphStorageName = 'AtlasStorage';
 
 	public static saveGraphToLocalStorage(saveGraph: AtlasGraph) {
-		//		if (!saveGraph || saveGraph.name === '' || saveGraph.nodes === []) return;
 		const recentGraphs: AtlasGraph[] = this.getRecentGraphsFromLocalStorageExceptWithName(
 			saveGraph.name,
 		);
@@ -26,8 +25,11 @@ export default class StorageUtils {
 		if (jsonStringWithGraphs === null) return [];
 
 		const recentGraphs: AtlasGraph[] = [];
-		JSON.parse(jsonStringWithGraphs).map((item: { name: string; nodes: any[]; edges: any[] }) =>
-			recentGraphs.push(JsonUtils.jsonToGraph(item)),
+		JSON.parse(jsonStringWithGraphs).map(
+			(item: { name: string; nodes: any[]; edges: any[] }) => {
+				const graph = JsonUtils.jsonToGraph(item);
+				if (graph !== null) recentGraphs.push(graph);
+			},
 		);
 
 		return recentGraphs;

@@ -1,8 +1,8 @@
 import React from 'react';
-import JupyterUtils from '../../src/utils/JupyterUtils';
-import styles from '../../styles/main.module.css';
+import JupyterUtils from '../../../src/utils/JupyterUtils';
+import styles from '../../../styles/main.module.css';
 
-export default function ElementsPanel() {
+export default function JupyterNotebookFlow() {
 	const jupyterNotebookRef = React.useRef<HTMLIFrameElement>(null);
 	React.useEffect(() => {
 		if (jupyterNotebookRef.current === null)

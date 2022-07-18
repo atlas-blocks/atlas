@@ -2,16 +2,17 @@ import React, { useState } from 'react';
 import Head from 'next/head';
 
 import Navbar from '../components/document/Navbar';
-import TabsSection from '../components/document/TabsSection';
+import AtlasWindow from '../components/document/AtlasWindow';
 import Panels from '../components/document/Panels';
-
-import WebInterfaceUtils, { wiu } from '../src/utils/WebInterfaceUtils';
-import { atlasModule } from '../src/utils/AtlasModule';
-import AtlasNode from '../src/graph/nodes/AtlasNode';
-import AtlasGraph from '../src/graph/AtlasGraph';
-import styles from '../styles/main.module.css';
 import { exampleNodes } from '../components/blocks/ExampleNodes';
+
+import AtlasGraph from '../src/graph/AtlasGraph';
+import AtlasNode from '../src/graph/nodes/AtlasNode';
 import JuliaExecuter from '../src/kernels/JuliaExecuter';
+import { atlasModule } from '../src/utils/AtlasModule';
+import WebInterfaceUtils, { wiu } from '../src/utils/WebInterfaceUtils';
+
+import styles from '../styles/main.module.css';
 
 wiu.graph = new AtlasGraph();
 atlasModule.graph = wiu.graph;
@@ -35,7 +36,7 @@ export default function Home() {
 			</Head>
 			<div className={styles.layout}>
 				<Navbar />
-				<TabsSection />
+				<AtlasWindow />
 				<Panels />
 			</div>
 		</>
