@@ -49,9 +49,15 @@ export default function Navbar() {
 	const handleOpenFile = (event: ChangeEvent<HTMLInputElement>) => {
 		if (event.target.files === null) return;
 		const filepath = event.target.files[0];
-		FileUtils.getFileContentString(filepath, (content: string) =>
-			atlasModule.replaceGraphWithNew(JsonUtils.jsonStringToGraph(content)),
-		);
+
+		FileUtils.getFileContentString(filepath, (content: string) => {
+			const newGraph = JsonUtils.jsonStringToGraph(content);
+			if (newGraph !== null) {
+				atlasModule.replaceGraphWithNew(newGraph);
+			} else {
+				window.alert('this file has a wrong format');
+			}
+		});
 	};
 	const removeGraphFromRecent = (evt: React.MouseEvent<HTMLDivElement>): void => {
 		evt.stopPropagation();

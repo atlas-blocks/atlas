@@ -1,12 +1,19 @@
 .PHONY: *
 
-dev:
+build:
 	docker-compose build
+run:
 	docker-compose up
 
-prod:
+dev: build run
+
+build-prod:
 	docker-compose -f docker-compose.yml -f docker-compose.prod.yml build
+
+run-prod:
 	docker-compose -f docker-compose.yml -f docker-compose.prod.yml up
+
+prod: build-prod run-prod
 
 kill:
 	docker kill reverse_proxy jupyter_backend frontend
