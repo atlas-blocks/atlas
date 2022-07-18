@@ -1,4 +1,3 @@
-import styles from '../../../styles/main.module.css';
 import React, { useState, useCallback, useRef } from 'react';
 import ReactFlow, {
 	Controls,
@@ -6,7 +5,6 @@ import ReactFlow, {
 	addEdge as addUiEdge,
 	applyNodeChanges,
 	applyEdgeChanges,
-	Edge as UIEdge,
 	Node as UINode,
 	EdgeChange as UIEdgeChange,
 	NodeChange as UINodeChange,
