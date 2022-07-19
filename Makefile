@@ -1,17 +1,17 @@
 .PHONY: *
 
 build:
-	docker-compose build
+	docker-compose build $(s)
 run:
-	docker-compose up
+	docker-compose up $(s)
 
 dev: build run
 
 build-prod:
-	docker-compose -f docker-compose.yml -f docker-compose.prod.yml build
+	docker-compose -f docker-compose.yml -f docker-compose.prod.yml build $(s)
 
 run-prod:
-	docker-compose -f docker-compose.yml -f docker-compose.prod.yml up
+	docker-compose -f docker-compose.yml -f docker-compose.prod.yml up $(s)
 
 prod: build-prod run-prod
 
