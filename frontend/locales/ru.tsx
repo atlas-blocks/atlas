@@ -1,10 +1,16 @@
 import React from 'react';
-import FileNode from '../../../src/graph/nodes/FileNode';
-import MatrixFilterNode from '../../../src/graph/nodes/MatrixFilterNode';
-import TextNode from '../../../src/graph/nodes/TextNode';
-import ExpressionNode from '../../../src/graph/nodes/ExpressionNode';
 
-export const typeDescriptions = {
+import FileNode from '../src/graph/nodes/FileNode';
+import MatrixFilterNode from '../src/graph/nodes/MatrixFilterNode';
+import TextNode from '../src/graph/nodes/TextNode';
+import ExpressionNode from '../src/graph/nodes/ExpressionNode';
+
+export const panels = {
+	mockup: 'Мокап',
+	elements: 'Елементы',
+};
+
+export const nodeDescriptions = {
 	[MatrixFilterNode.ui_type]: (
 		<>
 			Matrix Filter{'\n\n'}
@@ -32,5 +38,5 @@ export const typeDescriptions = {
 			type.
 		</>
 	),
-	[FileNode.ui_type]: <>File{'\n\n'}Upload a file</>,
+	[FileNode.ui_type]: <>File{'\n\n'}Загрузи файл.</>,
 };

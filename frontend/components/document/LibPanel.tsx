@@ -1,6 +1,7 @@
+import React, { useState } from 'react';
+
 import styles from '../../styles/LibPanel.module.css';
 import { wiu } from '../../src/utils/WebInterfaceUtils';
-import React, { useState } from 'react';
 import AtlasNode from '../../src/graph/nodes/AtlasNode';
 import ExpressionNode from '../../src/graph/nodes/ExpressionNode';
 import FileNode from '../../src/graph/nodes/FileNode';
