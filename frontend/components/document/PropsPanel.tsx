@@ -1,6 +1,7 @@
-import styles from '../../styles/PropsPanel.module.css';
 import React, { useEffect, useState } from 'react';
-import { typeDescriptions } from './props/descriptions';
+import { useRouter } from 'next/router';
+
+import styles from '../../styles/PropsPanel.module.css';
 import { wiu } from '../../src/utils/WebInterfaceUtils';
 import { atlasModule } from '../../src/utils/AtlasModule';
 import { InputState, NodeInput, getInputField, getTextareaField } from './props/propsInputFields';
@@ -14,7 +15,14 @@ import MatrixFilterNode from '../../src/graph/nodes/MatrixFilterNode';
 import ObjectNode from '../../src/graph/nodes/ObjectNode';
 import getObjectBuilder from './props/ObjectNodeBuilder';
 
+import { nodeDescriptions as nodeDescriptions_en } from '../../locales/en';
+import { nodeDescriptions as nodeDescriptions_ru } from '../../locales/ru';
+
 export default function PropsPanel(): JSX.Element {
+	const router = useRouter();
+	const { locale } = router;
+	const nodeDescriptions = locale === 'en' ? nodeDescriptions_en : nodeDescriptions_ru;
+
 	const inputStates = {
 		name: new InputState('name', useState<string>('')),
 		content: new InputState('content', useState<string>('')),
@@ -58,7 +66,7 @@ export default function PropsPanel(): JSX.Element {
 	};
 
 	const submitChanges = async () => {
-		if (wiu.selectedNode === null) return;
+		if (!wiu.selectedNode) return;
 		for (const nodeInput of nodeInputs[wiu.selectedNode.ui_type]) {
 			const inputState = nodeInput.inputState;
 			const setter = inputState.getNameSetter() as keyof AtlasNode;
@@ -70,7 +78,7 @@ export default function PropsPanel(): JSX.Element {
 	};
 
 	useEffect(() => {
-		if (wiu.selectedNode === null) return;
+		if (!wiu.selectedNode) return;
 		for (const nodeInput of nodeInputs[wiu.selectedNode.ui_type]) {
 			const inputState = nodeInput.inputState;
 			const field: any = wiu.selectedNode[inputState.name as keyof AtlasNode];
@@ -80,7 +88,7 @@ export default function PropsPanel(): JSX.Element {
 
 	return (
 		<>
-			{wiu.selectedNode !== null ? getNodeInputFields(wiu.selectedNode.ui_type) : ''}
+			{wiu.selectedNode ? getNodeInputFields(wiu.selectedNode.ui_type) : ''}
 			<div className={styles.propsPanelWrapper}>
 				<button className={styles.btnSubmit} onClick={submitChanges}>
 					Submit
@@ -88,7 +96,7 @@ export default function PropsPanel(): JSX.Element {
 			</div>
 			<div className={styles.propsPanelWrapper}>
 				<label>Description</label>
-				<p>{wiu.selectedNode !== null ? typeDescriptions[wiu.selectedNode.ui_type] : ''}</p>
+				<p>{wiu.selectedNode ? nodeDescriptions[wiu.selectedNode.ui_type] : ''}</p>
 			</div>
 		</>
 	);

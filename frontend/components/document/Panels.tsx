@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
+
 import styles from '../../styles/main.module.css';
 import buttonStyles from '../../styles/BtnStyle.module.css';
 import { wiu } from '../../src/utils/WebInterfaceUtils';
@@ -6,7 +8,14 @@ import ElementsPanel from './ElementsPanel';
 import PropsPanel from './PropsPanel';
 import LibPanel from './LibPanel';
 
+import { panels as panels_en } from '../../locales/en';
+import { panels as panels_ru } from '../../locales/ru';
+
 export default function Panels(): JSX.Element {
+	const router = useRouter();
+	const { locale } = router;
+	const t = locale === 'en' ? panels_en : panels_ru;
+
 	const [isLibrariesActive, setIsLibrariesActive] = useState<boolean>(true);
 	const [isPropertiesActive, setIsPropertiesActive] = useState<boolean>(true);
 
@@ -58,13 +67,13 @@ export default function Panels(): JSX.Element {
 				<label>Object</label>
 			</div>
 			<div id={buttonStyles.mockupBtn} className={getButtonClass(false)}>
-				<label>Mockup</label>
+				<label>{t.mockup}</label>
 			</div>
 			<div id={buttonStyles.envBtn} className={getButtonClass(false)}>
 				<label>Environment</label>
 			</div>
 			<div id={buttonStyles.elementsBtn} className={getButtonClass(true)}>
-				<label>Elements</label>
+				<label>{t.elements}</label>
 			</div>
 			<div id={buttonStyles.layersBtn} className={getButtonClass(false)}>
 				<label>Layers</label>
