@@ -21,5 +21,7 @@ services:
     container_name: jupyter_backend_prod
     build:
       target: prod
+    volumes:
+      - ./jupyter_backend:/home/jovyan/work
     ports:
       - 8000:8888
