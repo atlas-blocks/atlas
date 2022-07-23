@@ -9,6 +9,7 @@ import TextNode from '../../src/graph/nodes/TextNode';
 import SelectionNode from '../../src/graph/nodes/SelectionNode';
 import MatrixFilterNode from '../../src/graph/nodes/MatrixFilterNode';
 import ObjectNode from '../../src/graph/nodes/ObjectNode';
+import DesmosNode from '../../src/graph/nodes/DesmosNode';
 
 export default function LibPanel(): JSX.Element {
 	const onDragStart = (event: React.DragEvent<HTMLDivElement>, node: AtlasNode) => {
@@ -27,12 +28,19 @@ export default function LibPanel(): JSX.Element {
 		MatrixFilterNode: () => MatrixFilterNode.build().setDefaultName(wiu.graph),
 		SelectionNode: () => SelectionNode.build().setDefaultName(wiu.graph),
 		ObjectNode: () => ObjectNode.build().setDefaultName(wiu.graph),
+		DesmosNode: () => DesmosNode.build().setDefaultName(wiu.graph),
 	};
 
 	const libElements = {
-		Basic: ['ExpressionNode', 'TextNode', 'MatrixFilterNode', 'SelectionNode', 'ObjectNode'],
+		Basic: [
+			'ExpressionNode',
+			'TextNode',
+			'MatrixFilterNode',
+			'SelectionNode',
+			'ObjectNode',
+		],
 		Symbolic: [],
-		Graphics: [],
+		Graphics: ['DesmosNode'],
 		Engineering: [],
 		Import: ['FileNode'],
 		Physical: [],
@@ -77,14 +85,18 @@ export default function LibPanel(): JSX.Element {
 					id={libName}
 					className={styles.libSectionLabel}
 					onClick={(evt) => {
-						openOrCollapseLibSection(evt.currentTarget.id as keyof typeof libElements);
+						openOrCollapseLibSection(
+							evt.currentTarget.id as keyof typeof libElements,
+						);
 					}}
 				>
 					<label>
 						{'>'} {libName}
 					</label>
 				</div>
-				<div className={`${styles.elementsContainer} ${libCollapseStates[libName][0]}`}>
+				<div
+					className={`${styles.elementsContainer} ${libCollapseStates[libName][0]}`}
+				>
 					{libElements[libName].map((elem) =>
 						getLibElements(elem as keyof typeof nodesOptions),
 					)}

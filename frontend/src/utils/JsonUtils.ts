@@ -5,6 +5,7 @@ import TextNode from '../graph/nodes/TextNode';
 import SelectionNode from '../graph/nodes/SelectionNode';
 import MatrixFilterNode from '../graph/nodes/MatrixFilterNode';
 import ObjectNode from '../graph/nodes/ObjectNode';
+import DesmosNode from '../graph/nodes/DesmosNode';
 import AtlasEdge from '../graph/edges/AtlasEdge';
 import AtlasGraph from '../graph/AtlasGraph';
 
@@ -16,7 +17,9 @@ export default class JsonUtils {
 	}): AtlasGraph | null {
 		const graph: AtlasGraph = new AtlasGraph();
 		try {
-			return graph.setName(graphJson.name).setNodes(this.extractNodes(graphJson.nodes));
+			return graph
+				.setName(graphJson.name)
+				.setNodes(this.extractNodes(graphJson.nodes));
 		} catch (e) {
 			console.error(`This JSON is not an AtlasGraph: ${e}`, graphJson);
 		}
@@ -39,6 +42,7 @@ export default class JsonUtils {
 		[TextNode.ui_type]: TextNode.build,
 		[FileNode.ui_type]: FileNode.build,
 		[ObjectNode.ui_type]: ObjectNode.build,
+		[DesmosNode.ui_type]: DesmosNode.build,
 		[AtlasNode.ui_type]: AtlasNode.build,
 	};
 

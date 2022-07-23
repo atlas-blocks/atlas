@@ -4,7 +4,11 @@ import { InputState } from './propsInputFields';
 import { wiu } from '../../../src/utils/WebInterfaceUtils';
 import ObjectNode from '../../../src/graph/nodes/ObjectNode';
 
-function ObjectBuilder({ contentInputState }: { contentInputState: InputState }): JSX.Element {
+function ObjectBuilder({
+	contentInputState,
+}: {
+	contentInputState: InputState;
+}): JSX.Element {
 	const [objProperties, setObjProperties] = useState<[string, string][]>(
 		wiu.selectedNode instanceof ObjectNode ? wiu.selectedNode.ui_objProperties : [],
 	);
@@ -22,7 +26,9 @@ function ObjectBuilder({ contentInputState }: { contentInputState: InputState })
 			const updatedObjProperties: [string, string][] = objProperties.map(
 				(item: [string, string], index: number) => {
 					if (index !== propIndex) return item;
-					return isPropertyPart ? [updatedPart, item[1]] : [item[0], updatedPart];
+					return isPropertyPart
+						? [updatedPart, item[1]]
+						: [item[0], updatedPart];
 				},
 			);
 			setObjProperties(updatedObjProperties);

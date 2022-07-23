@@ -30,7 +30,9 @@ export default class AtlasGraph {
 				user.providerNames
 					.map((name) => this.getByName(name))
 					.forEach((providers) =>
-						providers.forEach((provider) => edges.push(new AtlasEdge(user, provider))),
+						providers.forEach((provider) =>
+							edges.push(new AtlasEdge(user, provider)),
+						),
 					);
 			});
 		return edges;

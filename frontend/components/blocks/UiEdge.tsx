@@ -27,7 +27,12 @@ export default function DefaultEdge({
 
 	return (
 		<>
-			<path id={id} className="react-flow__edge-path" d={edgePath} markerEnd={markerEnd} />
+			<path
+				id={id}
+				className="react-flow__edge-path"
+				d={edgePath}
+				markerEnd={markerEnd}
+			/>
 			<text>
 				<textPath
 					href={`#${id}`}

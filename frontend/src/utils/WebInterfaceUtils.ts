@@ -1,5 +1,9 @@
 import React from 'react';
-import { Node as UINode, Edge as UIEdge, NodeChange as UINodeChange } from 'react-flow-renderer';
+import {
+	Node as UINode,
+	Edge as UIEdge,
+	NodeChange as UINodeChange,
+} from 'react-flow-renderer';
 import AtlasNode from '../graph/nodes/AtlasNode';
 import AtlasEdge from '../graph/edges/AtlasEdge';
 import AtlasGraph from '../graph/AtlasGraph';

@@ -14,7 +14,9 @@ export default class SelectionNode extends ExpressionNode {
 
 	public getOptions(): string[] {
 		try {
-			const options = JSON.parse(this.helper_responses[0].getPlainTextResultString());
+			const options = JSON.parse(
+				this.helper_responses[0].getPlainTextResultString(),
+			);
 			if (Array.isArray(options)) return options;
 		} catch (ignored) {
 			// if options is not json array, then it's user's fault and we can ignore it
@@ -28,7 +30,9 @@ export default class SelectionNode extends ExpressionNode {
 			this.helper_contents = ['print([])'];
 		}
 		this.content = this.source + '[' + this.selectedOption + ']';
-		this.helper_contents = [`import JSON3;\nprint(JSON3.write(repr.(${this.source})))`];
+		this.helper_contents = [
+			`import JSON3;\nprint(JSON3.write(repr.(${this.source})))`,
+		];
 	}
 
 	public setSource(source: string): SelectionNode {

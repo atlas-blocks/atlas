@@ -4,7 +4,12 @@ import { useRouter } from 'next/router';
 import styles from '../../styles/PropsPanel.module.css';
 import { wiu } from '../../src/utils/WebInterfaceUtils';
 import { atlasModule } from '../../src/utils/AtlasModule';
-import { InputState, NodeInput, getInputField, getTextareaField } from './props/propsInputFields';
+import {
+	InputState,
+	NodeInput,
+	getInputField,
+	getTextareaField,
+} from './props/propsInputFields';
 import getMatrixBuilderField from './props/MatrixFilterBuilder';
 import AtlasNode from '../../src/graph/nodes/AtlasNode';
 import ExpressionNode from '../../src/graph/nodes/ExpressionNode';
@@ -14,6 +19,7 @@ import SelectionNode from '../../src/graph/nodes/SelectionNode';
 import MatrixFilterNode from '../../src/graph/nodes/MatrixFilterNode';
 import ObjectNode from '../../src/graph/nodes/ObjectNode';
 import getObjectBuilder from './props/ObjectNodeBuilder';
+import DesmosNode from '../../src/graph/nodes/DesmosNode';
 
 import { nodeDescriptions as nodeDescriptions_en } from '../../locales/en';
 import { nodeDescriptions as nodeDescriptions_ru } from '../../locales/ru';
@@ -42,19 +48,29 @@ export default function PropsPanel(): JSX.Element {
 			new NodeInput(inputStates.name, getInputField),
 			new NodeInput(inputStates.content, getTextareaField),
 		],
+		[DesmosNode.ui_type]: [
+			new NodeInput(inputStates.name, getInputField),
+			new NodeInput(inputStates.content, getTextareaField),
+		],
 		[MatrixFilterNode.ui_type]: [
 			new NodeInput(inputStates.name, getInputField),
-			new NodeInput(inputStates.content, (inputState) => getTextareaField(inputState, true)),
+			new NodeInput(inputStates.content, (inputState) =>
+				getTextareaField(inputState, true),
+			),
 			new NodeInput(inputStates.content, getMatrixBuilderField),
 		],
 		[SelectionNode.ui_type]: [
 			new NodeInput(inputStates.name, getInputField),
-			new NodeInput(inputStates.content, (inputState) => getTextareaField(inputState, true)),
+			new NodeInput(inputStates.content, (inputState) =>
+				getTextareaField(inputState, true),
+			),
 			new NodeInput(inputStates.source, getInputField),
 		],
 		[ObjectNode.ui_type]: [
 			new NodeInput(inputStates.name, getInputField),
-			new NodeInput(inputStates.content, (inputState) => getTextareaField(inputState, true)),
+			new NodeInput(inputStates.content, (inputState) =>
+				getTextareaField(inputState, true),
+			),
 			new NodeInput(inputStates.content, getObjectBuilder),
 		],
 	};
@@ -96,7 +112,9 @@ export default function PropsPanel(): JSX.Element {
 			</div>
 			<div className={styles.propsPanelWrapper}>
 				<label>Description</label>
-				<p>{wiu.selectedNode ? nodeDescriptions[wiu.selectedNode.ui_type] : ''}</p>
+				<p>
+					{wiu.selectedNode ? nodeDescriptions[wiu.selectedNode.ui_type] : ''}
+				</p>
 			</div>
 		</>
 	);

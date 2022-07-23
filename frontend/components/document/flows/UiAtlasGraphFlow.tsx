@@ -18,8 +18,10 @@ import { uiEdgeTypes } from '../../blocks/UiEdge';
 import { wiu } from '../../../src/utils/WebInterfaceUtils';
 import StorageUtils from '../../../src/utils/StorageUtils';
 
-export default function AtlasGraphTab(): JSX.Element {
-	const [reactFlowInstance, setReactFlowInstance] = useState<ReactFlowInstance | null>(null);
+export default function UiAtlasGraphFlow(): JSX.Element {
+	const [reactFlowInstance, setReactFlowInstance] = useState<ReactFlowInstance | null>(
+		null,
+	);
 	const reactFlowWrapper = useRef<HTMLDivElement | null>(null);
 
 	const onUiNodesChange = (changes: UINodeChange[]) => {
@@ -44,7 +46,9 @@ export default function AtlasGraphTab(): JSX.Element {
 
 	const onConnect = useCallback(
 		(connection: Connection) =>
-			wiu.setUiEdges((eds) => addUiEdge({ ...connection, type: 'defaultEdge' }, eds)),
+			wiu.setUiEdges((eds) =>
+				addUiEdge({ ...connection, type: 'defaultEdge' }, eds),
+			),
 		[],
 	);
 

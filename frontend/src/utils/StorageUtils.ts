@@ -5,17 +5,22 @@ export default class StorageUtils {
 	private static readonly recentGraphStorageName = 'AtlasStorage';
 
 	public static saveGraphToLocalStorage(saveGraph: AtlasGraph) {
-		const recentGraphs: AtlasGraph[] = this.getRecentGraphsFromLocalStorageExceptWithName(
-			saveGraph.name,
-		);
+		const recentGraphs: AtlasGraph[] =
+			this.getRecentGraphsFromLocalStorageExceptWithName(saveGraph.name);
 		recentGraphs.push(saveGraph);
-		localStorage.setItem(this.recentGraphStorageName, JsonUtils.stringify(recentGraphs));
+		localStorage.setItem(
+			this.recentGraphStorageName,
+			JsonUtils.stringify(recentGraphs),
+		);
 	}
 
 	public static removeGraphFromStorage = (graphName: string) => {
 		const recentGraphs: AtlasGraph[] =
 			this.getRecentGraphsFromLocalStorageExceptWithName(graphName);
-		localStorage.setItem(this.recentGraphStorageName, JsonUtils.stringify(recentGraphs));
+		localStorage.setItem(
+			this.recentGraphStorageName,
+			JsonUtils.stringify(recentGraphs),
+		);
 	};
 
 	public static getRecentGraphsFromLocalStorage(): AtlasGraph[] {
@@ -35,7 +40,9 @@ export default class StorageUtils {
 		return recentGraphs;
 	}
 
-	public static getRecentGraphsFromLocalStorageExceptWithName(name: string): AtlasGraph[] {
+	public static getRecentGraphsFromLocalStorageExceptWithName(
+		name: string,
+	): AtlasGraph[] {
 		return this.getRecentGraphsFromLocalStorage().filter(
 			(graph: AtlasGraph) => graph.name !== name,
 		);

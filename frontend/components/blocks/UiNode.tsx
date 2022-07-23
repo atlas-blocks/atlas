@@ -4,17 +4,23 @@ import { Handle, Position } from 'react-flow-renderer';
 import styles from '../../styles/Block.module.css';
 
 import AtlasNode from '../../src/graph/nodes/AtlasNode';
-import ExpressionNode, { ResultPart, ExecutionError } from '../../src/graph/nodes/ExpressionNode';
+import ExpressionNode, {
+	ResultPart,
+	ExecutionError,
+} from '../../src/graph/nodes/ExpressionNode';
 import TextNode from '../../src/graph/nodes/TextNode';
 import FileNode from '../../src/graph/nodes/FileNode';
 import SelectionNode from '../../src/graph/nodes/SelectionNode';
 import MatrixFilterNode from '../../src/graph/nodes/MatrixFilterNode';
 import ObjectNode from '../../src/graph/nodes/ObjectNode';
+import DesmosNode from '../../src/graph/nodes/DesmosNode';
 
 import { atlasModule } from '../../src/utils/AtlasModule';
 import { wiu } from '../../src/utils/WebInterfaceUtils';
+import { awu } from '../../src/utils/AtlasWindowUtils';
 
 import FileUtils from '../../src/utils/FileUtils';
+import DesmosFlow from '../../src/flows/DesmosFlow';
 
 export const uiNodeTypes = {
 	[ExpressionNode.ui_type]: ExpressionBlock,
@@ -23,6 +29,7 @@ export const uiNodeTypes = {
 	[SelectionNode.ui_type]: SelectionBlock,
 	[MatrixFilterNode.ui_type]: MatrixFilterBlock,
 	[ObjectNode.ui_type]: ObjectBlock,
+	[DesmosNode.ui_type]: DesmosBlock,
 };
 
 function renderResultPart(part: ResultPart): JSX.Element {
@@ -71,11 +78,13 @@ function resultWrapper(result: JSX.Element | string): JSX.Element {
 }
 
 function errorWrapper(error: JSX.Element | null): JSX.Element {
-	return <div className={error !== null ? styles.error : styles.invisible}>{error}</div>;
+	return (
+		<div className={error !== null ? styles.error : styles.invisible}>{error}</div>
+	);
 }
 
 function TextBlock({ data: { node } }: { data: { node: TextNode } }) {
-	return blockWrapper(node, contentWrapper(node.content));
+	return blockWrapper(node, contentWrapper(node.getContent()));
 }
 
 // UI Blocks
@@ -98,8 +107,14 @@ function FileBlock({ data: { node } }: { data: { node: FileNode } }) {
 		<>
 			{contentWrapper(
 				<>
-					<input className={styles.inputFile} type="file" onChange={uploadFile} />
-					<div className={styles.thickLine}>Imported file: {node.ui_filename}</div>
+					<input
+						className={styles.inputFile}
+						type="file"
+						onChange={uploadFile}
+					/>
+					<div className={styles.thickLine}>
+						Imported file: {node.ui_filename}
+					</div>
 					<label>
 						<input
 							className={styles.inputFile}
@@ -111,7 +126,7 @@ function FileBlock({ data: { node } }: { data: { node: FileNode } }) {
 				</>,
 			)}
 			<div className={showContent === false ? styles.invisible : ''}>
-				{resultWrapper(node.content)}
+				{resultWrapper(node.getContent())}
 			</div>
 		</>,
 	);
@@ -121,9 +136,27 @@ function ExpressionBlock({ data: { node } }: { data: { node: ExpressionNode } })
 	return blockWrapper(
 		node,
 		<>
-			{contentWrapper(node.content)}
+			{contentWrapper(node.getContent())}
 			{resultWrapper(renderResult(node.getResult()))}
 			{errorWrapper(renderExecutionError(node.getError()))}
+		</>,
+	);
+}
+
+function DesmosBlock({ data: { node } }: { data: { node: DesmosNode } }) {
+	return blockWrapper(
+		node,
+		<>
+			{contentWrapper(node.getContent())}
+			{resultWrapper(renderResult(node.getResult()))}
+			{errorWrapper(renderExecutionError(node.getError()))}
+			<button
+				onClick={() => {
+					awu.addAndSelectFlow(new DesmosFlow(node));
+				}}
+			>
+				Open
+			</button>
 		</>,
 	);
 }
@@ -162,7 +195,9 @@ function SelectionBlock({ data: { node } }: { data: { node: SelectionNode } }) {
 				value={selectedOption}
 				onChange={handleSelect}
 			>
-				{options.map((option: string, index: number) => getOption(option, index + 1))}
+				{options.map((option: string, index: number) =>
+					getOption(option, index + 1),
+				)}
 			</select>
 		);
 	};
