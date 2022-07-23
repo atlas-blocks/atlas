@@ -4,6 +4,7 @@ import FileNode from '../src/graph/nodes/FileNode';
 import MatrixFilterNode from '../src/graph/nodes/MatrixFilterNode';
 import TextNode from '../src/graph/nodes/TextNode';
 import ExpressionNode from '../src/graph/nodes/ExpressionNode';
+import DesmosNode from '../src/graph/nodes/DesmosNode';
 
 export const panels = {
 	mockup: 'Mockup',
@@ -39,4 +40,5 @@ export const nodeDescriptions = {
 		</>
 	),
 	[FileNode.ui_type]: <>File{'\n\n'}Upload a file</>,
+	[DesmosNode.ui_type]: <>Desmos{'\n\n'}Double click on the block to open tab with a grpah</>,
 };
