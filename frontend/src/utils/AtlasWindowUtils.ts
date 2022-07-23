@@ -26,6 +26,17 @@ export default class AtlasWindowUtils {
 		return flowIndex;
 	}
 
+	public removeById(id: string): boolean {
+		const index = this.flows.findIndex((flow) => {
+			return flow.getId() === id;
+		});
+		if (index != -1) {
+			this.flows.splice(index, 1);
+			return true;
+		}
+		return false;
+	}
+
 	public addAndSelectFlow(flow: Flow) {
 		this.setSelectedFlow(this.addFlow(flow));
 	}
