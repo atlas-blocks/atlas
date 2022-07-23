@@ -100,27 +100,21 @@ function MatrixFilterBuilder({ setNewContentValue }: Props): JSX.Element {
 				<label>{cols ? 'col:' : 'row:'}</label>
 				<input
 					ref={(el: HTMLInputElement) =>
-						cols
-							? (refCol.current[0][index] = el)
-							: (refRow.current[0][index] = el)
+						cols ? (refCol.current[0][index] = el) : (refRow.current[0][index] = el)
 					}
 					onChange={filterChange}
 				/>
 				<label>opr:</label>
 				<input
 					ref={(el: HTMLInputElement) =>
-						cols
-							? (refCol.current[1][index] = el)
-							: (refRow.current[1][index] = el)
+						cols ? (refCol.current[1][index] = el) : (refRow.current[1][index] = el)
 					}
 					onChange={filterChange}
 				/>
 				<label>val:</label>
 				<input
 					ref={(el: HTMLInputElement) =>
-						cols
-							? (refCol.current[2][index] = el)
-							: (refRow.current[2][index] = el)
+						cols ? (refCol.current[2][index] = el) : (refRow.current[2][index] = el)
 					}
 					onChange={filterChange}
 				/>
@@ -184,12 +178,7 @@ function MatrixFilterBuilder({ setNewContentValue }: Props): JSX.Element {
 }
 
 const getMatrixBuilderField = (inputState: InputState): JSX.Element => {
-	return (
-		<MatrixFilterBuilder
-			key="matrixFilter"
-			setNewContentValue={inputState.setState}
-		/>
-	);
+	return <MatrixFilterBuilder key="matrixFilter" setNewContentValue={inputState.setState} />;
 };
 
 export default getMatrixBuilderField;

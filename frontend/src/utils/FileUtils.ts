@@ -35,17 +35,10 @@ export default class FileUtils {
 		graph: AtlasGraph,
 		extension: keyof typeof this.filetypeMap,
 	): void {
-		this.makeUserDownloadFile(
-			this.converterMap[extension](graph),
-			graph.name,
-			extension,
-		);
+		this.makeUserDownloadFile(this.converterMap[extension](graph), graph.name, extension);
 	}
 
-	public static getFileContentString(
-		filepath: File,
-		callback: (string: string) => any,
-	): void {
+	public static getFileContentString(filepath: File, callback: (string: string) => any): void {
 		const reader = new FileReader();
 		reader.onload = (evt: ProgressEvent<FileReader>) => {
 			callback(reader.result === null ? '' : reader.result.toString());

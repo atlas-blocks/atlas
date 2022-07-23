@@ -17,9 +17,7 @@ export default class JsonUtils {
 	}): AtlasGraph | null {
 		const graph: AtlasGraph = new AtlasGraph();
 		try {
-			return graph
-				.setName(graphJson.name)
-				.setNodes(this.extractNodes(graphJson.nodes));
+			return graph.setName(graphJson.name).setNodes(this.extractNodes(graphJson.nodes));
 		} catch (e) {
 			console.error(`This JSON is not an AtlasGraph: ${e}`, graphJson);
 		}

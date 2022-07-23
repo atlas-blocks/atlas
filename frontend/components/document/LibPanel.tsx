@@ -32,13 +32,7 @@ export default function LibPanel(): JSX.Element {
 	};
 
 	const libElements = {
-		Basic: [
-			'ExpressionNode',
-			'TextNode',
-			'MatrixFilterNode',
-			'SelectionNode',
-			'ObjectNode',
-		],
+		Basic: ['ExpressionNode', 'TextNode', 'MatrixFilterNode', 'SelectionNode', 'ObjectNode'],
 		Symbolic: [],
 		Graphics: ['DesmosNode'],
 		Engineering: [],
@@ -85,18 +79,14 @@ export default function LibPanel(): JSX.Element {
 					id={libName}
 					className={styles.libSectionLabel}
 					onClick={(evt) => {
-						openOrCollapseLibSection(
-							evt.currentTarget.id as keyof typeof libElements,
-						);
+						openOrCollapseLibSection(evt.currentTarget.id as keyof typeof libElements);
 					}}
 				>
 					<label>
 						{'>'} {libName}
 					</label>
 				</div>
-				<div
-					className={`${styles.elementsContainer} ${libCollapseStates[libName][0]}`}
-				>
+				<div className={`${styles.elementsContainer} ${libCollapseStates[libName][0]}`}>
 					{libElements[libName].map((elem) =>
 						getLibElements(elem as keyof typeof nodesOptions),
 					)}

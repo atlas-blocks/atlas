@@ -4,10 +4,7 @@ import { Handle, Position } from 'react-flow-renderer';
 import styles from '../../styles/Block.module.css';
 
 import AtlasNode from '../../src/graph/nodes/AtlasNode';
-import ExpressionNode, {
-	ResultPart,
-	ExecutionError,
-} from '../../src/graph/nodes/ExpressionNode';
+import ExpressionNode, { ResultPart, ExecutionError } from '../../src/graph/nodes/ExpressionNode';
 import TextNode from '../../src/graph/nodes/TextNode';
 import FileNode from '../../src/graph/nodes/FileNode';
 import SelectionNode from '../../src/graph/nodes/SelectionNode';
@@ -78,9 +75,7 @@ function resultWrapper(result: JSX.Element | string): JSX.Element {
 }
 
 function errorWrapper(error: JSX.Element | null): JSX.Element {
-	return (
-		<div className={error !== null ? styles.error : styles.invisible}>{error}</div>
-	);
+	return <div className={error !== null ? styles.error : styles.invisible}>{error}</div>;
 }
 
 function TextBlock({ data: { node } }: { data: { node: TextNode } }) {
@@ -107,14 +102,8 @@ function FileBlock({ data: { node } }: { data: { node: FileNode } }) {
 		<>
 			{contentWrapper(
 				<>
-					<input
-						className={styles.inputFile}
-						type="file"
-						onChange={uploadFile}
-					/>
-					<div className={styles.thickLine}>
-						Imported file: {node.ui_filename}
-					</div>
+					<input className={styles.inputFile} type="file" onChange={uploadFile} />
+					<div className={styles.thickLine}>Imported file: {node.ui_filename}</div>
 					<label>
 						<input
 							className={styles.inputFile}
@@ -195,9 +184,7 @@ function SelectionBlock({ data: { node } }: { data: { node: SelectionNode } }) {
 				value={selectedOption}
 				onChange={handleSelect}
 			>
-				{options.map((option: string, index: number) =>
-					getOption(option, index + 1),
-				)}
+				{options.map((option: string, index: number) => getOption(option, index + 1))}
 			</select>
 		);
 	};

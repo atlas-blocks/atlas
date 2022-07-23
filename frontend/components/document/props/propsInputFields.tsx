@@ -11,10 +11,7 @@ export class InputState {
 	 * @param name must be equal to the name of a AtlasNode field
 	 * @param newState
 	 */
-	constructor(
-		name: string,
-		newState: [string, React.Dispatch<React.SetStateAction<string>>],
-	) {
+	constructor(name: string, newState: [string, React.Dispatch<React.SetStateAction<string>>]) {
 		this.name = name;
 		this.state = newState[0];
 		this.setState = newState[1];
@@ -33,19 +30,13 @@ export class NodeInput {
 	inputState: InputState;
 	jsxElementGetter: (inputState: InputState) => JSX.Element;
 
-	constructor(
-		inputState: InputState,
-		jsxElementGetter: (inputState: InputState) => JSX.Element,
-	) {
+	constructor(inputState: InputState, jsxElementGetter: (inputState: InputState) => JSX.Element) {
 		this.inputState = inputState;
 		this.jsxElementGetter = jsxElementGetter;
 	}
 }
 
-const inputFieldWrapper = (
-	inputState: InputState,
-	inside: JSX.Element | string,
-): JSX.Element => {
+const inputFieldWrapper = (inputState: InputState, inside: JSX.Element | string): JSX.Element => {
 	return (
 		<div className={styles.propsPanelWrapper} key={inputState.name}>
 			<label>{inputState.name}</label>
@@ -54,10 +45,7 @@ const inputFieldWrapper = (
 	);
 };
 
-export const getTextareaField = (
-	inputState: InputState,
-	disabled = false,
-): JSX.Element => {
+export const getTextareaField = (inputState: InputState, disabled = false): JSX.Element => {
 	return inputFieldWrapper(
 		inputState,
 		<textarea

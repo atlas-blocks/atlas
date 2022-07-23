@@ -17,8 +17,7 @@ const Home: NextPage = () => {
 				<h1 className={styles.title}>Welcome to Atlas!</h1>
 
 				<p className={styles.description}>
-					Get started by editing{' '}
-					<code className={styles.code}>pages/index.tsx</code>
+					Get started by editing <code className={styles.code}>pages/index.tsx</code>
 				</p>
 
 				<div className={styles.grid}>
@@ -45,10 +44,7 @@ const Home: NextPage = () => {
 						className={styles.card}
 					>
 						<h2>Deploy &rarr;</h2>
-						<p>
-							Instantly deploy your Next.js site to a public URL with
-							Vercel.
-						</p>
+						<p>Instantly deploy your Next.js site to a public URL with Vercel.</p>
 					</a>
 				</div>
 			</main>
@@ -61,12 +57,7 @@ const Home: NextPage = () => {
 				>
 					Powered by{' '}
 					<span className={styles.logo}>
-						<Image
-							src="/vercel.svg"
-							alt="Vercel Logo"
-							width={72}
-							height={16}
-						/>
+						<Image src="/vercel.svg" alt="Vercel Logo" width={72} height={16} />
 					</span>
 				</a>
 			</footer>

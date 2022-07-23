@@ -14,8 +14,8 @@ export const nodeDescriptions = {
 	[MatrixFilterNode.ui_type]: (
 		<>
 			Matrix Filter{'\n\n'}
-			You can choose Matrix and add a special filter to any Columns and/or Rows with
-			the logic Operator and Value:{'\n'}
+			You can choose Matrix and add a special filter to any Columns and/or Rows with the logic
+			Operator and Value:{'\n'}
 			matrix: A col: 1, opr: &lt, val: 4{'\n'}
 			-- provides all rows of matrix A with values less than 4 in Column 1{'\n'}
 			row: 2, opr: &gt, val: 0{'\n'}
@@ -35,8 +35,8 @@ export const nodeDescriptions = {
 	),
 	[TextNode.ui_type]: (
 		<>
-			Text{'\n\n'}You can add any text like string, CSV, JSON. Output of TextNode is
-			a String type.
+			Text{'\n\n'}You can add any text like string, CSV, JSON. Output of TextNode is a String
+			type.
 		</>
 	),
 	[FileNode.ui_type]: <>File{'\n\n'}Upload a file</>,

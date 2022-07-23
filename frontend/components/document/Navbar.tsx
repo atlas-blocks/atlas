@@ -32,8 +32,7 @@ export default function Navbar() {
 	const [recentFromLocalStorage, setRecentFromLocalStorage] = useState<AtlasGraph[]>();
 	const [removeTrigger, setRemoveTrigger] = useState<boolean>(false);
 
-	const fileMenuStyle =
-		styles.fileMenu + (isFileMenuOpen ? '' : ' ' + styles.fileMenuHidden);
+	const fileMenuStyle = styles.fileMenu + (isFileMenuOpen ? '' : ' ' + styles.fileMenuHidden);
 
 	// class that indicates that element is a part of a file menu section
 	// i.e. file menu button and dropdown with options
@@ -66,18 +65,14 @@ export default function Navbar() {
 		setRemoveTrigger(!removeTrigger);
 	};
 	const updateRecentElementsUi = () => {
-		setRecentFromLocalStorage(
-			StorageUtils.getRecentGraphsFromLocalStorage().reverse(),
-		);
+		setRecentFromLocalStorage(StorageUtils.getRecentGraphsFromLocalStorage().reverse());
 		refSchemaName.current!.value = wiu.graph.name;
 	};
 	useEffect(updateRecentElementsUi, [wiu.graph.name, removeTrigger]);
 
 	const handleClick = (event: MouseEvent) => {
 		if (!isFileMenuOpen) return;
-		setIsFileMenuOpen(
-			hasAncestorWithClass(event.target as HTMLElement, fileMenuPartClass),
-		);
+		setIsFileMenuOpen(hasAncestorWithClass(event.target as HTMLElement, fileMenuPartClass));
 	};
 
 	useEffect(() => {
@@ -95,9 +90,7 @@ export default function Navbar() {
 				className={styles.elementFileMenu}
 				onClick={() => atlasModule.replaceGraphWithNew(graphFromRecentList)}
 			>
-				<label className={styles.recentGraphName}>
-					{'> ' + graphFromRecentList.name}
-				</label>
+				<label className={styles.recentGraphName}>{'> ' + graphFromRecentList.name}</label>
 				<div
 					id={graphFromRecentList.name}
 					className={styles.remove}
@@ -158,9 +151,7 @@ export default function Navbar() {
 						<label className={styles.recent}>Recent</label>
 					</div>
 					<div>
-						{recentFromLocalStorage?.map((graph) =>
-							getRecentGraphElement(graph),
-						)}
+						{recentFromLocalStorage?.map((graph) => getRecentGraphElement(graph))}
 					</div>
 				</div>
 			</div>
@@ -169,16 +160,8 @@ export default function Navbar() {
 					<Image src={exportImg} objectFit={'contain'} alt="exportImg" />
 				</div>
 				<div className={styles.icon}>
-					<a
-						target={'_blank'}
-						href={'https://docs.ca.engineering'}
-						rel="noreferrer"
-					>
-						<Image
-							src={questionImg}
-							objectFit={'contain'}
-							alt={'questionImg'}
-						/>
+					<a target={'_blank'} href={'https://docs.ca.engineering'} rel="noreferrer">
+						<Image src={questionImg} objectFit={'contain'} alt={'questionImg'} />
 					</a>
 				</div>
 				<div className={styles.icon}>

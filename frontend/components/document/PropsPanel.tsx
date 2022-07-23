@@ -4,12 +4,7 @@ import { useRouter } from 'next/router';
 import styles from '../../styles/PropsPanel.module.css';
 import { wiu } from '../../src/utils/WebInterfaceUtils';
 import { atlasModule } from '../../src/utils/AtlasModule';
-import {
-	InputState,
-	NodeInput,
-	getInputField,
-	getTextareaField,
-} from './props/propsInputFields';
+import { InputState, NodeInput, getInputField, getTextareaField } from './props/propsInputFields';
 import getMatrixBuilderField from './props/MatrixFilterBuilder';
 import AtlasNode from '../../src/graph/nodes/AtlasNode';
 import ExpressionNode from '../../src/graph/nodes/ExpressionNode';
@@ -54,23 +49,17 @@ export default function PropsPanel(): JSX.Element {
 		],
 		[MatrixFilterNode.ui_type]: [
 			new NodeInput(inputStates.name, getInputField),
-			new NodeInput(inputStates.content, (inputState) =>
-				getTextareaField(inputState, true),
-			),
+			new NodeInput(inputStates.content, (inputState) => getTextareaField(inputState, true)),
 			new NodeInput(inputStates.content, getMatrixBuilderField),
 		],
 		[SelectionNode.ui_type]: [
 			new NodeInput(inputStates.name, getInputField),
-			new NodeInput(inputStates.content, (inputState) =>
-				getTextareaField(inputState, true),
-			),
+			new NodeInput(inputStates.content, (inputState) => getTextareaField(inputState, true)),
 			new NodeInput(inputStates.source, getInputField),
 		],
 		[ObjectNode.ui_type]: [
 			new NodeInput(inputStates.name, getInputField),
-			new NodeInput(inputStates.content, (inputState) =>
-				getTextareaField(inputState, true),
-			),
+			new NodeInput(inputStates.content, (inputState) => getTextareaField(inputState, true)),
 			new NodeInput(inputStates.content, getObjectBuilder),
 		],
 	};
@@ -112,9 +101,7 @@ export default function PropsPanel(): JSX.Element {
 			</div>
 			<div className={styles.propsPanelWrapper}>
 				<label>Description</label>
-				<p>
-					{wiu.selectedNode ? nodeDescriptions[wiu.selectedNode.ui_type] : ''}
-				</p>
+				<p>{wiu.selectedNode ? nodeDescriptions[wiu.selectedNode.ui_type] : ''}</p>
 			</div>
 		</>
 	);

@@ -12,9 +12,7 @@ export default class ObjectNode extends ExpressionNode {
 
 	private updateContent() {
 		let newContent = 'Dict(';
-		this.ui_objProperties.forEach(
-			(prop) => (newContent += `"${prop[0]}" => ${prop[1]},`),
-		);
+		this.ui_objProperties.forEach((prop) => (newContent += `"${prop[0]}" => ${prop[1]},`));
 		newContent = newContent.slice(0, newContent.length - 1) + ')';
 		this.content = newContent;
 	}
