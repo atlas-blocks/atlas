@@ -24,14 +24,15 @@ export default function UiDesmosFlow({ flow }: { flow: DesmosFlow }): JSX.Elemen
 			id: 'plot1',
 			latex: flow.node.getContent(),
 		});
-
-		wiu.setSelectedNode(flow.node);
 	};
 
 	React.useEffect(() => {
 		if (awu.getSelectedFlow() !== flow) return;
-		if (window.Desmos) loadDesmos(window.Desmos);
-	});
+		if (!window.Desmos) return;
+
+		if (wiu.selectedNode !== flow.node) wiu.setSelectedNode(flow.node);
+		loadDesmos(window.Desmos);
+	}, [wiu.selectedNode, awu.selectedFlow]);
 
 	return (
 		<>
