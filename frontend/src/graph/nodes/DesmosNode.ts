@@ -1,18 +1,12 @@
-import ExpressionNode from './ExpressionNode';
+import TextNode from './TextNode';
 
-export default class DesmosNode extends ExpressionNode {
+export default class DesmosNode extends TextNode {
 	static ui_type = 'AtlasGraph.DesmosNode';
 
 	constructor() {
 		super();
-		this.content = '""';
+		this.content = '';
 		this.ui_type = DesmosNode.ui_type;
-	}
-
-	public setContent(content: string): DesmosNode {
-		this.content = content;
-		this.helper_contents = [`print(${this.content})`];
-		return this;
 	}
 
 	public static build(): DesmosNode {

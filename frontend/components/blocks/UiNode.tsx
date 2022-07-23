@@ -135,18 +135,13 @@ function ExpressionBlock({ data: { node } }: { data: { node: ExpressionNode } })
 function DesmosBlock({ data: { node } }: { data: { node: DesmosNode } }) {
 	return blockWrapper(
 		node,
-		<>
+		<div
+			onClick={() => {
+				awu.addAndSelectFlow(new DesmosFlow(node));
+			}}
+		>
 			{contentWrapper(node.getContent())}
-			{resultWrapper(renderResult(node.getResult()))}
-			{errorWrapper(renderExecutionError(node.getError()))}
-			<button
-				onClick={() => {
-					awu.addAndSelectFlow(new DesmosFlow(node));
-				}}
-			>
-				Open
-			</button>
-		</>,
+		</div>,
 	);
 }
 

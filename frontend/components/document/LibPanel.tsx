@@ -28,7 +28,7 @@ export default function LibPanel(): JSX.Element {
 		MatrixFilterNode: () => MatrixFilterNode.build().setDefaultName(wiu.graph),
 		SelectionNode: () => SelectionNode.build().setDefaultName(wiu.graph),
 		ObjectNode: () => ObjectNode.build().setDefaultName(wiu.graph),
-		DesmosNode: () => DesmosNode.build().setDefaultName(wiu.graph),
+		DesmosNode: () => DesmosNode.build().setContent('y = x^2').setDefaultName(wiu.graph),
 	};
 
 	const libElements = {

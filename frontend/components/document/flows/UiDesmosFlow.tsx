@@ -20,10 +20,7 @@ export default function DesmosTab({ flow }: { flow: DesmosFlow }): JSX.Element {
 
 		calculator.setExpression({
 			id: 'plot1',
-			latex:
-				flow.node.helper_responses.length === 0
-					? ''
-					: flow.node.helper_responses[0].getPlainTextResultString(),
+			latex: flow.node.getContent(),
 		});
 	};
 

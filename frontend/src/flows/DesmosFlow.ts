@@ -14,6 +14,6 @@ export default class DesmosFlow extends Flow {
 	}
 
 	public getName() {
-		return 'desmos:' + this.node.name;
+		return this.node.name;
 	}
 }
