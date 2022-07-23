@@ -33,6 +33,11 @@ export default class AtlasWindowUtils {
 	public clearFlows() {
 		this.flows = [];
 	}
+
+	public getSelectedFlow(): Flow | null {
+		if (this.selectedFlow === -1) return null;
+		return this.flows[this.selectedFlow];
+	}
 }
 
 export const awu = new AtlasWindowUtils();

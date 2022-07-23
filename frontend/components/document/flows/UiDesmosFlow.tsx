@@ -2,6 +2,8 @@ import React from 'react';
 import Script from 'next/script';
 
 import DesmosFlow from '../../../src/flows/DesmosFlow';
+import { wiu } from '../../../src/utils/WebInterfaceUtils';
+import { awu } from '../../../src/utils/AtlasWindowUtils';
 
 declare global {
 	interface Window {
@@ -9,7 +11,7 @@ declare global {
 	}
 }
 
-export default function DesmosTab({ flow }: { flow: DesmosFlow }): JSX.Element {
+export default function UiDesmosFlow({ flow }: { flow: DesmosFlow }): JSX.Element {
 	const loadDesmos = (desmosObject: any) => {
 		const calculatorElement = document.getElementById('calculator/' + flow.node.name);
 		calculatorElement!.innerHTML = '';
@@ -22,9 +24,12 @@ export default function DesmosTab({ flow }: { flow: DesmosFlow }): JSX.Element {
 			id: 'plot1',
 			latex: flow.node.getContent(),
 		});
+
+		wiu.setSelectedNode(flow.node);
 	};
 
 	React.useEffect(() => {
+		if (awu.getSelectedFlow() !== flow) return;
 		if (window.Desmos) loadDesmos(window.Desmos);
 	});
 
