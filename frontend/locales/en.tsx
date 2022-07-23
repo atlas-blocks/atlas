@@ -25,8 +25,7 @@ export const nodeDescriptions = {
 	[ExpressionNode.ui_type]: (
 		<>
 			Expression{'\n\n'}
-			You can use any expression, formula, operator which Julia language supports.
-			{'\n\n'}
+			You can use any expression, formula, operator which Julia language supports.{'\n\n'}
 			See more information about expressions in ATLAS documentation:{'\n'}
 			<a target={'_blank'} href={'https://docs.ca.engineering'} rel="noreferrer">
 				docs.ca.engineering
