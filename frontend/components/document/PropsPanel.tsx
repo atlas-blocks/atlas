@@ -14,6 +14,7 @@ import SelectionNode from '../../src/graph/nodes/SelectionNode';
 import MatrixFilterNode from '../../src/graph/nodes/MatrixFilterNode';
 import ObjectNode from '../../src/graph/nodes/ObjectNode';
 import getObjectBuilder from './props/ObjectNodeBuilder';
+import DesmosNode from '../../src/graph/nodes/DesmosNode';
 
 import { nodeDescriptions as nodeDescriptions_en } from '../../locales/en';
 import { nodeDescriptions as nodeDescriptions_ru } from '../../locales/ru';
@@ -39,6 +40,10 @@ export default function PropsPanel(): JSX.Element {
 			new NodeInput(inputStates.content, getTextareaField),
 		],
 		[TextNode.ui_type]: [
+			new NodeInput(inputStates.name, getInputField),
+			new NodeInput(inputStates.content, getTextareaField),
+		],
+		[DesmosNode.ui_type]: [
 			new NodeInput(inputStates.name, getInputField),
 			new NodeInput(inputStates.content, getTextareaField),
 		],

@@ -1,4 +1,5 @@
 import ContentNode from './ContentNode';
+
 export default class TextNode extends ContentNode {
 	static ui_type = 'AtlasGraph.TextNode';
 

@@ -31,11 +31,11 @@ export default class JuliaExecuter {
 	}
 
 	public getExpressionCode(node: ExpressionNode): string {
-		return node.name + ' = ' + node.content;
+		return node.name + ' = ' + node.getContent();
 	}
 
 	public getTextCode(node: TextNode): string {
-		return node.name + ' = """' + node.content + '"""';
+		return node.name + ' = ' + JSON.stringify(node.getContent());
 	}
 
 	public getAtlasNodeCode(node: AtlasNode): string {
@@ -57,7 +57,9 @@ export default class JuliaExecuter {
 			if (msg.header.msg_type == 'execute_result') {
 				response.result.push((msg.content as any).data);
 			} else if (msg.header.msg_type == 'stream') {
-				response.result.push({ 'text/plain': (msg.content as any).text });
+				response.result.push({
+					'text/plain': (msg.content as any).text,
+				});
 			} else if (msg.header.msg_type == 'error') {
 				response.error = {
 					value: (msg.content as any).evalue,
@@ -76,19 +78,21 @@ export default class JuliaExecuter {
 
 		if (node instanceof ExpressionNode) {
 			node.response = response;
-
 			for (const content of node.helper_contents) {
 				node.helper_responses = [];
 				node.helper_responses.push(await this.executeCode(content));
 			}
 
-			node.providerNames = await this.getProviderNames(node.content);
+			node.providerNames = await this.getProviderNames(node.getContent());
 		}
 	}
 
 	public async getProviderNames(content: string): Promise<string[]> {
 		const response = await this.executeCode(
-			'print(JSON3.write(TokenUtils.getnames("""' + content + '""")))',
+			'print(JSON3.write(' + //
+				'TokenUtils.getnames(' +
+				JSON.stringify(content) +
+				')))',
 		);
 
 		try {

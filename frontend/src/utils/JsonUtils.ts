@@ -5,6 +5,7 @@ import TextNode from '../graph/nodes/TextNode';
 import SelectionNode from '../graph/nodes/SelectionNode';
 import MatrixFilterNode from '../graph/nodes/MatrixFilterNode';
 import ObjectNode from '../graph/nodes/ObjectNode';
+import DesmosNode from '../graph/nodes/DesmosNode';
 import AtlasEdge from '../graph/edges/AtlasEdge';
 import AtlasGraph from '../graph/AtlasGraph';
 
@@ -39,6 +40,7 @@ export default class JsonUtils {
 		[TextNode.ui_type]: TextNode.build,
 		[FileNode.ui_type]: FileNode.build,
 		[ObjectNode.ui_type]: ObjectNode.build,
+		[DesmosNode.ui_type]: DesmosNode.build,
 		[AtlasNode.ui_type]: AtlasNode.build,
 	};
 
@@ -52,7 +54,6 @@ export default class JsonUtils {
 
 	public static extractNode(node: any): AtlasNode {
 		if (this.typeMap[node.ui_type] == undefined) {
-			console.log(node);
 			throw new Error('no such node ui_type: ' + node.ui_type);
 		}
 		return Object.assign(this.typeMap[node.ui_type](), node);

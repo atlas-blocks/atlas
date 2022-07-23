@@ -18,7 +18,15 @@ import { uiEdgeTypes } from '../../blocks/UiEdge';
 import { wiu } from '../../../src/utils/WebInterfaceUtils';
 import StorageUtils from '../../../src/utils/StorageUtils';
 
-export default function AtlasGraphTab(): JSX.Element {
+import { awu } from '../../../src/utils/AtlasWindowUtils';
+import DesmosFlow from '../../../src/flows/DesmosFlow';
+import DesmosNode from '../../../src/graph/nodes/DesmosNode';
+
+const onDropMap = {
+	[DesmosNode.ui_type]: (node: DesmosNode) => awu.addFlow(new DesmosFlow(node)),
+};
+
+export default function UiAtlasGraphFlow(): JSX.Element {
 	const [reactFlowInstance, setReactFlowInstance] = useState<ReactFlowInstance | null>(null);
 	const reactFlowWrapper = useRef<HTMLDivElement | null>(null);
 
@@ -31,11 +39,11 @@ export default function AtlasGraphTab(): JSX.Element {
 		wiu.setUiEdges((eds) => applyEdgeChanges(changes, eds));
 
 	function handleUiNodeSelection(event: React.MouseEvent, node: UINode) {
-		// any user change of edges is ignored
+		wiu.setSelectedNode(node.data.node);
 	}
 
 	function handleUiNodeDoubleClick(event: React.MouseEvent, node: UINode) {
-		wiu.setSelectedNode(node.data.node);
+		// double click is ignored
 	}
 
 	function onPanelClick(event: React.MouseEvent) {
@@ -57,13 +65,11 @@ export default function AtlasGraphTab(): JSX.Element {
 		(event: React.DragEvent) => {
 			event.preventDefault();
 
-			console.assert(
-				wiu.druggedNode !== null,
-				'drugged node should be assigned before dragging',
-			);
-			if (wiu.druggedNode !== null) {
-				const width = wiu.getUiNodeWidth(wiu.druggedNode);
-				const height = wiu.getUiNodeHeight(wiu.druggedNode);
+			const node = wiu.druggedNode;
+			console.assert(node !== null, 'drugged node should be assigned before dragging');
+			if (node !== null) {
+				const width = wiu.getUiNodeWidth(node);
+				const height = wiu.getUiNodeHeight(node);
 
 				if (reactFlowWrapper.current == null) throw new Error();
 				const reactFlowBounds = reactFlowWrapper.current.getBoundingClientRect();
@@ -73,10 +79,14 @@ export default function AtlasGraphTab(): JSX.Element {
 					x: event.clientX - reactFlowBounds.left - width / 2,
 					y: event.clientY - reactFlowBounds.top - height / 2,
 				});
-				wiu.graph.nodes.push(wiu.druggedNode.setUiPosition(pos.x, pos.y));
+				wiu.graph.nodes.push(node.setUiPosition(pos.x, pos.y));
+				if (onDropMap[node.ui_type]) {
+					console.log('bbb');
+					onDropMap[node.ui_type](node as any);
+				}
 			}
 			wiu.refreshUiElements();
-			wiu.setSelectedNode(wiu.druggedNode);
+			wiu.setSelectedNode(node);
 		},
 		[reactFlowInstance],
 	);

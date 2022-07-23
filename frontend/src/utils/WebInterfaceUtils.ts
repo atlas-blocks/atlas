@@ -1,9 +1,13 @@
 import React from 'react';
 import { Node as UINode, Edge as UIEdge, NodeChange as UINodeChange } from 'react-flow-renderer';
+import DesmosNode from '../graph/nodes/DesmosNode';
+import DesmosFlow from '../flows/DesmosFlow';
 import AtlasNode from '../graph/nodes/AtlasNode';
 import AtlasEdge from '../graph/edges/AtlasEdge';
 import AtlasGraph from '../graph/AtlasGraph';
 import JsonUtils from './JsonUtils';
+
+import { awu } from './AtlasWindowUtils';
 
 export default class WebInterfaceUtils {
 	graph: AtlasGraph;
@@ -51,8 +55,8 @@ export default class WebInterfaceUtils {
 	public static toUiEdge(edge: AtlasEdge): UIEdge {
 		return {
 			id: 'edge' + edge.provider.getId() + edge.user.getId(),
-			source: edge.user.getId(),
-			target: edge.provider.getId(),
+			source: edge.provider.getId(),
+			target: edge.user.getId(),
 			type: 'DefaultEdge',
 		};
 	}
@@ -89,6 +93,9 @@ export default class WebInterfaceUtils {
 				node.setUiPosition(change.position.x, change.position.y);
 			}
 			if (change.type === 'remove') {
+				if (this.selectedNode instanceof DesmosNode) {
+					awu.removeById(new DesmosFlow(this.selectedNode).getId());
+				}
 				this.graph.removeById(change.id);
 				this.setSelectedNode(null);
 			}

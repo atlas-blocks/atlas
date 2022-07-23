@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Head from 'next/head';
 
 import Navbar from '../components/document/Navbar';
-import AtlasWindow from '../components/document/AtlasWindow';
+import UiAtlasWindow from '../components/document/UiAtlasWindow';
 import Panels from '../components/document/Panels';
 import { exampleNodes } from '../components/blocks/ExampleNodes';
 
@@ -11,6 +11,10 @@ import AtlasNode from '../src/graph/nodes/AtlasNode';
 import JuliaExecuter from '../src/kernels/JuliaExecuter';
 import { atlasModule } from '../src/utils/AtlasModule';
 import WebInterfaceUtils, { wiu } from '../src/utils/WebInterfaceUtils';
+import { awu } from '../src/utils/AtlasWindowUtils';
+
+import AtlasGrpahFlow from '../src/flows/AtlasGraphFlow';
+import JupyterFlow from '../src/flows/JupyterFlow';
 
 import styles from '../styles/main.module.css';
 
@@ -18,6 +22,10 @@ wiu.graph = new AtlasGraph();
 atlasModule.graph = wiu.graph;
 atlasModule.wiu = wiu;
 exampleNodes.forEach((node) => wiu.graph.nodes.push(node));
+
+awu.clearFlows();
+awu.addFlow(new AtlasGrpahFlow(wiu.graph));
+awu.addFlow(new JupyterFlow());
 
 if (global.window) {
 	atlasModule.executer = new JuliaExecuter();
@@ -36,7 +44,7 @@ export default function Home() {
 			</Head>
 			<div className={styles.layout}>
 				<Navbar />
-				<AtlasWindow />
+				<UiAtlasWindow />
 				<Panels />
 			</div>
 		</>
