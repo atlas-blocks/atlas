@@ -31,11 +31,11 @@ export default function UiAtlasGraphFlow(): JSX.Element {
 		wiu.setUiEdges((eds) => applyEdgeChanges(changes, eds));
 
 	function handleUiNodeSelection(event: React.MouseEvent, node: UINode) {
-		// any user change of edges is ignored
+		wiu.setSelectedNode(node.data.node);
 	}
 
 	function handleUiNodeDoubleClick(event: React.MouseEvent, node: UINode) {
-		wiu.setSelectedNode(node.data.node);
+		// double click is ignored
 	}
 
 	function onPanelClick(event: React.MouseEvent) {

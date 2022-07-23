@@ -58,7 +58,7 @@ export default class AtlasGraph {
 
 	getById(id: string): AtlasNode {
 		const nodes = this.nodes.filter((node) => node.getId() === id);
-		console.assert(nodes.length == 1);
+		console.assert(nodes.length === 1, id, this.nodes);
 		return nodes[0];
 	}
 }
