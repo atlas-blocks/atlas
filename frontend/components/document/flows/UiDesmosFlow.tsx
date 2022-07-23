@@ -12,20 +12,25 @@ declare global {
 export default function DesmosTab({ flow }: { flow: DesmosFlow }): JSX.Element {
 	const loadDesmos = (desmosObject: any) => {
 		const calculatorElement = document.getElementById('calculator/' + flow.node.name);
+		calculatorElement!.innerHTML = '';
 		const calculator = desmosObject.GraphingCalculator(calculatorElement, {
 			fontSize: 12,
+			expressionsCollapsed: true,
 		});
 
 		console.log(flow);
 		calculator.setExpression({
 			id: 'plot1',
-			latex: flow.node.getContent(),
+			latex:
+				flow.node.helper_responses.length === 0
+					? ''
+					: flow.node.helper_responses[0].getPlainTextResultString(),
 		});
 	};
 
 	React.useEffect(() => {
 		if (window.Desmos) loadDesmos(window.Desmos);
-	}, []);
+	});
 
 	return (
 		<>

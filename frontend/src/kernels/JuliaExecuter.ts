@@ -35,7 +35,7 @@ export default class JuliaExecuter {
 	}
 
 	public getTextCode(node: TextNode): string {
-		return node.name + ' = """' + node.getContent() + '"""';
+		return node.name + ' = ' + JSON.stringify(node.getContent());
 	}
 
 	public getAtlasNodeCode(node: AtlasNode): string {
@@ -89,7 +89,10 @@ export default class JuliaExecuter {
 
 	public async getProviderNames(content: string): Promise<string[]> {
 		const response = await this.executeCode(
-			'print(JSON3.write(TokenUtils.getnames("""' + content + '""")))',
+			'print(JSON3.write(' + //
+				'TokenUtils.getnames(' +
+				JSON.stringify(content) +
+				')))',
 		);
 
 		try {

@@ -21,8 +21,8 @@ export default class AtlasWindowUtils {
 				return flow;
 			}
 		});
-		console.log(this.flows, flow, this.flows.includes(flow));
 		if (!this.flows.includes(flow)) this.flows.push(flow);
+
 		return flowIndex;
 	}
 

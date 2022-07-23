@@ -34,7 +34,7 @@ export default function AtlasWindow(): JSX.Element {
 					<div
 						className={getTabClass(index === awu.selectedFlow)}
 						onClick={() => awu.setSelectedFlow(index)}
-						key={index}
+						key={flow.getId()}
 					>
 						<label>{flow.getName()}</label>
 					</div>
@@ -44,13 +44,14 @@ export default function AtlasWindow(): JSX.Element {
 	};
 
 	const getFlowHolderJSX = (): JSX.Element => {
+		console.log(awu.flows);
 		return (
 			<div className={styles.flow}>
 				{awu.flows.map((flow, index) => (
 					<div
 						className={getFlowClass(index === awu.selectedFlow)}
 						style={{ width: '100%', height: '100%' }}
-						key={index}
+						key={flow.getId()}
 					>
 						{React.createElement(uiFlowTypes[flow.constructor.name], {
 							flow,
