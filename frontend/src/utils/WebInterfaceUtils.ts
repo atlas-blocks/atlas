@@ -55,8 +55,8 @@ export default class WebInterfaceUtils {
 	public static toUiEdge(edge: AtlasEdge): UIEdge {
 		return {
 			id: 'edge' + edge.provider.getId() + edge.user.getId(),
-			source: edge.user.getId(),
-			target: edge.provider.getId(),
+			source: edge.provider.getId(),
+			target: edge.user.getId(),
 			type: 'DefaultEdge',
 		};
 	}

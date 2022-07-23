@@ -58,8 +58,8 @@ function blockWrapper(node: AtlasNode, tail?: JSX.Element | string): JSX.Element
 
 	return (
 		<div className={styles.block + ' ' + selectedBlockStyle}>
-			<Handle type="target" position={Position.Bottom} />
-			<Handle type="source" position={Position.Top} id="a" />
+			<Handle type="target" position={Position.Top} />
+			<Handle type="source" position={Position.Bottom} id="a" />
 			<div className={styles.name}>{node.name}</div>
 			{tail}
 		</div>
