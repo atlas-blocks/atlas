@@ -18,7 +18,6 @@ export default function DesmosTab({ flow }: { flow: DesmosFlow }): JSX.Element {
 			expressionsCollapsed: true,
 		});
 
-		console.log(flow);
 		calculator.setExpression({
 			id: 'plot1',
 			latex:

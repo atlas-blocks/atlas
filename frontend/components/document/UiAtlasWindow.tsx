@@ -44,7 +44,6 @@ export default function AtlasWindow(): JSX.Element {
 	};
 
 	const getFlowHolderJSX = (): JSX.Element => {
-		console.log(awu.flows);
 		return (
 			<div className={styles.flow}>
 				{awu.flows.map((flow, index) => (
@@ -54,7 +53,7 @@ export default function AtlasWindow(): JSX.Element {
 						key={flow.getId()}
 					>
 						{React.createElement(uiFlowTypes[flow.constructor.name], {
-							flow,
+							flow: flow as any,
 						})}
 					</div>
 				))}

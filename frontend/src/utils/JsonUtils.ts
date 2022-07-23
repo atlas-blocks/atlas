@@ -54,7 +54,6 @@ export default class JsonUtils {
 
 	public static extractNode(node: any): AtlasNode {
 		if (this.typeMap[node.ui_type] == undefined) {
-			console.log(node);
 			throw new Error('no such node ui_type: ' + node.ui_type);
 		}
 		return Object.assign(this.typeMap[node.ui_type](), node);
