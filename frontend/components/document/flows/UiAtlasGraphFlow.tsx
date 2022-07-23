@@ -23,7 +23,7 @@ import DesmosFlow from '../../../src/flows/DesmosFlow';
 import DesmosNode from '../../../src/graph/nodes/DesmosNode';
 
 const onDropMap = {
-	[DesmosNode.ui_type]: (node: DesmosNode) => awu.addAndSelectFlow(new DesmosFlow(node)),
+	[DesmosNode.ui_type]: (node: DesmosNode) => awu.addFlow(new DesmosFlow(node)),
 };
 
 export default function UiAtlasGraphFlow(): JSX.Element {
